@@ -29,7 +29,7 @@ module.exports = class AboutCommand extends Command {
 				\`pm2 start somebot.js --node-args='--harmony'\`
 
 				__**Documentation (WIP):**__
-				<https://gawdl3y.github.io/discord.js-commando/0.1.0/>
+				<https://gawdl3y.github.io/discord.js-commando/0.2.0/>
 				See also:
 				<http://hydrabolt.github.io/discord.js/#!/docs/tag/indev/file/general/Welcome>
 		`);
