@@ -25,7 +25,7 @@ module.exports = class UserInfoCommand extends Command {
 	}
 
 	async run(msg, args) {
-		let user = args.user ? msg.channel.members.find('id', args.user.replace(/<|!|>|@/g, '')) : msg.channel.members.find(message => message.user.username === args.user);
+		let user = args.user.startsWith('<') ? msg.channel.members.find('id', args.user.replace(/<|!|>|@/g, '')) : msg.channel.members.find(message => message.user.username === args.user);
 		if (user === null) {
 			return msg.say(`User not found.`);
 		}
