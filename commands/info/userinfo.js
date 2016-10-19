@@ -6,12 +6,13 @@ module.exports = class UserInfoCommand extends Command {
 	constructor(client) {
 		super(client, {
 			name: 'userinfo',
+			aliases: ['user'],
 			group: 'info',
 			memberName: 'userinfo',
 			description: 'Get info on a user.',
 			useage: '<user>',
-			details: `Get detailed information on the specified user or yourself.`,
-			examples: ['userinfo @Crawl#3208'],
+			details: `Get detailed information on the specified user.`,
+			examples: ['userinfo @Crawl#3208', 'user Crawl'],
 			guildOnly: true,
 
 			args: [
