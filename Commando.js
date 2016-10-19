@@ -50,10 +50,8 @@ client.on('error', console.error)
 	});
 
 client.registry
+	.registerGroup('info', 'Info')
 	.registerDefaults()
-	.registerGroups([
-		['info', 'Info']
-	])
 	.registerCommandsIn(path.join(__dirname, 'commands'));
 
 client.login(token);
