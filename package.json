@@ -1,0 +1,35 @@
+{
+  "name": "commando",
+  "version": "0.1.0",
+  "description": ".",
+  "license": "MIT",
+  "author": "Crawl",
+  "scripts": {
+    "test": "eslint src/ silent"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iCrawl/Commando.git"
+  },
+  "bugs": {
+    "url": "https://github.com/iCrawl/Commando/issues"
+  },
+  "keywords": [
+    "discord",
+    "bot"
+  ],
+  "homepage": "https://github.com/iCrawl/Commando#readme",
+  "dependencies": {
+    "bluebird": "^3.4.6",
+    "discord.js-commando": "github:gawdl3y/discord.js-commando",
+    "moment": "^2.15.1",
+    "request": "^2.75.0",
+    "request-promise": "^4.1.1"
+  },
+  "devDependencies": {
+    "eslint": "^3.7.0"
+  },
+  "engines": {
+    "node": ">=7.0.0"
+  }
+}
