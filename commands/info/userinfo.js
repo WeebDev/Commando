@@ -37,10 +37,10 @@ module.exports = class UserInfoCommand extends Command {
 					**❯ Member Details**
 					${user.nickname !== null ? ` • Nickname: ${user.nickname}` : ' • No nickname'}
 					 • Roles: ${user.roles.map(roles => `\`${roles.name}\``).join(' ')}
-					 • Joined at: ${moment.utc(user.joinDate).format('dddd, MMMM Do YYYY, HH:mm:ss ZZ')}
+					 • Joined at: ${moment.utc(user.joinedAt).format('dddd, MMMM Do YYYY, HH:mm:ss ZZ')}
 
 					**❯ User Details**
-					 • Created at: ${moment.utc(user.user.creationDate).format('dddd, MMMM Do YYYY, HH:mm:ss ZZ')}${user.user.bot === true ? '\n • Is a bot account' : ''}
+					 • Created at: ${moment.utc(user.user.creationAt).format('dddd, MMMM Do YYYY, HH:mm:ss ZZ')}${user.user.bot === true ? '\n • Is a bot account' : ''}
 					 • Status: ${user.presence.status}
 					 • Game: ${user.presence.game !== null ? user.presence.game.name : 'None'}
 		`);
