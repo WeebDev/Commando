@@ -1,12 +1,12 @@
+const moment = require('moment');
 const stripIndents = require('common-tags').stripIndents;
 const { Command } = require('discord.js-commando');
-const moment = require('moment');
 
 module.exports = class UserInfoCommand extends Command {
 	constructor(client) {
 		super(client, {
 			name: 'userinfo',
-			aliases: ['user'],
+			aliases: ['user', '🗒'],
 			group: 'info',
 			memberName: 'userinfo',
 			description: 'Get info on a user.',
@@ -26,7 +26,7 @@ module.exports = class UserInfoCommand extends Command {
 	}
 
 	async run(msg, args) {
-		let user = args.user.startsWith('<') ? msg.channel.members.find('id', args.user.replace(/<|!|>|@/g, '')) : msg.channel.members.find(message => message.user.username === args.user);
+		const user = !args.user.match(/^\d/g) ? msg.mentions.users.size !== 0 ? msg.channel.members.find('id', args.user.replace(/<|!|>|@/g, '')) : msg.channel.members.find(message => message.user.username.toLowerCase() === args.user.toLowerCase()) : msg.channel.members.find('id', args.user.replace(/<|!|>|@/g, ''));
 		if (user === null) {
 			return msg.say(`User not found.`);
 		}

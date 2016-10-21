@@ -5,6 +5,7 @@ module.exports = class AboutCommand extends Command {
 	constructor(client) {
 		super(client, {
 			name: 'about',
+			aliases: ['user', '📓'],
 			group: 'info',
 			memberName: 'about',
 			description: 'Displays information about the command framework.'
@@ -12,7 +13,7 @@ module.exports = class AboutCommand extends Command {
 	}
 
 	async run(msg) {
-		msg.say(stripIndents`
+		return msg.say(stripIndents`
 				__**discord.js Commando:**__
 				This is the WIP official command framework for discord.js' indev branch.
 				It makes full use of ES2017's \`async\`/\`await\`.
