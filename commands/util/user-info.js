@@ -10,7 +10,7 @@ module.exports = class UserInfoCommand extends Command {
 			group: 'util',
 			memberName: 'user-info',
 			description: 'Get info on a user.',
-			useage: '<user>',
+			format: '<user>',
 			details: `Get detailed information on the specified user.`,
 			examples: ['userinfo @Crawl#3208', 'user Crawl'],
 			guildOnly: true,

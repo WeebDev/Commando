@@ -8,8 +8,8 @@ module.exports = class CleanCommand extends Command {
 			aliases: ['purge', 'prune'],
 			group: 'util',
 			memberName: 'clean',
-			description: 'prune <number> [<filter> <argument>]',
-			useage: '<user>',
+			description: 'Deletes messages.',
+			format: '<number> [<filter> <argument>]',
 			details: `Deletes msgs. Here is a list of filters:
 				__text ...:__ Messages containing the following text
 				__invites:__ Messages containing an invite
@@ -18,7 +18,7 @@ module.exports = class CleanCommand extends Command {
 				__uploads:__ Messages containing an attachment
 				__links:__ Messages containing a link
 				__length #:__ Messages longer than the specified length`,
-			examples: ['prune 10', 'prune 20 text test', 'prune 10 invites', 'prune 50 user @Crawl#3280', 'prune 10 bots', 'prune 20 uploads', 'prune 100 links', 'prune 50 length 10'],
+			examples: ['clean 10', 'clean 20 text test', 'clean 10 invites', 'clean 50 user @Crawl#3280', 'clean 10 bots', 'clean 20 uploads', 'clean 100 links', 'clean 50 length 10'],
 			guildOnly: true,
 			argsType: 'multiple',
 			argsCount: 3
