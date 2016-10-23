@@ -19,7 +19,7 @@ module.exports = class StopMusicCommand extends Command {
 		const song = queue.songs[0];
 		queue.songs = [];
 		if (song.dispatcher) song.dispatcher.end();
-		return 'You\'ve just killed the party. Congrats. :clap:';
+		return 'You\'ve just killed the party. Congrats. 👏';
 	}
 
 	get queue() {
