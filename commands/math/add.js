@@ -20,7 +20,7 @@ module.exports = class AddNumbersCommand extends Command {
 				{
 					key: 'numbers',
 					label: 'number',
-					prompt: 'What numbers would you like to add? Every message you send will be interpreted as a single number',
+					prompt: 'What numbers would you like to add? Every message you send will be interpreted as a single number.\n',
 					type: 'float',
 					infinite: true
 				}

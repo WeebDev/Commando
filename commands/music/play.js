@@ -15,7 +15,15 @@ module.exports = class PlaySongCommand extends Command {
 			memberName: 'play',
 			description: 'Adds a song to the queue.',
 			format: '<YouTube URL/ID/Search>',
-			guildOnly: true
+			guildOnly: true,
+
+			args: [
+				{
+					key: 'url',
+					prompt: 'What music would you like to listen to?\n',
+					type: 'string'
+				}
+			]
 		});
 
 		this.queue = new Map();
@@ -23,8 +31,7 @@ module.exports = class PlaySongCommand extends Command {
 	}
 
 	async run(msg, args) {
-		if (!args) throw new CommandFormatError(this, msg.guild);
-		const url = args.replace(/<(.+)>/g, '$1');
+		const url = args.url.replace(/<(.+)>/g, '$1');
 		const queue = this.queue.get(msg.guild.id);
 
 		// Get the voice channel the user is in
