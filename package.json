@@ -23,8 +23,11 @@
     "bluebird": "^3.4.6",
     "discord.js-commando": "github:gawdl3y/discord.js-commando",
     "moment": "^2.15.1",
+    "node-opus": "^0.2.2",
     "request": "^2.75.0",
-    "request-promise": "^4.1.1"
+    "request-promise": "^4.1.1",
+    "simple-youtube-api": "^2.1.0",
+    "ytdl-core": "^0.7.19"
   },
   "devDependencies": {
     "eslint": "^3.7.0"

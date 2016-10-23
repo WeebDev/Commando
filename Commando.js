@@ -53,7 +53,8 @@ client.registry
 	.registerGroup('info', 'Info')
 	.registerDefaults()
 	.registerGroups([
-		['math', 'Math']
+		['math', 'Math'],
+		['normal', 'Normal']
 	])
 	.registerCommandsIn(path.join(__dirname, 'commands'));
 
