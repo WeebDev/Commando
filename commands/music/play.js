@@ -43,7 +43,7 @@ module.exports = class PlaySongCommand extends Command {
 				return msg.reply('You aren\'t in a voice channel, ya dingus.');
 			}
 
-				// Ensure the bot has permission to join and speak
+			// Ensure the bot has permission to join and speak
 			const permissions = voiceChannel.permissionsFor(msg.client.user);
 			if (!permissions.hasPermission('CONNECT')) {
 				return msg.reply('I don\'t have permission to join your voice channel. No parties allowed there.');
