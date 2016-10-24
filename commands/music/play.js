@@ -182,7 +182,7 @@ module.exports = class PlaySongCommand extends Command {
 			queue.songs.shift();
 			this.play(guild, queue.songs[0]);
 		});
-		dispatcher.setVolumeLogarithmic(queue.volume / 5);
+		queue.connection.player.setVolumeLogarithmic(queue.volume / 5);
 		song.dispatcher = dispatcher;
 		song.playing = true;
 	}
