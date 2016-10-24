@@ -6,7 +6,7 @@ const token = require('./auth.json').token;
 
 const client = new commando.Client({
 	owner: '81440962496172032',
-	commandPrefix: 'c!',
+	commandPrefix: 'cdev!',
 	unknownCommandResponse: true
 });
 
@@ -54,7 +54,8 @@ client.registry
 		['info', 'Info'],
 		['math', 'Math'],
 		['fun', 'Fun'],
-		['music', 'Music']
+		['music', 'Music'],
+		['tags', 'Tags']
 	])
 	.registerDefaults()
 	.registerCommandsIn(path.join(__dirname, 'commands'));
