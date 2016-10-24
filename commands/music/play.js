@@ -170,7 +170,7 @@ module.exports = class PlaySongCommand extends Command {
 				queue.songs.shift();
 				this.play(guild, queue.songs[0]);
 			});
-		const dispatcher = queue.connection.playUnknownStream(stream, { passes: auth.passes })
+		const dispatcher = queue.connection.player.playUnknownStream(stream, { passes: auth.passes })
 			.on('end', () => {
 				if (streamErrored) return;
 				queue.songs.shift();
