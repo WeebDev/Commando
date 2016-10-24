@@ -170,18 +170,18 @@ module.exports = class PlaySongCommand extends Command {
 				queue.songs.shift();
 				this.play(guild, queue.songs[0]);
 			});
-		const dispatcher = queue.connection.player.playUnknownStream(stream, { passes: auth.passes });
-		queue.connection.player.on('end', () => {
-			if (streamErrored) return;
-			queue.songs.shift();
-			this.play(guild, queue.songs[0]);
-		});
-		queue.connection.player.on('error', err => {
-			console.log('Error occurred in stream dispatcher:', err);
-			queue.textChannel.sendMessage(`An error occurred while playing the song: \`${err}\``);
-			queue.songs.shift();
-			this.play(guild, queue.songs[0]);
-		});
+		const dispatcher = queue.connection.player.playUnknownStream(stream, { passes: auth.passes })
+			.on('end', () => {
+				if (streamErrored) return;
+				queue.songs.shift();
+				this.play(guild, queue.songs[0]);
+			})
+			.on('error', err => {
+				console.log('Error occurred in stream dispatcher:', err);
+				queue.textChannel.sendMessage(`An error occurred while playing the song: \`${err}\``);
+				queue.songs.shift();
+				this.play(guild, queue.songs[0]);
+			});
 		dispatcher.setVolumeLogarithmic(queue.volume / 5);
 		song.dispatcher = dispatcher;
 		song.playing = true;
