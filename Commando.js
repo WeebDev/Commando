@@ -6,7 +6,7 @@ const token = require('./auth.json').token;
 
 const client = new commando.Client({
 	owner: '81440962496172032',
-	commandPrefix: 'cdev!',
+	commandPrefix: 'c!',
 	unknownCommandResponse: true
 });
 
