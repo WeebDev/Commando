@@ -82,7 +82,7 @@ module.exports = class PlaySongCommand extends Command {
 				voiceChannel: voiceChannel,
 				connection: null,
 				songs: [],
-				volume: auth.defaultVolume
+				volume: 2
 			};
 			this.queue.set(msg.guild.id, queue);
 
@@ -183,7 +183,7 @@ module.exports = class PlaySongCommand extends Command {
 			this.play(guild, queue.songs[0]);
 		});
 		dispatcher.setVolumeLogarithmic(queue.volume / 5);
-		song.dispatcher.player = dispatcher;
+		song.dispatcher = dispatcher;
 		song.playing = true;
 	}
 
