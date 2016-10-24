@@ -6,4 +6,4 @@ const Schema = mongoose.Schema;
 
 module.exports = { Schema };
 
-mongoose.connect('mongodb://localhost:27017/Hamakaze');
+mongoose.connect('mongodb://localhost:27017/Commando');
