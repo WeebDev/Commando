@@ -10,7 +10,7 @@ let TagSchema = new Schema({
 	channelName: String,
 	name: String,
 	content: String,
-	uses: Number,
+	uses: { type: Number, default: 0 },
 	createdAt: { type: Date, default: Date.now },
 	editedAt: { type: Date, default: Date.now }
 });
