@@ -97,7 +97,7 @@ module.exports = class PlaySongCommand extends Command {
 			// Join the voice channel and start playing
 			statusMsg.edit(`${msg.author}, Joining your voice channel...`);
 			queue.voiceChannel.join().then(connection => {
-				queue.connection.player = connection;
+				queue.connection = connection;
 				this.play(msg.guild, queue.songs[0]);
 				statusMsg.delete();
 			}).catch(err2 => {
@@ -170,7 +170,7 @@ module.exports = class PlaySongCommand extends Command {
 				queue.songs.shift();
 				this.play(guild, queue.songs[0]);
 			});
-		const dispatcher = queue.connection.playUnknownStream(stream, { passes: auth.passes })
+		const dispatcher = queue.connection.player.playUnknownStream(stream, { passes: auth.passes })
 			.on('end', () => {
 				if (streamErrored) return;
 				queue.songs.shift();
@@ -183,7 +183,7 @@ module.exports = class PlaySongCommand extends Command {
 				this.play(guild, queue.songs[0]);
 			});
 		dispatcher.setVolumeLogarithmic(queue.volume / 5);
-		song.dispatcher = dispatcher;
+		song.dispatcher.player = dispatcher;
 		song.playing = true;
 	}
 
