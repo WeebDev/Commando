@@ -57,7 +57,8 @@ module.exports = class TagAddCommand extends Command {
 						let replaceID = user.replace(/<|!|>|@/g, '');
 						let member = msg.channel.guild.members.get(replaceID);
 						return `@${member.user.username}`;
-					})
+					}),
+				uses: 0
 			}).save().then(() => msg.say(`A tag with the name **${name}** has been added, ${msg.author}`));
 		}).catch(error => console.log(error));
 	}

@@ -10,6 +10,7 @@ let TagSchema = new Schema({
 	channelName: String,
 	name: String,
 	content: String,
+	uses: Number,
 	createdAt: { type: Date, default: Date.now },
 	editedAt: { type: Date, default: Date.now }
 });
@@ -39,6 +40,10 @@ module.exports = class TagModel {
 
 	static update(name, guildID, userID, content, date) {
 		return Tag.findOneAndUpdate({ name: name, guildID: guildID, userID: userID }, { content: content, editedAt: date });
+	}
+
+	static incrementUses(name, guildID) {
+		return Tag.findOneAndUpdate({ name: name, guildID: guildID }, { $inc: { uses: 1 } });
 	}
 
 	static delete(name, guildID) {
