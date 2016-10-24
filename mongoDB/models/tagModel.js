@@ -3,7 +3,7 @@ const { Schema } = require('../../mongodb.js');
 
 let TagSchema = new Schema({
 	userID: String,
-	username: String,
+	userName: String,
 	guildID: String,
 	guildName: String,
 	channelID: String,

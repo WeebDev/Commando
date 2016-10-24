@@ -48,8 +48,13 @@ module.exports = class TagAddCommand extends Command {
 				name: name,
 				content: content.replace(/@everyone/g, '@\u200Beveryone')
 					.replace(/@here/g, '@\u200Bhere')
-					.replace(/<@!?[0-9]+>/g, input => {
-						let replaceID = input.replace(/<|!|>|@/g, '');
+					.replace(/<@&[0-9]+>/g, roles => {
+						let replaceID = roles.replace(/<|&|>|@/g, '');
+						let role = msg.channel.guild.roles.get(replaceID);
+						return `@${role.name}`;
+					})
+					.replace(/<@!?[0-9]+>/g, user => {
+						let replaceID = user.replace(/<|!|>|@/g, '');
 						let member = msg.channel.guild.members.get(replaceID);
 						return `@${member.user.username}`;
 					})
