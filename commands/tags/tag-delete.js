@@ -5,13 +5,13 @@ const TagModel = require('../../mongoDB/models/tagModel.js');
 module.exports = class TagDeleteCommand extends Command {
 	constructor(client) {
 		super(client, {
-			name: 'tag-delete',
-			aliases: ['tag-del'],
+			name: 'delete-tag',
+			aliases: ['tag-del', 'del-tag'],
 			group: 'tags',
 			memberName: 'tag-delete',
 			description: 'Deletes a Tag.',
 			format: '<tagname>',
-			examples: ['tag-delete cat', 'tag-del test'],
+			examples: ['delete-tag cat', 'tag-del test'],
 			guildOnly: true,
 
 			args: [

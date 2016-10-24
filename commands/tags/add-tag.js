@@ -5,7 +5,8 @@ const TagModel = require('../../mongoDB/models/tagModel.js');
 module.exports = class TagAddCommand extends Command {
 	constructor(client) {
 		super(client, {
-			name: 'tag-add',
+			name: 'add-tag',
+			aliases: ['tag-add'],
 			group: 'tags',
 			memberName: 'tag-add',
 			description: 'Adds a Tag.',

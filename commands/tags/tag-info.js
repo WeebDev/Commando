@@ -7,9 +7,10 @@ const moment = require('moment');
 module.exports = class TagWhoCommand extends Command {
 	constructor(client) {
 		super(client, {
-			name: 'tag-who',
+			name: 'tag-info',
+			aliases: ['tag-who'],
 			group: 'tags',
-			memberName: 'tag-who',
+			memberName: 'tag-info',
 			description: 'Displays information about a Tag.',
 			format: '<tagname>',
 			examples: ['tag-who cat', 'tag-who test'],
