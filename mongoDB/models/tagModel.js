@@ -16,40 +16,40 @@ let TagSchema = new Schema({
 
 let Tag = mongoose.model('Tag', TagSchema);
 
-module.export = class TagModel {
+module.exports = class TagModel {
 	constructor(options = {}) {
 		this.tag = options;
 	}
 
-	static async find(guildID) {
+	static find(guildID) {
 		return Tag.find({ guildID: guildID });
 	}
 
-	static async findAll() {
+	static findAll() {
 		return Tag.find({});
 	}
 
-	static async get(name, guildID) {
+	static get(name, guildID) {
 		return Tag.findOne({ name: name, guildID: guildID });
 	}
 
-	static async getAny(name) {
+	static getAny(name) {
 		return Tag.findOne({ name: name });
 	}
 
-	static async update(name, guildID, userID, content, date) {
+	static update(name, guildID, userID, content, date) {
 		return Tag.findOneAndUpdate({ name: name, guildID: guildID, userID: userID }, { content: content, editedAt: date });
 	}
 
-	static async delete(name, guildID) {
+	static delete(name, guildID) {
 		return Tag.findOneAndRemove({ name: name, guildID: guildID });
 	}
 
-	static async deleteAny(name) {
+	static deleteAny(name) {
 		return Tag.findOneAndRemove({ name: name });
 	}
 
-	async save() {
+	save() {
 		return Tag.create(this.tag);
 	}
 };
