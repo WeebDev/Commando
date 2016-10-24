@@ -34,7 +34,6 @@ module.exports = class TagWhoCommand extends Command {
 
 											 • Username: ${tag.userName} (ID: ${tag.userID})
 											 • Guild: ${tag.guildName}
-											 • Channel: <#${tag.channelID}>
 											 • Created at: ${moment.utc(tag.createdAt).format('dddd, MMMM Do YYYY, HH:mm:ss ZZ')}
 											 • Uses: ${tag.uses}`);
 		}).catch(error => console.log(error));
