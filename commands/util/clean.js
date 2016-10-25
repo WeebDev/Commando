@@ -38,7 +38,7 @@ module.exports = class CleanCommand extends Command {
 		}
 
 		let limit = 100;
-		let filter = null;
+		let filter;
 		if (/^[1-9]+/.test(args[0])) {
 			limit = parseInt(args[0]) + 1;
 			if (limit > 100) {
@@ -74,7 +74,7 @@ module.exports = class CleanCommand extends Command {
 		}
 
 		if (!args[1]) {
-			return msg.channel.fetchMessages({ limit: limit })
+			return msg.channel.fetchMessages({ limit: limit, before: msg.id })
 			.then(messagesToDelete => {
 				msg.channel.bulkDelete(messagesToDelete);
 			})
