@@ -40,9 +40,7 @@ module.exports = class CleanCommand extends Command {
 		let limit = 100;
 		let filter = null;
 		if (/^[1-9]+/.test(args[0])) {
-			console.log(args[0]);
 			limit = parseInt(args[0]) + 1;
-			console.log(limit);
 			if (limit > 100) {
 				limit = 100;
 			}
