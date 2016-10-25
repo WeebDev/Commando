@@ -41,9 +41,7 @@ module.exports = class CleanCommand extends Command {
 		let filter = null;
 		if (/^[1-9]+/.test(args[0])) {
 			console.log(args[0]);
-			limit = parseInt(args[0]);
-			console.log(limit);
-			limit += 1;
+			limit = parseInt(args[0]) + 1;
 			console.log(limit);
 			if (limit > 100) {
 				limit = 100;
@@ -64,7 +62,7 @@ module.exports = class CleanCommand extends Command {
 			} else if (args[1] === 'bots') {
 				filter = message => message.author.bot === true;
 			} else if (args[1] === 'you') {
-				filter = message => message.author.id === message.client.id;
+				filter = message => message.author.id === message.client.user.id;
 			} else if (args[1] === 'upload') {
 				filter = message => message.attachments.size !== 0;
 			} else if (args[1] === 'links') {
