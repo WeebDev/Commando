@@ -58,7 +58,7 @@ module.exports = class CleanCommand extends Command {
 					return msg.say(`${msg.author}, you have to mention someone.`);
 				}
 			} else if (args[1] === 'bots') {
-				filter = message => message.author.bot === true;
+				filter = message => message.author.bot;
 			} else if (args[1] === 'you') {
 				filter = message => message.author.id === message.client.user.id;
 			} else if (args[1] === 'upload') {
