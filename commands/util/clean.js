@@ -86,7 +86,6 @@ module.exports = class CleanCommand extends Command {
 			})
 			.catch(error => {
 				console.log(error);
-				msg.say(`${msg.author}, I got an error over here: ${error}`);
 			});
 		}
 		return msg.channel.fetchMessages({ limit: limit })
@@ -102,7 +101,10 @@ module.exports = class CleanCommand extends Command {
 			})
 			.catch(error => {
 				console.log(error);
-				msg.say(`${msg.author}, I got an error over here: ${error}`);
 			});
 	}
 };
+
+process.on("unhandledRejection", err => {
+	console.error("Uncaught Promise Error: \n" + err.stack);
+});
