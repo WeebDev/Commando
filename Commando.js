@@ -7,7 +7,7 @@ const token = require('./auth.json').token;
 const client = new commando.Client({
 	owner: '81440962496172032',
 	commandPrefix: 'c!',
-	unknownCommandResponse: true
+	disableEveryone: true
 });
 
 client.on('error', console.error)
