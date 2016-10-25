@@ -54,7 +54,8 @@ client.registry
 		['info', 'Info'],
 		['math', 'Math'],
 		['fun', 'Fun'],
-		['music', 'Music']
+		['music', 'Music'],
+		['tags', 'Tags']
 	])
 	.registerDefaults()
 	.registerCommandsIn(path.join(__dirname, 'commands'));

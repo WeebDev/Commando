@@ -31,8 +31,7 @@ module.exports = class SkipSongCommand extends Command {
 
 		// Determine the vote threshold, and handle immediate skipping
 		const threshold = Math.ceil((queue.voiceChannel.members.size - 1) / 3);
-		const force = threshold <= 1 || queue.voiceChannel.members.size < threshold
-			|| (this.bot.permissions.isMod(msg.guild, msg.author) && args.toLowerCase() === 'force');
+		const force = threshold <= 1 || queue.voiceChannel.members.size < threshold;
 		if (force) return msg.reply(this.skip(msg.guild, queue));
 
 		const vote = this.votes.get(msg.guild.id);

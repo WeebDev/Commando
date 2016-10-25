@@ -38,7 +38,7 @@ module.exports = class CleanCommand extends Command {
 		}
 
 		let limit = 100;
-		let filter = null;
+		let filter;
 		if (/^[1-9]+/.test(args[0])) {
 			limit = parseInt(args[0]) + 1;
 			if (limit > 100) {
@@ -50,6 +50,7 @@ module.exports = class CleanCommand extends Command {
 			if (/^text/.test(args[1])) {
 				filter = message => message.content.includes(args[2]);
 			} else if (args[1] === 'invite') {
+				limit = 50;
 				filter = message => message.content.search(/(discord\.gg\/.+|discordapp\.com\/invite\/.+)/i) !== -1;
 			} else if (args[1] === 'user') {
 				if (args[2]) {
@@ -58,12 +59,15 @@ module.exports = class CleanCommand extends Command {
 					return msg.say(`${msg.author}, you have to mention someone.`);
 				}
 			} else if (args[1] === 'bots') {
-				filter = message => message.author.bot === true;
+				limit = 100;
+				filter = message => message.author.bot;
 			} else if (args[1] === 'you') {
-				filter = message => message.author.id === message.client.id;
+				limit = 100;
+				filter = message => message.author.id === message.client.user.id;
 			} else if (args[1] === 'upload') {
 				filter = message => message.attachments.size !== 0;
 			} else if (args[1] === 'links') {
+				limit = 50;
 				filter = message => message.content.search(/https?:\/\/[^ \/\.]+\.[^ \/\.]+/) !== -1;
 			} else if (args[1] === 'length' && /\d+/.test(args[2])) {
 				let max = parseInt(args[2]);
@@ -74,9 +78,9 @@ module.exports = class CleanCommand extends Command {
 		}
 
 		if (!args[1]) {
-			return msg.channel.fetchMessages({ limit: limit })
+			return msg.channel.fetchMessages({ limit: limit, before: msg.id })
 			.then(messagesToDelete => {
-				msg.channel.bulkDelete(messagesToDelete);
+				msg.channel.bulkDelete(messagesToDelete).catch(error => console.log(error));
 			})
 			.then(() => {
 				msg.say(`I cleaned up the number of messages you requested, ${msg.author}.`)
@@ -86,13 +90,12 @@ module.exports = class CleanCommand extends Command {
 			})
 			.catch(error => {
 				console.log(error);
-				msg.say(`${msg.author}, I got an error over here: ${error}`);
 			});
 		}
-		return msg.channel.fetchMessages({ limit: limit })
+		return msg.channel.fetchMessages({ limit: limit, before: msg.id })
 			.then(messages => {
 				let messageFilter = messages.filter(filter);
-				msg.channel.bulkDelete(messageFilter);
+				msg.channel.bulkDelete(messageFilter).catch(error => console.log(error));
 			})
 			.then(() => {
 				msg.say(`I cleaned up the number of messages you requested, ${msg.author}.`)
@@ -102,7 +105,10 @@ module.exports = class CleanCommand extends Command {
 			})
 			.catch(error => {
 				console.log(error);
-				msg.say(`${msg.author}, I got an error over here: ${error}`);
 			});
 	}
 };
+
+process.on("unhandledRejection", err => {
+	console.error("Uncaught Promise Error: \n" + err.stack);
+});
