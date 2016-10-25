@@ -28,7 +28,7 @@ module.exports = class ViewQueueCommand extends Command {
 		return msg.reply(stripIndents`
 			__**Song queue, ${paginated.page}**__
 			${paginated.items.map(song => `**-** ${song.name} (${song.lengthString})`).join('\n')}
-			${paginated.maxPage > 1 ? `\nUse ${this.bot.util.usage(`queue <page>`, msg.guild)} to view a specific page.\n` : ''}
+			${paginated.maxPage > 1 ? `\nUse \`queue <page>\` to view a specific page.\n` : ''}
 			**Now playing:** ${currentSong.name} (queued by ${currentSong.username})
 			${oneLine`
 				**Progress:**
