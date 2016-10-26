@@ -48,11 +48,11 @@ client.on('error', console.error)
 			${guild ? `in guild ${guild.name} (${guild.id})` : 'globally'}.
 		`);
 	})
-	.on('guildMemberAdd', (guild, member) => {
-		guild.channels.get('232305140672102400').sendMessage(`**${member.user.username}#${member.user.discriminator}** (ID: ${member.user.id}) has joined us.`);
+	.on('guildMemberAdd', member => {
+		member.guild.channels.get('232305140672102400').sendMessage(`**${member.user.username}#${member.user.discriminator}** (ID: ${member.user.id}) has joined us.`);
 	})
-	.on('guildMemberRemove', (guild, member) => {
-		guild.channels.get('232305140672102400').sendMessage(`**${member.user.username}#${member.user.discriminator}** (ID: ${member.user.id}) has left us.`);
+	.on('guildMemberRemove', member => {
+		member.guild.channels.get('232305140672102400').sendMessage(`**${member.user.username}#${member.user.discriminator}** (ID: ${member.user.id}) has left us.`);
 	});
 
 client.registry
