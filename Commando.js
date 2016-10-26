@@ -49,10 +49,10 @@ client.on('error', console.error)
 		`);
 	})
 	.on('guildMemberAdd', (guild, member) => {
-		guild.channels.get('232305140672102400').sendMessage(`${member.user.username}#${member.user.discriminator} (ID: ${member.user.id}) has joined us.`);
+		guild.channels.get('232305140672102400').sendMessage(`**${member.user.username}#${member.user.discriminator}** (ID: ${member.user.id}) has joined us.`);
 	})
 	.on('guildMemberRemove', (guild, member) => {
-		guild.channels.get('232305140672102400').sendMessage(`${member.user.username}#${member.user.discriminator} (ID: ${member.user.id}) has left us.`);
+		guild.channels.get('232305140672102400').sendMessage(`**${member.user.username}#${member.user.discriminator}** (ID: ${member.user.id}) has left us.`);
 	});
 
 client.registry
