@@ -32,7 +32,7 @@ module.exports = class AboutCommand extends Command {
 				__**Documentation (WIP):**__
 				<https://gawdl3y.github.io/discord.js-commando/0.2.0/>
 				See also:
-				<http://hydrabolt.github.io/discord.js/#!/docs/tag/master/file/general/Welcome>
+				<https://discord.js.org/#!/docs/tag/master/file/general/Welcome>
 		`);
 	}
 };
