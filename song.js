@@ -1,18 +1,23 @@
 const oneLineTrim = require('common-tags').oneLineTrim;
 const escapeMarkdown = require('discord.js').escapeMarkdown;
+const auth = require('./auth.json');
 
 module.exports = class Song {
 	constructor(video, member) {
 		this.name = escapeMarkdown(video.title);
 		this.id = video.id;
-		this.length = parseInt(video.durationSeconds);
+		this.length = video.durationSeconds ? parseInt(video.durationSeconds) : parseInt(video.duration) / 1000;
 		this.member = member;
 		this.dispatcher = null;
 		this.playing = false;
 	}
 
 	get url() {
-		return `https://www.youtube.com/watch?v=${this.id}`;
+		if (!isNaN(this.id)) {
+			return `https://api.soundcloud.com/tracks/${this.id}/stream?client_id=${auth.soundcloudID}`;
+		} else {
+			return `https://www.youtube.com/watch?v=${this.id}`;
+		}
 	}
 
 	get username() {
