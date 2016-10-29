@@ -1,7 +1,8 @@
 /* eslint-disable no-console */
-const { Command, CommandFormatError, util } = require('discord.js-commando');
+const { Command, util } = require('discord.js-commando');
 const YouTube = require('simple-youtube-api');
 const ytdl = require('ytdl-core');
+const request = require('request-promise');
 const oneLine = require('common-tags').oneLine;
 const auth = require('../../auth.json');
 const Song = require('../../song.js');
@@ -14,7 +15,7 @@ module.exports = class PlaySongCommand extends Command {
 			group: 'music',
 			memberName: 'play',
 			description: 'Adds a song to the queue.',
-			format: '<YouTube URL/ID/Search>',
+			format: '<YouTube URL/ID/Search | SoundCloud URL>',
 			guildOnly: true,
 
 			args: [
@@ -56,22 +57,35 @@ module.exports = class PlaySongCommand extends Command {
 		}
 
 		const statusMsg = await msg.reply('Obtaining video details...');
-		return this.youtube.getVideo(url).then(video => {
-			this.handleVideo(video, queue, voiceChannel, msg, statusMsg);
-		}).catch(() => {
-			// Search for a video
-			this.youtube.searchVideos(url, 1).then(videos => {
-				// Get the video's details
-				this.youtube.getVideoByID(videos[0].id).then(video2 => {
-					this.handleVideo(video2, queue, voiceChannel, msg, statusMsg);
-				}).catch((error) => {
-					console.log(error);
-					statusMsg.edit(`${msg.author}, Couldn't obtain the search result video's details.`);
-				});
-			}).catch(() => {
-				statusMsg.edit(`${msg.author}, There were no search results.`);
+		if (url.match(/^https?:\/\/(soundcloud.com|snd.sc)\/(.*)$/)) {
+			return request({
+				uri: `http://api.soundcloud.com/resolve.json?url=${url}&client_id=${auth.soundcloudID}`,
+				headers: { 'User-Agent': `Commando (https://github.com/iCrawl/Commando/)` },
+				json: true
+			}).then(video => {
+				this.handleVideo(video, queue, voiceChannel, msg, statusMsg);
+			}).catch((error) => {
+				console.log(`${error.statusCode}: ${error.statusMessage}`);
+				statusMsg.edit(`${msg.author}, ❌ This track is not able to be streamed by SoundCloud.`);
 			});
-		});
+		} else {
+			return this.youtube.getVideo(url).then(video => {
+				this.handleVideo(video, queue, voiceChannel, msg, statusMsg);
+			}).catch(() => {
+				// Search for a video
+				this.youtube.searchVideos(url, 1).then(videos => {
+					// Get the video's details
+					this.youtube.getVideoByID(videos[0].id).then(video2 => {
+						this.handleVideo(video2, queue, voiceChannel, msg, statusMsg);
+					}).catch((error) => {
+						console.log(error);
+						statusMsg.edit(`${msg.author}, Couldn't obtain the search result video's details.`);
+					});
+				}).catch(() => {
+					statusMsg.edit(`${msg.author}, There were no search results.`);
+				});
+			});
+		}
 	}
 
 	handleVideo(video, queue, voiceChannel, msg, statusMsg) {
@@ -161,15 +175,20 @@ module.exports = class PlaySongCommand extends Command {
 
 		// Play the song
 		const playing = queue.textChannel.sendMessage(`🎵 Playing ${song}, queued by ${song.username}.`);
+		let stream;
 		let streamErrored = false;
-		const stream = ytdl(song.url, { audioonly: true })
-			.on('error', err => {
-				streamErrored = true;
-				console.log('Error occurred when streaming video:', err);
-				playing.then(msg => msg.edit(`❌ Couldn't play ${song}. What a drag!`));
-				queue.songs.shift();
-				this.play(guild, queue.songs[0]);
-			});
+		if (song.url.match(/^https?:\/\/(api.soundcloud.com)\/(.*)$/)) {
+			stream = request({ uri: song.url, headers: { 'User-Agent': `Commando (https://github.com/iCrawl/Commando/)` }, followAllRedirects: true });
+		} else {
+			stream = ytdl(song.url, { audioonly: true })
+				.on('error', err => {
+					streamErrored = true;
+					console.log('Error occurred when streaming video:', err);
+					playing.then(msg => msg.edit(`❌ Couldn't play ${song}. What a drag!`));
+					queue.songs.shift();
+					this.play(guild, queue.songs[0]);
+				});
+		}
 		const dispatcher = queue.connection.playStream(stream, { passes: auth.passes })
 			.on('end', () => {
 				if (streamErrored) return;
