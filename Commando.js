@@ -8,7 +8,37 @@ const token = require('./auth.json').token;
 const client = new commando.Client({
 	owner: '81440962496172032',
 	commandPrefix: 'c!',
-	disableEveryone: true
+	disableEveryone: true,
+	messageCacheLifetime: 30,
+	messageSweepInterval: 60,
+	disabledEvents: [
+		'GUILD_CREATE',
+		'GUILD_DELETE',
+		'GUILD_UPDATE',
+		'GUILD_UNAVAILABLE',
+		'GUILD_AVAILABLE',
+		'GUILD_MEMBER_UPDATE',
+		'GUILD_MEMBER_AVAILABLE',
+		'GUILD_MEMBER_SPEAKING',
+		'GUILD_ROLE_CREATE',
+		'GUILD_ROLE_DELETE',
+		'GUILD_ROLE_UPDATE',
+		'CHANNEL_CREATE',
+		'CHANNEL_DELETE',
+		'CHANNEL_UPDATE',
+		'CHANNEL_PINS_UPDATE',
+		'MESSAGE_DELETE_BULK',
+		'USER_UPDATE',
+		'USER_NOTE_UPDATE',
+		'PRESENCE_UPDATE',
+		'TYPING_START',
+		'TYPING_STOP',
+		'VOICE_STATE_UPDATE',
+		'FRIEND_ADD',
+		'FRIEND_REMOVE',
+		'RELATIONSHIP_ADD',
+		'RELATIONSHIP_REMOVE'
+	]
 });
 
 client.on('error', console.error)
