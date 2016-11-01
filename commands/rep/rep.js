@@ -49,6 +49,7 @@ module.exports = class RepCommand extends Command {
 				return msg.say(stripIndents`
 					__**${repUsername} has ${repUserPositive - repUserNegative} ( +${repUserPositive} | -${repUserNegative} ) reputation:**__
 					${paginated.maxPage > 1 ? `\n**Reputations page: ${paginated.page}**` : ''}
+
 					${paginated.items.map(reps => `**${reps.rep}** ${reps.userName}: ${reps.content}`).join('\n')}
 					${paginated.maxPage > 1 ? `\nUse \`rep <member> <page>\` to view a specific page.\n` : ''}
 					`);
