@@ -7,12 +7,11 @@ const token = require('./auth.json').token;
 const client = new commando.Client({
 	owner: '81440962496172032',
 	commandPrefix: 'c!',
-	unknownCommandResponse: true
+	disableEveryone: true
 });
 
 client.on('error', console.error)
 	.on('warn', console.warn)
-	.on('debug', console.log)
 	.on('ready', () => {
 		console.log(`Client ready; logged in as ${client.user.username}#${client.user.discriminator} (${client.user.id})`);
 	})
@@ -47,6 +46,12 @@ client.on('error', console.error)
 			${enabled ? 'enabled' : 'disabled'}
 			${guild ? `in guild ${guild.name} (${guild.id})` : 'globally'}.
 		`);
+	})
+	.on('guildMemberAdd', member => {
+		member.guild.channels.get('232305140672102400').sendMessage(`**${member.user.username}#${member.user.discriminator}** (ID: ${member.user.id}) has joined us.`);
+	})
+	.on('guildMemberRemove', member => {
+		member.guild.channels.get('232305140672102400').sendMessage(`**${member.user.username}#${member.user.discriminator}** (ID: ${member.user.id}) has left us.`);
 	});
 
 client.registry
@@ -55,7 +60,8 @@ client.registry
 		['math', 'Math'],
 		['fun', 'Fun'],
 		['music', 'Music'],
-		['tags', 'Tags']
+		['tags', 'Tags'],
+		['rep', 'Reputation']
 	])
 	.registerDefaults()
 	.registerCommandsIn(path.join(__dirname, 'commands'));

@@ -16,7 +16,7 @@ module.exports = class MusicStatusCommand extends Command {
 
 	async run(msg) {
 		const queue = this.queue.get(msg.guild.id);
-		if (!queue) return 'There isn\'t any music playing right now. You should get on that.';
+		if (!queue) return msg.say('There isn\'t any music playing right now. You should get on that.');
 		const song = queue.songs[0];
 		const currentTime = song.dispatcher ? song.dispatcher.time / 1000 : 0;
 		return msg.reply(oneLine`

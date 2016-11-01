@@ -13,12 +13,21 @@ module.exports = class ViewQueueCommand extends Command {
 			memberName: 'queue',
 			description: 'Lists the queued songs.',
 			format: '[page]',
-			guildOnly: true
+			guildOnly: true,
+
+			args: [
+				{
+					key: 'page',
+					prompt: 'What page would you like to view?\n',
+					type: 'integer',
+					default: 1
+				}
+			]
 		});
 	}
 
 	async run(msg, args) {
-		const page = parseInt(args) || 1;
+		const page = args.page;
 		const queue = this.queue.get(msg.guild.id);
 		if (!queue) return msg.reply('There are no songs in the queue. Why not start the party yourself?');
 		const paginated = util.paginate(queue.songs, page, Math.floor(auth.paginationItems));

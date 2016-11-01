@@ -1,6 +1,6 @@
 {
   "name": "commando",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": ".",
   "license": "MIT",
   "author": "Crawl",
@@ -21,7 +21,7 @@
   "homepage": "https://github.com/iCrawl/Commando#readme",
   "dependencies": {
     "bluebird": "^3.4.6",
-    "discord.js": "github:hydrabolt/discord.js#indev",
+    "discord.js": "hydrabolt/discord.js#indev",
     "discord.js-commando": "github:gawdl3y/discord.js-commando",
     "moment": "^2.15.1",
     "mongoose": "^4.6.5",

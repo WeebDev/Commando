@@ -18,7 +18,7 @@ module.exports = class UserInfoCommand extends Command {
 			args: [
 				{
 					key: 'member',
-					prompt: 'What user would you like information on?\n',
+					prompt: 'What user would you like to have information on?\n',
 					type: 'member'
 				}
 			]

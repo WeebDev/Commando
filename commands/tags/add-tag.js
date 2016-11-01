@@ -37,6 +37,7 @@ module.exports = class TagAddCommand extends Command {
 	async run(msg, args) {
 		const name = args.name.toLowerCase();
 		const content = args.content;
+
 		TagModel.get(name, msg.guild.id).then(tag => {
 			if (tag) return msg.say(`A tag with the name **${name}** already exists, ${msg.author}`);
 			return new TagModel({

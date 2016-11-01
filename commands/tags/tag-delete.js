@@ -27,6 +27,7 @@ module.exports = class TagDeleteCommand extends Command {
 
 	async run(msg, args) {
 		const name = args.name.toLowerCase();
+
 		return TagModel.get(name, msg.guild.id).then(tag => {
 			if (tag.userID === msg.author.id || msg.guild.owner.id === msg.author.id || msg.author.id === '81440962496172032') {
 				return TagModel.delete(name, msg.guild.id).then(tagEdit => {
