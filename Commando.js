@@ -80,10 +80,10 @@ client.on('error', console.error)
 		`);
 	})
 	.on('guildMemberAdd', member => {
-		member.guild.channels.get('232305140672102400').sendMessage(`**${member}** (ID: ${member.user.id} | Created at: ${moment.utc(member.user.createdAt).format('dddd, MMMM Do YYYY, HH:mm:ss ZZ')}) has joined us.`);
+		member.guild.channels.get('232305140672102400').sendMessage(`**${member}** has joined us.\n(ID: ${member.user.id} | Created at: ${moment.utc(member.user.createdAt).format('dddd, MMMM Do YYYY, HH:mm:ss ZZ')})`);
 	})
 	.on('guildMemberRemove', member => {
-		member.guild.channels.get('232305140672102400').sendMessage(`**${member}** (ID: ${member.user.id} | Created at: ${moment.utc(member.user.createdAt).format('dddd, MMMM Do YYYY, HH:mm:ss ZZ')}) has left us.`);
+		member.guild.channels.get('232305140672102400').sendMessage(`**${member}** has joined us.\n(ID: ${member.user.id} | Created at: ${moment.utc(member.user.createdAt).format('dddd, MMMM Do YYYY, HH:mm:ss ZZ')})`);
 	});
 
 client.registry
