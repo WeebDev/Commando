@@ -21,7 +21,7 @@ module.exports = class RepCommand extends Command {
 			args: [
 				{
 					key: 'member',
-					prompt: 'What user would you to rep?\n',
+					prompt: 'What user would you like to have information on?\n',
 					type: 'member'
 				},
 				{

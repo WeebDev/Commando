@@ -23,7 +23,7 @@ module.exports = class RepMinusCommand extends Command {
 			args: [
 				{
 					key: 'member',
-					prompt: 'What user would you to rep?\n',
+					prompt: 'What user would you like to rep?\n',
 					type: 'member'
 				},
 				{
