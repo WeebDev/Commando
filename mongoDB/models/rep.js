@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+
 const { Schema } = require('../../mongodb.js');
 
 let RepSchema = new Schema({
@@ -12,7 +13,6 @@ let RepSchema = new Schema({
 	rep: String,
 	createdAt: Number
 });
-
 let Rep = mongoose.model('Rep', RepSchema);
 
 module.exports = class RepModel {

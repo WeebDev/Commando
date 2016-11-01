@@ -1,7 +1,8 @@
 /* eslint-disable no-console */
 const commando = require('discord.js-commando');
-const path = require('path');
 const oneLine = require('common-tags').oneLine;
+const path = require('path');
+
 const token = require('./auth.json').token;
 
 const client = new commando.Client({

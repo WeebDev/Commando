@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 const { Command } = require('discord.js-commando');
-const TagModel = require('../../mongoDB/models/tagModel.js');
+
+const TagModel = require('../../mongoDB/models/TagModel.js');
 
 module.exports = class TagCommand extends Command {
 	constructor(client) {
@@ -10,7 +11,6 @@ module.exports = class TagCommand extends Command {
 			memberName: 'tag',
 			description: 'Displays a Tag.',
 			format: '<tagname>',
-			examples: ['tag cat', 'tag test'],
 			guildOnly: true,
 
 			args: [

@@ -1,8 +1,8 @@
 /* eslint-disable no-console */
 const { Command, util } = require('discord.js-commando');
+const RepModel = require('../../mongoDB/models/Rep.js');
+const RepUserModel = require('../../mongoDB/models/RepUser.js');
 const stripIndents = require('common-tags').stripIndents;
-const RepModel = require('../../mongoDB/models/rep.js');
-const RepUserModel = require('../../mongoDB/models/repUser.js');
 
 module.exports = class RepCommand extends Command {
 	constructor(client) {
@@ -11,9 +11,8 @@ module.exports = class RepCommand extends Command {
 			group: 'rep',
 			memberName: 'rep',
 			description: 'Shows someones reputations.',
-			format: '<mention>',
+			format: '<member> [page]',
 			details: `Shows someones rep, usable for everyone on the server.`,
-			examples: ['rep @Crawl#3280', 'rep @Crawl#3280 2'],
 			guildOnly: true,
 			argsType: 'multiple',
 			argsCount: 2,

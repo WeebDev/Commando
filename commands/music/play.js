@@ -1,12 +1,14 @@
 /* eslint-disable no-console */
 const { Command, util } = require('discord.js-commando');
+const escapeMarkdown = require('discord.js').escapeMarkdown;
+const oneLine = require('common-tags').oneLine;
+const request = require('request-promise');
 const YouTube = require('simple-youtube-api');
 const ytdl = require('ytdl-core');
-const request = require('request-promise');
-const oneLine = require('common-tags').oneLine;
+
 const auth = require('../../auth.json');
-const Song = require('../../song.js');
-const escapeMarkdown = require('discord.js').escapeMarkdown;
+const Song = require('../../Song.js');
+
 
 module.exports = class PlaySongCommand extends Command {
 	constructor(client) {
@@ -152,6 +154,7 @@ module.exports = class PlaySongCommand extends Command {
 		console.log('Adding song to queue.', { song: video.id, guild: msg.guild.id });
 		const song = new Song(video, msg.member);
 		queue.songs.push(song);
+
 		return `👍 Queued up ${song}.`;
 	}
 
@@ -208,6 +211,7 @@ module.exports = class PlaySongCommand extends Command {
 
 	get votes() {
 		if (!this._votes) this._votes = this.client.registry.resolveCommand('music:skip').votes;
+
 		return this._votes;
 	}
 };

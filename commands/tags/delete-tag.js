@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 const { Command } = require('discord.js-commando');
-const TagModel = require('../../mongoDB/models/tagModel.js');
+
+const TagModel = require('../../mongoDB/models/TagModel.js');
 
 module.exports = class TagDeleteCommand extends Command {
 	constructor(client) {
@@ -11,7 +12,6 @@ module.exports = class TagDeleteCommand extends Command {
 			memberName: 'tag-delete',
 			description: 'Deletes a Tag.',
 			format: '<tagname>',
-			examples: ['delete-tag cat', 'tag-del test'],
 			guildOnly: true,
 
 			args: [

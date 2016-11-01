@@ -1,5 +1,5 @@
-const oneLine = require('common-tags').oneLine;
 const { Command } = require('discord.js-commando');
+const oneLine = require('common-tags').oneLine;
 
 module.exports = class AddNumbersCommand extends Command {
 	constructor(client) {
@@ -14,7 +14,6 @@ module.exports = class AddNumbersCommand extends Command {
 				This is an incredibly useful command that finds the sum of numbers.
 				This command is the envy of all other commands.
 			`,
-			examples: ['add-numbers 42 1337'],
 
 			args: [
 				{
@@ -30,6 +29,7 @@ module.exports = class AddNumbersCommand extends Command {
 
 	async run(msg, args) {
 		const total = args.numbers.reduce((prev, arg) => prev + parseFloat(arg), 0);
+
 		return msg.reply(`**Sum:** ${total}`);
 	}
 };

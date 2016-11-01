@@ -19,11 +19,13 @@ module.exports = class PauseSongCommand extends Command {
 		if (!queue.songs[0].playing) return msg.reply('Pausing a song that is already paused is a bad move. I wouldn\'t recommend it.');
 		queue.songs[0].dispatcher.pause();
 		queue.songs[0].playing = false;
+
 		return msg.reply(`Paused the music. Use \`@Commando#3509 resume\` to continue playing.`);
 	}
 
 	get queue() {
 		if (!this._queue) this._queue = this.client.registry.resolveCommand('music:play').queue;
+
 		return this._queue;
 	}
 };

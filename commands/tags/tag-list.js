@@ -1,7 +1,8 @@
 /* eslint-disable no-console */
 const { Command } = require('discord.js-commando');
-const TagModel = require('../../mongoDB/models/tagModel.js');
 const stripIndents = require('common-tags').stripIndents;
+
+const TagModel = require('../../mongoDB/models/TagModel.js');
 
 module.exports = class TagListCommand extends Command {
 	constructor(client) {

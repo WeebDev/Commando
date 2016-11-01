@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+
 const { Schema } = require('../../mongodb.js');
 
 let TagSchema = new Schema({
@@ -14,7 +15,6 @@ let TagSchema = new Schema({
 	createdAt: { type: Date, default: Date.now },
 	editedAt: { type: Date, default: Date.now }
 });
-
 let Tag = mongoose.model('Tag', TagSchema);
 
 module.exports = class TagModel {
