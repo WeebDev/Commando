@@ -3,6 +3,7 @@ const moment = require('moment');
 const stripIndents = require('common-tags').stripIndents;
 
 const version = require('../../package.json').version;
+require('moment-duration-format');
 
 module.exports = class UserInfoCommand extends Command {
 	constructor(client) {
