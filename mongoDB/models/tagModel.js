@@ -22,35 +22,35 @@ module.exports = class TagModel {
 		this.tag = options;
 	}
 
-	static find(guildID) {
+	static async find(guildID) {
 		return Tag.find({ guildID: guildID });
 	}
 
-	static findAll() {
+	static async findAll() {
 		return Tag.find({});
 	}
 
-	static get(name, guildID) {
+	static async get(name, guildID) {
 		return Tag.findOne({ name: name, guildID: guildID });
 	}
 
-	static getAny(name) {
+	static async getAny(name) {
 		return Tag.findOne({ name: name });
 	}
 
-	static update(name, guildID, userID, content, date) {
+	static async update(name, guildID, userID, content, date) {
 		return Tag.findOneAndUpdate({ name: name, guildID: guildID, userID: userID }, { content: content, editedAt: date });
 	}
 
-	static incrementUses(name, guildID) {
+	static async incrementUses(name, guildID) {
 		return Tag.findOneAndUpdate({ name: name, guildID: guildID }, { $inc: { uses: 1 } });
 	}
 
-	static delete(name, guildID) {
+	static async delete(name, guildID) {
 		return Tag.findOneAndRemove({ name: name, guildID: guildID });
 	}
 
-	static deleteAny(name) {
+	static async deleteAny(name) {
 		return Tag.findOneAndRemove({ name: name });
 	}
 
