@@ -79,10 +79,10 @@ client.on('error', console.error)
 		`);
 	})
 	.on('guildMemberAdd', member => {
-		member.guild.channels.get('232305140672102400').sendMessage(`**${member.user.username}#${member.user.discriminator}** (ID: ${member.user.id}) has joined us.`);
+		member.guild.channels.get('232305140672102400').sendMessage(`**${member}** (ID: ${member.user.id}) has joined us.`);
 	})
 	.on('guildMemberRemove', member => {
-		member.guild.channels.get('232305140672102400').sendMessage(`**${member.user.username}#${member.user.discriminator}** (ID: ${member.user.id}) has left us.`);
+		member.guild.channels.get('232305140672102400').sendMessage(`**${member}** (ID: ${member.user.id}) has left us.`);
 	});
 
 client.registry
