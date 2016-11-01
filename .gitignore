@@ -28,4 +28,3 @@ build/Release
 node_modules
 
 auth.json
-yarn.lock
