@@ -26,6 +26,7 @@ module.exports = class TagCommand extends Command {
 
 	async run(msg, args) {
 		const name = args.name.toLowerCase();
+
 		return TagModel.get(name, msg.guild.id).then(tag => {
 			if (!tag) return msg.say(`A tag with the name **${name}** doesn't exist, ${msg.author}`);
 			return TagModel.incrementUses(name, msg.guild.id).then(() => msg.say(tag.content));
