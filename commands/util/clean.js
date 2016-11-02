@@ -51,37 +51,39 @@ module.exports = class CleanCommand extends Command {
 		if (msg.author.id !== '81440962496172032') {
 			return msg.say(`${msg.author}, don't set me up on stuff you can't even do yourself!`);
 		}
-		if (!args.number) {
+		if (!args.limit) {
 			return msg.say(`${msg.author}, atleast provide me with a number!`);
 		}
 
-		let filter;
-		if (args.filter) {
-			if (args.filter === 'invite') {
-				filter = message => message.content.search(/(discord\.gg\/.+|discordapp\.com\/invite\/.+)/i) !== -1;
-			} else if (args.filter === 'user') {
+		const limit = args.limit;
+		const filter = args.filter;
+		let messageFilter;
+		if (filter) {
+			if (filter === 'invite') {
+				messageFilter = message => message.content.search(/(discord\.gg\/.+|discordapp\.com\/invite\/.+)/i) !== -1;
+			} else if (filter === 'user') {
 				if (args.member) {
 					const member = args.member;
 					const user = member.user;
-					filter = message => message.author.id === user.id;
+					messageFilter = message => message.author.id === user.id;
 				} else {
 					return msg.say(`${msg.author}, you have to mention someone.`);
 				}
-			} else if (args.filter === 'bots') {
-				filter = message => message.author.bot;
-			} else if (args.filter === 'you') {
-				filter = message => message.author.id === message.client.user.id;
-			} else if (args.filter === 'upload') {
-				filter = message => message.attachments.size !== 0;
-			} else if (args.filter === 'links') {
-				filter = message => message.content.search(/https?:\/\/[^ \/\.]+\.[^ \/\.]+/) !== -1;
+			} else if (filter === 'bots') {
+				messageFilter = message => message.author.bot;
+			} else if (filter === 'you') {
+				messageFilter = message => message.author.id === message.client.user.id;
+			} else if (filter === 'upload') {
+				messageFilter = message => message.attachments.size !== 0;
+			} else if (filter === 'links') {
+				messageFilter = message => message.content.search(/https?:\/\/[^ \/\.]+\.[^ \/\.]+/) !== -1;
 			} else {
 				return msg.say(`${msg.author}, that is not a valid filter. Do \`help clean\` for all available filters.`);
 			}
 		}
 
 		if (!args.filter) {
-			return msg.channel.fetchMessages({ limit: args.limit, before: msg.id })
+			return msg.channel.fetchMessages({ limit: limit })
 			.then(messagesToDelete => {
 				msg.channel.bulkDelete(messagesToDelete).catch(error => console.log(error));
 			})
@@ -95,10 +97,10 @@ module.exports = class CleanCommand extends Command {
 				console.log(error);
 			});
 		}
-		return msg.channel.fetchMessages({ limit: args.limit, before: msg.id })
+		return msg.channel.fetchMessages({ limit: limit })
 			.then(messages => {
-				let messageFilter = messages.filter(filter);
-				msg.channel.bulkDelete(messageFilter).catch(error => console.log(error));
+				let messagesToDelete = messages.filter(messageFilter);
+				msg.channel.bulkDelete(messagesToDelete).catch(error => console.log(error));
 			})
 			.then(() => {
 				msg.say(`I cleaned up the number of messages you requested, ${msg.author}.`)
