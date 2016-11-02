@@ -24,6 +24,8 @@
     "canvas": "^1.6.2",
     "discord.js": "hydrabolt/discord.js#indev",
     "discord.js-commando": "github:gawdl3y/discord.js-commando",
+    "js-beautify": "^1.6.4",
+    "jsdoc-parse": "1.2.7",
     "moment": "^2.15.1",
     "moment-duration-format": "^1.3.0",
     "mongoose": "^4.6.5",
