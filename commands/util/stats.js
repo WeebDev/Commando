@@ -26,7 +26,7 @@ module.exports = class UserInfoCommand extends Command {
 				<Commando Statistics>
 
 				[UPTIME](${moment.duration(this.client.uptime).format('d[ DAYS], h[ HOURS], m[ MINUTES, and ]s[ SECONDS]')})
-				[MEMORY USEAGE](${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB)
+				[MEMORY USAGE](${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB)
 				[VERSION](${version})
 				\`\`\`
 			`);
