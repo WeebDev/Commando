@@ -29,3 +29,4 @@ node_modules
 
 settings.json
 docsdata.json
+yarn.lock
