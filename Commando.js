@@ -1,13 +1,13 @@
-/* eslint-disable no-console */
 const commando = require('discord.js-commando');
 const moment = require('moment');
 const oneLine = require('common-tags').oneLine;
 const path = require('path');
+const winston = require('winston');
 
-const token = require('./auth.json').token;
+const config = require('./settings');
 
 const client = new commando.Client({
-	owner: '81440962496172032',
+	owner: config.owner,
 	commandPrefix: 'c!',
 	disableEveryone: true,
 	messageCacheLifetime: 30,
@@ -42,38 +42,38 @@ const client = new commando.Client({
 	]
 });
 
-client.on('error', console.error)
-	.on('warn', console.warn)
+client.on('error', winston.error)
+	.on('warn', winston.warn)
 	.on('ready', () => {
-		console.log(`Client ready; logged in as ${client.user.username}#${client.user.discriminator} (${client.user.id})`);
+		winston.log(`Client ready; logged in as ${client.user.username}#${client.user.discriminator} (${client.user.id})`);
 	})
-	.on('disconnect', () => { console.warn('Disconnected!'); })
-	.on('reconnect', () => { console.warn('Reconnecting...'); })
+	.on('disconnect', () => { winston.warn('Disconnected!'); })
+	.on('reconnect', () => { winston.warn('Reconnecting...'); })
 	.on('commandError', (cmd, err) => {
 		if (err instanceof commando.FriendlyError) return;
-		console.error(`Error in command ${cmd.groupID}:${cmd.memberName}`, err);
+		winston.error(`Error in command ${cmd.groupID}:${cmd.memberName}`, err);
 	})
 	.on('commandBlocked', (msg, reason) => {
-		console.log(oneLine`
+		winston.log(oneLine`
 			Command ${msg.command ? `${msg.command.groupID}:${msg.command.memberName}` : ''}
 			blocked; ${reason}
 		`);
 	})
 	.on('commandPrefixChange', (guild, prefix) => {
-		console.log(oneLine`
+		winston.log(oneLine`
 			Prefix changed to ${prefix || 'the default'}
 			${guild ? `in guild ${guild.name} (${guild.id})` : 'globally'}.
 		`);
 	})
 	.on('commandStatusChange', (guild, command, enabled) => {
-		console.log(oneLine`
+		winston.log(oneLine`
 			Command ${command.groupID}:${command.memberName}
 			${enabled ? 'enabled' : 'disabled'}
 			${guild ? `in guild ${guild.name} (${guild.id})` : 'globally'}.
 		`);
 	})
 	.on('groupStatusChange', (guild, group, enabled) => {
-		console.log(oneLine`
+		winston.log(oneLine`
 			Group ${group.id}
 			${enabled ? 'enabled' : 'disabled'}
 			${guild ? `in guild ${guild.name} (${guild.id})` : 'globally'}.
@@ -91,6 +91,7 @@ client.registry
 		['info', 'Info'],
 		['math', 'Math'],
 		['fun', 'Fun'],
+		['weather', 'Weather'],
 		['music', 'Music'],
 		['tags', 'Tags'],
 		['rep', 'Reputation']
@@ -98,4 +99,4 @@ client.registry
 	.registerDefaults()
 	.registerCommandsIn(path.join(__dirname, 'commands'));
 
-client.login(token);
+client.login(config.token);

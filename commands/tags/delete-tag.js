@@ -1,7 +1,7 @@
-/* eslint-disable no-console */
 const { Command } = require('discord.js-commando');
+const winston = require('winston');
 
-const TagModel = require('../../mongoDB/models/TagModel.js');
+const TagModel = require('../../mongoDB/models/Tag');
 
 module.exports = class TagDeleteCommand extends Command {
 	constructor(client) {
@@ -36,6 +36,6 @@ module.exports = class TagDeleteCommand extends Command {
 				});
 			}
 			return msg.say(`You can only delete your own tags, ${msg.author}`);
-		}).catch(error => console.log(error));
+		}).catch(error => { winston.error(error); });
 	}
 };

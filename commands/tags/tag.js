@@ -1,7 +1,7 @@
-/* eslint-disable no-console */
 const { Command } = require('discord.js-commando');
+const winston = require('winston');
 
-const TagModel = require('../../mongoDB/models/TagModel.js');
+const TagModel = require('../../mongoDB/models/Tag');
 
 module.exports = class TagCommand extends Command {
 	constructor(client) {
@@ -30,6 +30,6 @@ module.exports = class TagCommand extends Command {
 		return TagModel.get(name, msg.guild.id).then(tag => {
 			if (!tag) return msg.say(`A tag with the name **${name}** doesn't exist, ${msg.author}`);
 			return TagModel.incrementUses(name, msg.guild.id).then(() => msg.say(tag.content));
-		}).catch(error => console.log(error));
+		}).catch(error => { winston.error(error); });
 	}
 };

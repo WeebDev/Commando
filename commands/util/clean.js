@@ -1,5 +1,5 @@
-/* eslint-disable no-console */
 const { Command } = require('discord.js-commando');
+const winston = require('winston');
 
 module.exports = class CleanCommand extends Command {
 	constructor(client) {
@@ -10,7 +10,7 @@ module.exports = class CleanCommand extends Command {
 			memberName: 'clean',
 			description: 'Deletes messages.',
 			format: '<number> [[filter] [argument]]',
-			details: `Deletes msgs. Here is a list of filters:
+			details: `Deletes messages. Here is a list of filters:
 				__invites:__ Messages containing an invite
 				__user @user:__ Messages sent by @user
 				__bots:__ Messages sent by bots
@@ -22,7 +22,7 @@ module.exports = class CleanCommand extends Command {
 
 			args: [
 				{
-					key: 'number',
+					key: 'limit',
 					prompt: 'How many messages would you like to delete?\n',
 					type: 'integer',
 					max: 100
@@ -82,38 +82,28 @@ module.exports = class CleanCommand extends Command {
 			}
 		}
 
-		if (!args.filter) {
+		if (!filter) {
 			return msg.channel.fetchMessages({ limit: limit })
 			.then(messagesToDelete => {
-				msg.channel.bulkDelete(messagesToDelete).catch(error => console.log(error));
+				msg.channel.bulkDelete(messagesToDelete).catch(error => { winston.error(error); });
 			})
 			.then(() => {
 				msg.say(`I cleaned up the number of messages you requested, ${msg.author}.`)
-				.then(sentMessage => {
-					sentMessage.delete(4000);
-				});
+					.then(sentMessage => { sentMessage.delete(4000); });
 			})
-			.catch(error => {
-				console.log(error);
-			});
+			.catch(error => { winston.error(error); });
 		}
 		return msg.channel.fetchMessages({ limit: limit })
 			.then(messages => {
 				let messagesToDelete = messages.filter(messageFilter);
-				msg.channel.bulkDelete(messagesToDelete).catch(error => console.log(error));
+				msg.channel.bulkDelete(messagesToDelete).catch(error => { winston.error(error); });
 			})
 			.then(() => {
 				msg.say(`I cleaned up the number of messages you requested, ${msg.author}.`)
-					.then(sentMessage => {
-						sentMessage.delete(4000);
-					});
+					.then(sentMessage => { sentMessage.delete(4000); });
 			})
-			.catch(error => {
-				console.log(error);
-			});
+			.catch(error => { winston.error(error); });
 	}
 };
 
-process.on('unhandledRejection', err => {
-	console.error(`Uncaught Promise Error: \n${err.stack}`);
-});
+process.on('unhandledRejection', err => { winston.error(`Uncaught Promise Error: \n${err.stack}`); });

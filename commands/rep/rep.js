@@ -1,9 +1,9 @@
-/* eslint-disable no-console */
 const { Command, util } = require('discord.js-commando');
 const stripIndents = require('common-tags').stripIndents;
+const winston = require('winston');
 
-const RepModel = require('../../mongoDB/models/Rep.js');
-const RepUserModel = require('../../mongoDB/models/RepUser.js');
+const RepModel = require('../../mongoDB/models/Rep');
+const RepUserModel = require('../../mongoDB/models/RepUser');
 
 module.exports = class RepCommand extends Command {
 	constructor(client) {
@@ -47,16 +47,13 @@ module.exports = class RepCommand extends Command {
 			return RepModel.findAll(user.id, msg.guild.id).then(rep => {
 				const paginated = util.paginate(rep, page, 5);
 				return msg.say(stripIndents`
-						**${repUsername} has ${repUserPositive - repUserNegative} ( +${repUserPositive} | -${repUserNegative} ) reputation:**
-						${paginated.maxPage > 1 ? `\n**Reputations page: ${paginated.page}**` : ''}
+					**${repUsername} has ${repUserPositive - repUserNegative} ( +${repUserPositive} | -${repUserNegative} ) reputation:**
+					${paginated.maxPage > 1 ? `\n**Reputations page: ${paginated.page}**` : ''}
 
-						${paginated.items.map(reps => `**${reps.rep}** ${reps.userName}: ${reps.content}`).join('\n')}
-						${paginated.maxPage > 1 ? `\nUse \`rep <member> <page>\` to view a specific page.\n` : ''}
-						`);
+					${paginated.items.map(reps => `**${reps.rep}** ${reps.userName}: ${reps.content}`).join('\n')}
+					${paginated.maxPage > 1 ? `\nUse \`rep <member> <page>\` to view a specific page.\n` : ''}
+				`);
 			});
-		}).catch(error => {
-			console.log(error);
-			msg.say(error);
-		});
+		}).catch(error => { winston.error(error); });
 	}
 };

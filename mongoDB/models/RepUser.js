@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const { Schema } = require('../../mongodb.js');
+const { Schema } = require('../mongoDB');
 
 let repUserSchema = new Schema({
 	userID: String,

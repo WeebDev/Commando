@@ -7,7 +7,7 @@ module.exports = class ServerInfoCommand extends Command {
 		super(client, {
 			name: 'server-info',
 			aliases: ['server'],
-			group: 'util',
+			group: 'info',
 			memberName: 'server-info',
 			description: 'Get info on the server.',
 			details: `Get detailed information on the server.`,

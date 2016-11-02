@@ -1,11 +1,11 @@
 const { Command } = require('discord.js-commando');
 const moment = require('moment');
 const stripIndents = require('common-tags').stripIndents;
-
-const version = require('../../package.json').version;
 require('moment-duration-format');
 
-module.exports = class UserInfoCommand extends Command {
+const version = require('../../package').version;
+
+module.exports = class StatsCommand extends Command {
 	constructor(client) {
 		super(client, {
 			name: 'stats',
@@ -17,18 +17,13 @@ module.exports = class UserInfoCommand extends Command {
 		});
 	}
 
-	hasPermission(msg) {
-		return msg.author.id === this.client.options.owner;
-	}
-
 	async run(msg) {
-		return msg.say(stripIndents`\`\`\`md
-				<Commando Statistics>
+		return msg.code('md', stripIndents`
+			<Hamakaze Statistics>
 
-				[UPTIME](${moment.duration(this.client.uptime).format('d[ DAYS], h[ HOURS], m[ MINUTES, and ]s[ SECONDS]')})
-				[MEMORY USAGE](${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB)
-				[VERSION](${version})
-				\`\`\`
-			`);
+			[UPTIME](${moment.duration(this.client.uptime).format('d[ DAYS], h[ HOURS], m[ MINUTES, and ]s[ SECONDS]')})
+			[MEMORY USAGE](${Math.round(process.memoryUsage().heapUsed / 1024 / 1024)}MB)
+			[VERSION](${version})
+		`);
 	}
 };
