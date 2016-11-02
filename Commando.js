@@ -36,9 +36,7 @@ const client = new commando.Client({
 		'TYPING_STOP',
 		'VOICE_STATE_UPDATE',
 		'FRIEND_ADD',
-		'FRIEND_REMOVE',
-		'RELATIONSHIP_ADD',
-		'RELATIONSHIP_REMOVE'
+		'FRIEND_REMOVE'
 	]
 });
 
