@@ -2,8 +2,8 @@ const { Command, util } = require('discord.js-commando');
 const oneLine = require('common-tags').oneLine;
 const stripIndents = require('common-tags').stripIndents;
 
-const auth = require('../../auth.json');
-const Song = require('../../Song.js');
+const config = require('../../settings');
+const Song = require('../../Song');
 
 module.exports = class ViewQueueCommand extends Command {
 	constructor(client) {
@@ -32,7 +32,7 @@ module.exports = class ViewQueueCommand extends Command {
 		const queue = this.queue.get(msg.guild.id);
 		if (!queue) return msg.reply('There are no songs in the queue. Why not start the party yourself?');
 
-		const paginated = util.paginate(queue.songs, page, Math.floor(auth.paginationItems));
+		const paginated = util.paginate(queue.songs, page, Math.floor(config.paginationItems));
 		const totalLength = queue.songs.reduce((prev, song) => prev + song.length, 0);
 		const currentSong = queue.songs[0];
 		const currentTime = currentSong.dispatcher ? currentSong.dispatcher.time / 1000 : 0;
