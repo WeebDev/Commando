@@ -32,6 +32,7 @@
     "request": "^2.75.0",
     "request-promise": "^4.1.1",
     "simple-youtube-api": "^2.1.0",
+    "winston": "^2.3.0",
     "ytdl-core": "^0.7.19"
   },
   "devDependencies": {
