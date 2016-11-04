@@ -43,7 +43,7 @@ const client = new commando.Client({
 client.on('error', winston.error)
 	.on('warn', winston.warn)
 	.on('ready', () => {
-		winston.log(`Client ready; logged in as ${client.user.username}#${client.user.discriminator} (${client.user.id})`);
+		winston.info(`Client ready; logged in as ${client.user.username}#${client.user.discriminator} (${client.user.id})`);
 	})
 	.on('disconnect', () => { winston.warn('Disconnected!'); })
 	.on('reconnect', () => { winston.warn('Reconnecting...'); })
@@ -52,26 +52,26 @@ client.on('error', winston.error)
 		winston.error(`Error in command ${cmd.groupID}:${cmd.memberName}`, err);
 	})
 	.on('commandBlocked', (msg, reason) => {
-		winston.log(oneLine`
+		winston.info(oneLine`
 			Command ${msg.command ? `${msg.command.groupID}:${msg.command.memberName}` : ''}
 			blocked; ${reason}
 		`);
 	})
 	.on('commandPrefixChange', (guild, prefix) => {
-		winston.log(oneLine`
+		winston.info(oneLine`
 			Prefix changed to ${prefix || 'the default'}
 			${guild ? `in guild ${guild.name} (${guild.id})` : 'globally'}.
 		`);
 	})
 	.on('commandStatusChange', (guild, command, enabled) => {
-		winston.log(oneLine`
+		winston.info(oneLine`
 			Command ${command.groupID}:${command.memberName}
 			${enabled ? 'enabled' : 'disabled'}
 			${guild ? `in guild ${guild.name} (${guild.id})` : 'globally'}.
 		`);
 	})
 	.on('groupStatusChange', (guild, group, enabled) => {
-		winston.log(oneLine`
+		winston.info(oneLine`
 			Group ${group.id}
 			${enabled ? 'enabled' : 'disabled'}
 			${guild ? `in guild ${guild.name} (${guild.id})` : 'globally'}.
