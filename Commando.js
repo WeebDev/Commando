@@ -9,6 +9,7 @@ const config = require('./settings');
 const client = new commando.Client({
 	owner: config.owner,
 	commandPrefix: 'dude, ',
+	unknownCommandResponse: false,
 	disableEveryone: true,
 	messageCacheLifetime: 30,
 	messageSweepInterval: 60,
