@@ -19,7 +19,7 @@ module.exports = class StatsCommand extends Command {
 
 	async run(msg) {
 		return msg.code('md', stripIndents`
-			<Hamakaze Statistics>
+			<Commando Statistics>
 
 			[UPTIME](${moment.duration(this.client.uptime).format('d[ DAYS], h[ HOURS], m[ MINUTES, and ]s[ SECONDS]')})
 			[MEMORY USAGE](${Math.round(process.memoryUsage().heapUsed / 1024 / 1024)}MB)
