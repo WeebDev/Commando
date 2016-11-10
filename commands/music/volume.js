@@ -8,7 +8,7 @@ module.exports = class ChangeVolumeCommand extends Command {
 			group: 'music',
 			memberName: 'volume',
 			description: 'Changes the volume.',
-			format: '<level>',
+			format: '[level]',
 			details: 'The volume level ranges from 0-10. You may specify "up" or "down" to modify the volume level by 2.',
 			examples: ['volume', 'volume 7', 'volume up', 'volume down'],
 			guildOnly: true
@@ -39,11 +39,13 @@ module.exports = class ChangeVolumeCommand extends Command {
 		volume = Math.min(Math.max(volume, 0), volume === 11 ? 11 : 10);
 		queue.volume = volume;
 		if (queue.songs[0].dispatcher) queue.songs[0].dispatcher.setVolumeLogarithmic(queue.volume / 5);
+
 		return msg.reply(`${volume === 11 ? 'This one goes to 11!' : `Set the dial to ${volume}.`}`);
 	}
 
 	get queue() {
 		if (!this._queue) this._queue = this.client.registry.resolveCommand('music:play').queue;
+
 		return this._queue;
 	}
 };

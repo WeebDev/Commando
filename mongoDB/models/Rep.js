@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const { Schema } = require('../../mongodb.js');
+
+const { Schema } = require('../mongoDB');
 
 let RepSchema = new Schema({
 	userID: String,
@@ -12,7 +13,6 @@ let RepSchema = new Schema({
 	rep: String,
 	createdAt: Number
 });
-
 let Rep = mongoose.model('Rep', RepSchema);
 
 module.exports = class RepModel {

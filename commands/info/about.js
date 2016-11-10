@@ -1,5 +1,5 @@
-const stripIndents = require('common-tags').stripIndents;
 const { Command } = require('discord.js-commando');
+const stripIndents = require('common-tags').stripIndents;
 
 module.exports = class AboutCommand extends Command {
 	constructor(client) {
@@ -30,7 +30,7 @@ module.exports = class AboutCommand extends Command {
 				\`pm2 start somebot.js --node-args='--harmony'\`
 
 				__**Documentation (WIP):**__
-				<https://gawdl3y.github.io/discord.js-commando/0.2.0/>
+				<https://gawdl3y.github.io/discord.js-commando/0.4.0/>
 				See also:
 				<https://discord.js.org/#!/docs/tag/master/file/general/Welcome>
 		`);

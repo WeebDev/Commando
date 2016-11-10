@@ -1,8 +1,9 @@
-/* eslint-disable no-console */
 const { Command } = require('discord.js-commando');
 const stripIndents = require('common-tags').stripIndents;
-const RepModel = require('../../mongoDB/models/rep.js');
-const RepUserModel = require('../../mongoDB/models/repUser.js');
+const winston = require('winston');
+
+const RepModel = require('../../mongoDB/models/Rep');
+const RepUserModel = require('../../mongoDB/models/RepUser');
 
 module.exports = class RepMinusCommand extends Command {
 	constructor(client) {
@@ -12,9 +13,8 @@ module.exports = class RepMinusCommand extends Command {
 			group: 'rep',
 			memberName: 'minus-rep',
 			description: 'Negatively rep someone.',
-			format: '<mention> <reason>',
+			format: '<member> <reason>',
 			details: `Negatively rep someone, usable for everyone on the server. (Markdown can be used.)`,
-			examples: ['-rep @Crawl#3280 noobest of noobs'],
 			guildOnly: true,
 			argsType: 'multiple',
 			argsCount: 2,
@@ -47,8 +47,8 @@ module.exports = class RepMinusCommand extends Command {
 		return RepModel.get(user.id, msg.author.id, msg.guild.id).then(rep => {
 			if (rep.createdAt + 86400000 > Date.now()) {
 				return msg.say(stripIndents`You already rep'd **${user.username}**, ${msg.author}
-						Please wait 24h.
-						`);
+					Please wait 24h.
+				`);
 			}
 			return this.rep(msg, user, reason);
 		}).catch(() => {
@@ -95,9 +95,6 @@ module.exports = class RepMinusCommand extends Command {
 				return msg.say(`Successfully rep'd **${user.username}**, ${msg.author}`);
 			});
 		})
-		.catch(error => {
-			console.log(error);
-			return msg.say(error);
-		});
+		.catch(error => { winston.error(error); });
 	}
 };

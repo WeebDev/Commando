@@ -1,57 +1,88 @@
-/* eslint-disable no-console */
 const commando = require('discord.js-commando');
-const path = require('path');
+const moment = require('moment');
 const oneLine = require('common-tags').oneLine;
-const token = require('./auth.json').token;
+const path = require('path');
+const winston = require('winston');
+
+const config = require('./settings');
 
 const client = new commando.Client({
-	owner: '81440962496172032',
-	commandPrefix: 'c!',
-	disableEveryone: true
+	owner: config.owner,
+	commandPrefix: 'dude, ',
+	unknownCommandResponse: false,
+	disableEveryone: true,
+	messageCacheLifetime: 30,
+	messageSweepInterval: 60,
+	disabledEvents: [
+		'GUILD_CREATE',
+		'GUILD_DELETE',
+		'GUILD_UPDATE',
+		'GUILD_UNAVAILABLE',
+		'GUILD_AVAILABLE',
+		'GUILD_MEMBER_UPDATE',
+		'GUILD_MEMBER_AVAILABLE',
+		'GUILD_MEMBER_SPEAKING',
+		'GUILD_ROLE_CREATE',
+		'GUILD_ROLE_DELETE',
+		'GUILD_ROLE_UPDATE',
+		'CHANNEL_CREATE',
+		'CHANNEL_DELETE',
+		'CHANNEL_UPDATE',
+		'CHANNEL_PINS_UPDATE',
+		'MESSAGE_DELETE_BULK',
+		'USER_UPDATE',
+		'USER_NOTE_UPDATE',
+		'PRESENCE_UPDATE',
+		'TYPING_START',
+		'TYPING_STOP',
+		'VOICE_STATE_UPDATE',
+		'FRIEND_ADD',
+		'FRIEND_REMOVE'
+	]
 });
 
-client.on('error', console.error)
-	.on('warn', console.warn)
+client.on('error', winston.error)
+	.on('warn', winston.warn)
 	.on('ready', () => {
-		console.log(`Client ready; logged in as ${client.user.username}#${client.user.discriminator} (${client.user.id})`);
+		winston.info(`Client ready; logged in as ${client.user.username}#${client.user.discriminator} (${client.user.id})`);
 	})
-	.on('disconnect', () => { console.warn('Disconnected!'); })
-	.on('reconnect', () => { console.warn('Reconnecting...'); })
+	.on('disconnect', () => { winston.warn('Disconnected!'); })
+	.on('reconnect', () => { winston.warn('Reconnecting...'); })
 	.on('commandError', (cmd, err) => {
 		if (err instanceof commando.FriendlyError) return;
-		console.error(`Error in command ${cmd.groupID}:${cmd.memberName}`, err);
+		winston.error(`Error in command ${cmd.groupID}:${cmd.memberName}`, err);
 	})
 	.on('commandBlocked', (msg, reason) => {
-		console.log(oneLine`
+		winston.info(oneLine`
 			Command ${msg.command ? `${msg.command.groupID}:${msg.command.memberName}` : ''}
 			blocked; ${reason}
 		`);
 	})
 	.on('commandPrefixChange', (guild, prefix) => {
-		console.log(oneLine`
+		winston.info(oneLine`
 			Prefix changed to ${prefix || 'the default'}
 			${guild ? `in guild ${guild.name} (${guild.id})` : 'globally'}.
 		`);
 	})
 	.on('commandStatusChange', (guild, command, enabled) => {
-		console.log(oneLine`
+		winston.info(oneLine`
 			Command ${command.groupID}:${command.memberName}
 			${enabled ? 'enabled' : 'disabled'}
 			${guild ? `in guild ${guild.name} (${guild.id})` : 'globally'}.
 		`);
 	})
 	.on('groupStatusChange', (guild, group, enabled) => {
-		console.log(oneLine`
+		winston.info(oneLine`
 			Group ${group.id}
 			${enabled ? 'enabled' : 'disabled'}
 			${guild ? `in guild ${guild.name} (${guild.id})` : 'globally'}.
 		`);
 	})
 	.on('guildMemberAdd', member => {
-		member.guild.channels.get('232305140672102400').sendMessage(`**${member.user.username}#${member.user.discriminator}** (ID: ${member.user.id}) has joined us.`);
+		member.guild.channels.get('232305140672102400').sendMessage(`**${member}** has joined us.\n(ID: ${member.user.id} | Created at: ${moment.utc(member.user.createdAt).format('dddd, MMMM Do YYYY, HH:mm:ss ZZ')})`);
 	})
 	.on('guildMemberRemove', member => {
-		member.guild.channels.get('232305140672102400').sendMessage(`**${member.user.username}#${member.user.discriminator}** (ID: ${member.user.id}) has left us.`);
+		member.guild.channels.get('232305140672102400').sendMessage(`**${member}** has left us.\n(ID: ${member.user.id} | Created at: ${moment.utc(member.user.createdAt).format('dddd, MMMM Do YYYY, HH:mm:ss ZZ')})`);
 	});
 
 client.registry
@@ -59,6 +90,7 @@ client.registry
 		['info', 'Info'],
 		['math', 'Math'],
 		['fun', 'Fun'],
+		['weather', 'Weather'],
 		['music', 'Music'],
 		['tags', 'Tags'],
 		['rep', 'Reputation']
@@ -66,4 +98,4 @@ client.registry
 	.registerDefaults()
 	.registerCommandsIn(path.join(__dirname, 'commands'));
 
-client.login(token);
+client.login(config.token);

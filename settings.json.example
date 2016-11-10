@@ -1,0 +1,12 @@
+{
+	"token": "YOUR_TOKEN",
+	"owner": "YOUR_ID",
+	"WeatherAPIKey": "darksky.net API Key",
+	"GoogleAPIKey": "Google Geocode API Key",
+	"soundcloudID": "SoundCloud API Key",
+	"defaultVolume": 2,
+	"paginationItems": 10,
+	"maxLength": 15,
+	"maxSongs": 5,
+	"passes": 2
+}

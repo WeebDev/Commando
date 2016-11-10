@@ -29,14 +29,14 @@ module.exports = class EightBallCommand extends Command {
 			group: 'fun',
 			memberName: '8ball',
 			description: 'Ask the magic 8 ball.',
-			format: '<number> [number2] [number3...]',
-			examples: ['8ball Is my Commando the best?'],
+			format: '[question]',
 
 			args: [
 				{
 					key: 'question',
-					prompt: 'What question do you want ask the magic 8ball?',
-					type: 'string'
+					prompt: 'What question do you want ask the magic 8ball?\n',
+					type: 'string',
+					default: ''
 				}
 			]
 		});

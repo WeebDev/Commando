@@ -1,8 +1,9 @@
-/* eslint-disable no-console */
 const { Command } = require('discord.js-commando');
-const TagModel = require('../../mongoDB/models/tagModel.js');
-const stripIndents = require('common-tags').stripIndents;
 const moment = require('moment');
+const stripIndents = require('common-tags').stripIndents;
+const winston = require('winston');
+
+const TagModel = require('../../mongoDB/models/Tag');
 
 module.exports = class TagWhoCommand extends Command {
 	constructor(client) {
@@ -13,7 +14,6 @@ module.exports = class TagWhoCommand extends Command {
 			memberName: 'tag-info',
 			description: 'Displays information about a Tag.',
 			format: '<tagname>',
-			examples: ['tag-who cat', 'tag-who test'],
 			guildOnly: true,
 
 			args: [
@@ -34,10 +34,11 @@ module.exports = class TagWhoCommand extends Command {
 			if (!tag) return msg.say(`A tag with the name **${name}** doesn't exist, ${msg.author}`);
 			return msg.say(stripIndents`❯ Info on Tag: **${tag.name}**
 
-											 • Username: ${tag.userName} (ID: ${tag.userID})
-											 • Guild: ${tag.guildName}
-											 • Created at: ${moment.utc(tag.createdAt).format('dddd, MMMM Do YYYY, HH:mm:ss ZZ')}
-											 • Uses: ${tag.uses}`);
-		}).catch(error => console.log(error));
+				 • Username: ${tag.userName} (ID: ${tag.userID})
+				 • Guild: ${tag.guildName}
+				 • Created at: ${moment.utc(tag.createdAt).format('dddd, MMMM Do YYYY, HH:mm:ss ZZ')}
+				 • Uses: ${tag.uses}
+			`);
+		}).catch(error => { winston.error(error); });
 	}
 };

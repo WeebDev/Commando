@@ -1,6 +1,7 @@
 const { Command } = require('discord.js-commando');
-const Song = require('../../song.js');
 const oneLine = require('common-tags').oneLine;
+
+const Song = require('../../Song');
 
 module.exports = class MusicStatusCommand extends Command {
 	constructor(client) {
@@ -19,6 +20,7 @@ module.exports = class MusicStatusCommand extends Command {
 		if (!queue) return msg.say('There isn\'t any music playing right now. You should get on that.');
 		const song = queue.songs[0];
 		const currentTime = song.dispatcher ? song.dispatcher.time / 1000 : 0;
+
 		return msg.reply(oneLine`
 			Currently playing ${song}, queued by ${song.username}.
 			We are ${Song.timeString(currentTime)} into the song, and have ${song.timeLeft(currentTime)} left.
@@ -28,6 +30,7 @@ module.exports = class MusicStatusCommand extends Command {
 
 	get queue() {
 		if (!this._queue) this._queue = this.client.registry.resolveCommand('music:play').queue;
+
 		return this._queue;
 	}
 };

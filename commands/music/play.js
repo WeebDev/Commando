@@ -1,12 +1,14 @@
 /* eslint-disable no-console */
 const { Command, util } = require('discord.js-commando');
+const escapeMarkdown = require('discord.js').escapeMarkdown;
+const oneLine = require('common-tags').oneLine;
+const request = require('request-promise');
 const YouTube = require('simple-youtube-api');
 const ytdl = require('ytdl-core');
-const request = require('request-promise');
-const oneLine = require('common-tags').oneLine;
-const auth = require('../../auth.json');
-const Song = require('../../song.js');
-const escapeMarkdown = require('discord.js').escapeMarkdown;
+
+const config = require('../../settings');
+const Song = require('../../Song');
+
 
 module.exports = class PlaySongCommand extends Command {
 	constructor(client) {
@@ -28,7 +30,7 @@ module.exports = class PlaySongCommand extends Command {
 		});
 
 		this.queue = new Map();
-		this.youtube = new YouTube(auth.GoogleAPIKey);
+		this.youtube = new YouTube(config.GoogleAPIKey);
 	}
 
 	async run(msg, args) {
@@ -59,7 +61,7 @@ module.exports = class PlaySongCommand extends Command {
 		const statusMsg = await msg.reply('Obtaining video details...');
 		if (url.match(/^https?:\/\/(soundcloud.com|snd.sc)\/(.*)$/)) {
 			return request({
-				uri: `http://api.soundcloud.com/resolve.json?url=${url}&client_id=${auth.soundcloudID}`,
+				uri: `http://api.soundcloud.com/resolve.json?url=${url}&client_id=${config.soundcloudID}`,
 				headers: { 'User-Agent': `Commando (https://github.com/iCrawl/Commando/)` },
 				json: true
 			}).then(video => {
@@ -96,7 +98,7 @@ module.exports = class PlaySongCommand extends Command {
 				voiceChannel: voiceChannel,
 				connection: null,
 				songs: [],
-				volume: auth.defaultVolume
+				volume: config.defaultVolume
 			};
 			this.queue.set(msg.guild.id, queue);
 
@@ -131,7 +133,7 @@ module.exports = class PlaySongCommand extends Command {
 
 		// Verify some stuff
 		if (msg.author.id !== this.client.options.owner) {
-			const maxLength = auth.maxLength;
+			const maxLength = config.maxLength;
 			if (maxLength > 0 && video.durationSeconds > maxLength * 60) {
 				return oneLine`
 					👎 **${util.escape(video.title)}**
@@ -142,7 +144,7 @@ module.exports = class PlaySongCommand extends Command {
 			if (queue.songs.some(song => song.id === video.id)) {
 				return `👎 **${escapeMarkdown(video.title)}** is already queued.`;
 			}
-			const maxSongs = auth.maxSongs;
+			const maxSongs = config.maxSongs;
 			if (maxSongs > 0 && queue.songs.reduce((prev, song) => prev + song.member.id === msg.author.id, 0) >= maxSongs) {
 				return `👎 You already have ${maxSongs} songs in the queue. Don't hog all the airtime!`;
 			}
@@ -152,6 +154,7 @@ module.exports = class PlaySongCommand extends Command {
 		console.log('Adding song to queue.', { song: video.id, guild: msg.guild.id });
 		const song = new Song(video, msg.member);
 		queue.songs.push(song);
+
 		return `👍 Queued up ${song}.`;
 	}
 
@@ -189,7 +192,7 @@ module.exports = class PlaySongCommand extends Command {
 					this.play(guild, queue.songs[0]);
 				});
 		}
-		const dispatcher = queue.connection.playStream(stream, { passes: auth.passes })
+		const dispatcher = queue.connection.playStream(stream, { passes: config.passes })
 			.on('end', () => {
 				if (streamErrored) return;
 				queue.songs.shift();
@@ -208,6 +211,7 @@ module.exports = class PlaySongCommand extends Command {
 
 	get votes() {
 		if (!this._votes) this._votes = this.client.registry.resolveCommand('music:skip').votes;
+
 		return this._votes;
 	}
 };

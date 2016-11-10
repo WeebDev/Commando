@@ -1,6 +1,7 @@
-/* eslint-disable no-console */
 const { Command } = require('discord.js-commando');
-const TagModel = require('../../mongoDB/models/tagModel.js');
+const winston = require('winston');
+
+const TagModel = require('../../mongoDB/models/Tag');
 
 module.exports = class TagAddCommand extends Command {
 	constructor(client) {
@@ -12,7 +13,6 @@ module.exports = class TagAddCommand extends Command {
 			description: 'Adds a Tag.',
 			format: '<tagname> <tagcontent>',
 			details: `Adds a Tag, usable for everyone on the server. (Markdown can be used.)`,
-			examples: ['tag-add cat meow', 'tag-add test test1'],
 			guildOnly: true,
 			argsType: 'multiple',
 			argsCount: 2,
@@ -61,6 +61,6 @@ module.exports = class TagAddCommand extends Command {
 						return `@${member.user.username}`;
 					})
 			}).save().then(() => msg.say(`A tag with the name **${name}** has been added, ${msg.author}`));
-		}).catch(error => console.log(error));
+		}).catch(error => { winston.error(error); });
 	}
 };

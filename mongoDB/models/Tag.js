@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const { Schema } = require('../../mongodb.js');
+
+const { Schema } = require('../mongoDB');
 
 let TagSchema = new Schema({
 	userID: String,
@@ -14,7 +15,6 @@ let TagSchema = new Schema({
 	createdAt: { type: Date, default: Date.now },
 	editedAt: { type: Date, default: Date.now }
 });
-
 let Tag = mongoose.model('Tag', TagSchema);
 
 module.exports = class TagModel {
