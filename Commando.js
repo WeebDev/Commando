@@ -77,12 +77,6 @@ client.on('error', winston.error)
 			${enabled ? 'enabled' : 'disabled'}
 			${guild ? `in guild ${guild.name} (${guild.id})` : 'globally'}.
 		`);
-	})
-	.on('guildMemberAdd', member => {
-		member.guild.channels.get('232305140672102400').sendMessage(`**${member}** has joined us.\n(ID: ${member.user.id} | Created at: ${moment.utc(member.user.createdAt).format('dddd, MMMM Do YYYY, HH:mm:ss ZZ')})`);
-	})
-	.on('guildMemberRemove', member => {
-		member.guild.channels.get('232305140672102400').sendMessage(`**${member}** has left us.\n(ID: ${member.user.id} | Created at: ${moment.utc(member.user.createdAt).format('dddd, MMMM Do YYYY, HH:mm:ss ZZ')})`);
 	});
 
 client.registry
