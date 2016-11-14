@@ -47,7 +47,7 @@ module.exports = class AnimeCommand extends Command {
 			}
 			data = data.length === 1 ? data[0] : data.find(en => en.title_english.toLowerCase() === anime.toLowerCase() || en.title_romaji.toLowerCase() === anime.toLowerCase()) || data[0];
 			let title = data.title_english !== '' && data.title_romaji !== data.title_english ? `${data.title_english} / ${data.title_romaji} / ${data.title_japanese}` : `${data.title_romaji} / ${data.title_japanese}`;
-			let synopsis = data.description.replace(/\\n/g, '\n').replace(/<br>|\\r/g, '').substring(0, 1500);
+			let synopsis = data.description.replace(/\\n/g, '\n').replace(/<br>|\\r/g, '').substring(0, 1000);
 			let score = data.average_score / 10;
 
 			// It would be horrible if she wouldn't stop typing
@@ -103,7 +103,7 @@ module.exports = class AnimeCommand extends Command {
 				}
 			};
 
-			return msg.channel.sendMessage('', { embed, split: true });
+			return msg.channel.sendMessage('', { embed });
 		} catch (error) {
 			msg.channel.stopTyping();
 			winston.error(error);
