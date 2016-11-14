@@ -76,12 +76,12 @@ module.exports = class WeatherCommand extends Command {
 						},
 						{
 							name: 'Temperature',
-							value: `${temperature}°`,
+							value: `${temperature}° ${this.getTempUnit(response.results[0].address_components)}`,
 							inline: true
 						},
 						{
 							name: 'High / Low',
-							value: `${temperatureMax}°\n${temperatureMin}°`,
+							value: `${temperatureMax}° ${this.getTempUnit(response.results[0].address_components)}\n${temperatureMin}° ${this.getTempUnit(response.results[0].address_components)}`,
 							inline: true
 						},
 						{
@@ -101,7 +101,7 @@ module.exports = class WeatherCommand extends Command {
 						},
 						{
 							name: 'Windspeed',
-							value: `${windspeed.toFixed(2)} ${this.getUnit(response.results[0].address_components)} `,
+							value: `${windspeed.toFixed(2)} ${this.getWindspeedUnit(response.results[0].address_components)} `,
 							inline: true
 						}
 					],
@@ -144,12 +144,20 @@ module.exports = class WeatherCommand extends Command {
 		return `☀`;
 	}
 
-	getUnit(units) {
+	getWindspeedUnit(units) {
 		let unit = units.find(un => un.types.includes('country'));
 
 		if (unit === undefined) return 'm/s';
 		if (unit.short_name === 'US' || unit.short_name === 'GB') return 'mph';
 		if (unit.short_name === 'CA') return 'kph';
 		return 'm/s';
+	}
+
+	getTempUnit(units) {
+		let unit = units.find(un => un.types.includes('country'));
+
+		if (unit === undefined) return 'C';
+		if (unit.short_name === 'US') return 'F';
+		return 'C';
 	}
 };
