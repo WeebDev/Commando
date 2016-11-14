@@ -76,32 +76,32 @@ module.exports = class WeatherCommand extends Command {
 						},
 						{
 							name: 'Temperature',
-							value: `${temperature}`,
+							value: `${temperature}°`,
 							inline: true
 						},
 						{
 							name: 'High / Low',
-							value: `${temperatureMax}\n${temperatureMin}`,
+							value: `${temperatureMax}°\n${temperatureMin}°`,
 							inline: true
 						},
 						{
 							name: 'Feels like',
-							value: `${feelslike}`,
+							value: `${feelslike}°`,
 							inline: true
 						},
 						{
 							name: 'Humidity',
-							value: `${humidity}`,
+							value: `${humidity}%`,
 							inline: true
 						},
 						{
 							name: 'Chance of rain',
-							value: `${chanceofrain}`,
+							value: `${chanceofrain}%`,
 							inline: true
 						},
 						{
 							name: 'Windspeed',
-							value: `${windspeed}`,
+							value: `${windspeed.toFixed(2)} ${this.getUnit(response.results[0].address_components)} `,
 							inline: true
 						}
 					],
