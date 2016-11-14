@@ -46,7 +46,7 @@ module.exports = class AnimeCommand extends Command {
 				return msg.say(data.error.messages[0]);
 			}
 			data = data.length === 1 ? data[0] : data.find(en => en.title_english.toLowerCase() === anime.toLowerCase() || en.title_romaji.toLowerCase() === anime.toLowerCase()) || data[0];
-			let title = data.title_english !== '' && data.title_romaji !== data.title_english ? `**${data.title_english}** / **${data.title_romaji}** / **${data.title_japanese}**` : `**${data.title_romaji}** / **${data.title_japanese}**`;
+			let title = data.title_english !== '' && data.title_romaji !== data.title_english ? `${data.title_english} / ${data.title_romaji} / ${data.title_japanese}` : `${data.title_romaji} / ${data.title_japanese}`;
 			let synopsis = data.description.replace(/\\n/g, '\n').replace(/<br>|\\r/g, '').substring(0, 500);
 			let score = data.average_score / 10;
 
