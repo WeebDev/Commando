@@ -46,8 +46,8 @@ module.exports = class AnimeCommand extends Command {
 				return msg.say(data.error.messages[0]);
 			}
 			data = data.length === 1 ? data[0] : data.find(en => en.title_english.toLowerCase() === anime.toLowerCase() || en.title_romaji.toLowerCase() === anime.toLowerCase()) || data[0];
-			let title = data.title_english !== '' && data.title_romaji !== data.title_english ? `**${data.title_english}** / **${data.title_romaji}** / **${data.title_japanese}**` : `**${data.title_romaji}** / **${data.title_japanese}**`;
-			let synopsis = data.description.replace(/\\n/g, '\n').replace(/<br>|\\r/g, '').substring(0, 500);
+			let title = data.title_english !== '' && data.title_romaji !== data.title_english ? `${data.title_english} / ${data.title_romaji} / ${data.title_japanese}` : `${data.title_romaji} / ${data.title_japanese}`;
+			let synopsis = data.description.replace(/\\n/g, '\n').replace(/<br>|\\r/g, '').substring(0, 1000);
 			let score = data.average_score / 10;
 
 			// It would be horrible if she wouldn't stop typing
@@ -55,32 +55,55 @@ module.exports = class AnimeCommand extends Command {
 
 			let embed = {
 				color: 3447003,
-				description: title,
+				author: {
+					name: title,
+					url: `http://www.anilist.co/anime/${data.id}`,
+					icon_url: `${data.image_url_med}` // eslint-disable-line camelcase
+				},
 				fields: [
 					{
-						name: 'Information:',
-						value: `•  ${data.type}\n•  ${data.total_episodes} eps\n•  ${data.airing_status.replace(/(\b\w)/gi, lc => lc.toUpperCase())}\n    Started: ${moment.utc(data.start_date).format('DD/MM/YYYY')}\n    Finished: ${data.end_date !== null ? moment.utc(data.end_date).format('DD/MM/YYYY') : '?'}\n•  ${data.duration !== null ? data.duration : '?'} mins/ep`,
+						name: 'Type',
+						value: `${data.type}\n${data.season !== null ? this.parseSeason(data.season) : '?'}\n${data.source !== null ? data.source : '?'}`,
 						inline: true
 					},
 					{
-						name: 'Source:',
-						value: `•  ${data.source !== null ? data.source : '?'}\n•  Season: ${data.season !== null ? this.parseSeason(data.season) : '?'}\n•  Scored ${score.toFixed(2)}\n•  ${data.genres.join(', ')}`,
+						name: 'Episodes',
+						value: `${data.total_episodes}`,
+						inline: true
+					},
+					{
+						name: 'Status',
+						value: `${data.airing_status.replace(/(\b\w)/gi, lc => lc.toUpperCase())}`,
+						inline: true
+					},
+					{
+						name: 'Genre(s)',
+						value: `${data.genres.join(', ')}`,
+						inline: true
+					},
+					{
+						name: 'Episode length',
+						value: `${data.duration !== null ? data.duration : '?'} mins/ep`,
+						inline: true
+					},
+					{
+						name: 'Score',
+						value: `${score.toFixed(2)}`,
 						inline: true
 					},
 					{
 						name: 'Description:',
-						value: `${synopsis}...\n\n[Read more](http://www.anilist.co/anime/${data.id})`,
+						value: `${synopsis}`,
 						inline: false
 					}
 				],
-				timestamp: new Date(),
 				footer: {
 					icon_url: msg.client.user.avatarURL, // eslint-disable-line camelcase
-					text: '©Commando'
+					text: `Started: ${moment.utc(data.start_date).format('DD/MM/YYYY')}\nFinished: ${data.end_date !== null ? moment.utc(data.end_date).format('DD/MM/YYYY') : '?'}`
 				}
 			};
 
-			return msg.channel.sendMessage('', { embed, split: true });
+			return msg.channel.sendMessage('', { embed });
 		} catch (error) {
 			msg.channel.stopTyping();
 			winston.error(error);
