@@ -56,7 +56,8 @@ module.exports = class AnimeCommand extends Command {
 			let embed = {
 				color: 3447003,
 				author: {
-					name: `[${title}](http://www.anilist.co/anime/${data.id})`,
+					name: title,
+					url: `http://www.anilist.co/anime/${data.id}`,
 					icon_url: `${data.image_url_med}` // eslint-disable-line camelcase
 				},
 				fields: [
@@ -72,7 +73,7 @@ module.exports = class AnimeCommand extends Command {
 					},
 					{
 						name: 'Status',
-						value: `${data.airing_status.replace(/(\b\w)/gi, lc => lc.toUpperCase())}\nStarted: ${moment.utc(data.start_date).format('DD/MM/YYYY')}\nFinished: ${data.end_date !== null ? moment.utc(data.end_date).format('DD/MM/YYYY') : '?'}`,
+						value: `${data.airing_status.replace(/(\b\w)/gi, lc => lc.toUpperCase())}`,
 						inline: true
 					},
 					{
@@ -96,10 +97,9 @@ module.exports = class AnimeCommand extends Command {
 						inline: false
 					}
 				],
-				timestamp: new Date(),
 				footer: {
 					icon_url: msg.client.user.avatarURL, // eslint-disable-line camelcase
-					text: '©Commando'
+					text: `Started: ${moment.utc(data.start_date).format('DD/MM/YYYY')}\nFinished: ${data.end_date !== null ? moment.utc(data.end_date).format('DD/MM/YYYY') : '?'}`
 				}
 			};
 
