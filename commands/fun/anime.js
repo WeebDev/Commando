@@ -55,21 +55,44 @@ module.exports = class AnimeCommand extends Command {
 
 			let embed = {
 				color: 3447003,
-				description: title,
+				author: {
+					name: `[${title}](http://www.anilist.co/anime/${data.id})`,
+					icon_url: `${data.image_url_med}` // eslint-disable-line camelcase
+				},
 				fields: [
 					{
-						name: 'Information:',
-						value: `•  ${data.type}\n•  ${data.total_episodes} eps\n•  ${data.airing_status.replace(/(\b\w)/gi, lc => lc.toUpperCase())}\n    Started: ${moment.utc(data.start_date).format('DD/MM/YYYY')}\n    Finished: ${data.end_date !== null ? moment.utc(data.end_date).format('DD/MM/YYYY') : '?'}\n•  ${data.duration !== null ? data.duration : '?'} mins/ep`,
+						name: 'Type',
+						value: `${data.type}\n${data.season !== null ? this.parseSeason(data.season) : '?'}\n${data.source !== null ? data.source : '?'}`,
 						inline: true
 					},
 					{
-						name: 'Source:',
-						value: `•  ${data.source !== null ? data.source : '?'}\n•  Season: ${data.season !== null ? this.parseSeason(data.season) : '?'}\n•  Scored ${score.toFixed(2)}\n•  ${data.genres.join(', ')}`,
+						name: 'Episodes',
+						value: `${data.total_episodes}`,
+						inline: true
+					},
+					{
+						name: 'Status',
+						value: `${data.airing_status.replace(/(\b\w)/gi, lc => lc.toUpperCase())}\nStarted: ${moment.utc(data.start_date).format('DD/MM/YYYY')}\nFinished: ${data.end_date !== null ? moment.utc(data.end_date).format('DD/MM/YYYY') : '?'}`,
+						inline: true
+					},
+					{
+						name: 'Genre(s)',
+						value: `${data.genres.join(', ')}`,
+						inline: true
+					},
+					{
+						name: 'Episode length',
+						value: `${data.duration !== null ? data.duration : '?'} mins/ep`,
+						inline: true
+					},
+					{
+						name: 'Score',
+						value: `${score.toFixed(2)}`,
 						inline: true
 					},
 					{
 						name: 'Description:',
-						value: `${synopsis}...\n\n[Read more](http://www.anilist.co/anime/${data.id})`,
+						value: `${synopsis}...`,
 						inline: false
 					}
 				],
