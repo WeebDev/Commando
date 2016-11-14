@@ -65,7 +65,7 @@ module.exports = class WeatherCommand extends Command {
 					color: 3447003,
 					fields: [
 						{
-							name: 'Los Angeles',
+							name: `${location.substr(0, 35)}`,
 							value: `${this.getBase(icon)}`,
 							inline: true
 						},
