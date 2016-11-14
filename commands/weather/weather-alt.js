@@ -60,7 +60,6 @@ module.exports = class WeatherCommand extends Command {
 				let feelslike = Math.round(res.currently.apparentTemperature * 10) / 10;
 				let humidity = Math.round(res.currently.humidity * 100);
 				let windspeed = res.currently.windSpeed;
-				let windBearing = res.currently.windBearing;
 
 				let embed = {
 					color: 3447003,
@@ -68,10 +67,10 @@ module.exports = class WeatherCommand extends Command {
 						{
 							name: 'Los Angeles',
 							value: `${this.getBase(icon)}`,
-							inline: false
+							inline: true
 						},
 						{
-							name: `${condition}`,
+							name: 'Condition',
 							value: `${condition}`,
 							inline: true
 						},
@@ -103,11 +102,6 @@ module.exports = class WeatherCommand extends Command {
 						{
 							name: 'Windspeed',
 							value: `${windspeed}`,
-							inline: true
-						},
-						{
-							name: 'Wind bearing',
-							value: `${windBearing}`,
 							inline: true
 						}
 					],
