@@ -121,11 +121,11 @@ module.exports = class WeatherCommand extends Command {
 
 					// Temperature
 					ctx.font = '88px Roboto';
-					ctx.fillText(`${temperature}°`, 19, 130);
+					ctx.fillText(`${temperature}°${this.getTempUnit(response.results[0].address_components)}`, 19, 130);
 
 					ctx.font = '16px Roboto';
-					ctx.fillText(`High ${temperatureMax}°`, 20, 157);
-					ctx.fillText(`Low ${temperatureMin}°`, 110, 157);
+					ctx.fillText(`High ${temperatureMax}°${this.getTempUnit(response.results[0].address_components)}`, 20, 157);
+					ctx.fillText(`Low ${temperatureMin}°${this.getTempUnit(response.results[0].address_components)}`, 110, 157);
 
 					// Condition
 					ctx.font = '14px Roboto';
@@ -153,9 +153,9 @@ module.exports = class WeatherCommand extends Command {
 					ctx.fillText('Chance of rain', 20, 270);
 
 					// Values
-					ctx.fillText(`${feelslike}°`, 170, 210);
+					ctx.fillText(`${feelslike}°${this.getTempUnit(response.results[0].address_components)}`, 170, 210);
 					ctx.fillText(`${humidity}%`, 170, 230);
-					ctx.fillText(`${windspeed.toFixed(2)} ${this.getUnit(response.results[0].address_components)}`, 170, 250);
+					ctx.fillText(`${windspeed.toFixed(2)} ${this.getWindspeedUnit(response.results[0].address_components)}`, 170, 250);
 					if (windspeed.toString().length < 4) {
 						ctx.drawImage(pointer, 240, 237);
 					} else if (windspeed.toString().length < 3) {
@@ -204,12 +204,20 @@ module.exports = class WeatherCommand extends Command {
 		return path.join(__dirname, '../../assets/weather/base/sun.png');
 	}
 
-	getUnit(units) {
+	getWindspeedUnit(units) {
 		let unit = units.find(un => un.types.includes('country'));
 
 		if (unit === undefined) return 'm/s';
 		if (unit.short_name === 'US' || unit.short_name === 'GB') return 'mph';
 		if (unit.short_name === 'CA') return 'kph';
 		return 'm/s';
+	}
+
+	getTempUnit(units) {
+		let unit = units.find(un => un.types.includes('country'));
+
+		if (unit === undefined) return 'C';
+		if (unit.short_name === 'US') return 'F';
+		return 'C';
 	}
 };
