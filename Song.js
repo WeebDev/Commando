@@ -23,7 +23,6 @@ module.exports = class Song {
 
 	get username() {
 		let name = `${this.member.user.username}#${this.member.user.discriminator} (${this.member.user.id})`;
-		if (this.member.nickname) name = `${this.member.nickname} (${name})`;
 		return escapeMarkdown(name);
 	}
 
