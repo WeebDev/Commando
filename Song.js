@@ -21,6 +21,11 @@ module.exports = class Song {
 		}
 	}
 
+	get thumbnail() {
+		let thumbnail = `https://img.youtube.com/vi/${this.id}/maxresdefault.jpg`;
+		return thumbnail;
+	}
+
 	get username() {
 		let name = `${this.member.user.username}#${this.member.user.discriminator} (${this.member.user.id})`;
 		return escapeMarkdown(name);

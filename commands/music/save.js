@@ -30,6 +30,7 @@ module.exports = class SaveQueueCommand extends Command {
 				[${song}](${song.url.match(/^https?:\/\/(api.soundcloud.com)\/(.*)$/) ? '' : song.url})
 				${song.url.match(/^https?:\/\/(api.soundcloud.com)\/(.*)$/) ? 'A SoundCloud song is currently playing.' : ''}
 			`,
+			image: { url: `${song.thumbnail}` },
 			timestamp: new Date(),
 			footer: {
 				icon_url: this.client.user.avatarURL, // eslint-disable-line camelcase

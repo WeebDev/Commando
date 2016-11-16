@@ -137,13 +137,14 @@ module.exports = class PlaySongCommand extends Command {
 			});
 		} else {
 			// Just add the song
-			const result = {
+			let result = this.addSong(msg, video);
+			let resultMessage = {
 				color: 3447003,
 				author: {
 					name: `${msg.author.username}#${msg.author.discriminator} (${msg.author.id})`,
 					icon_url: `${msg.author.avatarURL}` // eslint-disable-line camelcase
 				},
-				description: `${this.addSong(msg, video)}`,
+				description: `${result}`,
 				timestamp: new Date(),
 				footer: {
 					icon_url: this.client.user.avatarURL, // eslint-disable-line camelcase
@@ -151,7 +152,7 @@ module.exports = class PlaySongCommand extends Command {
 				}
 			};
 
-			statusMsg.edit('', { embed: result });
+			statusMsg.edit('', { embed: resultMessage });
 		}
 	}
 
@@ -211,6 +212,7 @@ module.exports = class PlaySongCommand extends Command {
 				icon_url: `${song.avatar}` // eslint-disable-line camelcase
 			},
 			description: `▶ [${song}](${song.url})`,
+			image: { url: `${song.thumbnail}` },
 			timestamp: new Date(),
 			footer: {
 				icon_url: this.client.user.avatarURL, // eslint-disable-line camelcase

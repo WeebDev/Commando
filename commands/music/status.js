@@ -31,6 +31,7 @@ module.exports = class MusicStatusCommand extends Command {
 				We are ${Song.timeString(currentTime)} into the song, and have ${song.timeLeft(currentTime)} left.
 				${!song.playing ? 'The music is paused.' : ''}
 			`,
+			image: { url: `${song.thumbnail}` },
 			timestamp: new Date(),
 			footer: {
 				icon_url: this.client.user.avatarURL, // eslint-disable-line camelcase
