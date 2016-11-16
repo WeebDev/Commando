@@ -27,7 +27,7 @@ module.exports = class MusicStatusCommand extends Command {
 				name: `${song.username}`,
 				icon_url: `${song.avatar}` // eslint-disable-line camelcase
 			},
-			description: stripIndents`🎵 ${song}
+			description: stripIndents`🎵 [${song}](${song.url})
 				We are ${Song.timeString(currentTime)} into the song, and have ${song.timeLeft(currentTime)} left.
 				${!song.playing ? 'The music is paused.' : ''}
 			`,
