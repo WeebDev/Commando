@@ -26,7 +26,8 @@ module.exports = class SaveQueueCommand extends Command {
 				icon_url: `${msg.author.avatarURL}` // eslint-disable-line camelcase
 			},
 			description: stripIndents`
-				**Currently playing:** [${song}](${song.url.match(/^https?:\/\/(api.soundcloud.com)\/(.*)$/) ? '' : song.url})
+				**Currently playing:**
+				[${song}](${song.url.match(/^https?:\/\/(api.soundcloud.com)\/(.*)$/) ? '' : song.url})
 				${song.url.match(/^https?:\/\/(api.soundcloud.com)\/(.*)$/) ? 'A SoundCloud song is currently playing.' : ''}
 			`,
 			timestamp: new Date(),

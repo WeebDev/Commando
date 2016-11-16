@@ -29,10 +29,25 @@ module.exports = class SkipSongCommand extends Command {
 		}
 		if (!queue.songs[0].dispatcher) return msg.reply('The song hasn\'t even begun playing yet. Why not give it a chance?');
 
+		let skip = this.skip(msg.guild, queue);
+		let skipMessage = {
+			color: 3447003,
+			author: {
+				name: `${msg.author.username}#${msg.author.discriminator} (${msg.author.id})`,
+				icon_url: `${msg.author.avatarURL}` // eslint-disable-line camelcase
+			},
+			description: `${skip}`,
+			timestamp: new Date(),
+			footer: {
+				icon_url: this.client.user.avatarURL, // eslint-disable-line camelcase
+				text: 'Skipped'
+			}
+		};
+
 		// Determine the vote threshold, and handle immediate skipping
 		const threshold = Math.ceil((queue.voiceChannel.members.size - 1) / 3);
 		const force = threshold <= 1 || queue.voiceChannel.members.size < threshold;
-		if (force) return msg.reply(this.skip(msg.guild, queue));
+		if (force) return msg.channel.sendMessage('', { embed: skipMessage });
 
 		const vote = this.votes.get(msg.guild.id);
 		if (vote && vote.count >= 1) {
@@ -41,21 +56,6 @@ module.exports = class SkipSongCommand extends Command {
 			vote.count++;
 			vote.users.push(msg.author.id);
 			if (vote.count >= threshold) {
-				let skip = this.skip(msg.guild, queue);
-				let skipMessage = {
-					color: 3447003,
-					author: {
-						name: `${msg.author.username}#${msg.author.discriminator} (${msg.author.id})`,
-						icon_url: `${msg.author.avatarURL}` // eslint-disable-line camelcase
-					},
-					description: `${skip}`,
-					timestamp: new Date(),
-					footer: {
-						icon_url: this.client.user.avatarURL, // eslint-disable-line camelcase
-						text: 'Skipped'
-					}
-				};
-
 				return msg.channel.sendMessage('', { embed: skipMessage });
 			}
 
