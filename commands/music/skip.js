@@ -99,7 +99,7 @@ module.exports = class SkipSongCommand extends Command {
 		const song = queue.songs[0];
 		song.dispatcher.end();
 
-		return `⏭ ${song}.`;
+		return `⏭ [${song}](${song.url})`;
 	}
 
 	setTimeout(vote) {
