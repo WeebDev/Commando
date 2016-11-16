@@ -22,9 +22,14 @@ module.exports = class Song {
 	}
 
 	get username() {
-		let name = `${this.member.user.username}#${this.member.user.discriminator}`;
+		let name = `${this.member.user.username}#${this.member.user.discriminator} (${this.member.user.id})`;
 		if (this.member.nickname) name = `${this.member.nickname} (${name})`;
 		return escapeMarkdown(name);
+	}
+
+	get avatar() {
+		let avatar = `${this.member.user.avatarURL}`;
+		return avatar;
 	}
 
 	get lengthString() {
@@ -36,16 +41,16 @@ module.exports = class Song {
 	}
 
 	toString() {
-		return `**${this.name}** (${this.lengthString})`;
+		return `${this.name} (${this.lengthString})`;
 	}
 
 	static timeString(seconds, forceHours = false) {
 		const hours = Math.floor(seconds / 3600);
 		const minutes = Math.floor(seconds % 3600 / 60);
 		return oneLineTrim`
-						${forceHours || hours >= 1 ? `${hours}:` : ''}
-						${hours >= 1 ? `0${minutes}`.slice(-2) : minutes}:
-						${`0${Math.floor(seconds % 60)}`.slice(-2)}
-						`;
+			${forceHours || hours >= 1 ? `${hours}:` : ''}
+			${hours >= 1 ? `0${minutes}`.slice(-2) : minutes}:
+			${`0${Math.floor(seconds % 60)}`.slice(-2)}
+		`;
 	}
 };

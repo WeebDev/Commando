@@ -1,5 +1,5 @@
 const { Command } = require('discord.js-commando');
-const oneLine = require('common-tags').oneLine;
+const stripIndents = require('common-tags').stripIndents;
 
 const Song = require('../../Song');
 
@@ -21,11 +21,23 @@ module.exports = class MusicStatusCommand extends Command {
 		const song = queue.songs[0];
 		const currentTime = song.dispatcher ? song.dispatcher.time / 1000 : 0;
 
-		return msg.reply(oneLine`
-			Currently playing ${song}, queued by ${song.username}.
-			We are ${Song.timeString(currentTime)} into the song, and have ${song.timeLeft(currentTime)} left.
-			${!song.playing ? 'The music is paused.' : ''}
-		`);
+		const currentSong = {
+			color: 3447003,
+			author: {
+				name: `${song.username}`,
+				icon_url: `${song.avatar}` // eslint-disable-line camelcase
+			},
+			description: stripIndents`🎵 ${song}
+				We are ${Song.timeString(currentTime)} into the song, and have ${song.timeLeft(currentTime)} left.
+				${!song.playing ? 'The music is paused.' : ''}
+			`,
+			timestamp: new Date(),
+			footer: {
+				icon_url: this.client.user.avatarURL, // eslint-disable-line camelcase
+				text: 'Currently playing'
+			}
+		};
+		return msg.channel.sendMessage('', { embed: currentSong });
 	}
 
 	get queue() {
