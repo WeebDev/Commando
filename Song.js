@@ -22,7 +22,7 @@ module.exports = class Song {
 	}
 
 	get thumbnail() {
-		let thumbnail = `https://img.youtube.com/vi/${this.id}/maxresdefault.jpg`;
+		let thumbnail = `https://img.youtube.com/vi/${this.id}/mqdefault.jpg`;
 		return thumbnail;
 	}
 
