@@ -22,7 +22,7 @@ module.exports = class ResumeSongCommand extends Command {
 		queue.songs[0].dispatcher.resume();
 		queue.songs[0].playing = true;
 
-		return msg.reply('Resumed the music. This party ain\'t over yet!');
+		return msg.reply('▶ Resumed the music. This party ain\'t over yet!');
 	}
 
 	get queue() {

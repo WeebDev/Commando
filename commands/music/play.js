@@ -117,6 +117,7 @@ module.exports = class PlaySongCommand extends Command {
 					text: 'Queued'
 				}
 			};
+
 			if (!result.startsWith('👍')) {
 				this.queue.delete(msg.guild.id);
 				statusMsg.edit('', { embed: resultMessage });
@@ -149,6 +150,7 @@ module.exports = class PlaySongCommand extends Command {
 					text: 'Queued'
 				}
 			};
+
 			statusMsg.edit('', { embed: result });
 		}
 	}
@@ -202,20 +204,21 @@ module.exports = class PlaySongCommand extends Command {
 		}
 
 		// Play the song
-		const playingSong = {
+		const playingMessage = {
 			color: 3447003,
 			author: {
 				name: `${song.username}`,
 				icon_url: `${song.avatar}` // eslint-disable-line camelcase
 			},
-			description: `🎵 [${song}](${song.url})`,
+			description: `▶ [${song}](${song.url})`,
 			timestamp: new Date(),
 			footer: {
 				icon_url: this.client.user.avatarURL, // eslint-disable-line camelcase
 				text: 'Playing'
 			}
 		};
-		const playing = queue.textChannel.sendMessage('', { embed: playingSong });
+
+		const playing = queue.textChannel.sendMessage('', { embed: playingMessage });
 		let stream;
 		let streamErrored = false;
 		if (song.url.match(/^https?:\/\/(api.soundcloud.com)\/(.*)$/)) {

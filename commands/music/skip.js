@@ -41,7 +41,22 @@ module.exports = class SkipSongCommand extends Command {
 			vote.count++;
 			vote.users.push(msg.author.id);
 			if (vote.count >= threshold) {
-				return msg.say(this.skip(msg.guild, queue));
+				let skip = this.skip(msg.guild, queue);
+				let skipMessage = {
+					color: 3447003,
+					author: {
+						name: `${msg.author.username}#${msg.author.discriminator} (${msg.author.id})`,
+						icon_url: `${msg.author.avatarURL}` // eslint-disable-line camelcase
+					},
+					description: `${skip}`,
+					timestamp: new Date(),
+					footer: {
+						icon_url: this.client.user.avatarURL, // eslint-disable-line camelcase
+						text: 'Skipped'
+					}
+				};
+
+				return msg.channel.sendMessage('', { embed: skipMessage });
 			}
 
 			const time = this.setTimeout(vote);
@@ -84,7 +99,7 @@ module.exports = class SkipSongCommand extends Command {
 		const song = queue.songs[0];
 		song.dispatcher.end();
 
-		return `Skipped ${song}.`;
+		return `⏭ ${song}.`;
 	}
 
 	setTimeout(vote) {

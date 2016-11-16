@@ -15,14 +15,28 @@ module.exports = class SaveQueueCommand extends Command {
 
 	async run(msg) {
 		const queue = this.queue.get(msg.guild.id);
-		if (!queue) return 'There isn\'t any music playing right now. You should get on that.';
+		if (!queue) return msg.reply('There isn\'t any music playing right now. You should get on that.');
 		const song = queue.songs[0];
 
-		msg.reply('✔ Sent you info about the currently playing song!');
-		return msg.direct(stripIndents`
-			Currently playing ${song}, queued by ${song.username}.
-			${song.url.match(/^https?:\/\/(api.soundcloud.com)\/(.*)$/) ? `A SoundCloud song is currently playing.` : `URL: <${song.url}>`}
-		`);
+		msg.reply('✔ Check your inbox!');
+		let saveMessage = {
+			color: 3447003,
+			author: {
+				name: `${msg.author.username}#${msg.author.discriminator} (${msg.author.id})`,
+				icon_url: `${msg.author.avatarURL}` // eslint-disable-line camelcase
+			},
+			description: stripIndents`
+				**Currently playing:** [${song}](${song.url.match(/^https?:\/\/(api.soundcloud.com)\/(.*)$/) ? '' : song.url})
+				${song.url.match(/^https?:\/\/(api.soundcloud.com)\/(.*)$/) ? 'A SoundCloud song is currently playing.' : ''}
+			`,
+			timestamp: new Date(),
+			footer: {
+				icon_url: this.client.user.avatarURL, // eslint-disable-line camelcase
+				text: 'Info request'
+			}
+		};
+
+		return msg.author.sendMessage('', { embed: saveMessage });
 	}
 
 	get queue() {

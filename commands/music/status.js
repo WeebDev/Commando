@@ -37,6 +37,7 @@ module.exports = class MusicStatusCommand extends Command {
 				text: 'Currently playing'
 			}
 		};
+
 		return msg.channel.sendMessage('', { embed: currentSong });
 	}
 
