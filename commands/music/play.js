@@ -211,7 +211,7 @@ module.exports = class PlaySongCommand extends Command {
 				name: `${song.username}`,
 				icon_url: `${song.avatar}` // eslint-disable-line camelcase
 			},
-			description: `▶ [${song}](${song.url})`,
+			description: `[${song}](${song.url})`,
 			image: { url: `${song.thumbnail}` },
 			timestamp: new Date(),
 			footer: {
