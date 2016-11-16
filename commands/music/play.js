@@ -180,7 +180,7 @@ module.exports = class PlaySongCommand extends Command {
 		const song = new Song(video, msg.member);
 		queue.songs.push(song);
 
-		return `👍 ${song}`;
+		return `👍 [${song}](${song.url})`;
 	}
 
 	play(guild, song) {
@@ -208,7 +208,7 @@ module.exports = class PlaySongCommand extends Command {
 				name: `${song.username}`,
 				icon_url: `${song.avatar}` // eslint-disable-line camelcase
 			},
-			description: `🎵 ${song}`,
+			description: `🎵 [${song}](${song.url})`,
 			timestamp: new Date(),
 			footer: {
 				icon_url: this.client.user.avatarURL, // eslint-disable-line camelcase
