@@ -107,7 +107,7 @@ module.exports = class PlaySongCommand extends Command {
 			let resultMessage = {
 				color: 3447003,
 				author: {
-					name: `${msg.author.username}`,
+					name: `${msg.author.username}#${msg.author.discriminator} (${msg.author.id})`,
 					icon_url: `${msg.author.avatarURL}` // eslint-disable-line camelcase
 				},
 				description: `${result}`,
@@ -139,7 +139,7 @@ module.exports = class PlaySongCommand extends Command {
 			const result = {
 				color: 3447003,
 				author: {
-					name: `${msg.author.username}`,
+					name: `${msg.author.username}#${msg.author.discriminator} (${msg.author.id})`,
 					icon_url: `${msg.author.avatarURL}` // eslint-disable-line camelcase
 				},
 				description: `${this.addSong(msg, video)}`,
