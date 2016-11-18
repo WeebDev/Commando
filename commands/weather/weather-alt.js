@@ -45,6 +45,8 @@ module.exports = class WeatherCommand extends Command {
 			if (response.status !== 'OK') return this.handleNotOK(msg, response.body.status);
 			if (response.results.length === 0) return msg.reply('I couldn\'t find a place with the location you provded me');
 
+			let geocodelocation = response.results[0].formatted_address;
+
 			return request({
 				uri: `https://api.darksky.net/forecast/${config.WeatherAPIKey}/${response.results[0].geometry.location.lat},${response.results[0].geometry.location.lng}?exclude=minutely,hourly,flags&units=auto`,
 				headers: { 'User-Agent': `Hamakaze ${version} (https://github.com/iCrawl/Hamakaze/)` },
@@ -65,7 +67,7 @@ module.exports = class WeatherCommand extends Command {
 					color: 3447003,
 					fields: [
 						{
-							name: `${location.substr(0, 35)}`,
+							name: `${geocodelocation.substr(0, 35)}`,
 							value: `${this.getBase(icon)}`,
 							inline: true
 						},

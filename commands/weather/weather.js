@@ -110,14 +110,14 @@ module.exports = class WeatherCommand extends Command {
 					ctx.shadowColor = 'rgba(255, 255, 255, 0.4)';
 					ctx.fillText(datetime, 20, 30);
 
-					if (location.length > 30) {
+					if (geocodelocation.length > 30) {
 						ctx.font = '16px Roboto';
 					} else {
 						ctx.font = '18px Roboto';
 					}
 					ctx.fillStyle = '#FFFFFF';
 					ctx.shadowColor = 'rgba(0, 0, 0, 0.4)';
-					ctx.fillText(location.substr(0, 35), 25, 52);
+					ctx.fillText(geocodelocation.substr(0, 35), 25, 52);
 
 					// Temperature
 					ctx.font = '88px Roboto';
