@@ -11,8 +11,6 @@ const client = new commando.Client({
 	commandPrefix: 'dude, ',
 	unknownCommandResponse: false,
 	disableEveryone: true,
-	messageCacheLifetime: 30,
-	messageSweepInterval: 60,
 	disabledEvents: [
 		'GUILD_CREATE',
 		'GUILD_DELETE',
