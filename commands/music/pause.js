@@ -20,7 +20,7 @@ module.exports = class PauseSongCommand extends Command {
 		queue.songs[0].dispatcher.pause();
 		queue.songs[0].playing = false;
 
-		return msg.reply(`⏸ Paused the music. Use \`@Commando#3509 resume\` to continue playing.`);
+		return msg.reply(`Paused the music. Use \`@Commando#3509 resume\` to continue playing.`);
 	}
 
 	get queue() {

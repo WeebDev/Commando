@@ -110,7 +110,7 @@ module.exports = class PlaySongCommand extends Command {
 					name: `${msg.author.username}#${msg.author.discriminator} (${msg.author.id})`,
 					icon_url: `${msg.author.avatarURL}` // eslint-disable-line camelcase
 				},
-				description: `${result}`,
+				description: `${result}\n\u200B`,
 				timestamp: new Date(),
 				footer: {
 					icon_url: this.client.user.avatarURL, // eslint-disable-line camelcase

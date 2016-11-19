@@ -21,7 +21,6 @@ module.exports = class AnimeCommand extends Command {
 			memberName: 'anime',
 			description: 'Get info on an anime.',
 			format: '<anime>',
-			guildOnly: true,
 
 			args: [
 				{
@@ -37,8 +36,7 @@ module.exports = class AnimeCommand extends Command {
 
 	async run(msg, args) { // eslint-disable-line consistent-return
 		const anime = args.anime;
-		// Because human interaction kek
-		msg.channel.startTyping();
+
 		try {
 			let data = await nani.get(`anime/search/${anime}`);
 			if (!Array.isArray(data)) {
@@ -47,11 +45,8 @@ module.exports = class AnimeCommand extends Command {
 			}
 			data = data.length === 1 ? data[0] : data.find(en => en.title_english.toLowerCase() === anime.toLowerCase() || en.title_romaji.toLowerCase() === anime.toLowerCase()) || data[0];
 			let title = data.title_english !== '' && data.title_romaji !== data.title_english ? `${data.title_english} / ${data.title_romaji} / ${data.title_japanese}` : `${data.title_romaji} / ${data.title_japanese}`;
-			let synopsis = data.description.replace(/\\n/g, '\n').replace(/<br>|\\r/g, '').substring(0, 1000);
+			let synopsis = data.description ? data.description.replace(/\\n/g, '\n').replace(/<br>|\\r/g, '').substring(0, 1000) : 'No description.';
 			let score = data.average_score / 10;
-
-			// It would be horrible if she wouldn't stop typing
-			msg.channel.stopTyping();
 
 			let embed = {
 				color: 3447003,
@@ -92,22 +87,19 @@ module.exports = class AnimeCommand extends Command {
 					},
 					{
 						name: 'Description:',
-						value: `${synopsis}`,
+						value: `${synopsis}\n\u200B`,
 						inline: false
 					}
 				],
 				thumbnail: { url: `${data.image_url_med}` },
 				footer: {
 					icon_url: msg.client.user.avatarURL, // eslint-disable-line camelcase
-					text: `Started: ${moment.utc(data.start_date).format('DD/MM/YYYY')}\nFinished: ${data.end_date !== null ? moment.utc(data.end_date).format('DD/MM/YYYY') : '?'}`
+					text: `Started: ${moment.utc(data.start_date).format('DD/MM/YYYY')} | Finished: ${data.end_date !== null ? moment.utc(data.end_date).format('DD/MM/YYYY') : '?'}`
 				}
 			};
 
 			return msg.channel.sendMessage('', { embed });
-		} catch (error) {
-			msg.channel.stopTyping();
-			winston.error(error);
-		}
+		} catch (error) { winston.error(error); }
 	}
 
 	parseSeason(season) {

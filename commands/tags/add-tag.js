@@ -1,6 +1,7 @@
 const { Command } = require('discord.js-commando');
 const winston = require('winston');
 
+const { redis } = require('../../redis/redis');
 const TagModel = require('../../mongoDB/models/Tag');
 
 module.exports = class TagAddCommand extends Command {
@@ -28,7 +29,8 @@ module.exports = class TagAddCommand extends Command {
 					key: 'content',
 					label: 'tagcontent',
 					prompt: 'What content would you like to add?\n',
-					type: 'string'
+					type: 'string',
+					max: 1800
 				}
 			]
 		});
@@ -40,6 +42,7 @@ module.exports = class TagAddCommand extends Command {
 
 		TagModel.get(name, msg.guild.id).then(tag => {
 			if (tag) return msg.say(`A tag with the name **${name}** already exists, ${msg.author}`);
+
 			return new TagModel({
 				userID: msg.author.id,
 				userName: `${msg.author.username}#${msg.author.discriminator}`,
@@ -60,7 +63,11 @@ module.exports = class TagAddCommand extends Command {
 						let member = msg.channel.guild.members.get(replaceID);
 						return `@${member.user.username}`;
 					})
-			}).save().then(() => msg.say(`A tag with the name **${name}** has been added, ${msg.author}`));
+			}).save().then(doc => {
+				redis.set(name + msg.guild.id, doc.content);
+
+				return msg.say(`A tag with the name **${name}** has been added, ${msg.author}`);
+			});
 		}).catch(error => { winston.error(error); });
 	}
 };
