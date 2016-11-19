@@ -26,19 +26,15 @@ module.exports = class TagDeleteCommand extends Command {
 		});
 	}
 
+
 	async run(msg, args) {
 		const name = args.name.toLowerCase();
 
 		return TagModel.get(name, msg.guild.id).then(tag => {
 			if (!tag) return msg.say(`There is no tag with the name **${name}**, ${msg.author}`);
 			if (tag.userID === msg.author.id || msg.guild.owner.id === msg.author.id || msg.author.id === '81440962496172032') {
-				return TagModel.delete(name, msg.guild.id).then(() => {
-					redis.del(name + msg.guild.id);
-
-					return msg.say(`The tag **${name}** has been deleted, ${msg.author}`);
-				});
+				return TagModel.delete(name, msg.guild.id).then(() => { return msg.say(`The tag **${name}** has been deleted, ${msg.author}`); });
 			}
-
 			return msg.say(`You can only delete your own tags, ${msg.author}`);
 		}).catch(error => { winston.error(error); });
 	}
