@@ -19,8 +19,9 @@ module.exports = class TagListCommand extends Command {
 	async run(msg) {
 		return TagModel.find(msg.guild.id).then(tags => {
 			if (!tags) return msg.say(`${msg.guild.name} doesn't have any tags, ${msg.author}. Why not add one?`);
+
 			return msg.say(stripIndents`**❯ Tags:**
-				${tags.map(tag => tag.name).join(', ')}
+				${tags.map(tag => tag.name).sort().join(', ')}
 			`);
 		}).catch(error => { winston.error(error); });
 	}

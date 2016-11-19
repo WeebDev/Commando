@@ -32,6 +32,7 @@ module.exports = class TagWhoCommand extends Command {
 
 		return TagModel.get(name, msg.guild.id).then(tag => {
 			if (!tag) return msg.say(`A tag with the name **${name}** doesn't exist, ${msg.author}`);
+
 			return msg.say(stripIndents`❯ Info on Tag: **${tag.name}**
 
 				 • Username: ${tag.userName} (ID: ${tag.userID})

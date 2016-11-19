@@ -44,8 +44,10 @@ module.exports = class RepCommand extends Command {
 			let repUsername = repUser.userName;
 			let repUserPositive = repUser.positive;
 			let repUserNegative = repUser.negative;
+
 			return RepModel.findAll(user.id, msg.guild.id).then(rep => {
 				const paginated = util.paginate(rep, page, 5);
+
 				return msg.say(stripIndents`
 					**${repUsername} has ${repUserPositive - repUserNegative} ( +${repUserPositive} | -${repUserNegative} ) reputation:**
 					${paginated.maxPage > 1 ? `\n**Reputations page: ${paginated.page}**` : ''}

@@ -23,7 +23,7 @@ module.exports = class ChangeVolumeCommand extends Command {
 			return msg.reply(`You're not in the voice channel. You better not be trying to mess with their mojo, man.`);
 		}
 
-		let volume = parseInt(args[0]);
+		let volume = parseInt(args);
 		if (isNaN(volume)) {
 			volume = args.toLowerCase();
 			if (volume === 'up' || volume === '+') {

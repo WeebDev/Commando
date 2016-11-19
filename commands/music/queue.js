@@ -37,19 +37,33 @@ module.exports = class ViewQueueCommand extends Command {
 		const currentSong = queue.songs[0];
 		const currentTime = currentSong.dispatcher ? currentSong.dispatcher.time / 1000 : 0;
 
-		return msg.reply(stripIndents`
-			__**Song queue, ${paginated.page}**__
-			${paginated.items.map(song => `**-** ${song.name} (${song.lengthString})`).join('\n')}
-			${paginated.maxPage > 1 ? `\nUse \`queue <page>\` to view a specific page.\n` : ''}
-			**Now playing:** ${currentSong.name} (queued by ${currentSong.username})
-			${oneLine`
-				**Progress:**
-				${!currentSong.playing ? 'Paused: ' : ''}${Song.timeString(currentTime)} /
-				${currentSong.lengthString}
-				(${currentSong.timeLeft(currentTime)} left)
-			`}
-			**Total queue time:** ${Song.timeString(totalLength)}
-		`);
+		const queueEmbed = {
+			color: 3447003,
+			author: {
+				name: `${msg.author.username}#${msg.author.discriminator} (${msg.author.id})`,
+				icon_url: `${msg.author.avatarURL}` // eslint-disable-line camelcase
+			},
+			description: stripIndents`
+				__**Song queue, page ${paginated.page}**__
+				${paginated.items.map(song => `**-** [${song.name} (${song.lengthString})](https://www.youtube.com/watch?v=${song.id})`).join('\n')}
+				${paginated.maxPage > 1 ? `\nUse \`queue <page>\` to view a specific page.\n` : ''}
+				**Now playing:** [${currentSong.name}](https://www.youtube.com/watch?v=${currentSong.id})
+				${oneLine`
+					**Progress:**
+					${!currentSong.playing ? 'Paused: ' : ''}${Song.timeString(currentTime)} /
+					${currentSong.lengthString}
+					(${currentSong.timeLeft(currentTime)} left)
+				`}
+				**Total queue time:** ${Song.timeString(totalLength)}\n\u200B
+			`,
+			timestamp: new Date(),
+			footer: {
+				icon_url: this.client.user.avatarURL, // eslint-disable-line camelcase
+				text: 'Queue'
+			}
+		};
+
+		return msg.channel.sendMessage('', { embed: queueEmbed });
 	}
 
 	get queue() {

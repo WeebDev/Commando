@@ -9,12 +9,12 @@ module.exports = class SkipSongCommand extends Command {
 			memberName: 'skip',
 			description: 'Skips the song that is currently playing.',
 			details: oneLine`
-							If there are 3 people or fewer (excluding the bot) in the voice channel, the skip will be immediate.
-							With at least 4 people, a voteskip will be started with 15 seconds to accept votes.
-							The required votes to successfully skip the song is one-third of the number of listeners, rounded up.
-							Each vote will add 5 seconds to the vote's timer.
-							Moderators can use the "force" parameter, which will immediately skip without a vote, no matter what.
-							`,
+				If there are 3 people or fewer (excluding the bot) in the voice channel, the skip will be immediate.
+				With at least 4 people, a voteskip will be started with 15 seconds to accept votes.
+				The required votes to successfully skip the song is one-third of the number of listeners, rounded up.
+				Each vote will add 5 seconds to the vote's timer.
+				Moderators can use the "force" parameter, which will immediately skip without a vote, no matter what.
+			`,
 			guildOnly: true
 		});
 
@@ -41,7 +41,7 @@ module.exports = class SkipSongCommand extends Command {
 			vote.count++;
 			vote.users.push(msg.author.id);
 			if (vote.count >= threshold) {
-				return msg.say(this.skip(msg.guild, queue));
+				return msg.reply(this.skip(msg.guild, queue));
 			}
 
 			const time = this.setTimeout(vote);
@@ -84,7 +84,7 @@ module.exports = class SkipSongCommand extends Command {
 		const song = queue.songs[0];
 		song.dispatcher.end();
 
-		return `Skipped ${song}.`;
+		return `[${song}](${song.url})`;
 	}
 
 	setTimeout(vote) {

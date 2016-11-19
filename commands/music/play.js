@@ -103,10 +103,24 @@ module.exports = class PlaySongCommand extends Command {
 			this.queue.set(msg.guild.id, queue);
 
 			// Try to add the song to the queue
-			const result = this.addSong(msg, video);
+			let result = this.addSong(msg, video);
+			let resultMessage = {
+				color: 3447003,
+				author: {
+					name: `${msg.author.username}#${msg.author.discriminator} (${msg.author.id})`,
+					icon_url: `${msg.author.avatarURL}` // eslint-disable-line camelcase
+				},
+				description: `${result}\n\u200B`,
+				timestamp: new Date(),
+				footer: {
+					icon_url: this.client.user.avatarURL, // eslint-disable-line camelcase
+					text: 'Queued'
+				}
+			};
+
 			if (!result.startsWith('👍')) {
 				this.queue.delete(msg.guild.id);
-				statusMsg.edit(`${msg.author}, ${result}`);
+				statusMsg.edit('', { embed: resultMessage });
 				return;
 			}
 
@@ -123,8 +137,22 @@ module.exports = class PlaySongCommand extends Command {
 			});
 		} else {
 			// Just add the song
-			const result = this.addSong(msg, video);
-			statusMsg.edit(`${msg.author}, ${result}`);
+			let result = this.addSong(msg, video);
+			let resultMessage = {
+				color: 3447003,
+				author: {
+					name: `${msg.author.username}#${msg.author.discriminator} (${msg.author.id})`,
+					icon_url: `${msg.author.avatarURL}` // eslint-disable-line camelcase
+				},
+				description: `${result}`,
+				timestamp: new Date(),
+				footer: {
+					icon_url: this.client.user.avatarURL, // eslint-disable-line camelcase
+					text: 'Queued'
+				}
+			};
+
+			statusMsg.edit('', { embed: resultMessage });
 		}
 	}
 
@@ -136,13 +164,13 @@ module.exports = class PlaySongCommand extends Command {
 			const maxLength = config.maxLength;
 			if (maxLength > 0 && video.durationSeconds > maxLength * 60) {
 				return oneLine`
-					👎 **${util.escape(video.title)}**
+					👎 ${util.escape(video.title)}
 					(${Song.timeString(video.durationSeconds)})
 					is too long. No songs longer than ${maxLength} minutes!
 				`;
 			}
 			if (queue.songs.some(song => song.id === video.id)) {
-				return `👎 **${escapeMarkdown(video.title)}** is already queued.`;
+				return `👎 ${escapeMarkdown(video.title)} is already queued.`;
 			}
 			const maxSongs = config.maxSongs;
 			if (maxSongs > 0 && queue.songs.reduce((prev, song) => prev + song.member.id === msg.author.id, 0) >= maxSongs) {
@@ -155,7 +183,7 @@ module.exports = class PlaySongCommand extends Command {
 		const song = new Song(video, msg.member);
 		queue.songs.push(song);
 
-		return `👍 Queued up ${song}.`;
+		return `👍 [${song}](${song.url})`;
 	}
 
 	play(guild, song) {
@@ -177,7 +205,22 @@ module.exports = class PlaySongCommand extends Command {
 		}
 
 		// Play the song
-		const playing = queue.textChannel.sendMessage(`🎵 Playing ${song}, queued by ${song.username}.`);
+		const playingMessage = {
+			color: 3447003,
+			author: {
+				name: `${song.username}`,
+				icon_url: `${song.avatar}` // eslint-disable-line camelcase
+			},
+			description: `[${song}](${song.url})`,
+			image: { url: `${song.thumbnail}` },
+			timestamp: new Date(),
+			footer: {
+				icon_url: this.client.user.avatarURL, // eslint-disable-line camelcase
+				text: 'Playing'
+			}
+		};
+
+		const playing = queue.textChannel.sendMessage('', { embed: playingMessage });
 		let stream;
 		let streamErrored = false;
 		if (song.url.match(/^https?:\/\/(api.soundcloud.com)\/(.*)$/)) {
