@@ -28,24 +28,9 @@ module.exports = class TagCommand extends Command {
 	async run(msg, args) {
 		const name = args.name.toLowerCase();
 
-		return this.findTagCached(msg, name, msg.guild.id);
-	}
-
-	async findTagCached(msg, name, guildID) {
-		redis.get(name + guildID, (err, reply) => {
-			if (err) return winston.error(err);
-			if (reply) {
-				TagModel.incrementUses(name, guildID);
-
-				return msg.say(reply);
-			} else {
-				return TagModel.get(name, guildID).then(tag => {
-					if (!tag) return msg.say(`A tag with the name **${name}** doesn't exist, ${msg.author}`);
-					TagModel.incrementUses(name, guildID);
-
-					return redis.set(name + guildID, tag.content, () => { msg.say(tag.content); });
-				}).catch(error => { winston.error(error); });
-			}
-		});
+		return TagModel.get(name, msg.guild.id).then(tag => {
+			if (!tag) return msg.say(`A tag with the name **${name}** doesn't exist, ${msg.author}`);
+			return TagModel.incrementUses(name, msg.guild.id).then(() => msg.say(tag.content));
+		}).catch(error => { winston.error(error); });
 	}
 };
