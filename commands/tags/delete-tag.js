@@ -1,6 +1,7 @@
 const { Command } = require('discord.js-commando');
 const winston = require('winston');
 
+const { redis } = require('../../redis/redis');
 const TagModel = require('../../mongoDB/models/Tag');
 
 module.exports = class TagDeleteCommand extends Command {
@@ -32,9 +33,12 @@ module.exports = class TagDeleteCommand extends Command {
 			if (!tag) return msg.say(`There is no tag with the name **${name}**, ${msg.author}`);
 			if (tag.userID === msg.author.id || msg.guild.owner.id === msg.author.id || msg.author.id === '81440962496172032') {
 				return TagModel.delete(name, msg.guild.id).then(() => {
+					redis.del(name + msg.guild.id);
+
 					return msg.say(`The tag **${name}** has been deleted, ${msg.author}`);
 				});
 			}
+
 			return msg.say(`You can only delete your own tags, ${msg.author}`);
 		}).catch(error => { winston.error(error); });
 	}

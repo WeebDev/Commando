@@ -76,7 +76,7 @@ module.exports = class CleanCommand extends Command {
 			} else if (filter === 'upload') {
 				messageFilter = message => message.attachments.size !== 0;
 			} else if (filter === 'links') {
-				messageFilter = message => message.content.search(/https?:\/\/[^ \/\.]+\.[^ \/\.]+/) !== -1;
+				messageFilter = message => message.content.search(/https?:\/\/[^ \/\.]+\.[^ \/\.]+/) !== -1; // eslint-disable-line no-useless-escape
 			} else {
 				return msg.say(`${msg.author}, that is not a valid filter. Do \`help clean\` for all available filters.`);
 			}

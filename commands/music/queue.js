@@ -54,7 +54,7 @@ module.exports = class ViewQueueCommand extends Command {
 					${currentSong.lengthString}
 					(${currentSong.timeLeft(currentTime)} left)
 				`}
-				**Total queue time:** ${Song.timeString(totalLength)}
+				**Total queue time:** ${Song.timeString(totalLength)}\n\u200B
 			`,
 			timestamp: new Date(),
 			footer: {

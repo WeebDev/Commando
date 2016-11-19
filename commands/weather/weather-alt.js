@@ -8,7 +8,7 @@ const winston = require('winston');
 const config = require('../../settings');
 const version = require('../../package').version;
 
-module.exports = class WeatherCommand extends Command {
+module.exports = class WeatherAlternativeCommand extends Command {
 	constructor(client) {
 		super(client, {
 			name: 'weather-alt',
@@ -17,7 +17,6 @@ module.exports = class WeatherCommand extends Command {
 			memberName: 'weather-alt',
 			description: 'Get the weather.',
 			format: '<location>',
-			guildOnly: true,
 
 			args: [
 				{
@@ -42,7 +41,7 @@ module.exports = class WeatherCommand extends Command {
 			headers: { 'User-Agent': `Hamakaze ${version} (https://github.com/iCrawl/Hamakaze/)` },
 			json: true
 		}).then(response => {
-			if (response.status !== 'OK') return this.handleNotOK(msg, response.body.status);
+			if (response.status !== 'OK') return this.handleNotOK(msg, response.status);
 			if (response.results.length === 0) return msg.reply('I couldn\'t find a place with the location you provded me');
 
 			let geocodelocation = response.results[0].formatted_address;
@@ -64,7 +63,7 @@ module.exports = class WeatherCommand extends Command {
 				let windspeed = res.currently.windSpeed;
 
 				let embed = {
-					color: 3447003,
+					color: this.getColor(icon),
 					fields: [
 						{
 							name: `${geocodelocation.substr(0, 35)}`,
@@ -113,28 +112,22 @@ module.exports = class WeatherCommand extends Command {
 					}
 				};
 
-				return msg.channel.sendMessage('', { embed })
-					.catch(error => { winston.error(error); });
-			}).catch(error => {
-				return winston.error(error);
-			});
-		}).catch(error => {
-			winston.error(error);
-			return msg.say(`Error: Status code ${error.status || error.response} from Google.`);
-		});
+				return msg.channel.sendMessage('', { embed }).catch(error => { winston.error(error); });
+			}).catch(error => { winston.error(error); });
+		}).catch(error => { winston.error(error); });
 	}
 
 	handleNotOK(msg, status) {
 		if (status === 'ZERO_RESULTS') {
-			return { plain: `${msg.author}, your request returned no results.` };
+			return `${msg.author}, your request returned no results.`;
 		} else if (status === 'REQUEST_DENIED') {
-			return { plain: `Error: Geocode API Request was denied.` };
+			return `Error: Geocode API Request was denied.`;
 		} else if (status === 'INVALID_REQUEST') {
-			return { plain: `Error: Invalid Request,` };
+			return `Error: Invalid Request,`;
 		} else if (status === 'OVER_QUERY_LIMIT') {
-			return { plain: `${msg.author}, Query Limit Exceeded. Try again tomorrow.` };
+			return `${msg.author}, Query Limit Exceeded. Try again tomorrow.`;
 		} else {
-			return { plain: `Error: Unknown.` };
+			return `Error: Unknown.`;
 		}
 	}
 
@@ -144,6 +137,14 @@ module.exports = class WeatherCommand extends Command {
 		if (icon === 'snow' || icon === 'sleet' || icon === 'fog' || icon === 'wind') return `🌫`;
 		if (icon === 'cloudy') return `☁`;
 		return `☀`;
+	}
+
+	getColor(icon) {
+		if (icon === 'clear-night' || icon === 'partly-cloudly-night') return 8547552;
+		if (icon === 'rain') return 1277387;
+		if (icon === 'snow' || icon === 'sleet' || icon === 'fog' || icon === 'wind') return 11318461;
+		if (icon === 'cloudy') return 8824516;
+		return 5937855;
 	}
 
 	getWindspeedUnit(units) {

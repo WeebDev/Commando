@@ -31,7 +31,7 @@ module.exports = class RepMinusCommand extends Command {
 					label: 'repreason',
 					prompt: 'What reason would you like to add?\n',
 					type: 'string',
-					max: 60
+					max: 200
 				}
 			]
 		});
@@ -50,10 +50,9 @@ module.exports = class RepMinusCommand extends Command {
 					Please wait 24h.
 				`);
 			}
+
 			return this.rep(msg, user, reason);
-		}).catch(() => {
-			return this.rep(msg, user, reason);
-		});
+		}).catch(() => { return this.rep(msg, user, reason); });
 	}
 
 	async rep(msg, user, reason) {

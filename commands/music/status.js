@@ -29,7 +29,7 @@ module.exports = class MusicStatusCommand extends Command {
 			},
 			description: stripIndents`[${song}](${song.url})
 				We are ${Song.timeString(currentTime)} into the song, and have ${song.timeLeft(currentTime)} left.
-				${!song.playing ? 'The music is paused.' : ''}
+				${!song.playing ? 'The music is paused.' : ''}\n\u200B
 			`,
 			image: { url: `${song.thumbnail}` },
 			timestamp: new Date(),
