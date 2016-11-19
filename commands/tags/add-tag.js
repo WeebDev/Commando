@@ -1,7 +1,6 @@
 const { Command } = require('discord.js-commando');
 const winston = require('winston');
 
-const { redis } = require('../../redis/redis');
 const TagModel = require('../../mongoDB/models/Tag');
 
 module.exports = class TagAddCommand extends Command {
