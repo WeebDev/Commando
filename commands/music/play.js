@@ -164,7 +164,7 @@ module.exports = class PlaySongCommand extends Command {
 			const maxLength = config.maxLength;
 			if (maxLength > 0 && video.durationSeconds > maxLength * 60) {
 				return oneLine`
-					👎 ${util.escape(video.title)}
+					👎 ${escapeMarkdown(video.title)}
 					(${Song.timeString(video.durationSeconds)})
 					is too long. No songs longer than ${maxLength} minutes!
 				`;
