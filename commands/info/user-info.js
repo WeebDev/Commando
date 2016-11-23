@@ -28,18 +28,37 @@ module.exports = class UserInfoCommand extends Command {
 		const member = args.member;
 		const user = member.user;
 
-		return msg.say(stripIndents`
-				Info on **${user.username}#${user.discriminator}** (ID: ${user.id})
+		let embed = {
+			color: 3447003,
+			author: {
+				name: `${user.username}#${user.discriminator} (${user.id})`,
+				icon_url: user.avatarURL ? user.avatarURL : this.client.user.avatarURL // eslint-disable-line camelcase
+			},
+			fields: [
+				{
+					name: '❯ Member Details',
+					value: stripIndents`
+						${member.nickname !== null ? ` • Nickname: ${member.nickname}` : '• No nickname'}
+						• Roles: ${member.roles.map(roles => `\`${roles.name}\``).join(' ')}
+						• Joined at: ${moment.utc(member.joinedAt).format('dddd, MMMM Do YYYY, HH:mm:ss ZZ')}
+					`
+				},
+				{
+					name: '❯ User Details',
+					value: stripIndents`
+						• Created at: ${moment.utc(user.createdAt).format('dddd, MMMM Do YYYY, HH:mm:ss ZZ')}${user.bot ? '\n• Is a bot account' : ''}
+						• Status: ${user.presence.status}
+						• Game: ${user.presence.game ? user.presence.game.name : 'None'}
+					`
+				}
+			],
+			timestamp: new Date(),
+			footer: {
+				icon_url: this.client.user.avatarURL, // eslint-disable-line camelcase
+				text: 'User info'
+			}
+		};
 
-				**❯ Member Details**
-				${member.nickname !== null ? ` • Nickname: ${member.nickname}` : ' • No nickname'}
-				 • Roles: ${member.roles.map(roles => `\`${roles.name}\``).join(' ')}
-				 • Joined at: ${moment.utc(member.joinedAt).format('dddd, MMMM Do YYYY, HH:mm:ss ZZ')}
-
-				**❯ User Details**
-				 • Created at: ${moment.utc(user.createdAt).format('dddd, MMMM Do YYYY, HH:mm:ss ZZ')}${user.bot ? '\n • Is a bot account' : ''}
-				 • Status: ${user.presence.status}
-				 • Game: ${user.presence.game ? user.presence.game.name : 'None'}
-		`);
+		return msg.channel.sendMessage('', { embed });
 	}
 };

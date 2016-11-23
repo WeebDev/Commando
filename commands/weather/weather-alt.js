@@ -66,13 +66,13 @@ module.exports = class WeatherAlternativeCommand extends Command {
 					color: this.getColor(icon),
 					fields: [
 						{
-							name: `${geocodelocation.substr(0, 35)}`,
-							value: `${this.getBase(icon)}`,
+							name: geocodelocation.substr(0, 35),
+							value: this.getBase(icon),
 							inline: true
 						},
 						{
 							name: 'Condition',
-							value: `${condition}`,
+							value: condition,
 							inline: true
 						},
 						{
@@ -108,7 +108,7 @@ module.exports = class WeatherAlternativeCommand extends Command {
 					],
 					footer: {
 						icon_url: msg.client.user.avatarURL, // eslint-disable-line camelcase
-						text: `${datetime}`
+						text: datetime
 					}
 				};
 

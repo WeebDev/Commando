@@ -25,13 +25,13 @@ module.exports = class MusicStatusCommand extends Command {
 			color: 3447003,
 			author: {
 				name: `${song.username}`,
-				icon_url: `${song.avatar}` // eslint-disable-line camelcase
+				icon_url: song.avatar ? song.avatar : this.client.user.avatarURL // eslint-disable-line camelcase
 			},
 			description: stripIndents`[${song}](${song.url})
 				We are ${Song.timeString(currentTime)} into the song, and have ${song.timeLeft(currentTime)} left.
-				${!song.playing ? 'The music is paused.' : ''}\n\u200B
+				${!song.playing ? 'The music is paused.' : ''}
 			`,
-			image: { url: `${song.thumbnail}` },
+			image: { url: song.thumbnail },
 			timestamp: new Date(),
 			footer: {
 				icon_url: this.client.user.avatarURL, // eslint-disable-line camelcase

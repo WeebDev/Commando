@@ -23,14 +23,14 @@ module.exports = class SaveQueueCommand extends Command {
 			color: 3447003,
 			author: {
 				name: `${msg.author.username}#${msg.author.discriminator} (${msg.author.id})`,
-				icon_url: `${msg.author.avatarURL}` // eslint-disable-line camelcase
+				icon_url: msg.author.avatarURL ? msg.author.avatarURL : this.client.user.avatarURL // eslint-disable-line camelcase
 			},
 			description: stripIndents`
 				**Currently playing:**
 				[${song}](${song.url.match(/^https?:\/\/(api.soundcloud.com)\/(.*)$/) ? '' : song.url})
 				${song.url.match(/^https?:\/\/(api.soundcloud.com)\/(.*)$/) ? 'A SoundCloud song is currently playing.' : ''}\n\u200B
 			`,
-			image: { url: `${song.thumbnail}` },
+			image: { url: song.thumbnail },
 			timestamp: new Date(),
 			footer: {
 				icon_url: this.client.user.avatarURL, // eslint-disable-line camelcase

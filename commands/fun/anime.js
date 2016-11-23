@@ -62,17 +62,17 @@ module.exports = class AnimeCommand extends Command {
 					},
 					{
 						name: 'Episodes',
-						value: `${data.total_episodes}`,
+						value: data.total_episodes,
 						inline: true
 					},
 					{
 						name: 'Status',
-						value: `${data.airing_status.replace(/(\b\w)/gi, lc => lc.toUpperCase())}`,
+						value: data.airing_status.replace(/(\b\w)/gi, lc => lc.toUpperCase()),
 						inline: true
 					},
 					{
 						name: 'Genre(s)',
-						value: `${data.genres.join(', ')}`,
+						value: data.genres.join(', '),
 						inline: true
 					},
 					{
@@ -82,7 +82,7 @@ module.exports = class AnimeCommand extends Command {
 					},
 					{
 						name: 'Score',
-						value: `${score.toFixed(2)}`,
+						value: score.toFixed(2),
 						inline: true
 					},
 					{
@@ -91,7 +91,7 @@ module.exports = class AnimeCommand extends Command {
 						inline: false
 					}
 				],
-				thumbnail: { url: `${data.image_url_med}` },
+				thumbnail: { url: data.image_url_med },
 				footer: {
 					icon_url: msg.client.user.avatarURL, // eslint-disable-line camelcase
 					text: `Started: ${moment.utc(data.start_date).format('DD/MM/YYYY')} | Finished: ${data.end_date !== null ? moment.utc(data.end_date).format('DD/MM/YYYY') : '?'}`
