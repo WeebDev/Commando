@@ -13,12 +13,19 @@ module.exports = class AboutCommand extends Command {
 	}
 
 	async run(msg) {
-		return msg.say(stripIndents`
+		let embed = {
+			color: 3447003,
+			author: {
+				name: `${msg.author.username}#${msg.author.discriminator} (${msg.author.id})`,
+				icon_url: msg.author.avatarURL ? msg.author.avatarURL : this.client.user.avatarURL // eslint-disable-line camelcase
+			},
+			description: stripIndents`
 				__**discord.js Commando:**__
 				This is the WIP official command framework for discord.js.
 				It makes full use of ES2017's \`async\`/\`await\`.
 
-				GitHub: <https://github.com/Gawdl3y/discord.js-commando>
+				[Framework GitHub](https://github.com/Gawdl3y/discord.js-commando)
+				[Commando bot Github](https://github.com/iCrawl/Commando)
 
 				__**Installation:**__
 				**Node 7.0.0 or newer is required.**
@@ -29,10 +36,15 @@ module.exports = class AboutCommand extends Command {
 				\`node --harmony somebot.js\`
 				\`pm2 start somebot.js --node-args='--harmony'\`
 
-				__**Documentation (WIP):**__
-				<https://gawdl3y.github.io/discord.js-commando/0.4.0/>
-				See also:
-				<https://discord.js.org/#!/docs/tag/master/file/general/Welcome>
-		`);
+				[Documentation (WIP)](https://gawdl3y.github.io/discord.js-commando/0.4.0/)
+				[Discord.js Documentation](https://discord.js.org/#!/docs/tag/master/file/general/Welcome)\n\u200B
+			`,
+			timestamp: new Date(),
+			footer: {
+				icon_url: this.client.user.avatarURL, // eslint-disable-line camelcase
+				text: 'About'
+			}
+		};
+		return msg.channel.sendMessage('', { embed });
 	}
 };
