@@ -27,8 +27,8 @@ module.exports = class StatsCommand extends Command {
 			fields: [
 				{
 					name: '❯ Uptime',
-					value: moment.duration(this.client.uptime).format('d[ days]\nh[ hours]\nm[ minutes\n]s[ seconds]\n\u200B'),
-					inline: true
+					value: moment.duration(this.client.uptime).format('d[ days], h[ hours], m[ minutes, and ]s[ seconds]'),
+					inline: false
 				},
 				{
 					name: '❯ Memory usage',
