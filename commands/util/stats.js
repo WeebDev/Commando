@@ -19,16 +19,11 @@ module.exports = class StatsCommand extends Command {
 	async run(msg) {
 		let embed = {
 			color: 3447003,
-			author: {
-				name: `${msg.author.username}#${msg.author.discriminator} (${msg.author.id})`,
-				icon_url: msg.author.avatarURL ? msg.author.avatarURL : this.client.user.avatarURL // eslint-disable-line camelcase
-			},
 			description: '**Commando Statistics**\n',
 			fields: [
 				{
 					name: '❯ Uptime',
-					value: moment.duration(this.client.uptime).format('d[ days], h[ hours], m[ minutes, and ]s[ seconds]'),
-					inline: false
+					value: moment.duration(this.client.uptime).format('d[ days], h[ hours], m[ minutes, and ]s[ seconds]')
 				},
 				{
 					name: '❯ Memory usage',
@@ -39,8 +34,13 @@ module.exports = class StatsCommand extends Command {
 					name: '❯ Version',
 					value: version,
 					inline: true
+				},
+				{
+					name: '\u200B',
+					value: '\u200B'
 				}
 			],
+			thumbnail: { url: this.client.user.avatarURL },
 			timestamp: new Date(),
 			footer: {
 				icon_url: this.client.user.avatarURL, // eslint-disable-line camelcase
