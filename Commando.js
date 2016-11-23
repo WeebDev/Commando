@@ -1,6 +1,5 @@
 const commando = require('discord.js-commando');
 const fs = require('fs');
-const moment = require('moment');
 const oneLine = require('common-tags').oneLine;
 const path = require('path');
 const winston = require('winston');
