@@ -1,5 +1,4 @@
 const commando = require('discord.js-commando');
-const moment = require('moment');
 const oneLine = require('common-tags').oneLine;
 const path = require('path');
 const winston = require('winston');
@@ -15,27 +14,24 @@ const client = new commando.Client({
 		'GUILD_CREATE',
 		'GUILD_DELETE',
 		'GUILD_UPDATE',
-		'GUILD_UNAVAILABLE',
-		'GUILD_AVAILABLE',
+		'GUILD_MEMBER_ADD',
+		'GUILD_MEMBER_REMOVE',
 		'GUILD_MEMBER_UPDATE',
-		'GUILD_MEMBER_AVAILABLE',
-		'GUILD_MEMBER_SPEAKING',
+		'GUILD_MEMBERS_CHUNK',
 		'GUILD_ROLE_CREATE',
 		'GUILD_ROLE_DELETE',
 		'GUILD_ROLE_UPDATE',
-		'CHANNEL_CREATE',
-		'CHANNEL_DELETE',
+		'GUILD_BAN_ADD',
+		'GUILD_BAN_REMOVE',
 		'CHANNEL_UPDATE',
 		'CHANNEL_PINS_UPDATE',
 		'MESSAGE_DELETE_BULK',
 		'USER_UPDATE',
-		'USER_NOTE_UPDATE',
 		'PRESENCE_UPDATE',
-		'TYPING_START',
-		'TYPING_STOP',
 		'VOICE_STATE_UPDATE',
-		'FRIEND_ADD',
-		'FRIEND_REMOVE'
+		'TYPING_START',
+		'RELATIONSHIP_ADD',
+		'RELATIONSHIP_REMOVE'
 	]
 });
 
