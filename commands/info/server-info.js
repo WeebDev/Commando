@@ -46,11 +46,11 @@ module.exports = class ServerInfoCommand extends Command {
 						• Region: ${msg.guild.region}
 						• Created at: ${moment.utc(msg.guild.createdAt).format('dddd, MMMM Do YYYY, HH:mm:ss ZZ')}
 						• Verification Level: ${msg.guild.verificationLevel}
-						• Emojis: ${msg.guild.emojis.array().join(' ')}
-						• Icon: ${msg.guild.iconURL !== null ? `<${msg.guild.iconURL}>` : 'None'}
+						• Emojis: ${msg.guild.emojis.array().join(' ')}\n\u200B
 					`
 				}
 			],
+			thumbnail: { url: msg.guild.iconURL },
 			timestamp: new Date(),
 			footer: {
 				icon_url: this.client.user.avatarURL, // eslint-disable-line camelcase

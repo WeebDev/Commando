@@ -48,10 +48,11 @@ module.exports = class UserInfoCommand extends Command {
 					value: stripIndents`
 						• Created at: ${moment.utc(user.createdAt).format('dddd, MMMM Do YYYY, HH:mm:ss ZZ')}${user.bot ? '\n• Is a bot account' : ''}
 						• Status: ${user.presence.status}
-						• Game: ${user.presence.game ? user.presence.game.name : 'None'}
+						• Game: ${user.presence.game ? user.presence.game.name : 'None'}\n\u200B
 					`
 				}
 			],
+			thumbnail: { url: user.avatarURL },
 			timestamp: new Date(),
 			footer: {
 				icon_url: this.client.user.avatarURL, // eslint-disable-line camelcase
