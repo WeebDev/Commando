@@ -11,7 +11,11 @@ module.exports = class ServerInfoCommand extends Command {
 			memberName: 'server-info',
 			description: 'Get info on the server.',
 			details: `Get detailed information on the server.`,
-			guildOnly: true
+			guildOnly: true,
+			throttling: {
+				usages: 2,
+				duration: 3
+			}
 		});
 	}
 
