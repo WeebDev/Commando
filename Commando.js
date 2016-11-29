@@ -23,16 +23,7 @@ const client = new commando.Client({
 	owner: config.owner,
 	commandPrefix: 'sir, ',
 	unknownCommandResponse: false,
-	disableEveryone: true,
-	disabledEvents: [
-		'GUILD_MEMBER_ADD',
-		'GUILD_MEMBER_REMOVE',
-		'GUILD_BAN_ADD',
-		'GUILD_BAN_REMOVE',
-		'CHANNEL_PINS_UPDATE',
-		'VOICE_STATE_UPDATE',
-		'TYPING_START'
-	]
+	disableEveryone: true
 });
 
 client.on('error', winston.error)
