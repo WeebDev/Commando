@@ -20,6 +20,10 @@ module.exports = class WeatherCommand extends Command {
 			memberName: 'weather',
 			description: 'Get the weather.',
 			format: '<location>',
+			throttling: {
+				usages: 1,
+				duration: 10
+			},
 
 			args: [
 				{

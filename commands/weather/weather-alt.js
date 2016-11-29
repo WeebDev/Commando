@@ -17,6 +17,10 @@ module.exports = class WeatherAlternativeCommand extends Command {
 			memberName: 'weather-alt',
 			description: 'Get the weather.',
 			format: '<location>',
+			throttling: {
+				usages: 1,
+				duration: 10
+			},
 
 			args: [
 				{

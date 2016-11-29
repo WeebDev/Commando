@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-const { Command, util } = require('discord.js-commando');
+const { Command } = require('discord.js-commando');
 const escapeMarkdown = require('discord.js').escapeMarkdown;
 const oneLine = require('common-tags').oneLine;
 const request = require('request-promise');
