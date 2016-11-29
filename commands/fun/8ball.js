@@ -5,7 +5,7 @@ const RESPONSES = [
 	'it is decidedly so.',
 	'without a doubt.',
 	'you may rely on it.',
-	'as i see it, yes',
+	'as I see it, yes',
 	'most likely.',
 	'outlook good',
 	'yes.',

@@ -1,9 +1,12 @@
+global.Promise = require('bluebird');
+
 const commando = require('discord.js-commando');
 const fs = require('fs');
 const oneLine = require('common-tags').oneLine;
 const path = require('path');
 const winston = require('winston');
 
+const Database = require('./postgreSQL/postgreSQL');
 const config = require('./settings');
 
 const data = require('./docsdata.json');
@@ -15,33 +18,20 @@ const docs = new Docs(data);
 const lookup = new Lookup(data, docs);
 const commands = new Commands(data, docs);
 
+const database = new Database();
 const client = new commando.Client({
 	owner: config.owner,
-	commandPrefix: 'dude, ',
+	commandPrefix: 'sir, ',
 	unknownCommandResponse: false,
 	disableEveryone: true,
 	disabledEvents: [
-		'GUILD_CREATE',
-		'GUILD_DELETE',
-		'GUILD_UPDATE',
 		'GUILD_MEMBER_ADD',
 		'GUILD_MEMBER_REMOVE',
-		'GUILD_MEMBER_UPDATE',
-		'GUILD_MEMBERS_CHUNK',
-		'GUILD_ROLE_CREATE',
-		'GUILD_ROLE_DELETE',
-		'GUILD_ROLE_UPDATE',
 		'GUILD_BAN_ADD',
 		'GUILD_BAN_REMOVE',
-		'CHANNEL_UPDATE',
 		'CHANNEL_PINS_UPDATE',
-		'MESSAGE_DELETE_BULK',
-		'USER_UPDATE',
-		'PRESENCE_UPDATE',
 		'VOICE_STATE_UPDATE',
-		'TYPING_START',
-		'RELATIONSHIP_ADD',
-		'RELATIONSHIP_REMOVE'
+		'TYPING_START'
 	]
 });
 
@@ -193,6 +183,8 @@ client.registry
 	])
 	.registerDefaults()
 	.registerCommandsIn(path.join(__dirname, 'commands'));
+
+database.start();
 
 function save() {
 	fs.writeFileSync('./docsdata.json', JSON.stringify(data));
