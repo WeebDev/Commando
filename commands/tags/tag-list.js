@@ -1,8 +1,7 @@
 const { Command } = require('discord.js-commando');
 const stripIndents = require('common-tags').stripIndents;
-const winston = require('winston');
 
-const TagModel = require('../../mongoDB/models/Tag');
+const Tag = require('../../postgreSQL/models/Tag');
 
 module.exports = class TagListCommand extends Command {
 	constructor(client) {
@@ -12,17 +11,38 @@ module.exports = class TagListCommand extends Command {
 			group: 'tags',
 			memberName: 'tag-list',
 			description: 'Lists all server tags.',
-			guildOnly: true
+			guildOnly: true,
+			throttling: {
+				usages: 2,
+				duration: 3
+			}
 		});
 	}
 
 	async run(msg) {
-		return TagModel.find(msg.guild.id).then(tags => {
-			if (!tags) return msg.say(`${msg.guild.name} doesn't have any tags, ${msg.author}. Why not add one?`);
+		let tags = await Tag.findAll({ where: { guildID: msg.guild.id } });
+		if (!tags) return msg.say(`${msg.guild.name} doesn't have any tags, ${msg.author}. Why not add one?`);
 
-			return msg.say(stripIndents`**❯ Tags:**
-				${tags.map(tag => tag.name).sort().join(', ')}
-			`);
-		}).catch(error => { winston.error(error); });
+		return msg.say(stripIndents`**❯ Tags:**
+			${tags.filter(tag => tag.type)
+				.filter(tag => !tag.example)
+				.map(tag => tag.name)
+				.sort()
+				.join(', ')}
+
+			**❯ Examples:**
+			${tags.filter(tag => tag.type)
+				.filter(tag => tag.example)
+				.map(tag => tag.name)
+				.sort()
+				.join(', ')}
+
+			**❯ ${msg.author.username}'s tags:**
+			${tags.filter(tag => !tag.type)
+				.filter(tag => tag.userID === msg.author.id)
+				.map(tag => tag.name)
+				.sort()
+				.join(', ')}
+		`);
 	}
 };

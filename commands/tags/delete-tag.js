@@ -1,7 +1,9 @@
 const { Command } = require('discord.js-commando');
 const winston = require('winston');
 
-const TagModel = require('../../mongoDB/models/Tag');
+const config = require('../../settings');
+const { redis } = require('../../redis/redis');
+const Tag = require('../../postgreSQL/models/Tag');
 
 module.exports = class TagDeleteCommand extends Command {
 	constructor(client) {
@@ -10,31 +12,41 @@ module.exports = class TagDeleteCommand extends Command {
 			aliases: ['tag-del', 'del-tag'],
 			group: 'tags',
 			memberName: 'tag-delete',
-			description: 'Deletes a Tag.',
+			description: 'Deletes a tag.',
 			format: '<tagname>',
 			guildOnly: true,
+			throttling: {
+				usages: 2,
+				duration: 3
+			},
 
 			args: [
 				{
 					key: 'name',
 					label: 'tagname',
-					prompt: 'What Tag would you like to delete?\n',
+					prompt: 'What tag would you like to delete?\n',
 					type: 'string'
 				}
 			]
 		});
 	}
 
-
 	async run(msg, args) {
 		const name = args.name.toLowerCase();
 
-		return TagModel.get(name, msg.guild.id).then(tag => {
-			if (!tag) return msg.say(`There is no tag with the name **${name}**, ${msg.author}`);
-			if (tag.userID === msg.author.id || msg.guild.owner.id === msg.author.id || msg.author.id === '81440962496172032') {
-				return TagModel.delete(name, msg.guild.id).then(() => { return msg.say(`The tag **${name}** has been deleted, ${msg.author}`); });
-			}
-			return msg.say(`You can only delete your own tags, ${msg.author}`);
-		}).catch(error => { winston.error(error); });
+		let tag = await Tag.findOne({ where: { name, guildID: msg.guild.id } });
+		if (!tag) return msg.say(`A tag with the name **${name}** doesn't exist, ${msg.author}`);
+		if (tag.userID !== msg.author.id || msg.guild.owner.id !== msg.author.id || msg.author.id !== '81440962496172032') return msg.say(`You can only delete your own tags, ${msg.author}`);
+
+		return Tag.sync()
+			.then(() => {
+				Tag.destroy({ where: { name, guildID: msg.guild.id } });
+
+				redis.delAsync(name + msg.guild.id);
+
+				if (tag.example) msg.guild.channels.get(config.exampleChannel).fetchMessage(tag.exampleID).then(del => del.delete());
+				return msg.say(`The tag **${name}** has been deleted, ${msg.author}`);
+			})
+			.catch(error => { winston.error(error); });
 	}
 };

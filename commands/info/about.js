@@ -36,8 +36,8 @@ module.exports = class AboutCommand extends Command {
 				\`node --harmony somebot.js\`
 				\`pm2 start somebot.js --node-args='--harmony'\`
 
-				[Documentation (WIP)](https://gawdl3y.github.io/discord.js-commando/0.4.0/)
-				[Discord.js Documentation](https://discord.js.org/#!/docs/tag/master/file/general/Welcome)\n\u200B
+				[Documentation (WIP)](https://discord.js.org/#/docs/commando/)
+				[Discord.js Documentation](https://discord.js.org/#/docs/main/)\n\u200B
 			`,
 			timestamp: new Date(),
 			footer: {
