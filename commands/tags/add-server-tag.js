@@ -8,7 +8,7 @@ module.exports = class ServerTagAddCommand extends Command {
 	constructor(client) {
 		super(client, {
 			name: 'add-tag-server',
-			aliases: ['tag-add-server', 'severtag'],
+			aliases: ['tag-add-server', 'servertag'],
 			group: 'tags',
 			memberName: 'tag-add-server',
 			description: 'Adds a server tag.',
