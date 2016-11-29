@@ -21,7 +21,7 @@ const commands = new Commands(data, docs);
 const database = new Database();
 const client = new commando.Client({
 	owner: config.owner,
-	commandPrefix: 'sir, ',
+	commandPrefix: '?',
 	unknownCommandResponse: false,
 	disableEveryone: true
 });
