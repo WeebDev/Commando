@@ -67,7 +67,6 @@ module.exports = class ExampleAddCommand extends Command {
 				let member = msg.channel.guild.members.get(replaceID);
 				return `@${member.user.username}`;
 			});
-		let exampleContent = `${cleanContent}`;
 
 		return Tag.sync()
 			.then(() => {
@@ -79,15 +78,14 @@ module.exports = class ExampleAddCommand extends Command {
 					channelID: msg.channel.id,
 					channelName: msg.channel.name,
 					name: name,
-					header: header,
-					content: exampleContent,
+					content: cleanContent,
 					type: true,
 					example: true
 				});
 
-				redis.setAsync(name + msg.guild.id, exampleContent);
+				redis.setAsync(name + msg.guild.id, cleanContent);
 
-				msg.guild.channels.get(config.exampleChannel).sendMessage(`${header}\n${exampleContent}`)
+				msg.guild.channels.get(config.exampleChannel).sendMessage(cleanContent)
 					.then(ex => {
 						Tag.update({ exampleID: ex.id }, { where: { name, guildID: msg.guild.id } });
 					});
