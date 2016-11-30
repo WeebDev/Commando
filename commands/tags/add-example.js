@@ -67,7 +67,7 @@ module.exports = class ExampleAddCommand extends Command {
 				let member = msg.channel.guild.members.get(replaceID);
 				return `@${member.user.username}`;
 			});
-		let exampleContent = `\`\`\`js\n${cleanContent}\n\`\`\``;
+		let exampleContent = `${cleanContent}`;
 
 		return Tag.sync()
 			.then(() => {
@@ -79,6 +79,7 @@ module.exports = class ExampleAddCommand extends Command {
 					channelID: msg.channel.id,
 					channelName: msg.channel.name,
 					name: name,
+					header: header,
 					content: exampleContent,
 					type: true,
 					example: true

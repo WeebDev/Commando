@@ -10,6 +10,7 @@ let Tag = database.db.define('tags', {
 	guildID: { type: Sequelize.STRING },
 	guildName: { type: Sequelize.STRING },
 	name: { type: Sequelize.STRING },
+	header: { type: Sequelize.STRING },
 	content: { type: Sequelize.STRING(1800) }, // eslint-disable-line new-cap
 	type: {
 		type: Sequelize.BOOLEAN,
