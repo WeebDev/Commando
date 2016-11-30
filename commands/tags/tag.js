@@ -46,9 +46,11 @@ module.exports = class TagCommand extends Command {
 				if (!tag) return msg.say(`A tag with the name **${name}** doesn't exist, ${msg.author}`);
 				tag.increment('uses');
 
-				return redis.setAsync(name + guildID, tag.content)
+				let tagcontent = `${tag.header ? `${tag.header}\n` : ''}\n${tag.content}`;
+
+				return redis.setAsync(name + guildID, tagcontent)
 					.then(() => {
-						msg.say(tag.content);
+						msg.say(tagcontent);
 					});
 			}
 		});
