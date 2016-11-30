@@ -11,7 +11,7 @@ module.exports = class ExampleAddCommand extends Command {
 			name: 'add-example',
 			aliases: ['example-add'],
 			group: 'tags',
-			memberName: 'example-add',
+			memberName: 'add-example',
 			description: 'Adds an example.',
 			format: '<examplename> <examplecontent>',
 			details: `Adds an example and posts it into the #examples channel. (Markdown can be used.)`,

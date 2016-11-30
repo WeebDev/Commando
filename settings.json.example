@@ -1,6 +1,10 @@
 {
 	"token": "YOUR_TOKEN",
 	"owner": "YOUR_ID",
+	"exampleChannel": "example channel ID",
+	"db": "postgreSQL URL",
+	"AniListID": "Anilist ID",
+	"AniListSecret": "Anilist Secret",
 	"WeatherAPIKey": "darksky.net API Key",
 	"GoogleAPIKey": "Google Geocode API Key",
 	"soundcloudID": "SoundCloud API Key",
