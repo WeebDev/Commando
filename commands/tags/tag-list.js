@@ -43,10 +43,10 @@ module.exports = class TagListCommand extends Command {
 				.join(', ')}
 
 			${examples ? `**❯ Examples:**
-				examples` : `There are no examples.`}
+				${examples}` : `There are no examples.`}
 
 			${usertags ? `**❯ ${msg.author.username}'s tags:**
-				usertags` : `${msg.author.username} has no tags.`}
+				${usertags}` : `${msg.author.username} has no tags.`}
 		`);
 	}
 };
