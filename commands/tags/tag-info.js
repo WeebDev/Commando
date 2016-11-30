@@ -36,12 +36,36 @@ module.exports = class TagWhoCommand extends Command {
 		let tag = await Tag.findOne({ where: { name, guildID: msg.guild.id } });
 		if (!tag) return msg.say(`A tag with the name **${name}** doesn't exist, ${msg.author}`);
 
-		return msg.say(stripIndents`❯ Info on Tag: **${tag.name}**
+		let embed = {
+			color: 3447003,
+			author: {
+				name: `${msg.author.username}#${msg.author.discriminator} (${msg.author.id})`,
+				icon_url: `${msg.author.avatarURL}` // eslint-disable-line camelcase
+			},
+			fields: [
+				{
+					name: 'Username',
+					value: `${tag.userName} (ID: ${tag.userID})`
+				},
+				{
+					name: 'Guild',
+					value: `${tag.guildName}`
+				},
+				{
+					name: 'Created at',
+					value: `${moment.utc(tag.createdAt).format('dddd, MMMM Do YYYY, HH:mm:ss ZZ')}`
+				},
+				{
+					name: 'Uses',
+					value: `${tag.uses} `
+				}
+			],
+			footer: {
+				icon_url: this.client.user.avatarURL, // eslint-disable-line camelcase
+				text: 'Tag info'
+			}
+		};
 
-				 • Username: ${tag.userName} (ID: ${tag.userID})
-				 • Guild: ${tag.guildName}
-				 • Created at: ${moment.utc(tag.createdAt).format('dddd, MMMM Do YYYY, HH:mm:ss ZZ')}
-				 • Uses: ${tag.uses}
-			`);
+		return msg.channel.sendMessage('', { embed });
 	}
 };
