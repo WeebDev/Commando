@@ -183,7 +183,7 @@ module.exports = class PlaySongCommand extends Command {
 		const song = new Song(video, msg.member);
 		queue.songs.push(song);
 
-		return `👍 [${song}](${song.url})`;
+		return `👍 ${song.url.match(/^https?:\/\/(api.soundcloud.com)\/(.*)$/) ? `${song}` : `[${song}](${`${song.url}`})`}`;
 	}
 
 	play(guild, song) {
@@ -211,7 +211,7 @@ module.exports = class PlaySongCommand extends Command {
 				name: song.username,
 				icon_url: song.avatar ? song.avatar : this.client.user.avatarURL // eslint-disable-line camelcase
 			},
-			description: `[${song}](${song.url})`,
+			description: `${song.url.match(/^https?:\/\/(api.soundcloud.com)\/(.*)$/) ? `${song}\n\u200B` : `[${song}](${`${song.url}`})`}`,
 			image: { url: song.thumbnail },
 			timestamp: new Date(),
 			footer: {

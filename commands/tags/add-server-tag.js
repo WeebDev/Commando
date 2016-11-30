@@ -7,10 +7,10 @@ const Tag = require('../../postgreSQL/models/Tag');
 module.exports = class ServerTagAddCommand extends Command {
 	constructor(client) {
 		super(client, {
-			name: 'add-tag-server',
-			aliases: ['tag-add-server', 'severtag'],
+			name: 'add-server-tag',
+			aliases: ['tag-add-server', 'servertag'],
 			group: 'tags',
-			memberName: 'tag-add-server',
+			memberName: 'add-server-tag',
 			description: 'Adds a server tag.',
 			format: '<tagname> <tagcontent>',
 			details: `Adds a server tag, usable for everyone on the server. (Markdown can be used.)`,

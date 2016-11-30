@@ -27,9 +27,9 @@ module.exports = class MusicStatusCommand extends Command {
 				name: `${song.username}`,
 				icon_url: song.avatar ? song.avatar : this.client.user.avatarURL // eslint-disable-line camelcase
 			},
-			description: stripIndents`[${song}](${song.url})
-				We are ${Song.timeString(currentTime)} into the song, and have ${song.timeLeft(currentTime)} left.
-				${!song.playing ? 'The music is paused.' : ''}
+			description: stripIndents`${song.url.match(/^https?:\/\/(api.soundcloud.com)\/(.*)$/) ? `${song}\n\u200B` : `[${song}](${`${song.url}`})\n\u200B`}
+				We are ${Song.timeString(currentTime)} into the song, and have ${song.timeLeft(currentTime)} left.\n\u200B
+				${!song.playing ? 'The music is paused.\n\u200B' : ''}
 			`,
 			image: { url: song.thumbnail },
 			timestamp: new Date(),

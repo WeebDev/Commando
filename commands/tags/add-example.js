@@ -11,7 +11,7 @@ module.exports = class ExampleAddCommand extends Command {
 			name: 'add-example',
 			aliases: ['example-add'],
 			group: 'tags',
-			memberName: 'example-add',
+			memberName: 'add-example',
 			description: 'Adds an example.',
 			format: '<examplename> <examplecontent>',
 			details: `Adds an example and posts it into the #examples channel. (Markdown can be used.)`,
@@ -29,6 +29,12 @@ module.exports = class ExampleAddCommand extends Command {
 					type: 'string'
 				},
 				{
+					key: 'header',
+					label: 'exampleheader',
+					prompt: 'What would you like to put as a header?\n',
+					type: 'string'
+				},
+				{
 					key: 'content',
 					label: 'examplecontent',
 					prompt: 'What content would you like to add?\n',
@@ -41,6 +47,7 @@ module.exports = class ExampleAddCommand extends Command {
 
 	async run(msg, args) {
 		const name = args.name.toLowerCase();
+		const header = args.header;
 		const content = args.content;
 		const staffRole = await msg.member.roles.exists('name', 'Server Staff');
 		if (!staffRole) return msg.say(`Only the **Server Staff** can add examples, ${msg.author}`);
@@ -79,7 +86,7 @@ module.exports = class ExampleAddCommand extends Command {
 
 				redis.setAsync(name + msg.guild.id, exampleContent);
 
-				msg.guild.channels.get(config.exampleChannel).sendMessage(`${name}\n${exampleContent}`)
+				msg.guild.channels.get(config.exampleChannel).sendMessage(`${header}\n${exampleContent}`)
 					.then(ex => {
 						Tag.update({ exampleID: ex.id }, { where: { name, guildID: msg.guild.id } });
 					});
