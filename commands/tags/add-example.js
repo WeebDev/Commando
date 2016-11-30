@@ -29,12 +29,6 @@ module.exports = class ExampleAddCommand extends Command {
 					type: 'string'
 				},
 				{
-					key: 'header',
-					label: 'exampleheader',
-					prompt: 'What would you like to put as a header?\n',
-					type: 'string'
-				},
-				{
 					key: 'content',
 					label: 'examplecontent',
 					prompt: 'What content would you like to add?\n',
@@ -47,7 +41,6 @@ module.exports = class ExampleAddCommand extends Command {
 
 	async run(msg, args) {
 		const name = args.name.toLowerCase();
-		const header = args.header;
 		const content = args.content;
 		const staffRole = await msg.member.roles.exists('name', 'Server Staff');
 		if (!staffRole) return msg.say(`Only the **Server Staff** can add examples, ${msg.author}`);
