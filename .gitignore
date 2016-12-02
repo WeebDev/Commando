@@ -28,5 +28,5 @@ build/Release
 node_modules
 
 settings.json
+settings.db
 docsdata.json
-yarn.lock

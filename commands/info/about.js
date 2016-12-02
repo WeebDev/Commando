@@ -25,7 +25,7 @@ module.exports = class AboutCommand extends Command {
 				It makes full use of ES2017's \`async\`/\`await\`.
 
 				[Framework GitHub](https://github.com/Gawdl3y/discord.js-commando)
-				[Commando bot Github](https://github.com/iCrawl/Commando)
+				[Commando bot Github](https://github.com/WeebDev/Commando)
 
 				__**Installation:**__
 				**Node 7.0.0 or newer is required.**
