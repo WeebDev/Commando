@@ -1,6 +1,6 @@
 {
   "name": "commando",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": ".",
   "license": "MIT",
   "author": "Crawl",
@@ -36,6 +36,7 @@
     "request-promise": "^4.1.1",
     "sequelize": "github:sequelize/sequelize",
     "simple-youtube-api": "^2.1.0",
+    "sqlite": "^2.2.3",
     "uws": "^0.11.1",
     "winston": "^2.3.0",
     "ytdl-core": "^0.7.19"
