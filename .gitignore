@@ -28,6 +28,6 @@ build/Release
 node_modules
 
 settings.json
+settings.db
 repos/*
 docsdata.json
-yarn.lock
