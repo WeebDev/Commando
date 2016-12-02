@@ -30,6 +30,7 @@ module.exports = class ServerInfoCommand extends Command {
 			fields: [
 				{
 					name: '❯ Channels',
+					inline: true,
 					value: stripIndents`
 						• ${msg.guild.channels.filter(ch => ch.type === 'text').size} Text, ${msg.guild.channels.filter(ch => ch.type === 'voice').size} Voice
 						• Default: ${msg.guild.defaultChannel}
@@ -38,6 +39,7 @@ module.exports = class ServerInfoCommand extends Command {
 				},
 				{
 					name: '❯ Member',
+					inline: true,
 					value: stripIndents`
 						• ${msg.guild.memberCount} members
 						• Owner: ${msg.guild.owner.user.username}#${msg.guild.owner.user.discriminator} (ID: ${msg.guild.ownerID})
