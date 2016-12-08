@@ -4,7 +4,7 @@ const commando = require('discord.js-commando');
 const fs = require('fs');
 const oneLine = require('common-tags').oneLine;
 const path = require('path');
-const sqlite = require('sqlite')
+const sqlite = require('sqlite');
 const winston = require('winston');
 
 const Database = require('./postgreSQL/postgreSQL');
@@ -172,12 +172,10 @@ client.on('error', winston.error)
 client.registry
 	.registerGroups([
 		['info', 'Info'],
-		['math', 'Math'],
-		['fun', 'Fun'],
 		['weather', 'Weather'],
 		['music', 'Music'],
-		['tags', 'Tags'],
-		['rep', 'Reputation']
+		['listenmoe', 'Listen.moe'],
+		['tags', 'Tags']
 	])
 	.registerDefaults()
 	.registerCommandsIn(path.join(__dirname, 'commands'));
