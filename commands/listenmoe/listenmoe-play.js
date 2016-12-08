@@ -126,6 +126,8 @@ module.exports = class PlayListenMoeCommand extends Command {
 			})
 			.on('error', err => {
 				console.log('Error occurred in stream dispatcher:', err);
+				radio.voiceChannel.leave();
+				clearTimeout(this.playing);
 				return radio.textChannel.sendMessage(`An error occurred while playing the song: \`${err}\``);
 			});
 		dispatcher.setVolumeLogarithmic(radio.volume / 5);
