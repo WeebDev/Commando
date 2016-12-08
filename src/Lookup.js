@@ -241,7 +241,7 @@ module.exports = class Lookup {
 	generateDocsURL(repo, data) {
 		let docsURL = repo.docsURL;
 		const branch = repo.branch;
-		const optionalMemberRegex = /\?scrollto=\${member}/g;
+		const optionalMemberRegex = /\?scrollTo=\${member}/g;
 
 		docsURL = docsURL.replace('${branch}', branch).replace('${type}', data.type).replace('${name}', data.name);
 
