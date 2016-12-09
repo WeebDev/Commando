@@ -52,7 +52,7 @@ module.exports = class PlayListenMoeCommand extends Command {
 			return msg.reply('You\'re not in the voice channel. You better not be trying to mess with their mojo, man.');
 		}
 
-		clearTimeout(this.playing);
+		clearInterval(this.playing);
 		const statusMsg = await msg.reply('Obtaining video details...');
 		return this.addRadio(radio, voiceChannel, msg, statusMsg);
 	}
@@ -75,11 +75,12 @@ module.exports = class PlayListenMoeCommand extends Command {
 			statusMsg.edit(`${msg.author}, Joining your voice channel...`);
 			return radio.voiceChannel.join().then(connection => {
 				radio.connection = connection;
-				clearTimeout(this.playing);
+				clearInterval(this.playing);
 				this.play(msg, msg.guild);
 				statusMsg.delete();
 			}).catch(err2 => {
 				console.log('Error occurred when joining voice channel.', err2);
+				clearInterval(this.playing);
 				this.radio.delete(msg.guild.id);
 				statusMsg.edit(`${msg.author}, Unable to join your voice channel.`);
 			});
@@ -125,14 +126,14 @@ module.exports = class PlayListenMoeCommand extends Command {
 			.on('end', () => {
 				if (streamErrored) return;
 				radio.voiceChannel.leave();
-				clearTimeout(this.playing);
+				clearInterval(this.playing);
 				this.radio.delete(guild.id);
 				return;
 			})
 			.on('error', err => {
 				console.log('Error occurred in stream dispatcher:', err);
 				radio.voiceChannel.leave();
-				clearTimeout(this.playing);
+				clearInterval(this.playing);
 				this.radio.delete(guild.id);
 				return radio.textChannel.sendMessage(`An error occurred while playing the song: \`${err}\``);
 			});
