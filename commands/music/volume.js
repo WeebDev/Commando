@@ -17,10 +17,10 @@ module.exports = class ChangeVolumeCommand extends Command {
 
 	async run(msg, args) {
 		const queue = this.queue.get(msg.guild.id);
-		if (!queue) return msg.reply(`There isn't any music playing to change the volume of. Better queue some up!`);
-		if (!args) return msg.reply(`The dial is currently set to ${queue.volume}.`);
+		if (!queue) return msg.reply(`there isn't any music playing to change the volume of. Better queue some up!`);
+		if (!args) return msg.reply(`the dial is currently set to ${queue.volume}.`);
 		if (!queue.voiceChannel.members.has(msg.author.id)) {
-			return msg.reply(`You're not in the voice channel. You better not be trying to mess with their mojo, man.`);
+			return msg.reply(`you're not in the voice channel. You better not be trying to mess with their mojo, man.`);
 		}
 
 		let volume = parseInt(args);
@@ -31,7 +31,7 @@ module.exports = class ChangeVolumeCommand extends Command {
 			} else if (volume === 'down' || volume === '-') {
 				volume = queue.volume - 2;
 			} else {
-				return msg.reply(`Invalid volume level. The dial goes from 0-10, baby.`);
+				return msg.reply(`invalid volume level. The dial goes from 0-10, baby.`);
 			}
 			if (volume === 11) volume = 10;
 		}
@@ -40,7 +40,7 @@ module.exports = class ChangeVolumeCommand extends Command {
 		queue.volume = volume;
 		if (queue.songs[0].dispatcher) queue.songs[0].dispatcher.setVolumeLogarithmic(queue.volume / 5);
 
-		return msg.reply(`${volume === 11 ? 'This one goes to 11!' : `Set the dial to ${volume}.`}`);
+		return msg.reply(`${volume === 11 ? 'this one goes to 11!' : `set the dial to ${volume}.`}`);
 	}
 
 	get queue() {

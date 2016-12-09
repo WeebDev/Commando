@@ -30,7 +30,7 @@ module.exports = class ViewQueueCommand extends Command {
 	async run(msg, args) {
 		const page = args.page;
 		const queue = this.queue.get(msg.guild.id);
-		if (!queue) return msg.reply('There are no songs in the queue. Why not start the party yourself?');
+		if (!queue) return msg.reply('there are no songs in the queue. Why not start the party yourself?');
 
 		const paginated = util.paginate(queue.songs, page, Math.floor(config.paginationItems));
 		const totalLength = queue.songs.reduce((prev, song) => prev + song.length, 0);

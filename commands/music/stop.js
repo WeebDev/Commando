@@ -15,12 +15,12 @@ module.exports = class StopMusicCommand extends Command {
 
 	async run(msg) {
 		const queue = this.queue.get(msg.guild.id);
-		if (!queue) return msg.reply('There isn\'t any music playing right now.');
+		if (!queue) return msg.reply('there isn\'t any music playing right now.');
 		const song = queue.songs[0];
 		queue.songs = [];
 		if (song.dispatcher) song.dispatcher.end();
 
-		return msg.reply('You\'ve just killed the party. Congrats. 👏');
+		return msg.reply('you\'ve just killed the party. Congrats. 👏');
 	}
 
 	get queue() {
