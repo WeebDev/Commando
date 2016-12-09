@@ -1,8 +1,9 @@
 /* eslint-disable no-console */
 const { Command } = require('discord.js-commando');
 const request = require('request-promise');
-const io = require('socket.io-client');
-const socket = io.connect('https://listen.moe/api/info');
+const WebSocket = require('ws');
+
+const ws = new WebSocket('wss://listen.moe/api/socket');
 
 const config = require('../../settings');
 
@@ -19,9 +20,10 @@ module.exports = class PlayListenMoeCommand extends Command {
 		this.radio = new Map();
 		this.playing; // eslint-disable-line no-unused-expressions
 		this.songInfo; // eslint-disable-line no-unused-expressions
-		socket.on('update', (obj) => {
+		ws.on('message', (data) => {
 			try {
-				this.songInfo = obj;
+				if (data === '') return;
+				this.songInfo = JSON.parse(data);
 			} catch (error) {
 				console.log(error);
 			}
@@ -50,6 +52,7 @@ module.exports = class PlayListenMoeCommand extends Command {
 			return msg.reply('You\'re not in the voice channel. You better not be trying to mess with their mojo, man.');
 		}
 
+		clearTimeout(this.playing);
 		const statusMsg = await msg.reply('Obtaining video details...');
 		return this.addRadio(radio, voiceChannel, msg, statusMsg);
 	}
@@ -72,6 +75,7 @@ module.exports = class PlayListenMoeCommand extends Command {
 			statusMsg.edit(`${msg.author}, Joining your voice channel...`);
 			return radio.voiceChannel.join().then(connection => {
 				radio.connection = connection;
+				clearTimeout(this.playing);
 				this.play(msg, msg.guild);
 				statusMsg.delete();
 			}).catch(err2 => {
