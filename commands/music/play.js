@@ -43,7 +43,7 @@ module.exports = class PlaySongCommand extends Command {
 			// Make sure the user is in a voice channel
 			voiceChannel = msg.member.voiceChannel;
 			if (!voiceChannel) {
-				return msg.reply('You aren\'t in a voice channel, ya dingus.');
+				return msg.reply('you aren\'t in a voice channel, ya dingus.');
 			}
 
 			// Ensure the bot has permission to join and speak
@@ -55,10 +55,10 @@ module.exports = class PlaySongCommand extends Command {
 				return msg.reply('I don\'t have permission to speak in your voice channel. What a disappointment.');
 			}
 		} else if (!queue.voiceChannel.members.has(msg.author.id)) {
-			return msg.reply('You\'re not in the voice channel. You better not be trying to mess with their mojo, man.');
+			return msg.reply('you\'re not in the voice channel. You better not be trying to mess with their mojo, man.');
 		}
 
-		const statusMsg = await msg.reply('Obtaining video details...');
+		const statusMsg = await msg.reply('obtaining video details...');
 		if (url.match(/^https?:\/\/(soundcloud.com|snd.sc)\/(.*)$/)) {
 			return request({
 				uri: `http://api.soundcloud.com/resolve.json?url=${url}&client_id=${config.soundcloudID}`,
@@ -81,10 +81,10 @@ module.exports = class PlaySongCommand extends Command {
 						this.handleVideo(video2, queue, voiceChannel, msg, statusMsg);
 					}).catch((error) => {
 						console.log(error);
-						statusMsg.edit(`${msg.author}, Couldn't obtain the search result video's details.`);
+						statusMsg.edit(`${msg.author}, couldn't obtain the search result video's details.`);
 					});
 				}).catch(() => {
-					statusMsg.edit(`${msg.author}, There were no search results.`);
+					statusMsg.edit(`${msg.author}, there were no search results.`);
 				});
 			});
 		}
@@ -125,7 +125,7 @@ module.exports = class PlaySongCommand extends Command {
 			}
 
 			// Join the voice channel and start playing
-			statusMsg.edit(`${msg.author}, Joining your voice channel...`);
+			statusMsg.edit(`${msg.author}, joining your voice channel...`);
 			queue.voiceChannel.join().then(connection => {
 				queue.connection = connection;
 				this.play(msg.guild, queue.songs[0]);
@@ -133,7 +133,7 @@ module.exports = class PlaySongCommand extends Command {
 			}).catch(err2 => {
 				console.log('Error occurred when joining voice channel.', err2);
 				this.queue.delete(msg.guild.id);
-				statusMsg.edit(`${msg.author}, Unable to join your voice channel.`);
+				statusMsg.edit(`${msg.author}, unable to join your voice channel.`);
 			});
 		} else {
 			// Just add the song
@@ -174,7 +174,7 @@ module.exports = class PlaySongCommand extends Command {
 			}
 			const maxSongs = config.maxSongs;
 			if (maxSongs > 0 && queue.songs.reduce((prev, song) => prev + song.member.id === msg.author.id, 0) >= maxSongs) {
-				return `👎 You already have ${maxSongs} songs in the queue. Don't hog all the airtime!`;
+				return `👎 you already have ${maxSongs} songs in the queue. Don't hog all the airtime!`;
 			}
 		}
 

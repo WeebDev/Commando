@@ -14,10 +14,10 @@ module.exports = class StopListenMoeCommand extends Command {
 
 	async run(msg) {
 		const radio = this.radio.get(msg.guild.id);
-		if (!radio) return msg.reply('There isn\'t any music playing right now.');
+		if (!radio) return msg.reply('there isn\'t any music playing right now.');
 		if (radio.dispatcher) radio.dispatcher.end();
 
-		return msg.reply('You\'ve just killed the weeb party. Congrats. 👏');
+		return msg.reply('you\'ve just killed the weeb party. Congrats. 👏');
 	}
 
 	get radio() {

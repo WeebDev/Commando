@@ -15,7 +15,7 @@ module.exports = class SaveQueueCommand extends Command {
 
 	async run(msg) {
 		const queue = this.queue.get(msg.guild.id);
-		if (!queue) return msg.reply('There isn\'t any music playing right now. You should get on that.');
+		if (!queue) return msg.reply('there isn\'t any music playing right now. You should get on that.');
 		const song = queue.songs[0];
 
 		msg.reply('✔ Check your inbox!');
