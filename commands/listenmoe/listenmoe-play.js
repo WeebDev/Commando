@@ -120,19 +120,16 @@ module.exports = class PlayListenMoeCommand extends Command {
 		this.websocket(radio);
 
 		let streamErrored = false;
-		let stream = request({ uri: 'https://listen.moe/stream', headers: { 'User-Agent': `Commando (https://github.com/iCrawl/Commando/)` } });
+		let stream = request({ uri: 'https://listen.moe/stream', headers: { 'User-Agent': `Commando (https://github.com/WeebDev/Commando/)` } });
 		const dispatcher = radio.connection.playStream(stream, { passes: config.passes })
 			.on('end', () => {
 				if (streamErrored) return;
 				radio.voiceChannel.leave();
-				this.radio.delete(guild.id);
 				ws.close();
+				this.radio.delete(guild.id);
 			})
 			.on('error', err => {
 				console.log('Error occurred in stream dispatcher:', err);
-				radio.voiceChannel.leave();
-				this.radio.delete(guild.id);
-				ws.close();
 				return radio.textChannel.sendMessage(`An error occurred while playing the song: \`${err}\``);
 			});
 		dispatcher.setVolumeLogarithmic(radio.volume / 5);
