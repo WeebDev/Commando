@@ -21,7 +21,7 @@ module.exports = class SkipSongCommand extends Command {
 		this.votes = new Map();
 	}
 
-	run(msg) {
+	run(msg, args) {
 		const queue = this.queue.get(msg.guild.id);
 		if (!queue) return msg.reply('there isn\'t a song playing right now, silly.');
 		if (!queue.voiceChannel.members.has(msg.author.id)) {
@@ -31,7 +31,7 @@ module.exports = class SkipSongCommand extends Command {
 
 		// Determine the vote threshold, and handle immediate skipping
 		const threshold = Math.ceil((queue.voiceChannel.members.size - 1) / 3);
-		const force = threshold <= 1 || queue.voiceChannel.members.size < threshold;
+		const force = threshold <= 1 || queue.voiceChannel.members.size < threshold || (msg.member.hasPermission('MANAGE_MESSAGES') && args.toLowerCase() === 'force');
 		if (force) return msg.reply(this.skip(msg.guild, queue));
 
 		const vote = this.votes.get(msg.guild.id);

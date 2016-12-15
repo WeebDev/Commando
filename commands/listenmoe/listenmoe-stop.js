@@ -12,6 +12,10 @@ module.exports = class StopListenMoeCommand extends Command {
 		});
 	}
 
+	hasPermission(msg) {
+		return msg.member.hasPermission('MANAGE_MESSAGES');
+	}
+
 	async run(msg) {
 		const radio = this.radio.get(msg.guild.id);
 		if (!radio) return msg.reply('there isn\'t any music playing right now.');
