@@ -171,6 +171,7 @@ module.exports = class Lookup {
 			${description}
 
 			**${typeName}:** ${types}
+
 		`;
 	}
 
@@ -202,8 +203,8 @@ module.exports = class Lookup {
 
 			${description}
 
-			**Params:**
-				${params}
+			**Params:** ${params}
+
 		`;
 	}
 
@@ -221,6 +222,7 @@ module.exports = class Lookup {
 			**\`${type.directData.names.join(' ')} ${name}\`**
 
 			${description}
+
 		`;
 	}
 
