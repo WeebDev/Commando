@@ -83,7 +83,8 @@ module.exports = class PlayListenMoeCommand extends Command {
 
 		ws.on('message', (data) => {
 			try {
-				if (data) songInfo = JSON.parse(data);
+				if (data === '') return;
+				songInfo = JSON.parse(data);
 
 				let anime = songInfo.anime_name ? `\n\n**Anime:** ${songInfo.anime_name}` : '';
 				let requestedBy = songInfo.requested_by ? `\n\n**Requested by:** [${songInfo.requested_by}](https://forum.listen.moe/u/${songInfo.requested_by})` : '';
