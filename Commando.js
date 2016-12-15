@@ -30,6 +30,9 @@ client.on('error', winston.error)
 	})
 	.on('disconnect', () => { winston.warn('Disconnected!'); })
 	.on('reconnect', () => { winston.warn('Reconnecting...'); })
+	.on('commandRun', (cmd, promise, msg) => {
+		winston.info(`${msg.author.username}#${msg.author.discriminator} (${msg.author.id}) > ${msg.guild.name} (${msg.guild.id}) >> ${cmd.groupID}:${cmd.memberName} ${msg.argString ? `>>>${msg.argString}` : ''}`);
+	})
 	.on('commandError', (cmd, err) => {
 		if (err instanceof commando.FriendlyError) return;
 		winston.error(`Error in command ${cmd.groupID}:${cmd.memberName}`, err);
