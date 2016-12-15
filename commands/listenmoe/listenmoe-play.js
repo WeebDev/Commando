@@ -78,10 +78,10 @@ module.exports = class PlayListenMoeCommand extends Command {
 	}
 
 	websocket(radio) {
-		ws.on('message', (data) => {
-			if (ws) ws.removeAllListeners();
-			ws = new WebSocket('wss://listen.moe/api/socket');
+		if (ws) ws.removeAllListeners();
+		ws = new WebSocket('wss://listen.moe/api/socket');
 
+		ws.on('message', (data) => {
 			try {
 				if (data) songInfo = JSON.parse(data);
 
