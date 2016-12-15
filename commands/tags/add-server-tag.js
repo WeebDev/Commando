@@ -38,6 +38,10 @@ module.exports = class ServerTagAddCommand extends Command {
 		});
 	}
 
+	hasPermission(msg) {
+		return msg.member.roles.exists('name', 'Server Staff');
+	}
+
 	async run(msg, args) {
 		const name = args.name.toLowerCase();
 		const content = args.content;

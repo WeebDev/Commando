@@ -3,7 +3,8 @@ const { Command } = require('discord.js-commando');
 const request = require('request-promise');
 const WebSocket = require('ws');
 
-const ws = new WebSocket('wss://listen.moe/api/socket');
+let ws;
+let songInfo;
 
 const config = require('../../settings');
 
@@ -18,16 +19,6 @@ module.exports = class PlayListenMoeCommand extends Command {
 		});
 
 		this.radio = new Map();
-		this.playing; // eslint-disable-line no-unused-expressions
-		this.songInfo; // eslint-disable-line no-unused-expressions
-		ws.on('message', (data) => {
-			try {
-				if (data === '') return;
-				this.songInfo = JSON.parse(data);
-			} catch (error) {
-				console.log(error);
-			}
-		});
 	}
 
 	async run(msg) {
@@ -56,9 +47,6 @@ module.exports = class PlayListenMoeCommand extends Command {
 		const statusMsg = await msg.reply('obtaining video details...');
 		return this.addRadio(radio, voiceChannel, msg, statusMsg);
 	}
-
-	/* handleVideo() {
-	} */
 
 	addRadio(radio, voiceChannel, msg, statusMsg) {
 		if (!radio) {
@@ -89,51 +77,58 @@ module.exports = class PlayListenMoeCommand extends Command {
 		}
 	}
 
-	message(msg, radio) {
-		let oldInfo;
-		this.playing = setInterval(() => {
-			if (oldInfo === this.songInfo) return;
+	websocket(radio) {
+		ws.on('message', (data) => {
+			if (ws) ws.removeAllListeners();
+			ws = new WebSocket('wss://listen.moe/api/socket');
 
-			let anime = this.songInfo.anime_name ? `\n\n**Anime:** ${this.songInfo.anime_name}` : '';
-			let requestedBy = this.songInfo.requested_by ? `\n\n**Requested by:** [${this.songInfo.requested_by}](https://forum.listen.moe/u/${this.songInfo.requested_by})` : '';
-			const playingMessage = {
-				author: {
-					name: 'Listen.moe',
-					icon_url: 'https://listen.moe/files/images/favicons/favicon-32x32.png' // eslint-disable-line camelcase
-				},
-				color: 15473237,
-				url: 'https://listen.moe',
-				description: `${this.songInfo.song_name} by ${this.songInfo.artist_name}${anime}${requestedBy}\u200B`,
-				timestamp: new Date(),
-				footer: {
-					icon_url: this.client.user.avatarURL, // eslint-disable-line camelcase
-					text: 'Listen.moe'
-				}
-			};
-			oldInfo = this.songInfo;
-			radio.textChannel.sendMessage('', { embed: playingMessage });
-		}, 15000);
+			try {
+				if (data) songInfo = JSON.parse(data);
+
+				let anime = songInfo.anime_name ? `\n\n**Anime:** ${songInfo.anime_name}` : '';
+				let requestedBy = songInfo.requested_by ? `\n\n**Requested by:** [${songInfo.requested_by}](https://forum.listen.moe/u/${songInfo.requested_by})` : '';
+				const playingMessage = {
+					author: {
+						name: 'Listen.moe',
+						icon_url: 'https://listen.moe/files/images/favicons/favicon-32x32.png' // eslint-disable-line camelcase
+					},
+					color: 15473237,
+					url: 'https://listen.moe',
+					description: `${songInfo.song_name} by ${songInfo.artist_name}${anime}${requestedBy}\u200B`,
+					timestamp: new Date(),
+					footer: {
+						icon_url: this.client.user.avatarURL, // eslint-disable-line camelcase
+						text: 'Listen.moe'
+					}
+				};
+				radio.textChannel.sendMessage('', { embed: playingMessage });
+			} catch (error) {
+				console.log(error);
+			}
+		});
+		ws.on('close', () => {
+			setTimeout(this.websocket(radio), 3000);
+			console.log('Websocket connection closed, reconnecting...');
+		});
+		ws.on('error', console.error);
 	}
 
 	play(msg, guild) {
 		const radio = this.radio.get(guild.id);
 
-		this.message(msg, radio);
-		let stream;
+		this.websocket(radio);
+
 		let streamErrored = false;
-		stream = request({ uri: 'https://listen.moe/stream', headers: { 'User-Agent': `Commando (https://github.com/iCrawl/Commando/)` } });
+		let stream = request({ uri: 'https://listen.moe/stream', headers: { 'User-Agent': `Commando (https://github.com/iCrawl/Commando/)` } });
 		const dispatcher = radio.connection.playStream(stream, { passes: config.passes })
 			.on('end', () => {
 				if (streamErrored) return;
 				radio.voiceChannel.leave();
-				clearInterval(this.playing);
 				this.radio.delete(guild.id);
-				return;
 			})
 			.on('error', err => {
 				console.log('Error occurred in stream dispatcher:', err);
 				radio.voiceChannel.leave();
-				clearInterval(this.playing);
 				this.radio.delete(guild.id);
 				return radio.textChannel.sendMessage(`An error occurred while playing the song: \`${err}\``);
 			});
