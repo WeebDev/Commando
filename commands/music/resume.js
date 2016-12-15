@@ -14,15 +14,15 @@ module.exports = class ResumeSongCommand extends Command {
 
 	async run(msg) {
 		const queue = this.queue.get(msg.guild.id);
-		if (!queue) return msg.reply(`There isn't any music playing to resume, oh brilliant one.`);
+		if (!queue) return msg.reply(`there isn't any music playing to resume, oh brilliant one.`);
 		if (!queue.songs[0].dispatcher) {
-			return msg.reply('Pretty sure a song that hasn\'t actually begun playing yet could be considered "resumed".');
+			return msg.reply('pretty sure a song that hasn\'t actually begun playing yet could be considered "resumed".');
 		}
 		if (queue.songs[0].playing) return msg.reply('Resuming a song that isn\'t paused is a great move. Really fantastic.');
 		queue.songs[0].dispatcher.resume();
 		queue.songs[0].playing = true;
 
-		return msg.reply('Resumed the music. This party ain\'t over yet!');
+		return msg.reply('resumed the music. This party ain\'t over yet!');
 	}
 
 	get queue() {

@@ -9,7 +9,7 @@ module.exports = class TagDeleteCommand extends Command {
 	constructor(client) {
 		super(client, {
 			name: 'delete-tag',
-			aliases: ['tag-del', 'del-tag'],
+			aliases: ['tag-del', 'del-tag', 'delete-example', 'example-del', 'del-example'],
 			group: 'tags',
 			memberName: 'delete-tag',
 			description: 'Deletes a tag.',
@@ -33,10 +33,11 @@ module.exports = class TagDeleteCommand extends Command {
 
 	async run(msg, args) {
 		const name = args.name.toLowerCase();
+		const staffRole = await msg.member.roles.exists('name', 'Server Staff');
 
 		let tag = await Tag.findOne({ where: { name, guildID: msg.guild.id } });
 		if (!tag) return msg.say(`A tag with the name **${name}** doesn't exist, ${msg.author}`);
-		if (tag.userID !== msg.author.id && msg.guild.owner.id !== msg.author.id && msg.author.id !== '81440962496172032') return msg.say(`You can only delete your own tags, ${msg.author}`);
+		if (tag.userID !== msg.author.id && !staffRole) return msg.say(`You can only delete your own tags, ${msg.author}`);
 
 		return Tag.sync()
 			.then(() => {

@@ -21,22 +21,22 @@ module.exports = class SkipSongCommand extends Command {
 		this.votes = new Map();
 	}
 
-	run(msg) {
+	run(msg, args) {
 		const queue = this.queue.get(msg.guild.id);
-		if (!queue) return msg.reply('There isn\'t a song playing right now, silly.');
+		if (!queue) return msg.reply('there isn\'t a song playing right now, silly.');
 		if (!queue.voiceChannel.members.has(msg.author.id)) {
-			return msg.reply('You\'re not in the voice channel. You better not be trying to mess with their mojo, man.');
+			return msg.reply('you\'re not in the voice channel. You better not be trying to mess with their mojo, man.');
 		}
-		if (!queue.songs[0].dispatcher) return msg.reply('The song hasn\'t even begun playing yet. Why not give it a chance?');
+		if (!queue.songs[0].dispatcher) return msg.reply('the song hasn\'t even begun playing yet. Why not give it a chance?');
 
 		// Determine the vote threshold, and handle immediate skipping
 		const threshold = Math.ceil((queue.voiceChannel.members.size - 1) / 3);
-		const force = threshold <= 1 || queue.voiceChannel.members.size < threshold;
+		const force = threshold <= 1 || queue.voiceChannel.members.size < threshold || (msg.member.hasPermission('MANAGE_MESSAGES') && args.toLowerCase() === 'force');
 		if (force) return msg.reply(this.skip(msg.guild, queue));
 
 		const vote = this.votes.get(msg.guild.id);
 		if (vote && vote.count >= 1) {
-			if (vote.users.some(user => user === msg.author.id)) return msg.reply('You\'ve already voted to skip the song.');
+			if (vote.users.some(user => user === msg.author.id)) return msg.reply('you\'ve already voted to skip the song.');
 
 			vote.count++;
 			vote.users.push(msg.author.id);
