@@ -40,8 +40,8 @@ client.on('error', winston.error)
 	})
 	.on('disconnect', () => { winston.warn('Disconnected!'); })
 	.on('reconnect', () => { winston.warn('Reconnecting...'); })
-	.on('commandRun', (cmd, promise, msg) => {
-		winston.info(`${msg.author.username}#${msg.author.discriminator} (${msg.author.id}) > ${msg.guild ? `${msg.guild.name} (${msg.guild.id})` : 'DM'} >> ${cmd.groupID}:${cmd.memberName} ${msg.argString ? `>>>${msg.argString}` : ''}`);
+	.on('commandRun', (cmd, promise, msg, args) => {
+		winston.info(`${msg.author.username}#${msg.author.discriminator} (${msg.author.id}) > ${msg.guild ? `${msg.guild.name} (${msg.guild.id})` : 'DM'} >> ${cmd.groupID}:${cmd.memberName} ${args ? `>>> ${Object.values(args)}` : ''}`);
 	})
 	.on('message', msg => {
 		if (msg.author.bot) return;
@@ -177,7 +177,6 @@ client.registry
 		['info', 'Info'],
 		['weather', 'Weather'],
 		['music', 'Music'],
-		['listenmoe', 'Listen.moe'],
 		['tags', 'Tags']
 	])
 	.registerDefaults()

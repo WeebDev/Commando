@@ -9,7 +9,7 @@ module.exports = class ExampleAddCommand extends Command {
 	constructor(client) {
 		super(client, {
 			name: 'add-example',
-			aliases: ['example-add'],
+			aliases: ['tag-add-example', 'example-add', 'add-example-tag'],
 			group: 'tags',
 			memberName: 'add-example',
 			description: 'Adds an example.',
