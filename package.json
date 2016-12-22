@@ -21,7 +21,7 @@
   "homepage": "https://github.com/iCrawl/Commando#readme",
   "dependencies": {
     "Sherlock": "github:neilgupta/Sherlock",
-    "bluebird": "^3.4.6",
+    "bluebird": "^3.4.7",
     "canvas": "^1.6.2",
     "discord.js": "hydrabolt/discord.js#indev",
     "discord.js-commando": "github:gawdl3y/discord.js-commando",
