@@ -46,9 +46,11 @@ module.exports = class UserInfoCommand extends Command {
 				{
 					name: '❯ User Details',
 					value: stripIndents`
-						• Created at: ${moment.utc(user.createdAt).format('dddd, MMMM Do YYYY, HH:mm:ss ZZ')}${user.bot ? '\n• Is a bot account' : ''}
+						• Created at: ${moment.utc(user.createdAt).format('dddd, MMMM Do YYYY, HH:mm:ss ZZ')}${user.bot
+							? '\n• Is a bot account'
+							: ''}
 						• Status: ${user.presence.status}
-						• Game: ${user.presence.game ? user.presence.game.name : 'None'}\n\u200B
+						• Game: ${user.presence.game ? user.presence.game.name : 'None'}
 					`
 				}
 			],

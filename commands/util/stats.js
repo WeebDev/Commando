@@ -1,6 +1,7 @@
 const { Command } = require('discord.js-commando');
 const moment = require('moment');
 require('moment-duration-format');
+const stripIndents = require('common-tags').stripIndents;
 
 const version = require('../../package').version;
 
@@ -19,11 +20,13 @@ module.exports = class StatsCommand extends Command {
 	async run(msg) {
 		let embed = {
 			color: 3447003,
-			description: '**Commando Statistics**\n',
+			description: '**Hamakaze Statistics**',
 			fields: [
 				{
 					name: '❯ Uptime',
-					value: moment.duration(this.client.uptime).format('d[ days], h[ hours], m[ minutes, and ]s[ seconds]')
+					value: moment.duration(this.client.uptime)
+						.format('d[ days], h[ hours], m[ minutes, and ]s[ seconds]'),
+					inline: true
 				},
 				{
 					name: '❯ Memory usage',
@@ -31,8 +34,17 @@ module.exports = class StatsCommand extends Command {
 					inline: true
 				},
 				{
+					name: '❯ General Stats',
+					value: stripIndents`
+					• Guilds: ${this.client.guilds.size}
+					• Channels: ${this.client.channels.size}
+					• Users: ${this.client.guilds.map(guild => guild.memberCount).reduce((a, b) => a + b)}
+					`,
+					inline: true
+				},
+				{
 					name: '❯ Version',
-					value: version,
+					value: `v${version}`,
 					inline: true
 				}
 			],

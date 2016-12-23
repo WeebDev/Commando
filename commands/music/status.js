@@ -21,7 +21,7 @@ module.exports = class MusicStatusCommand extends Command {
 		const song = queue.songs[0];
 		const currentTime = song.dispatcher ? song.dispatcher.time / 1000 : 0;
 
-		const currentSong = {
+		const embed = {
 			color: 3447003,
 			author: {
 				name: `${song.username}`,
@@ -31,15 +31,10 @@ module.exports = class MusicStatusCommand extends Command {
 				We are ${Song.timeString(currentTime)} into the song, and have ${song.timeLeft(currentTime)} left.\n\u200B
 				${!song.playing ? 'The music is paused.\n\u200B' : ''}
 			`,
-			image: { url: song.thumbnail },
-			timestamp: new Date(),
-			footer: {
-				icon_url: this.client.user.avatarURL, // eslint-disable-line camelcase
-				text: 'Currently playing'
-			}
+			image: { url: song.thumbnail }
 		};
 
-		return msg.channel.sendMessage('', { embed: currentSong });
+		return msg.embed(embed);
 	}
 
 	get queue() {

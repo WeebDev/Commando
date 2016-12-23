@@ -3,6 +3,7 @@ global.Promise = require('bluebird');
 const commando = require('discord.js-commando');
 const oneLine = require('common-tags').oneLine;
 const path = require('path');
+const Raven = require('raven');
 const sqlite = require('sqlite');
 const winston = require('winston');
 
@@ -19,6 +20,9 @@ const client = new commando.Client({
 	disableEveryone: true
 });
 
+Raven.config(config.ravenKey);
+Raven.install();
+
 database.start();
 redis.start();
 
@@ -29,12 +33,18 @@ client.setProvider(sqlite.open(path.join(__dirname, 'settings.db'))
 client.on('error', winston.error)
 	.on('warn', winston.warn)
 	.on('ready', () => {
-		winston.info(`Client ready; logged in as ${client.user.username}#${client.user.discriminator} (${client.user.id})`);
+		winston.info(oneLine`
+			Client ready... Logged in as ${client.user.username}#${client.user.discriminator} (${client.user.id})
+		`);
 	})
 	.on('disconnect', () => { winston.warn('Disconnected!'); })
 	.on('reconnect', () => { winston.warn('Reconnecting...'); })
 	.on('commandRun', (cmd, promise, msg, args) => {
-		winston.info(`${msg.author.username}#${msg.author.discriminator} (${msg.author.id}) > ${msg.guild ? `${msg.guild.name} (${msg.guild.id})` : 'DM'} >> ${cmd.groupID}:${cmd.memberName} ${args ? `>>> ${Object.values(args)}` : ''}`);
+		winston.info(oneLine`${msg.author.username}#${msg.author.discriminator} (${msg.author.id})
+			> ${msg.guild ? `${msg.guild.name} (${msg.guild.id})` : 'DM'}
+			>> ${cmd.groupID}:${cmd.memberName}
+			${Object.values(args)[0] !== '' ? `>>> ${Object.values(args)}` : ''}
+		`);
 	})
 	.on('commandError', (cmd, err) => {
 		if (err instanceof commando.FriendlyError) return;

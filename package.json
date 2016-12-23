@@ -32,6 +32,7 @@
     "node-opus": "^0.2.4",
     "pg": "^6.1.2",
     "pg-hstore": "^2.3.2",
+    "raven": "^1.1.1",
     "redis": "^2.6.3",
     "request": "^2.79.0",
     "request-promise": "^4.1.1",

@@ -19,7 +19,7 @@ module.exports = class SaveQueueCommand extends Command {
 		const song = queue.songs[0];
 
 		msg.reply('✔ Check your inbox!');
-		let saveMessage = {
+		let embed = {
 			color: 3447003,
 			author: {
 				name: `${msg.author.username}#${msg.author.discriminator} (${msg.author.id})`,
@@ -28,17 +28,12 @@ module.exports = class SaveQueueCommand extends Command {
 			description: stripIndents`
 				**Currently playing:**
 				${song.url.match(/^https?:\/\/(api.soundcloud.com)\/(.*)$/) ? `${song}` : `[${song}](${`${song.url}`})`}
-				${song.url.match(/^https?:\/\/(api.soundcloud.com)\/(.*)$/) ? 'A SoundCloud song is currently playing.' : ''}\n\u200B
+				${song.url.match(/^https?:\/\/(api.soundcloud.com)\/(.*)$/) ? 'A SoundCloud song is currently playing.' : ''}
 			`,
-			image: { url: song.thumbnail },
-			timestamp: new Date(),
-			footer: {
-				icon_url: this.client.user.avatarURL, // eslint-disable-line camelcase
-				text: 'Info request'
-			}
+			image: { url: song.thumbnail }
 		};
 
-		return msg.author.sendMessage('', { embed: saveMessage });
+		return msg.author.sendMessage('', { embed });
 	}
 
 	get queue() {
