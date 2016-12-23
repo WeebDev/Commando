@@ -2,7 +2,7 @@
 
 const Canvas = require('canvas');
 const { Command } = require('discord.js-commando');
-const fs = require('fs');
+const fs = global.Promise.promisifyAll(require('fs'));
 const moment = require('moment');
 const path = require('path');
 const request = require('request-promise');
@@ -22,7 +22,7 @@ module.exports = class WeatherCommand extends Command {
 			format: '<location>',
 			throttling: {
 				usages: 1,
-				duration: 10
+				duration: 30
 			},
 
 			args: [
@@ -66,7 +66,7 @@ module.exports = class WeatherCommand extends Command {
 				uri: `https://api.darksky.net/forecast/${config.WeatherAPIKey}/${response.results[0].geometry.location.lat},${response.results[0].geometry.location.lng}?exclude=minutely,hourly,flags&units=auto`,
 				headers: { 'User-Agent': `Hamakaze ${version} (https://github.com/iCrawl/Hamakaze/)` },
 				json: true
-			}).then(res => {
+			}).then(async res => {
 				let datetime = moment().utcOffset(res.timezone).format('D MMMM, h:mma');
 				let condition = res.currently.summary;
 				let icon = res.currently.icon;
@@ -169,9 +169,9 @@ module.exports = class WeatherCommand extends Command {
 					ctx.fillText(`${chanceofrain}%`, 170, 270);
 				};
 
-				base.src = fs.readFileSync(this.getBase(icon));
-				cond.src = fs.readFileSync(path.join(__dirname, `../../assets/weather/icons/${icon}.png`));
-				windDir.src = fs.readFileSync(path.join(__dirname, `../../assets/weather/pointer.png`));
+				base.src = await fs.readFileAsync(this.getBase(icon));
+				cond.src = await fs.readFileAsync(path.join(__dirname, `../../assets/weather/icons/${icon}.png`));
+				windDir.src = await fs.readFileAsync(path.join(__dirname, `../../assets/weather/pointer.png`));
 				generate();
 
 				return msg.channel.sendFile(canvas.toBuffer(), `${geocodelocation}.png`).catch(error => { winston.error(error); });
