@@ -22,11 +22,7 @@ module.exports = class ServerInfoCommand extends Command {
 	async run(msg) {
 		let embed = {
 			color: 3447003,
-			author: {
-				name: `${msg.author.username}#${msg.author.discriminator} (${msg.author.id})`,
-				icon_url: msg.author.avatarURL ? msg.author.avatarURL : this.client.user.avatarURL // eslint-disable-line camelcase
-			},
-			description: `Info on **${msg.guild.name}** (ID: ${msg.guild.id})\n`,
+			description: `Info on **${msg.guild.name}** (ID: ${msg.guild.id})`,
 			fields: [
 				{
 					name: '❯ Channels',
@@ -57,14 +53,9 @@ module.exports = class ServerInfoCommand extends Command {
 					`
 				}
 			],
-			thumbnail: { url: msg.guild.iconURL },
-			timestamp: new Date(),
-			footer: {
-				icon_url: this.client.user.avatarURL, // eslint-disable-line camelcase
-				text: 'Server info'
-			}
+			thumbnail: { url: msg.guild.iconURL }
 		};
 
-		return msg.channel.sendMessage('', { embed });
+		return msg.embed(embed);
 	}
 };

@@ -34,20 +34,11 @@ module.exports = class StatsCommand extends Command {
 					name: '❯ Version',
 					value: version,
 					inline: true
-				},
-				{
-					name: '\u200B',
-					value: '\u200B'
 				}
 			],
-			thumbnail: { url: this.client.user.avatarURL },
-			timestamp: new Date(),
-			footer: {
-				icon_url: this.client.user.avatarURL, // eslint-disable-line camelcase
-				text: 'Statistics'
-			}
+			thumbnail: { url: this.client.user.avatarURL }
 		};
 
-		return msg.channel.sendMessage('', { embed });
+		return msg.embed(embed);
 	}
 };

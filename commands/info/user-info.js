@@ -34,10 +34,6 @@ module.exports = class UserInfoCommand extends Command {
 
 		let embed = {
 			color: 3447003,
-			author: {
-				name: `${user.username}#${user.discriminator} (${user.id})`,
-				icon_url: user.avatarURL ? user.avatarURL : this.client.user.avatarURL // eslint-disable-line camelcase
-			},
 			fields: [
 				{
 					name: '❯ Member Details',
@@ -56,14 +52,9 @@ module.exports = class UserInfoCommand extends Command {
 					`
 				}
 			],
-			thumbnail: { url: user.avatarURL },
-			timestamp: new Date(),
-			footer: {
-				icon_url: this.client.user.avatarURL, // eslint-disable-line camelcase
-				text: 'User info'
-			}
+			thumbnail: { url: user.avatarURL }
 		};
 
-		return msg.channel.sendMessage('', { embed });
+		return msg.embed(embed);
 	}
 };

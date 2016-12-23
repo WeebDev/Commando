@@ -15,10 +15,6 @@ module.exports = class AboutCommand extends Command {
 	async run(msg) {
 		let embed = {
 			color: 3447003,
-			author: {
-				name: `${msg.author.username}#${msg.author.discriminator} (${msg.author.id})`,
-				icon_url: msg.author.avatarURL ? msg.author.avatarURL : this.client.user.avatarURL // eslint-disable-line camelcase
-			},
 			description: stripIndents`
 				__**discord.js Commando:**__
 				This is the WIP official command framework for discord.js.
@@ -37,14 +33,9 @@ module.exports = class AboutCommand extends Command {
 				\`pm2 start somebot.js --node-args='--harmony'\`
 
 				[Documentation (WIP)](https://discord.js.org/#/docs/commando/)
-				[Discord.js Documentation](https://discord.js.org/#/docs/main/)\n\u200B
-			`,
-			timestamp: new Date(),
-			footer: {
-				icon_url: this.client.user.avatarURL, // eslint-disable-line camelcase
-				text: 'About'
-			}
+				[Discord.js Documentation](https://discord.js.org/#/docs/main/)
+			`
 		};
-		return msg.channel.sendMessage('', { embed });
+		return msg.embed(embed);
 	}
 };

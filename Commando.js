@@ -6,10 +6,12 @@ const path = require('path');
 const sqlite = require('sqlite');
 const winston = require('winston');
 
+const Redis = require('./redis/Redis');
 const Database = require('./postgreSQL/postgreSQL');
 const config = require('./settings');
 
 const database = new Database();
+const redis = new Redis();
 const client = new commando.Client({
 	owner: config.owner,
 	commandPrefix: '?',
@@ -18,6 +20,7 @@ const client = new commando.Client({
 });
 
 database.start();
+redis.start();
 
 client.setProvider(sqlite.open(path.join(__dirname, 'settings.db'))
 	.then(db => new commando.SQLiteProvider(db)))
