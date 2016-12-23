@@ -110,12 +110,7 @@ module.exports = class PlaySongCommand extends Command {
 					name: `${msg.author.username}#${msg.author.discriminator} (${msg.author.id})`,
 					icon_url: msg.author.avatarURL ? msg.author.avatarURL : this.client.user.avatarURL // eslint-disable-line camelcase
 				},
-				description: `${result}\n\u200B`,
-				timestamp: new Date(),
-				footer: {
-					icon_url: this.client.user.avatarURL, // eslint-disable-line camelcase
-					text: 'Queued'
-				}
+				description: result
 			};
 
 			if (!result.startsWith('👍')) {
@@ -144,12 +139,7 @@ module.exports = class PlaySongCommand extends Command {
 					name: `${msg.author.username}#${msg.author.discriminator} (${msg.author.id})`,
 					icon_url: msg.author.avatarURL ? msg.author.avatarURL : this.client.user.avatarURL // eslint-disable-line camelcase
 				},
-				description: `${result}\n\u200B`,
-				timestamp: new Date(),
-				footer: {
-					icon_url: this.client.user.avatarURL, // eslint-disable-line camelcase
-					text: 'Queued'
-				}
+				description: result
 			};
 
 			statusMsg.edit('', { embed: resultMessage });
@@ -211,13 +201,8 @@ module.exports = class PlaySongCommand extends Command {
 				name: song.username,
 				icon_url: song.avatar ? song.avatar : this.client.user.avatarURL // eslint-disable-line camelcase
 			},
-			description: `${song.url.match(/^https?:\/\/(api.soundcloud.com)\/(.*)$/) ? `${song}\n\u200B` : `[${song}](${`${song.url}`})`}`,
-			image: { url: song.thumbnail },
-			timestamp: new Date(),
-			footer: {
-				icon_url: this.client.user.avatarURL, // eslint-disable-line camelcase
-				text: 'Playing'
-			}
+			description: `${song.url.match(/^https?:\/\/(api.soundcloud.com)\/(.*)$/) ? `${song}` : `[${song}](${`${song.url}`})`}`,
+			image: { url: song.thumbnail }
 		};
 
 		const playing = queue.textChannel.sendMessage('', { embed: playingMessage });

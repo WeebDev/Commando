@@ -37,7 +37,7 @@ module.exports = class ViewQueueCommand extends Command {
 		const currentSong = queue.songs[0];
 		const currentTime = currentSong.dispatcher ? currentSong.dispatcher.time / 1000 : 0;
 
-		const queueEmbed = {
+		const embed = {
 			color: 3447003,
 			author: {
 				name: `${msg.author.username}#${msg.author.discriminator} (${msg.author.id})`,
@@ -55,16 +55,11 @@ module.exports = class ViewQueueCommand extends Command {
 					${currentSong.lengthString}
 					(${currentSong.timeLeft(currentTime)} left)
 				`}
-				**Total queue time:** ${Song.timeString(totalLength)}\n\u200B
-			`,
-			timestamp: new Date(),
-			footer: {
-				icon_url: this.client.user.avatarURL, // eslint-disable-line camelcase
-				text: 'Queue'
-			}
+				**Total queue time:** ${Song.timeString(totalLength)}
+			`
 		};
 
-		return msg.channel.sendMessage('', { embed: queueEmbed });
+		return msg.embed(embed);
 	}
 
 	get queue() {

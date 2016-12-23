@@ -34,10 +34,6 @@ module.exports = class UserInfoCommand extends Command {
 
 		let embed = {
 			color: 3447003,
-			author: {
-				name: `${user.username}#${user.discriminator} (${user.id})`,
-				icon_url: user.avatarURL ? user.avatarURL : this.client.user.avatarURL // eslint-disable-line camelcase
-			},
 			fields: [
 				{
 					name: '❯ Member Details',
@@ -50,20 +46,17 @@ module.exports = class UserInfoCommand extends Command {
 				{
 					name: '❯ User Details',
 					value: stripIndents`
-						• Created at: ${moment.utc(user.createdAt).format('dddd, MMMM Do YYYY, HH:mm:ss ZZ')}${user.bot ? '\n• Is a bot account' : ''}
+						• Created at: ${moment.utc(user.createdAt).format('dddd, MMMM Do YYYY, HH:mm:ss ZZ')}${user.bot
+							? '\n• Is a bot account'
+							: ''}
 						• Status: ${user.presence.status}
-						• Game: ${user.presence.game ? user.presence.game.name : 'None'}\n\u200B
+						• Game: ${user.presence.game ? user.presence.game.name : 'None'}
 					`
 				}
 			],
-			thumbnail: { url: user.avatarURL },
-			timestamp: new Date(),
-			footer: {
-				icon_url: this.client.user.avatarURL, // eslint-disable-line camelcase
-				text: 'User info'
-			}
+			thumbnail: { url: user.avatarURL }
 		};
 
-		return msg.channel.sendMessage('', { embed });
+		return msg.embed(embed);
 	}
 };

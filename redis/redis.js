@@ -5,9 +5,19 @@ const winston = require('winston');
 bluebird.promisifyAll(redisClient.RedisClient.prototype);
 bluebird.promisifyAll(redisClient.Multi.prototype);
 
-const redis = redisClient.createClient();
+class Redis {
+	constructor() {
+		this.redis = redisClient.createClient();
+	}
 
-redis.on('error', err => { winston.error(err); })
-	.on('reconnecting', () => { winston.warn('Reconnecting...'); });
+	get db() {
+		return this.redis;
+	}
 
-module.exports = { redis };
+	start() {
+		this.redis.on('error', err => { winston.error(err); })
+			.on('reconnecting', () => { winston.warn('Reconnecting...'); });
+	}
+}
+
+module.exports = Redis;

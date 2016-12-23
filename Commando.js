@@ -4,9 +4,11 @@ const commando = require('discord.js-commando');
 const fs = require('fs');
 const oneLine = require('common-tags').oneLine;
 const path = require('path');
+const Raven = require('raven');
 const sqlite = require('sqlite');
 const winston = require('winston');
 
+const Redis = require('./redis/Redis');
 const Database = require('./postgreSQL/postgreSQL');
 const config = require('./settings');
 
@@ -20,6 +22,7 @@ const lookup = new Lookup(data, docs);
 const commands = new Commands(data, docs);
 
 const database = new Database();
+const redis = new Redis();
 const client = new commando.Client({
 	owner: config.owner,
 	commandPrefix: '?',
@@ -27,7 +30,11 @@ const client = new commando.Client({
 	disableEveryone: true
 });
 
+Raven.config(config.ravenKey);
+Raven.install();
+
 database.start();
+redis.start();
 
 client.setProvider(sqlite.open(path.join(__dirname, 'settings.db'))
 	.then(db => new commando.SQLiteProvider(db)))
@@ -36,12 +43,18 @@ client.setProvider(sqlite.open(path.join(__dirname, 'settings.db'))
 client.on('error', winston.error)
 	.on('warn', winston.warn)
 	.on('ready', () => {
-		winston.info(`Client ready; logged in as ${client.user.username}#${client.user.discriminator} (${client.user.id})`);
+		winston.info(oneLine`
+			Client ready... Logged in as ${client.user.username}#${client.user.discriminator} (${client.user.id})
+		`);
 	})
 	.on('disconnect', () => { winston.warn('Disconnected!'); })
 	.on('reconnect', () => { winston.warn('Reconnecting...'); })
 	.on('commandRun', (cmd, promise, msg, args) => {
-		winston.info(`${msg.author.username}#${msg.author.discriminator} (${msg.author.id}) > ${msg.guild ? `${msg.guild.name} (${msg.guild.id})` : 'DM'} >> ${cmd.groupID}:${cmd.memberName} ${args ? `>>> ${Object.values(args)}` : ''}`);
+		winston.info(oneLine`${msg.author.username}#${msg.author.discriminator} (${msg.author.id})
+			> ${msg.guild ? `${msg.guild.name} (${msg.guild.id})` : 'DM'}
+			>> ${cmd.groupID}:${cmd.memberName}
+			${Object.values(args)[0] !== '' ? `>>> ${Object.values(args)}` : ''}
+		`);
 	})
 	.on('message', msg => {
 		if (msg.author.bot) return;

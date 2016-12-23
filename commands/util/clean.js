@@ -43,12 +43,8 @@ module.exports = class CleanCommand extends Command {
 		});
 	}
 
-	hasPermission(msg) {
-		return msg.author.id === this.client.options.owner;
-	}
-
 	async run(msg, args) {
-		if (msg.author.id !== '81440962496172032') {
+		if (!msg.member.hasPermission('MANAGE_MESSAGES')) {
 			return msg.say(`${msg.author}, don't set me up on stuff you can't even do yourself!`);
 		}
 		if (!args.limit) {
@@ -60,7 +56,8 @@ module.exports = class CleanCommand extends Command {
 		let messageFilter;
 		if (filter) {
 			if (filter === 'invite') {
-				messageFilter = message => message.content.search(/(discord\.gg\/.+|discordapp\.com\/invite\/.+)/i) !== -1;
+				messageFilter = message => message.content.search(/(discord\.gg\/.+|discordapp\.com\/invite\/.+)/i)
+				!== -1;
 			} else if (filter === 'user') {
 				if (args.member) {
 					const member = args.member;
@@ -78,14 +75,14 @@ module.exports = class CleanCommand extends Command {
 			} else if (filter === 'links') {
 				messageFilter = message => message.content.search(/https?:\/\/[^ \/\.]+\.[^ \/\.]+/) !== -1; // eslint-disable-line no-useless-escape
 			} else {
-				return msg.say(`${msg.author}, that is not a valid filter. Do \`help clean\` for all available filters.`);
+				return msg.say(`${msg.author}, this is not a valid filter. \`help clean\` for all available filters.`);
 			}
 		}
 
 		if (!filter) {
 			return msg.channel.fetchMessages({ limit: limit })
 			.then(messagesToDelete => {
-				msg.channel.bulkDelete(messagesToDelete).catch(error => { winston.error(error); });
+				msg.channel.bulkDelete(messagesToDelete.array().reverse()).catch(error => { winston.error(error); });
 			})
 			.then(() => {
 				msg.say(`I cleaned up the number of messages you requested, ${msg.author}.`)

@@ -1,7 +1,9 @@
 const { Command } = require('discord.js-commando');
 
-const { redis } = require('../../redis/redis');
+const Redis = require('../../redis/Redis');
 const Tag = require('../../postgreSQL/models/Tag');
+
+const redis = new Redis();
 
 module.exports = class TagCommand extends Command {
 	constructor(client) {
@@ -35,7 +37,7 @@ module.exports = class TagCommand extends Command {
 	}
 
 	async findTagCached(msg, name, guildID) {
-		return redis.getAsync(name + guildID).then(async reply => {
+		return redis.db.getAsync(name + guildID).then(async reply => {
 			if (reply) {
 				let tag = await Tag.findOne({ where: { name: name, guildID: guildID } });
 				if (tag) tag.increment('uses');
@@ -46,7 +48,7 @@ module.exports = class TagCommand extends Command {
 				if (!tag) return msg.say(`A tag with the name **${name}** doesn't exist, ${msg.author}`);
 				tag.increment('uses');
 
-				return redis.setAsync(name + guildID, tag.content)
+				return redis.db.setAsync(name + guildID, tag.content)
 					.then(() => {
 						msg.say(tag.content);
 					});

@@ -3,6 +3,7 @@
 	"owner": "YOUR_ID",
 	"exampleChannel": "example channel ID",
 	"db": "postgreSQL URL",
+	"ravenKey": "Sentry API Key",
 	"AniListID": "Anilist ID",
 	"AniListSecret": "Anilist Secret",
 	"WeatherAPIKey": "darksky.net API Key",

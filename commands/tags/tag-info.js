@@ -1,6 +1,5 @@
 const { Command } = require('discord.js-commando');
 const moment = require('moment');
-const stripIndents = require('common-tags').stripIndents;
 
 const Tag = require('../../postgreSQL/models/Tag');
 
@@ -38,10 +37,6 @@ module.exports = class TagWhoCommand extends Command {
 
 		let embed = {
 			color: 3447003,
-			author: {
-				name: `${msg.author.username}#${msg.author.discriminator} (${msg.author.id})`,
-				icon_url: `${msg.author.avatarURL}` // eslint-disable-line camelcase
-			},
 			fields: [
 				{
 					name: 'Username',
@@ -59,13 +54,9 @@ module.exports = class TagWhoCommand extends Command {
 					name: 'Uses',
 					value: `${tag.uses} `
 				}
-			],
-			footer: {
-				icon_url: this.client.user.avatarURL, // eslint-disable-line camelcase
-				text: 'Tag info'
-			}
+			]
 		};
 
-		return msg.channel.sendMessage('', { embed });
+		return msg.embed(embed);
 	}
 };

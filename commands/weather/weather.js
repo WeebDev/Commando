@@ -22,7 +22,7 @@ module.exports = class WeatherCommand extends Command {
 			format: '<location>',
 			throttling: {
 				usages: 1,
-				duration: 30
+				duration: 10
 			},
 
 			args: [
@@ -54,17 +54,20 @@ module.exports = class WeatherCommand extends Command {
 
 		return request({
 			uri: `https://maps.googleapis.com/maps/api/geocode/json?address=${locationURI}&key=${config.GoogleAPIKey}`,
-			headers: { 'User-Agent': `Hamakaze ${version} (https://github.com/iCrawl/Hamakaze/)` },
+			headers: { 'User-Agent': `Hamakaze v${version} (https://github.com/WeebDev/Hamakaze/)` },
 			json: true
 		}).then(response => {
 			if (response.status !== 'OK') return this.handleNotOK(msg, response.status);
-			if (response.results.length === 0) return msg.reply('I couldn\'t find a place with the location you provded me');
+			if (response.results.length === 0) return msg.reply('I couldn\'t find the location you provided me');
 
 			let geocodelocation = response.results[0].formatted_address;
+			let addressComponents = response.results[0].address_components;
+			let wAPIKey = config.WeatherAPIKey;
+			let params = `${response.results[0].geometry.location.lat},${response.results[0].geometry.location.lng}`;
 
 			return request({
-				uri: `https://api.darksky.net/forecast/${config.WeatherAPIKey}/${response.results[0].geometry.location.lat},${response.results[0].geometry.location.lng}?exclude=minutely,hourly,flags&units=auto`,
-				headers: { 'User-Agent': `Hamakaze ${version} (https://github.com/iCrawl/Hamakaze/)` },
+				uri: `https://api.darksky.net/forecast/${wAPIKey}/${params}?exclude=minutely,hourly,flags&units=auto`,
+				headers: { 'User-Agent': `Hamakaze v${version} (https://github.com/WeebDev/Hamakaze/)` },
 				json: true
 			}).then(async res => {
 				let datetime = moment().utcOffset(res.timezone).format('D MMMM, h:mma');
@@ -124,11 +127,11 @@ module.exports = class WeatherCommand extends Command {
 
 					// Temperature
 					ctx.font = '88px Roboto';
-					ctx.fillText(`${temperature}°${this.getTempUnit(response.results[0].address_components)}`, 19, 130);
+					ctx.fillText(`${temperature}°${this.getTempUnit(addressComponents)}`, 19, 130);
 
 					ctx.font = '16px Roboto';
-					ctx.fillText(`High ${temperatureMax}°${this.getTempUnit(response.results[0].address_components)}`, 20, 157);
-					ctx.fillText(`Low ${temperatureMin}°${this.getTempUnit(response.results[0].address_components)}`, 110, 157);
+					ctx.fillText(`High ${temperatureMax}°${this.getTempUnit(addressComponents)}`, 20, 157);
+					ctx.fillText(`Low ${temperatureMin}°${this.getTempUnit(addressComponents)}`, 110, 157);
 
 					// Condition
 					ctx.font = '14px Roboto';
@@ -156,9 +159,9 @@ module.exports = class WeatherCommand extends Command {
 					ctx.fillText('Chance of rain', 20, 270);
 
 					// Values
-					ctx.fillText(`${feelslike}°${this.getTempUnit(response.results[0].address_components)}`, 170, 210);
+					ctx.fillText(`${feelslike}°${this.getTempUnit(addressComponents)}`, 170, 210);
 					ctx.fillText(`${humidity}%`, 170, 230);
-					ctx.fillText(`${windspeed.toFixed(2)} ${this.getWindspeedUnit(response.results[0].address_components)}`, 170, 250);
+					ctx.fillText(`${windspeed.toFixed(2)} ${this.getWindspeedUnit(addressComponents)}`, 170, 250);
 					if (windspeed.toString().length < 4) {
 						ctx.drawImage(pointer, 240, 237);
 					} else if (windspeed.toString().length < 3) {
@@ -174,7 +177,8 @@ module.exports = class WeatherCommand extends Command {
 				windDir.src = await fs.readFileAsync(path.join(__dirname, `../../assets/weather/pointer.png`));
 				generate();
 
-				return msg.channel.sendFile(canvas.toBuffer(), `${geocodelocation}.png`).catch(error => { winston.error(error); });
+				return msg.channel.sendFile(canvas.toBuffer(), `${geocodelocation}.png`)
+					.catch(error => { winston.error(error); });
 			}).catch(error => { winston.error(error); });
 		}).catch(error => { winston.error(error); });
 	}
@@ -194,9 +198,13 @@ module.exports = class WeatherCommand extends Command {
 	}
 
 	getBase(icon) {
-		if (icon === 'clear-night' || icon === 'partly-cloudly-night') return path.join(__dirname, '../../assets/weather/base/moon.png');
+		if (icon === 'clear-night' || icon === 'partly-cloudly-night') {
+			return path.join(__dirname, '../../assets/weather/base/moon.png');
+		}
 		if (icon === 'rain') return path.join(__dirname, '../../assets/weather/base/rain.png');
-		if (icon === 'snow' || icon === 'sleet' || icon === 'fog' || icon === 'wind') return path.join(__dirname, '../../assets/weather/base/snow.png');
+		if (icon === 'snow' || icon === 'sleet' || icon === 'fog' || icon === 'wind') {
+			return path.join(__dirname, '../../assets/weather/base/snow.png');
+		}
 		if (icon === 'cloudy') return path.join(__dirname, '../../assets/weather/base/cloud.png');
 		return path.join(__dirname, '../../assets/weather/base/sun.png');
 	}

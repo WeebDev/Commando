@@ -1,8 +1,10 @@
 const { Command } = require('discord.js-commando');
 const winston = require('winston');
 
-const { redis } = require('../../redis/redis');
+const Redis = require('../../redis/Redis');
 const Tag = require('../../postgreSQL/models/Tag');
+
+const redis = new Redis();
 
 module.exports = class ServerTagAddCommand extends Command {
 	constructor(client) {
@@ -78,7 +80,7 @@ module.exports = class ServerTagAddCommand extends Command {
 					type: true
 				});
 
-				redis.setAsync(name + msg.guild.id, cleanContent);
+				redis.db.setAsync(name + msg.guild.id, cleanContent);
 
 				return msg.say(`A server tag with the name **${name}** has been added, ${msg.author}`);
 			})
