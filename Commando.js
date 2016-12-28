@@ -1,6 +1,7 @@
 global.Promise = require('bluebird');
 
 const commando = require('discord.js-commando');
+const Collection = require('discord.js').Collection;
 const oneLine = require('common-tags').oneLine;
 const path = require('path');
 const Raven = require('raven');
@@ -10,6 +11,7 @@ const winston = require('winston');
 const Redis = require('./redis/Redis');
 const Database = require('./postgreSQL/postgreSQL');
 const config = require('./settings');
+const Money = require('./postgreSQL/models/Money');
 
 const database = new Database();
 const redis = new Redis();
@@ -30,6 +32,25 @@ client.setProvider(sqlite.open(path.join(__dirname, 'settings.db'))
 	.then(db => new commando.SQLiteProvider(db)))
 	.catch(error => { winston.error(error); });
 
+let earnings = new Collection();
+setInterval(() => {
+	for (const [userID, moneyEarned] of earnings) {
+		Money.findOne({ where: { userID } }).then(user => {
+			if (!user) {
+				Money.create({
+					userID: userID,
+					money: moneyEarned
+				});
+			} else {
+				user.increment('money', { by: moneyEarned });
+				user.save();
+			}
+		});
+	}
+
+	earnings = new Collection();
+}, 30 * 1000);
+
 client.on('error', winston.error)
 	.on('warn', winston.warn)
 	.on('ready', () => {
@@ -39,6 +60,16 @@ client.on('error', winston.error)
 	})
 	.on('disconnect', () => { winston.warn('Disconnected!'); })
 	.on('reconnect', () => { winston.warn('Reconnecting...'); })
+	.on('message', (message) => {
+		const hasImageAttachment = message.attachments.some(attachment => attachment.url.match(/(\.png|\.jpg|\.jpeg|\.gif)$/));
+		const moneyEarned = (hasImageAttachment * 40) + ((1 - hasImageAttachment) * 5);
+
+		if (!earnings.has(message.author.id)) {
+			earnings.set(message.author.id, moneyEarned);
+		} else {
+			earnings.set(message.author.id, earnings.get(message.author.id) + moneyEarned);
+		}
+	})
 	.on('commandRun', (cmd, promise, msg, args) => {
 		winston.info(oneLine`${msg.author.username}#${msg.author.discriminator} (${msg.author.id})
 			> ${msg.guild ? `${msg.guild.name} (${msg.guild.id})` : 'DM'}
