@@ -25,7 +25,7 @@ module.exports = class AboutCommand extends Command {
 
 				__**Installation:**__
 				**Node 7.0.0 or newer is required.**
-				\`npm install --save discord.js-commando\`
+				\`npm i -S discord.js-commando\`
 
 				When running a bot using Commando, make sure to run Node with the \`--harmony\` flag.
 				Example:
