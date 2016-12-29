@@ -1,6 +1,12 @@
 const { Command } = require('discord.js-commando');
 const moment = require('moment');
 const stripIndents = require('common-tags').stripIndents;
+const humanLevels = {
+    0: 'None',
+    1: 'Low',
+    2: 'Medium',
+    3: '(╯°□°）╯︵ ┻━┻'
+}
 
 module.exports = class ServerInfoCommand extends Command {
 	constructor(client) {
@@ -52,7 +58,7 @@ module.exports = class ServerInfoCommand extends Command {
 						• Roles: ${msg.guild.roles.size}
 						• Region: ${msg.guild.region}
 						• Created at: ${moment.utc(msg.guild.createdAt).format('dddd, MMMM Do YYYY, HH:mm:ss ZZ')}
-						• Verification Level: ${msg.guild.verificationLevel}
+						• Verification Level: ${humanLevels[msg.guild.verificationLevel]}
 						• Emojis: ${msg.guild.emojis.array().join(' ')}
 					`
 				}
