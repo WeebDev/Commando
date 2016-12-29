@@ -38,6 +38,7 @@ Money.findAll().then(rows => {
 	}
 });
 
+let earnedRecently = [];
 let earnings = new Collection();
 setInterval(() => {
 	for (const [userID, moneyEarned] of earnings) {
@@ -67,6 +68,8 @@ client.on('error', winston.error)
 	.on('disconnect', () => { winston.warn('Disconnected!'); })
 	.on('reconnect', () => { winston.warn('Reconnecting...'); })
 	.on('message', (message) => {
+		if (earnedRecently.includes(message.author.id)) return;
+
 		const hasImageAttachment = message.attachments.some(attachment => attachment.url.match(/\.(png|jpg|jpeg|gif|webp)$/));
 		const moneyEarned = (hasImageAttachment * 40) + ((1 - hasImageAttachment) * 5);
 		const collectedMoney = earnings.get(message.author.id) || 0;
@@ -77,6 +80,12 @@ client.on('error', winston.error)
 			if (!balance) return redis.db.setAsync(`money${message.author.id}`, moneyEarned);
 			else return redis.db.setAsync(`money${message.author.id}`, moneyEarned + parseInt(balance));
 		});
+
+		earnedRecently.push(message.author.id);
+		setTimeout(() => {
+			const index = earnedRecently.indexOf(message.author);
+			earnedRecently.splice(index, 1);
+		}, 8000);
 	})
 	.on('commandRun', (cmd, promise, msg, args) => {
 		winston.info(oneLine`${msg.author.username}#${msg.author.discriminator} (${msg.author.id})
