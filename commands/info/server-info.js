@@ -1,12 +1,13 @@
 const { Command } = require('discord.js-commando');
 const moment = require('moment');
 const stripIndents = require('common-tags').stripIndents;
+
 const humanLevels = {
-    0: 'None',
-    1: 'Low',
-    2: 'Medium',
-    3: '(╯°□°）╯︵ ┻━┻'
-}
+	0: 'None',
+	1: 'Low',
+	2: 'Medium',
+	3: '(╯°□°）╯︵ ┻━┻'
+};
 
 module.exports = class ServerInfoCommand extends Command {
 	constructor(client) {
