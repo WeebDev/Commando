@@ -4,7 +4,7 @@ const commando = require('discord.js-commando');
 const Collection = require('discord.js').Collection;
 const oneLine = require('common-tags').oneLine;
 const path = require('path');
-/*const Raven = require('raven');*/
+const Raven = require('raven');
 const sqlite = require('sqlite');
 const winston = require('winston');
 
@@ -22,8 +22,8 @@ const client = new commando.Client({
 	disableEveryone: true
 });
 
-/*Raven.config(config.ravenKey);
-Raven.install();*/
+Raven.config(config.ravenKey);
+Raven.install();
 
 database.start();
 redis.start();
