@@ -1,5 +1,7 @@
 const { Command } = require('discord.js-commando');
-const Money = require('../../postgreSQL/models/Money');
+const Redis = require('../../redis/Redis');
+
+const redis = new Redis();
 
 module.exports = class MoneyCheckCommand extends Command {
 	constructor(client) {
@@ -24,13 +26,13 @@ module.exports = class MoneyCheckCommand extends Command {
 	async run(msg, args) {
 		let user = args.member || msg.author;
 
-		return Money.findOne({ where: { userID: user.id } }).then(row => {
+		redis.db.getAsync(user.id).then(balance => {
 			if (args.member) {
-				if (!row) return msg.reply(`${args.member.displayName} hasn't earned any money yet! :(`);
-				return msg.reply(`${args.member.displayName} has earned ${row.money}Đ so far. Good on them!`);
+				if (!balance) return msg.reply(`${args.member.displayName} hasn't earned any money yet :(`);
+				return msg.reply(`${args.member.displayName} has earned ${balance}Đ so far. Good on them!`);
 			} else {
-				if (!row) return msg.reply('you haven\'t earned any money yet!');
-				return msg.reply(`You have earned ${row.money}Đ so far. Good on you!`);
+				if (!balance) return msg.reply('you haven\'t earned any money yet, sorry :(');
+				return msg.reply(`You have earned ${balance}Đ so far. Good on you!`);
 			}
 		});
 	}

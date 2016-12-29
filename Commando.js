@@ -32,6 +32,12 @@ client.setProvider(sqlite.open(path.join(__dirname, 'settings.db'))
 	.then(db => new commando.SQLiteProvider(db)))
 	.catch(error => { winston.error(error); });
 
+Money.findAll().then(rows => {
+	for (const row of rows) {
+		redis.db.setAsync(`money${row.userID}`, row.money);
+	}
+});
+
 let earnings = new Collection();
 setInterval(() => {
 	for (const [userID, moneyEarned] of earnings) {
@@ -66,6 +72,11 @@ client.on('error', winston.error)
 		const collectedMoney = earnings.get(message.author.id) || 0;
 
 		earnings.set(message.author.id, collectedMoney + moneyEarned);
+
+		redis.db.getAsync(`money${message.author.id}`).then(balance => {
+			if (!balance) return redis.db.setAsync(`money${message.author.id}`, moneyEarned);
+			else return redis.db.setAsync(`money${message.author.id}`, moneyEarned + parseInt(balance));
+		});
 	})
 	.on('commandRun', (cmd, promise, msg, args) => {
 		winston.info(oneLine`${msg.author.username}#${msg.author.discriminator} (${msg.author.id})
