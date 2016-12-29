@@ -83,7 +83,7 @@ client.on('error', winston.error)
 
 		earnedRecently.push(message.author.id);
 		setTimeout(() => {
-			const index = earnedRecently.indexOf(message.author);
+			const index = earnedRecently.indexOf(message.author.id);
 			earnedRecently.splice(index, 1);
 		}, 8000);
 	})
