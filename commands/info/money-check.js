@@ -26,7 +26,7 @@ module.exports = class MoneyCheckCommand extends Command {
 	async run(msg, args) {
 		let user = args.member || msg.author;
 
-		redis.db.getAsync(user.id).then(balance => {
+		redis.db.getAsync(`money${user.id}`).then(balance => {
 			if (args.member) {
 				if (!balance) return msg.reply(`${args.member.displayName} hasn't earned any money yet :(`);
 				return msg.reply(`${args.member.displayName} has earned ${balance}Đ so far. Good on them!`);
