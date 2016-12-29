@@ -4,7 +4,7 @@ const commando = require('discord.js-commando');
 const Collection = require('discord.js').Collection;
 const oneLine = require('common-tags').oneLine;
 const path = require('path');
-const Raven = require('raven');
+/*const Raven = require('raven');*/
 const sqlite = require('sqlite');
 const winston = require('winston');
 
@@ -22,8 +22,8 @@ const client = new commando.Client({
 	disableEveryone: true
 });
 
-Raven.config(config.ravenKey);
-Raven.install();
+/*Raven.config(config.ravenKey);
+Raven.install();*/
 
 database.start();
 redis.start();
@@ -61,14 +61,11 @@ client.on('error', winston.error)
 	.on('disconnect', () => { winston.warn('Disconnected!'); })
 	.on('reconnect', () => { winston.warn('Reconnecting...'); })
 	.on('message', (message) => {
-		const hasImageAttachment = message.attachments.some(attachment => attachment.url.match(/(\.png|\.jpg|\.jpeg|\.gif)$/));
+		const hasImageAttachment = message.attachments.some(attachment => attachment.url.match(/\.(png|jpg|jpeg|gif|webp)$/));
 		const moneyEarned = (hasImageAttachment * 40) + ((1 - hasImageAttachment) * 5);
+		const collectedMoney = earnings.get(message.author.id) || 0;
 
-		if (!earnings.has(message.author.id)) {
-			earnings.set(message.author.id, moneyEarned);
-		} else {
-			earnings.set(message.author.id, earnings.get(message.author.id) + moneyEarned);
-		}
+		earnings.set(message.author.id, collectedMoney + moneyEarned);
 	})
 	.on('commandRun', (cmd, promise, msg, args) => {
 		winston.info(oneLine`${msg.author.username}#${msg.author.discriminator} (${msg.author.id})
