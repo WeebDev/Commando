@@ -17,6 +17,6 @@ module.exports = class SlotMachineInfo extends Command {
 	async run(msg) {
 		const balance = await currency.getBalance('SLOTMACHINE');
 
-		msg.say(`The slotmachine currently holds ${balance} 🍩s`);
+		return msg.say(`The slotmachine currently holds ${balance} 🍩s`);
 	}
 };
