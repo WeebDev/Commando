@@ -190,6 +190,7 @@ module.exports = class Lookup {
 			${description}
 
 			**Returns:** ${returns}
+
 		`;
 	}
 
