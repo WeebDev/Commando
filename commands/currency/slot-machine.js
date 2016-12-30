@@ -8,15 +8,15 @@ const currency = new Currency();
 const symbols = ['🍒', '💰', '⭐', '🎲', '💎', '❤', '⚜', '🔅', '🎉'];
 
 const combinations = {
-	'💎-💎-💎': 1000,
-	'⚜-⚜-⚜': 800,
-	'💰-💰-💰': 800,
-	'❤-❤-❤': 600,
-	'⭐-⭐-⭐': 600,
-	'🎲-🎲-🎲': 450,
-	'🔅-🔅-🔅': 450,
-	'🎉-🎉-🎉': 450,
-	'🍒-🍒-🍒': 450
+	'💎-💎-💎': 500,
+	'⚜-⚜-⚜': 400,
+	'💰-💰-💰': 400,
+	'❤-❤-❤': 300,
+	'⭐-⭐-⭐': 300,
+	'🎲-🎲-🎲': 250,
+	'🔅-🔅-🔅': 250,
+	'🎉-🎉-🎉': 250,
+	'🍒-🍒-🍒': 250
 };
 
 module.exports = class SlotMachineCommand extends Command {
@@ -42,7 +42,7 @@ module.exports = class SlotMachineCommand extends Command {
 	async run(msg, args) {
 		const userBalance = await currency.getBalance(msg.author.id);
 
-		if (![200, 300, 400].includes(args.donuts)) {
+		if (![100, 200, 300].includes(args.donuts)) {
 			return msg.say('Sorry, you need to pay either 200, 300 or 400 🍩s. Anything else does not work.');
 		}
 
