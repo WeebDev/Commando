@@ -19,6 +19,10 @@ module.exports = class Currency {
 		});
 	}
 
+	removeBalance(user, earned) {
+		this.addBalance(user, -earned);
+	}
+
 	getBalance(user) {
 		return redis.db.getAsync(`money${user}`);
 	}
