@@ -8,11 +8,10 @@ const redis = new Redis();
 module.exports = class TagSourceCommand extends Command {
 	constructor(client) {
 		super(client, {
-			name: 'tag',
+			name: 'tag-source',
 			group: 'tags',
-			memberName: 'tag',
-			description: 'Displays a tag.',
-			format: '<tagname>',
+			memberName: 'tag-source',
+			description: 'Displays a tags source.',
 			guildOnly: true,
 			throttling: {
 				usages: 2,
