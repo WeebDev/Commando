@@ -9,7 +9,7 @@ module.exports = class TagWhoCommand extends Command {
 			name: 'tag-info',
 			aliases: ['tag-who'],
 			group: 'tags',
-			memberName: 'tag-info',
+			memberName: 'info',
 			description: 'Displays information about a tag.',
 			format: '<tagname>',
 			guildOnly: true,

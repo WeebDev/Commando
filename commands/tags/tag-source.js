@@ -10,7 +10,7 @@ module.exports = class TagSourceCommand extends Command {
 		super(client, {
 			name: 'tag-source',
 			group: 'tags',
-			memberName: 'tag-source',
+			memberName: 'source',
 			description: 'Displays a tags source.',
 			guildOnly: true,
 			throttling: {
@@ -41,7 +41,7 @@ module.exports = class TagSourceCommand extends Command {
 				let tag = await Tag.findOne({ where: { name: name, guildID: guildID } });
 				if (tag) tag.increment('uses');
 
-				return msg.code('', reply);
+				return msg.code('md', reply);
 			} else {
 				let tag = await Tag.findOne({ where: { name: name, guildID: guildID } });
 				if (!tag) return msg.say(`A tag with the name **${name}** doesn't exist, ${msg.author}`);
@@ -49,7 +49,7 @@ module.exports = class TagSourceCommand extends Command {
 
 				return redis.db.setAsync(name + guildID, tag.content)
 					.then(() => {
-						msg.code('', tag.content);
+						msg.code('md', tag.content);
 					});
 			}
 		});

@@ -13,7 +13,7 @@ module.exports = class TagDeleteCommand extends Command {
 			name: 'delete-tag',
 			aliases: ['tag-del', 'del-tag', 'delete-example', 'example-del', 'del-example'],
 			group: 'tags',
-			memberName: 'delete-tag',
+			memberName: 'delete',
 			description: 'Deletes a tag.',
 			format: '<tagname>',
 			guildOnly: true,

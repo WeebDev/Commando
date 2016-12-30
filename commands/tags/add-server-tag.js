@@ -12,7 +12,7 @@ module.exports = class ServerTagAddCommand extends Command {
 			name: 'add-server-tag',
 			aliases: ['tag-add-server', 'servertag'],
 			group: 'tags',
-			memberName: 'add-server-tag',
+			memberName: 'add-server',
 			description: 'Adds a server tag.',
 			format: '<tagname> <tagcontent>',
 			details: `Adds a server tag, usable for everyone on the server. (Markdown can be used.)`,

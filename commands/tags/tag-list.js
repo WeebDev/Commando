@@ -9,7 +9,7 @@ module.exports = class TagListCommand extends Command {
 			name: 'tag-list',
 			aliases: ['tags'],
 			group: 'tags',
-			memberName: 'tag-list',
+			memberName: 'list',
 			description: 'Lists all server tags.',
 			guildOnly: true,
 			throttling: {
