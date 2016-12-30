@@ -7,7 +7,7 @@ bluebird.promisifyAll(redisClient.Multi.prototype);
 
 class Redis {
 	constructor() {
-		this.redis = redisClient.createClient();
+		this.redis = redisClient.createClient({ db: 2 });
 	}
 
 	get db() {

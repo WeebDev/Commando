@@ -25,8 +25,8 @@ const client = new commando.Client({
 
 let earnedRecently = [];
 
-Raven.config(config.ravenKey);
-Raven.install();
+/* Raven.config(config.ravenKey);
+Raven.install(); */
 
 database.start();
 redis.start();
@@ -56,14 +56,8 @@ client.on('error', winston.error)
 
 		const hasImageAttachment = message.attachments.some(attachment => attachment.url.match(/\.(png|jpg|jpeg|gif|webp)$/));
 		const moneyEarned = hasImageAttachment ? 40 : 5;
-		const collectedMoney = currency.getEarning(message.author.id) || 0;
 
-		currency.addEarning(message.author.id, collectedMoney + moneyEarned);
-
-		redis.db.getAsync(`money${message.author.id}`).then(balance => {
-			if (!balance) return redis.db.setAsync(`money${message.author.id}`, moneyEarned);
-			return redis.db.setAsync(`money${message.author.id}`, moneyEarned + parseInt(balance));
-		});
+		currency.addBalance(message.author.id, moneyEarned);
 
 		earnedRecently.push(message.author.id);
 		setTimeout(() => {
@@ -113,8 +107,6 @@ client.registry
 	.registerDefaults()
 	.registerCommandsIn(path.join(__dirname, 'commands'));
 
-client.login(config.token);
-
 Money.findAll().then(rows => {
 	for (const row of rows) {
 		redis.db.setAsync(`money${row.userID}`, row.money);
@@ -122,7 +114,7 @@ Money.findAll().then(rows => {
 });
 
 setInterval(() => {
-	for (const [userID, moneyEarned] of currency.earnings) {
+	for (const [userID, moneyEarned] of currency.collection) {
 		Money.findOne({ where: { userID } }).then(user => {
 			if (!user) {
 				Money.create({
@@ -137,4 +129,6 @@ setInterval(() => {
 	}
 
 	currency.clear();
-}, 5 * 60 * 1000);
+}, 2 * 60 * 1000);
+
+client.login(config.token);

@@ -1,18 +1,26 @@
 const Collection = require('discord.js').Collection;
 
+const Redis = require('./redis/Redis');
+
 const earnings = new Collection();
+const redis = new Redis();
 
 module.exports = class Currency {
-	get earnings() {
+	get collection() {
 		return earnings;
 	}
 
-	addEarning(user, amount) {
-		earnings.set(user, amount);
+	addBalance(user, earned) {
+		const amount = earnings.get(user) || 0;
+		earnings.set(user, amount + earned);
+		redis.db.getAsync(`money${user}`).then(balance => {
+			if (!balance) return redis.db.setAsync(`money${user}`, earned);
+			return redis.db.setAsync(`money${user}`, earned + parseInt(balance));
+		});
 	}
 
-	getEarning(user) {
-		return earnings.get(user);
+	getBalance(user) {
+		return redis.db.getAsync(`money${user}`);
 	}
 
 	clear() {

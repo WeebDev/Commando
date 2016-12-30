@@ -40,10 +40,11 @@ module.exports = class CleanCommand extends Command {
 		});
 	}
 
+	hasPermission(msg) {
+		return msg.member.roles.exists('name', 'Server Staff');
+	}
+
 	async run(msg, args) {
-		if (!msg.member.hasPermission('MANAGE_MESSAGES')) {
-			return msg.say(`${msg.author}, don't set me up on stuff you can't even do yourself!`);
-		}
 		if (!args.limit) {
 			return msg.say(`${msg.author}, atleast provide me with a number!`);
 		}

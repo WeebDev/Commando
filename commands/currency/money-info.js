@@ -1,13 +1,13 @@
 const { Command } = require('discord.js-commando');
-const Redis = require('../../redis/Redis');
+const Currency = require('../../Currency');
 
-const redis = new Redis();
+const currency = new Currency();
 
 module.exports = class MoneyInfoCommand extends Command {
 	constructor(client) {
 		super(client, {
 			name: 'money',
-			aliases: ['donut'],
+			aliases: ['monies', 'donut', 'donuts'],
 			group: 'currency',
 			memberName: 'info',
 			description: 'Displays the money you have earned.',
@@ -16,7 +16,7 @@ module.exports = class MoneyInfoCommand extends Command {
 			args: [
 				{
 					key: 'member',
-					prompt: 'What user\'s earning do you want to view?',
+					prompt: 'What users earning would you like to view?',
 					type: 'member',
 					default: ''
 				}
@@ -25,16 +25,16 @@ module.exports = class MoneyInfoCommand extends Command {
 	}
 
 	async run(msg, args) {
-		let user = args.member || msg.author;
+		const user = args.member || msg.author;
 
-		redis.db.getAsync(`money${user.id}`).then(balance => {
-			if (args.member) {
-				if (!balance) return msg.reply(`${args.member.displayName} hasn't earned any 🍩's yet :(`);
-				return msg.reply(`${args.member.displayName} has earned ${balance} 🍩's so far. Good on them!`);
-			} else {
-				if (!balance) return msg.reply('you haven\'t earned any 🍩\'s yet, sorry :(');
-				return msg.reply(`You have earned ${balance} 🍩's so far. Good on you!`);
-			}
-		});
+		const balance = await currency.getBalance(user.id);
+
+		if (args.member) {
+			if (!balance) return msg.reply(`${args.member.displayName} hasn't earned any 🍩s yet :(`);
+			return msg.reply(`${args.member.displayName} has earned ${balance} 🍩s so far. Good on them!`);
+		} else {
+			if (!balance) return msg.reply('you haven\'t earned any 🍩s yet, sorry :(');
+			return msg.reply(`You have earned ${balance} 🍩s so far. Good on you!`);
+		}
 	}
 };
