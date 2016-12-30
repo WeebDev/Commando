@@ -37,6 +37,6 @@ module.exports = class MoneyRemoveCommand extends Command {
 		const user = args.member;
 		const donuts = args.donuts;
 
-		currency.addBalance(user.id, -donuts);
+		currency.removeBalance(user.id, donuts);
 	}
 };
