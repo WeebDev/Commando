@@ -55,12 +55,8 @@ module.exports = class SlotMachineCommand extends Command {
 		currency.removeBalance(msg.author.id, args.donuts);
 		currency.addBalance('SLOTMACHINE', args.donuts);
 
-		let roll = [];
+		let roll = generateRoll();
 		let winnings = 0;
-
-		for (let i = 0; i < 9; i++) {
-			roll.push(symbols[Math.floor(Math.random() * symbols.length)]);
-		}
 
 		combinations.forEach(combo => {
 			if (roll[combo[0]] === roll[combo[1]] && roll[combo[1]] === roll[combo[2]]) {
@@ -92,6 +88,18 @@ module.exports = class SlotMachineCommand extends Command {
 					${roll[3]} | ${roll[4]} | ${roll[5]}
 					${roll[6]} | ${roll[7]} | ${roll[8]}
 					`;
+		}
+		
+		function generateRoll() {
+			let generated = [];
+			for (let i = 0; i < 9; i++) {
+				const sym = symbols[Math.floor(Math.random() * symbols.length)];
+				if (i < 3) generated.push(sym);
+				else if (i < 6 && sym !== generated[i - 3]) generated.push(sym);
+				else if (sym !== generated[i - 3] && sym !== generated[i - 6]) generated.push(sym);
+				else i--;
+			}
+			return generated;
 		}
 	}
 };
