@@ -50,7 +50,7 @@ module.exports = class SlotMachineCommand extends Command {
 			return msg.say(`You don't have enough donuts to pay your bet! Your current account balance is ${userBalance}🍩 s.`);
 		}
 
-		currency.removeBalance(msg.author.id, 100);
+		currency.removeBalance(msg.author.id, args.donuts);
 		currency.addBalance('SLOTMACHINE', args.donuts);
 
 		const columns = [
