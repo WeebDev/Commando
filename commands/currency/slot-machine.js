@@ -47,7 +47,7 @@ module.exports = class SlotMachineCommand extends Command {
 		}
 
 		if (userBalance < args.donuts) {
-			return msg.say(`You don't have enough donuts to pay your bet! Your current account balance is ${userBalance}🍩 s.`);
+			return msg.say(`You don't have enough donuts to pay your bet! Your current account balance is ${userBalance} 🍩s.`);
 		}
 
 		currency.removeBalance(msg.author.id, args.donuts);
