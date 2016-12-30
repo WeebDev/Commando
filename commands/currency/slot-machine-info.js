@@ -8,13 +8,13 @@ module.exports = class SlotMachineInfo extends Command {
 		super(client, {
 			name: 'slotmachine-info',
 			group: 'currency',
-			memberName: 'info',
+			memberName: 'slotmachine-info',
 			description: 'Displays information about the slotmachine.',
 			details: 'Displays information about the slotmachine.'
 		});
 	}
 
-	async run(msg, args) {
+	async run(msg) {
 		const balance = await currency.getBalance('SLOTMACHINE');
 
 		msg.say(`The slotmachine currently holds ${balance} 🍩s`);
