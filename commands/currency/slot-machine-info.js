@@ -6,12 +6,11 @@ const currency = new Currency();
 module.exports = class SlotMachineInfo extends Command {
 	constructor(client) {
 		super(client, {
-			name: 'money',
-			aliases: ['monies', 'donut', 'donuts'],
+			name: 'slotmachine-info',
 			group: 'currency',
 			memberName: 'info',
 			description: 'Displays information about the slotmachine.',
-			details: 'Display the amount of money you have earned. For example the pay table and the current donut count.'
+			details: 'Displays information about the slotmachine.'
 		});
 	}
 
