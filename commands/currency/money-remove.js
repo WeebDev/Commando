@@ -1,9 +1,8 @@
 const { Command } = require('discord.js-commando');
 
-const Money = require('../../postgreSQL/models/Money');
-const Redis = require('../../redis/Redis');
+const Currency = require('../../Currency');
 
-const redis = new Redis();
+const currency = new Currency();
 
 module.exports = class MoneyRemoveCommand extends Command {
 	constructor(client) {
@@ -38,16 +37,6 @@ module.exports = class MoneyRemoveCommand extends Command {
 		const user = args.member;
 		const donuts = args.donuts;
 
-		return Money.findOne({ where: { userID: user.id } }).then(member => {
-			if (!member) {
-				return msg.say('Fek u no user.');
-			} else {
-				member.decrement('money', { by: donuts });
-				member.save();
-				return redis.db.getAsync(`money${user.id}`).then(balance => {
-					redis.db.setAsync(`money${user.id}`, parseInt(balance) - donuts);
-				});
-			}
-		});
+		currency.addBalance(user.id, -donuts);
 	}
 };
