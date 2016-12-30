@@ -7,6 +7,18 @@ const currency = new Currency();
 
 const symbols = ['🍒', '💰', '⭐', '🎲', '💎', '❤', '⚜', '🔅', '🎉'];
 
+const combinations = {
+	'💎-💎-💎': 500,
+	'⚜-⚜-⚜': 400,
+	'💰-💰-💰': 400,
+	'❤-❤-❤': 300,
+	'⭐-⭐-⭐': 300,
+	'🎲-🎲-🎲': 250,
+	'🔅-🔅-🔅': 250,
+	'🎉-🎉-🎉': 250,
+	'🍒-🍒-🍒': 250
+};
+
 module.exports = class SlotMachineCommand extends Command {
 	constructor(client) {
 		super(client, {
@@ -19,43 +31,48 @@ module.exports = class SlotMachineCommand extends Command {
 
 			args: [
 				{
-					key: 'bet',
-					prompt: 'How much money do you want to bet?',
-					type: 'integer',
-					default: '100'
+					key: 'donuts',
+					prompt: 'How many donuts do you want to bet?',
+					type: 'integer'
 				}
 			]
 		});
 	}
 
 	async run(msg, args) {
+		const userBalance = await currency.getBalance(msg.author.id);
+
+		if (![200, 300, 400].includes(args.donuts)) {
+			return msg.say('Sorry, you need to pay either 200, 300 or 400 🍩s. Anything else does not work.');
+		}
+
+		if (userBalance < 100) {
+			return msg.say(`You don't enough donuts to pay your bet! Your current account balance is ${userBalance}🍩s.`);
+		}
+
+		currency.removeBalance(msg.author.id, 100);
+		currency.addBalance('SLOTMACHINE', args.donuts);
+
 		const columns = [
 			symbols[Math.floor(Math.random() * symbols.length)],
 			symbols[Math.floor(Math.random() * symbols.length)],
 			symbols[Math.floor(Math.random() * symbols.length)]
 		];
-		currency.removeBalance(msg.author.id, args.bet);
 
-		if (columns[0] === '💎' && columns[1] === '💎' && columns[2] === '💎') {
-			currency.addBalance(msg.author.id, args.bet * 3);
+		const multiplier = [200, 300, 400].indexOf(args.donuts) + 1;
+
+		if (!combinations.hasOwnProperty(columns.join('-'))) {
 			return msg.reply(stripIndents`
-				The wheels of the machine are spinning... you see ${columns.join('|')} in front of you.
-				Three diamonds in a row! Congratulations, you got the jackpot!
-				Your bet has been **tripled** and added to your account.
+				The reels of the machine are spinning... You rolled ${columns.join('|')}.
+				Sorry, you just lost your money. Better luck next time.
 			`);
 		}
 
-		if (columns[0] === columns[1] && columns[1] === columns[2]) {
-			currency.addBalance(msg.author.id, args.bet * 2);
-			return msg.reply(stripIndents`
-				The wheels of the machine are spinning... you see ${columns.join('|')} in front of you.
-				Congratulations, you won! Your bet has been **doubled** and added to your account.
-			`);
-		}
-
+		currency.addBalance(msg.author.id, multiplier * combinations[columns.join('-')]);
+		currency.removeBalance('SLOTMACHINE', multiplier * combinations[columns.join('-')]);
 		return msg.reply(stripIndents`
-			The wheels of the machine are spinning... you rolled ${columns.join('|')}.
-			Sorry, you didn't win. Your bet of ${args.bet} 🍩s has been removed from your account. :(
-		`);
+				The reels of the machine are spinning... You rolled ${columns.join('|')}.
+				Congratulations! You won ${multiplier * combinations[columns.join('-')]} 🍩s!
+			`);
 	}
 };
