@@ -46,7 +46,7 @@ module.exports = class SlotMachineCommand extends Command {
 			return msg.say('Sorry, you need to pay either 200, 300 or 400 🍩s. Anything else does not work.');
 		}
 
-		if (userBalance < 100) {
+		if (userBalance < args.donuts) {
 			return msg.say(`You don't enough donuts to pay your bet! Your current account balance is ${userBalance}🍩s.`);
 		}
 
