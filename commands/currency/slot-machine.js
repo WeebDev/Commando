@@ -43,7 +43,7 @@ module.exports = class SlotMachineCommand extends Command {
 		const userBalance = await currency.getBalance(msg.author.id);
 
 		if (![100, 200, 300].includes(args.donuts)) {
-			return msg.say('Sorry, you need to pay either 200, 300 or 400 🍩s. Anything else does not work.');
+			return msg.say('Sorry, you need to pay either 100, 200 or 300 🍩s. Anything else does not work.');
 		}
 
 		if (userBalance < args.donuts) {
