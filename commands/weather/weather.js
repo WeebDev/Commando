@@ -19,7 +19,6 @@ module.exports = class WeatherCommand extends Command {
 			group: 'weather',
 			memberName: 'weather',
 			description: 'Get the weather.',
-			format: '<location>',
 			throttling: {
 				usages: 1,
 				duration: 10

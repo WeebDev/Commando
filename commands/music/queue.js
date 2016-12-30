@@ -13,7 +13,6 @@ module.exports = class ViewQueueCommand extends Command {
 			group: 'music',
 			memberName: 'queue',
 			description: 'Lists the queued songs.',
-			format: '[page]',
 			guildOnly: true,
 
 			args: [

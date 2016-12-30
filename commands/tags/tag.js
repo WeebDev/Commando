@@ -12,7 +12,6 @@ module.exports = class TagCommand extends Command {
 			group: 'tags',
 			memberName: 'tag',
 			description: 'Displays a tag.',
-			format: '<tagname>',
 			guildOnly: true,
 			throttling: {
 				usages: 2,

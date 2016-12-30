@@ -14,7 +14,6 @@ module.exports = class TagAddCommand extends Command {
 			group: 'tags',
 			memberName: 'add',
 			description: 'Adds a tag.',
-			format: '<tagname> <tagcontent>',
 			details: `Adds a tag, usable for everyone on the server. (Markdown can be used.)`,
 			guildOnly: true,
 			throttling: {

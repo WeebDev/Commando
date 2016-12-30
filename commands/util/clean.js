@@ -9,7 +9,6 @@ module.exports = class CleanCommand extends Command {
 			group: 'util',
 			memberName: 'clean',
 			description: 'Deletes messages.',
-			format: '<number> [[filter] [argument]]',
 			details: `Deletes messages. Here is a list of filters:
 				__invites:__ Messages containing an invite
 				__user @user:__ Messages sent by @user
@@ -17,8 +16,6 @@ module.exports = class CleanCommand extends Command {
 				__uploads:__ Messages containing an attachment
 				__links:__ Messages containing a link`,
 			guildOnly: true,
-			argsType: 'multiple',
-			argsCount: 3,
 
 			args: [
 				{
@@ -43,10 +40,11 @@ module.exports = class CleanCommand extends Command {
 		});
 	}
 
+	hasPermission(msg) {
+		return msg.member.roles.exists('name', 'Server Staff');
+	}
+
 	async run(msg, args) {
-		if (!msg.member.hasPermission('MANAGE_MESSAGES')) {
-			return msg.say(`${msg.author}, don't set me up on stuff you can't even do yourself!`);
-		}
 		if (!args.limit) {
 			return msg.say(`${msg.author}, atleast provide me with a number!`);
 		}

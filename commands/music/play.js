@@ -17,7 +17,6 @@ module.exports = class PlaySongCommand extends Command {
 			group: 'music',
 			memberName: 'play',
 			description: 'Adds a song to the queue.',
-			format: '<YouTube URL/ID/Search | SoundCloud URL>',
 			guildOnly: true,
 
 			args: [
