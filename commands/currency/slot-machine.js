@@ -59,7 +59,7 @@ module.exports = class SlotMachineCommand extends Command {
 			symbols[Math.floor(Math.random() * symbols.length)]
 		];
 
-		const multiplier = [200, 300, 400].indexOf(args.donuts) + 1;
+		const multiplier = [100, 200, 300].indexOf(args.donuts) + 1;
 
 		if (!combinations.hasOwnProperty(columns.join('-'))) {
 			return msg.reply(stripIndents`
