@@ -1,7 +1,7 @@
 global.Promise = require('bluebird');
 
 const commando = require('discord.js-commando');
-const Collection = require('discord.js').Collection;
+const Currency = require('./Currency');
 const oneLine = require('common-tags').oneLine;
 const path = require('path');
 const Raven = require('raven');
@@ -15,6 +15,7 @@ const Money = require('./postgreSQL/models/Money');
 
 const database = new Database();
 const redis = new Redis();
+const currency = new Currency();
 const client = new commando.Client({
 	owner: config.owner,
 	commandPrefix: '?',
@@ -23,7 +24,6 @@ const client = new commando.Client({
 });
 
 let earnedRecently = [];
-let earnings = new Collection();
 
 Raven.config(config.ravenKey);
 Raven.install();
@@ -56,9 +56,9 @@ client.on('error', winston.error)
 
 		const hasImageAttachment = message.attachments.some(attachment => attachment.url.match(/\.(png|jpg|jpeg|gif|webp)$/));
 		const moneyEarned = hasImageAttachment ? 40 : 5;
-		const collectedMoney = earnings.get(message.author.id) || 0;
+		const collectedMoney = currency.getEarning(message.author.id) || 0;
 
-		earnings.set(message.author.id, collectedMoney + moneyEarned);
+		currency.addEarning(message.author.id, collectedMoney + moneyEarned);
 
 		redis.db.getAsync(`money${message.author.id}`).then(balance => {
 			if (!balance) return redis.db.setAsync(`money${message.author.id}`, moneyEarned);
@@ -122,7 +122,7 @@ Money.findAll().then(rows => {
 });
 
 setInterval(() => {
-	for (const [userID, moneyEarned] of earnings) {
+	for (const [userID, moneyEarned] of currency.earnings) {
 		Money.findOne({ where: { userID } }).then(user => {
 			if (!user) {
 				Money.create({
@@ -136,5 +136,5 @@ setInterval(() => {
 		});
 	}
 
-	earnings = new Collection();
+	currency.clear();
 }, 5 * 60 * 1000);

@@ -8,7 +8,7 @@ module.exports = class UserInfoCommand extends Command {
 			name: 'user-info',
 			aliases: ['user', '🗒'],
 			group: 'info',
-			memberName: 'user-info',
+			memberName: 'user',
 			description: 'Get info on a user.',
 			format: '<user>',
 			details: `Get detailed information on the specified user.`,
