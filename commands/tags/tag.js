@@ -32,10 +32,10 @@ module.exports = class TagCommand extends Command {
 	async run(msg, args) {
 		const name = args.name.toLowerCase();
 
-		return this.findTagCached(msg, name, msg.guild.id);
+		return this.findCached(msg, name, msg.guild.id);
 	}
 
-	async findTagCached(msg, name, guildID) {
+	async findCached(msg, name, guildID) {
 		return redis.db.getAsync(name + guildID).then(async reply => {
 			if (reply) {
 				let tag = await Tag.findOne({ where: { name: name, guildID: guildID } });
