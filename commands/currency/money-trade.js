@@ -35,6 +35,10 @@ module.exports = class MoneyTradeCommand extends Command {
 
 		const userBalance = await currency.getBalance(msg.author.id);
 
+		if (msg.author.id === user.id) {
+			return msg.say(`You can't trade with yourself.`);
+		}
+
 		if (userBalance < args.donuts) {
 			return msg.say(`You don't have that many donuts to trade! Your current account balance is ${userBalance} 🍩s.`);
 		}
