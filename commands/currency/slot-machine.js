@@ -22,10 +22,9 @@ const values = {
 module.exports = class SlotMachineCommand extends Command {
 	constructor(client) {
 		super(client, {
-			name: 'slotmachine',
-			aliases: ['slot-machine'],
+			name: 'slot-machine',
 			group: 'currency',
-			memberName: 'slotmachine',
+			memberName: 'slot-machine',
 			description: 'Let\'s you play a round with the slot machine',
 			details: 'Bet some amount of money, and enjoy a round with the slot machine.\nDoubles your money if you win!',
 
