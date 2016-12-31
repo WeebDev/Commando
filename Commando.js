@@ -11,7 +11,6 @@ const winston = require('winston');
 const Redis = require('./redis/Redis');
 const Database = require('./postgreSQL/postgreSQL');
 const config = require('./settings');
-const Money = require('./postgreSQL/models/Money');
 
 const database = new Database();
 const redis = new Redis();
@@ -107,29 +106,5 @@ client.registry
 	])
 	.registerDefaults()
 	.registerCommandsIn(path.join(__dirname, 'commands'));
-
-Money.findAll().then(rows => {
-	for (const row of rows) {
-		redis.db.setAsync(`money${row.userID}`, row.money);
-	}
-});
-
-setInterval(() => {
-	for (const [userID, moneyEarned] of currency.collection) {
-		Money.findOne({ where: { userID } }).then(user => {
-			if (!user) {
-				Money.create({
-					userID: userID,
-					money: moneyEarned
-				});
-			} else {
-				user.increment('money', { by: moneyEarned });
-				user.save();
-			}
-		});
-	}
-
-	currency.clear();
-}, 4 * 60 * 1000);
 
 client.login(config.token);
