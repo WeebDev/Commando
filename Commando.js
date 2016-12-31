@@ -62,6 +62,7 @@ client.on('error', winston.error)
 		`);
 	})
 	.on('message', (message) => {
+		if (message.author.bot) return;
 		if (earnedRecently.includes(message.author.id)) return;
 
 		const hasImageAttachment = message.attachments.some(attachment => attachment.url.match(/\.(png|jpg|jpeg|gif|webp)$/));

@@ -7,7 +7,7 @@ module.exports = class MoneyInfoCommand extends Command {
 	constructor(client) {
 		super(client, {
 			name: 'money',
-			aliases: ['monies', 'donut', 'donuts'],
+			aliases: ['donut', 'donuts'],
 			group: 'currency',
 			memberName: 'info',
 			description: 'Displays the money you have earned.',
