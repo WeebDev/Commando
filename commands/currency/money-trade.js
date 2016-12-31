@@ -40,6 +40,8 @@ module.exports = class MoneyTradeCommand extends Command {
 		}
 
 		currency.removeBalance(msg.author.id, donuts);
-		return currency.addBalance(user.id, donuts);
+		currency.addBalance(user.id, donuts);
+
+		return msg.reply(`${user.displayName} successfully received your ${donuts} 🍩s!`);
 	}
 };

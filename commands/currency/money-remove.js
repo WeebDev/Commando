@@ -38,5 +38,7 @@ module.exports = class MoneyRemoveCommand extends Command {
 		const donuts = args.donuts;
 
 		currency.removeBalance(user.id, donuts);
+
+		return msg.reply(`successfully removed ${donuts} 🍩s to ${user.displayName}s balance.`);
 	}
 };

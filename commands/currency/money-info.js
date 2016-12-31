@@ -30,11 +30,11 @@ module.exports = class MoneyInfoCommand extends Command {
 		const balance = await currency.getBalance(user.id);
 
 		if (args.member) {
-			if (!balance) return msg.reply(`${args.member.displayName} hasn't earned any 🍩s yet :(`);
-			return msg.reply(`${args.member.displayName} has earned ${balance} 🍩s so far. Good on them!`);
+			if (!balance) return msg.reply(`${user.displayName} hasn't earned any 🍩s yet :(`);
+			return msg.reply(`${user.displayName} has earned ${balance} 🍩s so far. Good on them!`);
 		} else {
 			if (!balance) return msg.reply('you haven\'t earned any 🍩s yet, sorry :(');
-			return msg.reply(`You have earned ${balance} 🍩s so far. Good on you!`);
+			return msg.reply(`you have earned ${balance} 🍩s so far. Good on you!`);
 		}
 	}
 };
