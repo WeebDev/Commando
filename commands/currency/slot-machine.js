@@ -65,28 +65,44 @@ module.exports = class SlotMachineCommand extends Command {
 		const multiplier = [100, 200, 300].indexOf(args.donuts) + 1;
 
 		if (winnings === 0) {
-			return msg.reply(stripIndents`
-				The reels of the machine are spinning... You rolled:
-				${this.showRoll(roll)}
-				Sorry, you just lost your money. Better luck next time.
-			`);
+			let loseEmbed = {
+				color: 0xBE1931,
+				description: stripIndents`
+					**You rolled:**
+
+					${this.showRoll(roll)}
+
+					**You lost!**
+					Better luck next time!
+				`
+			};
+
+			return msg.embed(loseEmbed);
 		}
 
 		currency.addBalance(msg.author.id, multiplier * winnings);
 		currency.removeBalance('SLOTMACHINE', multiplier * winnings);
 
-		return msg.reply(stripIndents`
-			The reels of the machine are spinning... You rolled:
-			${this.showRoll(roll)}
-			Congratulations! You won ${multiplier * winnings} 🍩s!
-		`);
+		let winEmbed = {
+			color: 0x5C913B,
+			description: stripIndents`
+				**You rolled:**
+
+				${this.showRoll(roll)}
+
+				**Congratulations!**
+				You won ${multiplier * winnings} 🍩s!
+			`
+		};
+
+		return msg.embed(winEmbed);
 	}
 
 	showRoll(roll) {
 		return stripIndents`
-			${roll[0]} | ${roll[1]} | ${roll[2]}
-			${roll[3]} | ${roll[4]} | ${roll[5]}
-			${roll[6]} | ${roll[7]} | ${roll[8]}
+			${roll[0]}ー${roll[1]}ー${roll[2]}
+			${roll[3]}ー${roll[4]}ー${roll[5]}
+			${roll[6]}ー${roll[7]}ー${roll[8]}
 		`;
 	}
 
