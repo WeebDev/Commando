@@ -55,12 +55,8 @@ module.exports = class SlotMachineCommand extends Command {
 		currency.removeBalance(msg.author.id, args.donuts);
 		currency.addBalance('SLOTMACHINE', args.donuts);
 
-		let roll = [];
+		let roll = this.generateRoll();
 		let winnings = 0;
-
-		for (let i = 0; i < 9; i++) {
-			roll.push(symbols[Math.floor(Math.random() * symbols.length)]);
-		}
 
 		combinations.forEach(combo => {
 			if (roll[combo[0]] === roll[combo[1]] && roll[combo[1]] === roll[combo[2]]) {
@@ -73,7 +69,7 @@ module.exports = class SlotMachineCommand extends Command {
 		if (winnings === 0) {
 			return msg.reply(stripIndents`
 				The reels of the machine are spinning... You rolled:
-				${showRoll()}
+				${this.showRoll(roll)}
 				Sorry, you just lost your money. Better luck next time.
 			`);
 		}
@@ -81,17 +77,29 @@ module.exports = class SlotMachineCommand extends Command {
 		currency.addBalance(msg.author.id, multiplier * winnings);
 		currency.removeBalance('SLOTMACHINE', multiplier * winnings);
 		return msg.reply(stripIndents`
-				The reels of the machine are spinning... You rolled:
-				${showRoll()}
-				Congratulations! You won ${multiplier * winnings} 🍩s!
-			`);
+			The reels of the machine are spinning... You rolled:
+			${this.showRoll(roll)}
+			Congratulations! You won ${multiplier * winnings} 🍩s!
+		`);
+	}
 
-		function showRoll() {
-			return stripIndents`
-					${roll[0]} | ${roll[1]} | ${roll[2]}
-					${roll[3]} | ${roll[4]} | ${roll[5]}
-					${roll[6]} | ${roll[7]} | ${roll[8]}
-					`;
+	showRoll(roll) {
+		return stripIndents`
+				${roll[0]} | ${roll[1]} | ${roll[2]}
+				${roll[3]} | ${roll[4]} | ${roll[5]}
+				${roll[6]} | ${roll[7]} | ${roll[8]}
+				`;
+	}
+
+	generateRoll() {
+		let generated = [];
+		for (let i = 0; i < 9; i++) {
+			const sym = symbols[Math.floor(Math.random() * symbols.length)];
+			if (i < 3) generated.push(sym);
+			else if (i < 6 && sym !== generated[i - 3]) generated.push(sym);
+			else if (sym !== generated[i - 3] && sym !== generated[i - 6]) generated.push(sym);
+			else i--;
 		}
+		return generated;
 	}
 };
