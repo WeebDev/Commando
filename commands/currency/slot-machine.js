@@ -65,21 +65,42 @@ module.exports = class SlotMachineCommand extends Command {
 		const multiplier = [100, 200, 300].indexOf(args.donuts) + 1;
 
 		if (winnings === 0) {
-			return msg.reply(stripIndents`
-				The reels of the machine are spinning... You rolled:
-				${this.showRoll(roll)}
-				Sorry, you just lost your money. Better luck next time.
-			`);
+			let loseEmbed = {
+				description: 'The reels of the machine are spinning...',
+				fields: [
+					{
+						name: 'You rolled:',
+						value: this.showRolle(roll)
+					},
+					{
+						name: 'You lost!',
+						value: 'Better luck next time!'
+					}
+				]
+			};
+
+			return msg.embed(loseEmbed);
 		}
 
 		currency.addBalance(msg.author.id, multiplier * winnings);
 		currency.removeBalance('SLOTMACHINE', multiplier * winnings);
 
-		return msg.reply(stripIndents`
-			The reels of the machine are spinning... You rolled:
-			${this.showRoll(roll)}
-			Congratulations! You won ${multiplier * winnings} 🍩s!
-		`);
+		let winEmbed = {
+			title: '',
+			description: 'The reels of the machine are spinning...',
+			fields: [
+				{
+					name: 'You rolled:',
+					value: this.showRolle(roll)
+				},
+				{
+					name: 'Congratulations!',
+					value: `You won ${multiplier * winnings} 🍩s!`
+				}
+			]
+		};
+
+		return msg.embed(winEmbed);
 	}
 
 	showRoll(roll) {
