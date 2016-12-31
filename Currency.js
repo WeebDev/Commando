@@ -22,6 +22,11 @@ setInterval(() => {
 	});
 }, 60 * 60 * 1000);
 
+redis.db.hgetAsync('money', 'SLOTMACHINE').then(balance => {
+	if (!balance) return redis.db.hsetAsync('money', 'SLOTMACHINE', 5000);
+	return; // eslint-disable-line consistent-return
+});
+
 module.exports = class Currency {
 	addBalance(user, earned) {
 		redis.db.hgetAsync('money', user).then(balance => {

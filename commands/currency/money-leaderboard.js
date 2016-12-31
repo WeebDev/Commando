@@ -58,7 +58,7 @@ module.exports = class MoneyLeaderboardCommand extends Command {
 				if (!money) return `No money biatch`;
 
 				redis.db.setAsync('moneyleaderboard', JSON.stringify(money));
-				redis.db.expire('moneyleaderboard', 1800);
+				redis.db.expire('moneyleaderboard', 3700);
 
 				return JSON.stringify(money);
 			}
