@@ -18,7 +18,7 @@ Money.find({ where: { userID: 'SLOTMACHINE' } }).then(slotmachine => {
 	if (!slotmachine) {
 		Money.create({
 			userID: 'SLOTMACHINE',
-			money: 10000
+			money: 5000
 		});
 	}
 });

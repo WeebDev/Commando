@@ -20,16 +20,16 @@ module.exports = class TagListCommand extends Command {
 	}
 
 	async run(msg) {
-		let tags = await Tag.findAll({ where: { guildID: msg.guild.id } });
+		const tags = await Tag.findAll({ where: { guildID: msg.guild.id } });
 		if (!tags) return msg.say(`${msg.guild.name} doesn't have any tags, ${msg.author}. Why not add one?`); // eslint-disable-line no-extra-boolean-cast
 
-		let examples = tags.filter(tag => tag.type)
+		const examples = tags.filter(tag => tag.type)
 			.filter(tag => tag.example)
 			.map(tag => tag.name)
 			.sort()
 			.join(', ');
 
-		let usertags = tags.filter(tag => !tag.type)
+		const usertags = tags.filter(tag => !tag.type)
 			.filter(tag => tag.userID === msg.author.id)
 			.map(tag => tag.name)
 			.sort()
