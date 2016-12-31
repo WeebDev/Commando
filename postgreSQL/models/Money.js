@@ -14,13 +14,4 @@ let Money = database.db.define('money', {
 
 Money.sync();
 
-Money.find({ where: { userID: 'SLOTMACHINE' } }).then(slotmachine => {
-	if (!slotmachine) {
-		Money.create({
-			userID: 'SLOTMACHINE',
-			money: 5000
-		});
-	}
-});
-
 module.exports = Money;
