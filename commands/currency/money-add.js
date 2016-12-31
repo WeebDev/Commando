@@ -37,6 +37,8 @@ module.exports = class MoneyAddCommand extends Command {
 		const user = args.member;
 		const donuts = args.donuts;
 
-		return currency.addBalance(user.id, donuts);
+		currency.addBalance(user.id, donuts);
+
+		return msg.reply(`successfully added ${donuts} 🍩s to ${user.displayName}s balance.`);
 	}
 };
