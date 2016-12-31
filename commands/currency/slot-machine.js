@@ -6,9 +6,7 @@ const Currency = require('../../Currency');
 const currency = new Currency();
 
 const symbols = ['🍒', '💰', '⭐', '🎲', '💎', '❤', '⚜', '🔅', '🎉'];
-
 const combinations = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 4, 8], [2, 4, 6]];
-
 const values = {
 	'💎': 500,
 	'⚜': 400,
@@ -76,6 +74,7 @@ module.exports = class SlotMachineCommand extends Command {
 
 		currency.addBalance(msg.author.id, multiplier * winnings);
 		currency.removeBalance('SLOTMACHINE', multiplier * winnings);
+
 		return msg.reply(stripIndents`
 			The reels of the machine are spinning... You rolled:
 			${this.showRoll(roll)}
@@ -85,21 +84,24 @@ module.exports = class SlotMachineCommand extends Command {
 
 	showRoll(roll) {
 		return stripIndents`
-				${roll[0]} | ${roll[1]} | ${roll[2]}
-				${roll[3]} | ${roll[4]} | ${roll[5]}
-				${roll[6]} | ${roll[7]} | ${roll[8]}
-				`;
+			${roll[0]} | ${roll[1]} | ${roll[2]}
+			${roll[3]} | ${roll[4]} | ${roll[5]}
+			${roll[6]} | ${roll[7]} | ${roll[8]}
+		`;
 	}
 
 	generateRoll() {
 		let generated = [];
+
 		for (let i = 0; i < 9; i++) {
 			const sym = symbols[Math.floor(Math.random() * symbols.length)];
+
 			if (i < 3) generated.push(sym);
 			else if (i < 6 && sym !== generated[i - 3]) generated.push(sym);
 			else if (sym !== generated[i - 3] && sym !== generated[i - 6]) generated.push(sym);
 			else i--;
 		}
+
 		return generated;
 	}
 };
