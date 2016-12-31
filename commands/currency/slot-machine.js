@@ -6,17 +6,17 @@ const Currency = require('../../Currency');
 const currency = new Currency();
 
 const symbols = ['🍒', '💰', '⭐', '🎲', '💎', '❤', '⚜', '🔅', '🎉'];
-
-const combinations = {
-	'💎-💎-💎': 500,
-	'⚜-⚜-⚜': 400,
-	'💰-💰-💰': 400,
-	'❤-❤-❤': 300,
-	'⭐-⭐-⭐': 300,
-	'🎲-🎲-🎲': 250,
-	'🔅-🔅-🔅': 250,
-	'🎉-🎉-🎉': 250,
-	'🍒-🍒-🍒': 250
+const combinations = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 4, 8], [2, 4, 6]];
+const values = {
+	'💎': 500,
+	'⚜': 400,
+	'💰': 400,
+	'❤': 300,
+	'⭐': 300,
+	'🎲': 250,
+	'🔅': 250,
+	'🎉': 250,
+	'🍒': 250
 };
 
 module.exports = class SlotMachineCommand extends Command {
@@ -53,26 +53,55 @@ module.exports = class SlotMachineCommand extends Command {
 		currency.removeBalance(msg.author.id, args.donuts);
 		currency.addBalance('SLOTMACHINE', args.donuts);
 
-		const columns = [
-			symbols[Math.floor(Math.random() * symbols.length)],
-			symbols[Math.floor(Math.random() * symbols.length)],
-			symbols[Math.floor(Math.random() * symbols.length)]
-		];
+		let roll = this.generateRoll();
+		let winnings = 0;
+
+		combinations.forEach(combo => {
+			if (roll[combo[0]] === roll[combo[1]] && roll[combo[1]] === roll[combo[2]]) {
+				winnings += values[roll[combo[0]]];
+			}
+		});
 
 		const multiplier = [100, 200, 300].indexOf(args.donuts) + 1;
 
-		if (!combinations.hasOwnProperty(columns.join('-'))) {
+		if (winnings === 0) {
 			return msg.reply(stripIndents`
-				The reels of the machine are spinning... You rolled ${columns.join('|')}.
+				The reels of the machine are spinning... You rolled:
+				${this.showRoll(roll)}
 				Sorry, you just lost your money. Better luck next time.
 			`);
 		}
 
-		currency.addBalance(msg.author.id, multiplier * combinations[columns.join('-')]);
-		currency.removeBalance('SLOTMACHINE', multiplier * combinations[columns.join('-')]);
+		currency.addBalance(msg.author.id, multiplier * winnings);
+		currency.removeBalance('SLOTMACHINE', multiplier * winnings);
+
 		return msg.reply(stripIndents`
-				The reels of the machine are spinning... You rolled ${columns.join('|')}.
-				Congratulations! You won ${multiplier * combinations[columns.join('-')]} 🍩s!
-			`);
+			The reels of the machine are spinning... You rolled:
+			${this.showRoll(roll)}
+			Congratulations! You won ${multiplier * winnings} 🍩s!
+		`);
+	}
+
+	showRoll(roll) {
+		return stripIndents`
+			${roll[0]} | ${roll[1]} | ${roll[2]}
+			${roll[3]} | ${roll[4]} | ${roll[5]}
+			${roll[6]} | ${roll[7]} | ${roll[8]}
+		`;
+	}
+
+	generateRoll() {
+		let generated = [];
+
+		for (let i = 0; i < 9; i++) {
+			const sym = symbols[Math.floor(Math.random() * symbols.length)];
+
+			if (i < 3) generated.push(sym);
+			else if (i < 6 && sym !== generated[i - 3]) generated.push(sym);
+			else if (sym !== generated[i - 3] && sym !== generated[i - 6]) generated.push(sym);
+			else i--;
+		}
+
+		return generated;
 	}
 };
