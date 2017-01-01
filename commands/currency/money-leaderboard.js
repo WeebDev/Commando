@@ -31,10 +31,10 @@ module.exports = class MoneyLeaderboardCommand extends Command {
 
 	async run(msg, args) {
 		const page = args.page;
-		let ranking = config.paginationItems * (page - 1);
 
 		const money = await this.findCached();
 		const paginated = util.paginate(JSON.parse(money), page, Math.floor(config.paginationItems));
+		let ranking = config.paginationItems * (paginated.page - 1);
 
 		for (const user of paginated.items) await this.client.fetchUser(user.userID);
 
