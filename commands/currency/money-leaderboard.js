@@ -31,7 +31,7 @@ module.exports = class MoneyLeaderboardCommand extends Command {
 
 	async run(msg, args) {
 		const page = args.page;
-		let ranking = 1;
+		let ranking = config.paginationItems * (page - 1);
 
 		const money = await this.findCached();
 		const paginated = util.paginate(JSON.parse(money), page, Math.floor(config.paginationItems));
@@ -43,9 +43,9 @@ module.exports = class MoneyLeaderboardCommand extends Command {
 			description: stripIndents`
 				__**Donut leaderboard, page ${paginated.page}**__
 
-				${paginated.items.map(user => `**${ranking++} -** ${`${this.client.users.get(user.userID).username}#${this.client.users.get(user.userID).discriminator}`} (**${user.money}** 🍩)`).join('\n')}
-				${paginated.maxPage > 1 ? `Use \`donut-leaderboard <page>\` to view a specific page.` : ''}
-			`
+				${paginated.items.map(user => `**${++ranking} -** ${`${this.client.users.get(user.userID).username}#${this.client.users.get(user.userID).discriminator}`} (**${user.money}** 🍩)`).join('\n')}
+			`,
+			footer: { text: paginated.maxPage > 1 ? 'Use \'donut-leaderboard <page>\' to view a specific page.' : '' }
 		});
 	}
 
