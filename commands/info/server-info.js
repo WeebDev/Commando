@@ -27,7 +27,7 @@ module.exports = class ServerInfoCommand extends Command {
 	}
 
 	async run(msg) {
-		let embed = {
+		return msg.embed({
 			color: 3447003,
 			description: `Info on **${msg.guild.name}** (ID: ${msg.guild.id})`,
 			fields: [
@@ -68,8 +68,6 @@ module.exports = class ServerInfoCommand extends Command {
 				}
 			],
 			thumbnail: { url: msg.guild.iconURL }
-		};
-
-		return msg.embed(embed);
+		});
 	}
 };

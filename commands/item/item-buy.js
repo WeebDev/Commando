@@ -36,7 +36,8 @@ module.exports = class BuyItemCommand extends Command {
 	}
 
 	async run(msg, args) {
-		const item = args.item;
+		const item = args.item.toLowerCase();
+		const itemName = item.replace(/(\b\w)/gi, lc => lc.toUpperCase());
 		const amount = args.amount;
 		const storeItem = Store.getItem(item);
 
@@ -53,17 +54,16 @@ module.exports = class BuyItemCommand extends Command {
 
 		if (balance < storeItem.price * amount) {
 			return msg.reply(stripIndents`
-				you don't have enough donuts to buy ${amount} ${item}(s). ${amount} ${item}${plural ? 's' : ''} cost${plural ? '' : 's'} ${amount * item.price} 🍩s.
+				you don't have enough donuts to buy ${amount} ${itemName}(s). ${amount} ${itemName}${plural ? 's' : ''} cost${plural ? '' : 's'} ${amount * item.price} 🍩s.
 				Your current account balance is ${balance} 🍩s.
 			`);
 		}
 
-		return Inventory.fetchInventory(msg.author.id).then(inventory => {
-			inventory.addItems(new ItemGroup(storeItem, amount));
-			currency.removeBalance(msg.author.id, amount * storeItem.price);
-			return inventory.save();
-		}).then(() => {
-			return msg.reply(`you have successfully purchased ${amount} ${item}${plural ? 's' : ''} for ${amount * storeItem.price} 🍩s.`);
-		});
+		let inventory = await Inventory.fetchInventory(msg.author.id);
+		inventory.addItems(new ItemGroup(storeItem, amount));
+		currency.removeBalance(msg.author.id, amount * storeItem.price);
+		inventory.save();
+
+		return msg.reply(`you have successfully purchased ${amount} ${itemName}${plural ? 's' : ''} for ${amount * storeItem.price} 🍩s.`);
 	}
 };

@@ -26,35 +26,33 @@ module.exports = class InventoryShowCommand extends Command {
 
 	async run(msg, args) {
 		const page = args.page;
+		let items = [];
 
-		return Inventory.fetchInventory(msg.author.id).then(inventory => {
-			let items = [];
-
-			for (const item of Object.keys(inventory.content)) {
-				items.push({
-					name: item,
-					amount: inventory.content[item].amount
-				});
-			}
-
-			const paginated = util.paginate(items, page, Math.floor(config.paginationItems));
-
-			return msg.embed({
-				description: `__**${msg.author.username}#${msg.author.discriminator}'s inventory:**__`,
-				fields: [
-					{
-						name: 'Item',
-						value: paginated.items.map(item => item.name).join('\n'),
-						inline: true
-					},
-					{
-						name: 'Amount',
-						value: paginated.items.map(item => item.amount).join('\n'),
-						inline: true
-					}
-				],
-				footer: { text: paginated.maxPage > 1 ? 'Use \'show-inventory <page>\' to view a specific page.' : '' }
+		const inventory = await Inventory.fetchInventory(msg.author.id);
+		for (const item of Object.keys(inventory.content)) {
+			items.push({
+				name: item,
+				amount: inventory.content[item].amount
 			});
+		}
+
+		const paginated = util.paginate(items, page, Math.floor(config.paginationItems));
+
+		return msg.embed({
+			description: `__**${msg.author.username}#${msg.author.discriminator}'s inventory:**__`,
+			fields: [
+				{
+					name: 'Item',
+					value: paginated.items.map(item => item.name.replace(/(\b\w)/gi, lc => lc.toUpperCase())).join('\n'),
+					inline: true
+				},
+				{
+					name: 'Amount',
+					value: paginated.items.map(item => item.amount).join('\n'),
+					inline: true
+				}
+			],
+			footer: { text: paginated.maxPage > 1 ? 'Use \'show-inventory <page>\' to view a specific page.' : '' }
 		});
 	}
 };

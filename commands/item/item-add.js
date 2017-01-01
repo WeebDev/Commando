@@ -35,19 +35,20 @@ module.exports = class ItemAddCommand extends Command {
 	}
 
 	async run(msg, args) {
-		const name = args.name;
+		const name = args.name.toLowerCase();
 		const price = args.price;
 		const item = Store.getItem(name);
 
 		if (item) return msg.reply('an item with that name already exists');
 
 		return Item.create({
-			name: name,
-			price: price
+			name,
+			price
 		}).then(newItem => {
+			const newItemName = newItem.name.replace(/(\b\w)/gi, lc => lc.toUpperCase());
 			Store.registerItem(new StoreItem(newItem.name, newItem.price));
 
-			return msg.reply(`the item ${newItem.name} has been successfully created!`);
+			return msg.reply(`the item ${newItemName} has been successfully created!`);
 		});
 	}
 };

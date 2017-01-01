@@ -18,7 +18,7 @@ module.exports = class StatsCommand extends Command {
 	}
 
 	async run(msg) {
-		let embed = {
+		return msg.embed({
 			color: 3447003,
 			description: '**Commando Statistics**',
 			fields: [
@@ -49,8 +49,6 @@ module.exports = class StatsCommand extends Command {
 				}
 			],
 			thumbnail: { url: this.client.user.avatarURL }
-		};
-
-		return msg.embed(embed);
+		});
 	}
 };

@@ -33,7 +33,7 @@ module.exports = class StoreInfoCommand extends Command {
 			fields: [
 				{
 					name: 'Item',
-					value: paginated.items.map(item => item.name).join('\n'),
+					value: paginated.items.map(item => item.name.replace(/(\b\w)/gi, lc => lc.toUpperCase())).join('\n'),
 					inline: true
 				},
 				{

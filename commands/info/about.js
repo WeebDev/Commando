@@ -13,7 +13,7 @@ module.exports = class AboutCommand extends Command {
 	}
 
 	async run(msg) {
-		let embed = {
+		return msg.embed({
 			color: 3447003,
 			description: stripIndents`
 				__**discord.js Commando:**__
@@ -35,7 +35,6 @@ module.exports = class AboutCommand extends Command {
 				[Documentation (WIP)](https://discord.js.org/#/docs/commando/)
 				[Discord.js Documentation](https://discord.js.org/#/docs/main/)
 			`
-		};
-		return msg.embed(embed);
+		});
 	}
 };

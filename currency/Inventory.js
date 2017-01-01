@@ -44,6 +44,7 @@ module.exports = class Inventory {
 
 	addItems(itemGroup) {
 		const amountInInventory = this.content[itemGroup.item.name] ? this.content[itemGroup.item.name].amount : 0;
+
 		itemGroup.amount += amountInInventory;
 		this.content[itemGroup.item.name] = itemGroup;
 	}
