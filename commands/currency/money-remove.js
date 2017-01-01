@@ -1,6 +1,6 @@
 const { Command } = require('discord.js-commando');
 
-const Currency = require('../../Currency');
+const Currency = require('../../currency/Currency');
 
 const currency = new Currency();
 

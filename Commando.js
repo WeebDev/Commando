@@ -1,7 +1,7 @@
 global.Promise = require('bluebird');
 
 const commando = require('discord.js-commando');
-const Currency = require('./Currency');
+const Currency = require('./currency/Currency');
 const oneLine = require('common-tags').oneLine;
 const path = require('path');
 const Raven = require('raven');
@@ -24,8 +24,8 @@ const client = new commando.Client({
 
 let earnedRecently = [];
 
-Raven.config(config.ravenKey);
-Raven.install();
+/*Raven.config(config.ravenKey);
+Raven.install();*/
 
 database.start();
 redis.start();
