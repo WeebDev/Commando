@@ -1,7 +1,7 @@
 global.Promise = require('bluebird');
 
 const commando = require('discord.js-commando');
-const Currency = require('./Currency');
+const Currency = require('./currency/Currency');
 const fs = require('fs');
 const oneLine = require('common-tags').oneLine;
 const path = require('path');
@@ -208,6 +208,7 @@ client.registry
 	.registerGroups([
 		['info', 'Info'],
 		['currency', 'Currency'],
+		['item', 'Item'],
 		['weather', 'Weather'],
 		['music', 'Music'],
 		['tags', 'Tags']

@@ -1,5 +1,5 @@
-const Redis = require('./redis/Redis');
-const Money = require('./postgreSQL/models/Money');
+const Redis = require('../redis/Redis');
+const Money = require('../postgreSQL/models/Money');
 
 const redis = new Redis();
 
