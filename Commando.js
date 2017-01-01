@@ -17,7 +17,7 @@ const redis = new Redis();
 const currency = new Currency();
 const client = new commando.Client({
 	owner: config.owner,
-	commandPrefix: '-',
+	commandPrefix: '?',
 	unknownCommandResponse: false,
 	disableEveryone: true
 });
