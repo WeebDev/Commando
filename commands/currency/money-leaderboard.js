@@ -36,7 +36,7 @@ module.exports = class MoneyLeaderboardCommand extends Command {
 		const money = await this.findCached();
 		const paginated = util.paginate(JSON.parse(money), page, Math.floor(config.paginationItems));
 
-		for (const user of paginated.items) this.client.fetchUser(user.userID);
+		for (const user of paginated.items) await this.client.fetchUser(user.userID);
 
 		return msg.embed({
 			color: 3447003,
@@ -44,7 +44,7 @@ module.exports = class MoneyLeaderboardCommand extends Command {
 				__**Donut leaderboard, page ${paginated.page}**__
 
 				${paginated.items.map(user => `**${ranking++} -** ${`${this.client.users.get(user.userID).username}#${this.client.users.get(user.userID).discriminator}`} (**${user.money}** 🍩)`).join('\n')}
-				${paginated.maxPage > 1 ? `\nUse \`donut-leaderboard <page>\` to view a specific page.\n` : ''}
+				${paginated.maxPage > 1 ? `Use \`donut-leaderboard <page>\` to view a specific page.` : ''}
 			`
 		});
 	}
