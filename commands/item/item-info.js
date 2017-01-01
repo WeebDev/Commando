@@ -8,7 +8,7 @@ module.exports = class StoreInfoCommand extends Command {
 			name: 'item-info',
 			aliases: ['info-item'],
 			group: 'item',
-			memberName: 'item-info',
+			memberName: 'info',
 			description: 'Displays price of an item.',
 			display: 'Displays price of an item.',
 
@@ -23,10 +23,11 @@ module.exports = class StoreInfoCommand extends Command {
 	}
 
 	async run(msg, args) {
-		const item = Store.getItem(args.item);
+		const item = args.item;
+		const storeItem = Store.getItem(item);
 
-		if (!item) return msg.reply(`sorry, but that item doesn't exist. You can use ${this.client.commandPrefix}store-items to get a list of the available items.`);
+		if (!storeItem) return msg.reply(`sorry, but that item doesn't exist. You can use ${this.client.commandPrefix}store-items to get a list of the available items.`);
 
-		return msg.reply(`one ${item.name} costs ${item.price} 🍩s`);
+		return msg.reply(`one ${storeItem.name} costs ${storeItem.price} 🍩s`);
 	}
 };

@@ -10,7 +10,7 @@ module.exports = class ItemAddCommand extends Command {
 			name: 'item-add',
 			aliases: ['add-item'],
 			group: 'item',
-			memberName: 'item-add',
+			memberName: 'add',
 			description: 'Adds an item to the store.',
 			details: 'Adds an item to the store.',
 
@@ -35,15 +35,18 @@ module.exports = class ItemAddCommand extends Command {
 	}
 
 	async run(msg, args) {
-		const item = Store.getItem(args.name);
+		const name = args.name;
+		const price = args.price;
+		const item = Store.getItem(name);
 
 		if (item) return msg.reply('an item with that name already exists');
 
 		return Item.create({
-			name: args.name,
-			price: args.price
+			name: name,
+			price: price
 		}).then(newItem => {
 			Store.registerItem(new StoreItem(newItem.name, newItem.price));
+
 			return msg.reply(`the item ${newItem.name} has been successfully created!`);
 		});
 	}

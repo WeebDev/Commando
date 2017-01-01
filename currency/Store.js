@@ -20,9 +20,7 @@ class Store {
 }
 
 Item.findAll().then(items => {
-	for (const item of items) {
-		Store.registerItem(new StoreItem(item.name, item.price));
-	}
+	for (const item of items) Store.registerItem(new StoreItem(item.name, item.price));
 });
 
 module.exports = Store;

@@ -14,7 +14,7 @@ module.exports = class BuyItemCommand extends Command {
 			name: 'buy-item',
 			aliases: ['buy', 'item-buy'],
 			group: 'item',
-			memberName: 'buy-item',
+			memberName: 'buy',
 			description: 'Buys an item at the store.',
 			details: 'Let\'s you exchange your hard earned donuts for other goods.',
 
@@ -36,9 +36,11 @@ module.exports = class BuyItemCommand extends Command {
 	}
 
 	async run(msg, args) {
-		const item = Store.getItem(args.item);
+		const item = args.item;
+		const amount = args.amount;
+		const storeItem = Store.getItem(item);
 
-		if (!item) {
+		if (!storeItem) {
 			return msg.reply(stripIndents`
 				sorry, but that item does not exist.
 				You can use ${this.client.commandPrefix}store-items to get a list of the available items.
@@ -47,21 +49,21 @@ module.exports = class BuyItemCommand extends Command {
 
 		const balance = await currency.getBalance(msg.author.id);
 
-		const plural = args.amount > 1 || args.amount === 0;
+		const plural = amount > 1 || amount === 0;
 
-		if (balance < item.price * args.amount) {
+		if (balance < storeItem.price * amount) {
 			return msg.reply(stripIndents`
-				you don't have enough donuts to buy ${args.amount} ${args.item}(s). ${args.amount} ${args.item}${plural ? 's' : ''} cost${plural ? '' : 's'} ${args.amount * item.price} 🍩s.
+				you don't have enough donuts to buy ${amount} ${item}(s). ${amount} ${item}${plural ? 's' : ''} cost${plural ? '' : 's'} ${amount * item.price} 🍩s.
 				Your current account balance is ${balance} 🍩s.
 			`);
 		}
 
 		return Inventory.fetchInventory(msg.author.id).then(inventory => {
-			inventory.addItems(new ItemGroup(item, args.amount));
-			currency.removeBalance(msg.author.id, args.amount * item.price);
+			inventory.addItems(new ItemGroup(storeItem, amount));
+			currency.removeBalance(msg.author.id, amount * storeItem.price);
 			return inventory.save();
 		}).then(() => {
-			return msg.reply(`you have successfully purchased ${args.amount} ${args.item}${plural ? 's' : ''} for ${args.amount * item.price} 🍩s.`);
+			return msg.reply(`you have successfully purchased ${amount} ${item}${plural ? 's' : ''} for ${amount * storeItem.price} 🍩s.`);
 		});
 	}
 };

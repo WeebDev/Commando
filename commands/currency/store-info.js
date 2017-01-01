@@ -25,10 +25,11 @@ module.exports = class StoreInfoCommand extends Command {
 	}
 
 	async run(msg, args) {
-		const paginated = util.paginate(Store.getItems().array(), args.page, Math.floor(config.paginationItems));
+		const page = args.page;
+		const paginated = util.paginate(Store.getItems().array(), page, Math.floor(config.paginationItems));
 
 		return msg.embed({
-			description: `__**Items**__`,
+			description: `__**Items:**__`,
 			fields: [
 				{
 					name: 'Item',
@@ -41,7 +42,7 @@ module.exports = class StoreInfoCommand extends Command {
 					inline: true
 				}
 			],
-			footer: { text: paginated.maxPage > 1 ? `\nUse \`donut-leaderboard <page>\` to view a specific page.\n` : '' }
+			footer: { text: paginated.maxPage > 1 ? 'Use \'store-info <page>\' to view a specific page.' : '' }
 		});
 	}
 };

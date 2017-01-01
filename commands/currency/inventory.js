@@ -6,10 +6,10 @@ const Inventory = require('../../currency/Inventory');
 module.exports = class InventoryShowCommand extends Command {
 	constructor(client) {
 		super(client, {
-			name: 'inventory-show',
-			aliases: ['show-inventory'],
+			name: 'inventory',
+			aliases: ['inv'],
 			group: 'currency',
-			memberName: 'inventory-show',
+			memberName: 'inventory',
 			description: 'Displays the items you have in your inventory',
 			detail: 'Displays the items you have in your inventory',
 
@@ -25,20 +25,22 @@ module.exports = class InventoryShowCommand extends Command {
 	}
 
 	async run(msg, args) {
+		const page = args.page;
+
 		return Inventory.fetchInventory(msg.author.id).then(inventory => {
-			let items;
+			let items = [];
 
 			for (const item of Object.keys(inventory.content)) {
 				items.push({
 					name: item,
-					amount: inventory.content[item].item.amount
+					amount: inventory.content[item].amount
 				});
 			}
 
-			const paginated = util.paginate(items, args.page, Math.floor(config.paginationItems));
+			const paginated = util.paginate(items, page, Math.floor(config.paginationItems));
 
 			return msg.embed({
-				description: `__**${msg.author.name}#${msg.author.discriminator}'s inventory**__`,
+				description: `__**${msg.author.username}#${msg.author.discriminator}'s inventory:**__`,
 				fields: [
 					{
 						name: 'Item',
@@ -51,7 +53,7 @@ module.exports = class InventoryShowCommand extends Command {
 						inline: true
 					}
 				],
-				footer: { text: paginated.maxPage > 1 ? `\nUse \`donut-leaderboard <page>\` to view a specific page.\n` : '' }
+				footer: { text: paginated.maxPage > 1 ? 'Use \'show-inventory <page>\' to view a specific page.' : '' }
 			});
 		});
 	}
