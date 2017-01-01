@@ -41,7 +41,10 @@ module.exports = class MoneyLeaderboardCommand extends Command {
 			description: stripIndents`
 				__**Donut leaderboard, page ${paginated.page}**__
 
-				${paginated.items.map(user => `**${ranking++} -** ${`${this.client.users.get(user.userID).username}#${this.client.users.get(user.userID).discriminator}`} (**${user.money}** 🍩)`).join('\n')}
+				${paginated.items.map(async user => {
+					let fetchedUser = await this.client.fetchUser(user.userID);
+					return `**${ranking++} -** ${`${this.client.users.get(fetchedUser).username}#${this.client.users.get(fetchedUser).discriminator}`} (**${user.money}** 🍩)`
+				})}
 				${paginated.maxPage > 1 ? `\nUse \`donut-leaderboard <page>\` to view a specific page.\n` : ''}
 			`
 		});
