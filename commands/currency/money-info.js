@@ -17,7 +17,7 @@ module.exports = class MoneyInfoCommand extends Command {
 			args: [
 				{
 					key: 'member',
-					prompt: 'What users earning would you like to view?',
+					prompt: 'Which user\'s earnings would you like to view?',
 					type: 'member',
 					default: ''
 				}

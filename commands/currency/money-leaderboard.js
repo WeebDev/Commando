@@ -55,7 +55,7 @@ module.exports = class MoneyLeaderboardCommand extends Command {
 				return reply;
 			} else {
 				const money = await Money.findAll({ where: { userID: { $ne: 'SLOTMACHINE' } }, order: 'money DESC' });
-				if (!money) return `No money biatch`;
+				if (!money) return `No money, biatch`;
 
 				redis.db.setAsync('moneyleaderboard', JSON.stringify(money));
 				redis.db.expire('moneyleaderboard', 3700);
