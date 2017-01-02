@@ -85,7 +85,7 @@ module.exports = class SlotMachineCommand extends Command {
 			return msg.embed({
 				color: 0xBE1931,
 				description: stripIndents`
-					**${msg.author.username}, you rolled:**
+					**${msg.member.displayName}, you rolled:**
 
 					${this.showRoll(roll)}
 
@@ -101,7 +101,7 @@ module.exports = class SlotMachineCommand extends Command {
 		return msg.embed({
 			color: 0x5C913B,
 			description: stripIndents`
-				**${msg.author.username}, you rolled:**
+				**${msg.member.displayName}, you rolled:**
 
 				${this.showRoll(roll)}
 
