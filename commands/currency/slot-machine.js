@@ -86,7 +86,9 @@ module.exports = class SlotMachineCommand extends Command {
 				color: 0xBE1931,
 				description: stripIndents`
 					**You rolled:**
+
 					${this.showRoll(roll)}
+
 					**You lost!**
 					Better luck next time!
 				`
@@ -100,7 +102,9 @@ module.exports = class SlotMachineCommand extends Command {
 			color: 0x5C913B,
 			description: stripIndents`
 				**You rolled:**
+
 				${this.showRoll(roll)}
+				
 				**Congratulations!**
 				You won ${coins * winnings} 🍩s!
 			`
