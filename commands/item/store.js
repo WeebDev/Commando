@@ -6,10 +6,9 @@ const Store = require('../../currency/Store');
 module.exports = class StoreInfoCommand extends Command {
 	constructor(client) {
 		super(client, {
-			name: 'store-info',
-			aliases: ['info-store'],
-			group: 'currency',
-			memberName: 'store-info',
+			name: 'store',
+			group: 'item',
+			memberName: 'store',
 			description: 'Displays price of all items.',
 			display: 'Displays price of all items.',
 
@@ -42,7 +41,7 @@ module.exports = class StoreInfoCommand extends Command {
 					inline: true
 				}
 			],
-			footer: { text: paginated.maxPage > 1 ? 'Use \'store-info <page>\' to view a specific page.' : '' }
+			footer: { text: paginated.maxPage > 1 ? 'Use \'store <page>\' to view a specific page.' : '' }
 		});
 	}
 };

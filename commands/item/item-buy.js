@@ -43,8 +43,8 @@ module.exports = class BuyItemCommand extends Command {
 
 		if (!storeItem) {
 			return msg.reply(stripIndents`
-				sorry, but that item does not exist.
-				You can use ${this.client.commandPrefix}store-items to get a list of the available items.
+				that item does not exist.
+				You can use ${this.client.commandPrefix}store to get a list of the available items.
 			`);
 		}
 
@@ -54,7 +54,7 @@ module.exports = class BuyItemCommand extends Command {
 
 		if (balance < storeItem.price * amount) {
 			return msg.reply(stripIndents`
-				you don't have enough donuts to buy ${amount} ${itemName}(s). ${amount} ${itemName}${plural ? 's' : ''} cost${plural ? '' : 's'} ${amount * item.price} 🍩s.
+				you don't have enough donuts to buy ${amount} ${itemName}${plural ? 's' : ''}. ${amount} ${itemName}${plural ? 's' : ''} cost${plural ? '' : 's'} ${amount * storeItem.price} 🍩s.
 				Your current account balance is ${balance} 🍩s.
 			`);
 		}

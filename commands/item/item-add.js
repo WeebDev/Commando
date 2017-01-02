@@ -39,7 +39,7 @@ module.exports = class ItemAddCommand extends Command {
 		const price = args.price;
 		const item = Store.getItem(name);
 
-		if (item) return msg.reply('an item with that name already exists');
+		if (item) return msg.reply('an item with that name already exists.');
 
 		return Item.create({
 			name,

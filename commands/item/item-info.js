@@ -1,4 +1,5 @@
 const { Command } = require('discord.js-commando');
+const stripIndents = require('common-tags').stripIndents;
 
 const Store = require('../../currency/Store');
 
@@ -26,7 +27,12 @@ module.exports = class StoreInfoCommand extends Command {
 		const item = args.item.toLowerCase();
 		const storeItem = Store.getItem(item);
 
-		if (!storeItem) return msg.reply(`sorry, but that item doesn't exist. You can use ${this.client.commandPrefix}store-items to get a list of the available items.`);
+		if (!storeItem) {
+			return msg.reply(stripIndents`
+				sorry, but that item doesn't exist.
+				You can use \`${this.client.commandPrefix}store\` to get a list of the available items.
+			`);
+		}
 
 		const storeItemName = storeItem.name.replace(/(\b\w)/gi, lc => lc.toUpperCase());
 
