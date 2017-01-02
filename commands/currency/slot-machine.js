@@ -104,7 +104,7 @@ module.exports = class SlotMachineCommand extends Command {
 				**You rolled:**
 
 				${this.showRoll(roll)}
-				
+
 				**Congratulations!**
 				You won ${coins * winnings} 🍩s!
 			`
