@@ -8,8 +8,12 @@ const Store = require('../../currency/Store');
 
 const currency = new Currency();
 
-const symbols = ['🍒', '💰', '⭐', '🎲', '💎', '❤', '⚜', '🔅', '🎉'];
 const combinations = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 4, 8], [2, 4, 6]];
+const reels = [
+	['🍒', '💰', '⭐', '🎲', '💎', '❤', '⚜', '🔅', '🎉'],
+	['💎', '🔅', '❤', '🍒', '🎉', '⚜', '🎲', '⭐', '💰'],
+	['❤', '🎲', '💎', '⭐', '⚜', '🍒', '💰', '🎉', '🔅']
+];
 const values = {
 	'💎': 500,
 	'⚜': 400,
@@ -68,7 +72,7 @@ module.exports = class SlotMachineCommand extends Command {
 
 		currency.addBalance('SLOTMACHINE', coins * 100);
 
-		let roll = this.generateRoll();
+		const roll = this.generateRoll();
 		let winnings = 0;
 
 		combinations.forEach(combo => {
@@ -112,17 +116,16 @@ module.exports = class SlotMachineCommand extends Command {
 	}
 
 	generateRoll() {
-		let generated = [];
+		const roll = [];
 
-		for (let i = 0; i < 9; i++) {
-			const sym = symbols[Math.floor(Math.random() * symbols.length)];
+		reels.forEach((reel, index) => {
+			const rand = Math.floor(Math.random() * reel.length);
 
-			if (i < 3) generated.push(sym);
-			else if (i < 6 && sym !== generated[i - 3]) generated.push(sym);
-			else if (sym !== generated[i - 3] && sym !== generated[i - 6]) generated.push(sym);
-			else i--;
-		}
+			roll[index] = rand === 0 ? reel[reel.length - 1] : reel[rand - 1];
+			roll[index + 3] = reel[rand];
+			roll[index + 6] = rand === reel.length - 1 ? reel[0] : reel[rand + 1];
+		});
 
-		return generated;
+		return roll;
 	}
 };
