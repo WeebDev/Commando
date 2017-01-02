@@ -31,7 +31,7 @@ module.exports = class UserInfoCommand extends Command {
 		const member = args.member;
 		const user = member.user;
 
-		let embed = {
+		return msg.embed({
 			color: 3447003,
 			fields: [
 				{
@@ -54,8 +54,6 @@ module.exports = class UserInfoCommand extends Command {
 				}
 			],
 			thumbnail: { url: user.avatarURL }
-		};
-
-		return msg.embed(embed);
+		});
 	}
 };

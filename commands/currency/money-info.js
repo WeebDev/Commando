@@ -1,5 +1,6 @@
 const { Command } = require('discord.js-commando');
-const Currency = require('../../Currency');
+
+const Currency = require('../../currency/Currency');
 
 const currency = new Currency();
 
@@ -16,7 +17,7 @@ module.exports = class MoneyInfoCommand extends Command {
 			args: [
 				{
 					key: 'member',
-					prompt: 'What users earning would you like to view?',
+					prompt: 'Which user\'s earnings would you like to view?',
 					type: 'member',
 					default: ''
 				}
@@ -30,10 +31,12 @@ module.exports = class MoneyInfoCommand extends Command {
 		const balance = await currency.getBalance(user.id);
 
 		if (args.member) {
-			if (!balance) return msg.reply(`${user.displayName} hasn't earned any 🍩s yet :(`);
+			if (!balance) return msg.reply(`${user.displayName} hasn't earned any 🍩s yet.`);
+
 			return msg.reply(`${user.displayName} has earned ${balance} 🍩s so far. Good on them!`);
 		} else {
-			if (!balance) return msg.reply('you haven\'t earned any 🍩s yet, sorry :(');
+			if (!balance) return msg.reply('you haven\'t earned any 🍩s yet.');
+
 			return msg.reply(`you have earned ${balance} 🍩s so far. Good on you!`);
 		}
 	}

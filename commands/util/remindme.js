@@ -33,6 +33,7 @@ module.exports = class RemindMeCommand extends Command {
 		const remindMessage = await new Promise(resolve => {
 			setTimeout(() => resolve(msg.say(`${msg.author} you wanted me to remind you of: '${remindTime.eventTitle}'`)), time);
 		});
+
 		return [preRemind, remindMessage];
 	}
 };

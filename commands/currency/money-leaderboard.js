@@ -10,8 +10,8 @@ const redis = new Redis();
 module.exports = class MoneyLeaderboardCommand extends Command {
 	constructor(client) {
 		super(client, {
-			name: 'money-leaderboard',
-			aliases: ['donut-leaderboard', 'donuts-leaderboard'],
+			name: 'leaderboard',
+			aliases: ['donut-leaderboard', 'donuts-leaderboard', 'money-leaderboard'],
 			group: 'currency',
 			memberName: 'leaderboard',
 			description: 'Displays the money members have earned.',
@@ -31,22 +31,22 @@ module.exports = class MoneyLeaderboardCommand extends Command {
 
 	async run(msg, args) {
 		const page = args.page;
-		let ranking = 1;
 
 		const money = await this.findCached();
 		const paginated = util.paginate(JSON.parse(money), page, Math.floor(config.paginationItems));
+		let ranking = config.paginationItems * (paginated.page - 1);
 
-		const embed = {
+		for (const user of paginated.items) await this.client.fetchUser(user.userID);
+
+		return msg.embed({
 			color: 3447003,
 			description: stripIndents`
 				__**Donut leaderboard, page ${paginated.page}**__
 
-				${paginated.items.map(user => `**${ranking++} -** ${`${this.client.users.get(user.userID).username}#${this.client.users.get(user.userID).discriminator}`} (**${user.money}** 🍩)`).join('\n')}
-				${paginated.maxPage > 1 ? `\nUse \`donut-leaderboard <page>\` to view a specific page.\n` : ''}
-			`
-		};
-
-		return msg.embed(embed);
+				${paginated.items.map(user => `**${++ranking} -** ${`${this.client.users.get(user.userID).username}#${this.client.users.get(user.userID).discriminator}`} (**${user.money}** 🍩)`).join('\n')}
+			`,
+			footer: { text: paginated.maxPage > 1 ? 'Use \'leaderboard <page>\' to view a specific page.' : '' }
+		});
 	}
 
 	async findCached() {
@@ -55,10 +55,10 @@ module.exports = class MoneyLeaderboardCommand extends Command {
 				return reply;
 			} else {
 				const money = await Money.findAll({ where: { userID: { $ne: 'SLOTMACHINE' } }, order: 'money DESC' });
-				if (!money) return `No money biatch`;
+				if (!money) return `No money, biatch`;
 
 				redis.db.setAsync('moneyleaderboard', JSON.stringify(money));
-				redis.db.expire('moneyleaderboard', 1800);
+				redis.db.expire('moneyleaderboard', 3700);
 
 				return JSON.stringify(money);
 			}

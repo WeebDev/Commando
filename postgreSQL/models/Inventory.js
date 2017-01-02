@@ -4,14 +4,11 @@ const Database = require('../postgreSQL');
 
 const database = new Database();
 
-let Money = database.db.define('money', {
+let Inventory = database.db.define('inventories', {
 	userID: Sequelize.STRING,
-	money: {
-		type: Sequelize.INTEGER,
-		defaultValue: 0
-	}
+	content: Sequelize.STRING
 });
 
-Money.sync();
+Inventory.sync();
 
-module.exports = Money;
+module.exports = Inventory;

@@ -27,7 +27,7 @@ module.exports = class ServerInfoCommand extends Command {
 	}
 
 	async run(msg) {
-		let embed = {
+		return msg.embed({
 			color: 3447003,
 			description: `Info on **${msg.guild.name}** (ID: ${msg.guild.id})`,
 			fields: [
@@ -60,13 +60,14 @@ module.exports = class ServerInfoCommand extends Command {
 						• Region: ${msg.guild.region}
 						• Created at: ${moment.utc(msg.guild.createdAt).format('dddd, MMMM Do YYYY, HH:mm:ss ZZ')}
 						• Verification Level: ${humanLevels[msg.guild.verificationLevel]}
-						• Emojis: ${msg.guild.emojis.array().join(' ')}
 					`
+				},
+				{
+					name: '❯ Emojis',
+					value: `• Emojis: ${msg.guild.emojis.array().join(' ')}`
 				}
 			],
 			thumbnail: { url: msg.guild.iconURL }
-		};
-
-		return msg.embed(embed);
+		});
 	}
 };
