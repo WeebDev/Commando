@@ -29,7 +29,10 @@ module.exports = class SlotMachineCommand extends Command {
 			group: 'currency',
 			memberName: 'slot-machine',
 			description: 'Let\'s you play a round with the slot machine',
-			details: 'Bet some amount of money, and enjoy a round with the slot machine.\nDoubles your money if you win!',
+			details: stripIndents`
+				Bet some amount of money, and enjoy a round with the slot machine.
+				Doubles your money if you win!
+			`,
 
 			args: [
 				{
@@ -47,12 +50,17 @@ module.exports = class SlotMachineCommand extends Command {
 		const userCoins = (inventory.content.coin || { amount: 0 }).amount;
 		const item = Store.getItem('coin');
 
+		const plural = userCoins > 1 || userCoins === 0;
+
 		if (![1, 3, 5].includes(coins)) {
 			return msg.say('Sorry, you need to pay either 1, 3 or 5 coin(s). Anything else does not work.');
 		}
 
 		if (userCoins < coins) {
-			return msg.say(`You don't have enough coins to pay your bet! Your current account balance is ${userCoins} coin(s).`);
+			return msg.say(stripIndents`
+				You don't have enough coins to pay your bet!
+				Your current account balance is ${userCoins} coin${plural ? 's' : ''}
+			`);
 		}
 
 		inventory.removeItems(new ItemGroup(item, coins));

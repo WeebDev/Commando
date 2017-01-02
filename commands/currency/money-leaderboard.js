@@ -10,8 +10,8 @@ const redis = new Redis();
 module.exports = class MoneyLeaderboardCommand extends Command {
 	constructor(client) {
 		super(client, {
-			name: 'money-leaderboard',
-			aliases: ['donut-leaderboard', 'donuts-leaderboard'],
+			name: 'leaderboard',
+			aliases: ['donut-leaderboard', 'donuts-leaderboard', 'money-leaderboard'],
 			group: 'currency',
 			memberName: 'leaderboard',
 			description: 'Displays the money members have earned.',
@@ -45,7 +45,7 @@ module.exports = class MoneyLeaderboardCommand extends Command {
 
 				${paginated.items.map(user => `**${++ranking} -** ${`${this.client.users.get(user.userID).username}#${this.client.users.get(user.userID).discriminator}`} (**${user.money}** 🍩)`).join('\n')}
 			`,
-			footer: { text: paginated.maxPage > 1 ? 'Use \'donut-leaderboard <page>\' to view a specific page.' : '' }
+			footer: { text: paginated.maxPage > 1 ? 'Use \'leaderboard <page>\' to view a specific page.' : '' }
 		});
 	}
 

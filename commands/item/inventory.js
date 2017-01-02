@@ -8,7 +8,7 @@ module.exports = class InventoryShowCommand extends Command {
 		super(client, {
 			name: 'inventory',
 			aliases: ['inv'],
-			group: 'currency',
+			group: 'item',
 			memberName: 'inventory',
 			description: 'Displays the items you have in your inventory',
 			detail: 'Displays the items you have in your inventory',
@@ -54,7 +54,7 @@ module.exports = class InventoryShowCommand extends Command {
 					inline: true
 				}
 			],
-			footer: { text: paginated.maxPage > 1 ? 'Use \'show-inventory <page>\' to view a specific page.' : '' }
+			footer: { text: paginated.maxPage > 1 ? 'Use \'inventory <page>\' to view a specific page.' : '' }
 		});
 	}
 };
