@@ -42,7 +42,11 @@ module.exports = class RouletteCommand extends Command {
 
 		const barrel = this.generateBarrel();
 
-		return msg.say('A new game of roulette has started! Use the `roulette` command to join!').then(async () => {
+		return msg.say('A new game of roulette has been initiated! Use the `roulette` command in the next 15 seconds to join!').then(async () => {
+			setTimeout(() => msg.say('10 seconds left for you to join'), 5000);
+			setTimeout(() => msg.say('5 more seconds for new people to join'), 10000);
+			setTimeout(() => msg.say('The game begins!'), 14500);
+
 			const players = await roulette.awaitPlayers(15000);
 
 			if (players.length === 1) return msg.say('Seems like no one else wanted to join. Ah well, maybe another time.');
