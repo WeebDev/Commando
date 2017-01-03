@@ -24,7 +24,7 @@ module.exports = class RouletteCommand extends Command {
 		let roulette = Roulette.findGame(msg.guild.id);
 
 		if (balance < donuts) {
-			return msg.reply(`you don't have that many donuts. Your current account balance is ${balance} 🍩s.`);
+			return msg.reply(`you don't have enough donuts. You need 100 🍩s to join, but your current account balance is ${balance} 🍩s.`);
 		}
 
 		if (roulette) {
