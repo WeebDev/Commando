@@ -13,10 +13,10 @@ module.exports = class RouletteCommand extends Command {
 			aliases: ['roulette', 'bet'],
 			group: 'games',
 			memberName: 'roulette',
-			description: 'Play a game of russian roulette for donuts!',
-			details: 'Play a game of russian roulette for donuts.',
+			description: 'Play a game of roulette for donuts!',
+			details: 'Play a game of roulette for donuts.',
 			throttling: {
-				duration: 30,
+				duration: 60,
 				usages: 1
 			},
 			args: [
