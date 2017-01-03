@@ -30,6 +30,8 @@ module.exports = class RouletteCommand extends Command {
 		if (roulette) {
 			if (roulette.hasPlayer(msg.author.id)) return msg.reply('you have already joined this game of russian roulette.');
 
+			if (roulette.players.length === 6) return msg.reply('only 6 people can join at a time. You\'ll have to wait for the next round');
+
 			roulette.join(msg.author, donuts);
 
 			return msg.reply('you have successfully joined the game.');
