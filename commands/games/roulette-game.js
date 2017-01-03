@@ -46,7 +46,7 @@ module.exports = class RouletteCommand extends Command {
 			setTimeout(() => msg.say('10 seconds left for you to join'), 5000);
 			setTimeout(() => msg.say('5 more seconds for new people to join'), 10000);
 			setTimeout(() => {
-				if (roulette.players > 1) msg.say('The game begins!');
+				if (roulette.players.length > 1) msg.say('The game begins!');
 			}, 14500);
 
 			const players = await roulette.awaitPlayers(15000);
