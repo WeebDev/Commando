@@ -58,7 +58,7 @@ module.exports = class RouletteCommand extends Command {
 			survivors = players.filter(player => player !== deadPlayer);
 
 			currency.removeBalance(deadPlayer.user.id, 100);
-			survivors.forEach(survivor => currency.addBalance(survivor.user.id, 100 / survivors.length));
+			survivors.forEach(survivor => currency.addBalance(survivor.user.id, donuts / survivors.length));
 
 			return msg.embed({
 				description: stripIndents`
