@@ -14,7 +14,11 @@ module.exports = class RouletteCommand extends Command {
 			group: 'games',
 			memberName: 'roulette',
 			description: 'Play a game of russian roulette for donuts!',
-			details: 'Play a game of russian roulette for donuts.'
+			details: 'Play a game of russian roulette for donuts.',
+			throttling: {
+				duration: 30,
+				usages: 1
+			}
 		});
 	}
 
