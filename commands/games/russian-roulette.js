@@ -2,17 +2,17 @@ const { Command } = require('discord.js-commando');
 const stripIndents = require('common-tags').stripIndents;
 
 const Currency = require('../../currency/Currency');
-const Roulette = require('../../Roulette');
+const Roulette = require('../../Russian-roulette');
 
 const currency = new Currency();
 
-module.exports = class RouletteCommand extends Command {
+module.exports = class RussianRouletteCommand extends Command {
 	constructor(client) {
 		super(client, {
 			name: 'russian-roulette',
-			aliases: ['roulette'],
+			aliases: ['rus-roulette'],
 			group: 'games',
-			memberName: 'roulette',
+			memberName: 'russian-roulette',
 			description: 'Play a game of russian roulette for donuts!',
 			details: 'Play a game of russian roulette for donuts.',
 			throttling: {
@@ -46,7 +46,7 @@ module.exports = class RouletteCommand extends Command {
 
 		const barrel = this.generateBarrel();
 
-		return msg.say('A new game of roulette has been initiated! Use the `roulette` command in the next 15 seconds to join!').then(async () => {
+		return msg.say('A new game of russian roulette has been initiated! Use the `roulette` command in the next 15 seconds to join!').then(async () => {
 			setTimeout(() => msg.say('10 seconds left for you to join'), 5000);
 			setTimeout(() => msg.say('5 more seconds for new people to join'), 10000);
 			setTimeout(() => {
@@ -86,10 +86,5 @@ module.exports = class RouletteCommand extends Command {
 		let barrel = [0, 0, 0, 0, 0, 0];
 		barrel[Math.floor(Math.random() * barrel.length)] = 1;
 		return barrel;
-	}
-
-	removeDuplicates(array) {
-		let seen = [];
-		return array.filter(element => !seen.includes(element) && seen.push(element));
 	}
 };
