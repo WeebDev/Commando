@@ -27,6 +27,10 @@ module.exports = class SlotMachineCommand extends Command {
 			memberName: 'slot-machine',
 			description: 'Let\'s you play a round with the slot machine',
 			details: 'Bet some amount of money, and enjoy a round with the slot machine.\nDoubles your money if you win!',
+			throttling: {
+				duration: 5,
+				usages: 1
+			},
 
 			args: [
 				{
