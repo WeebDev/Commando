@@ -8,7 +8,7 @@ module.exports = class SlotMachineInfo extends Command {
 	constructor(client) {
 		super(client, {
 			name: 'slotmachine-info',
-			group: 'currency',
+			group: 'games',
 			memberName: 'slotmachine-info',
 			description: 'Displays information about the slotmachine.',
 			details: 'Displays information about the slotmachine.'

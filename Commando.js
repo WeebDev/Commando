@@ -100,6 +100,7 @@ client.registry
 	.registerGroups([
 		['info', 'Info'],
 		['currency', 'Currency'],
+		['games', 'Games'],
 		['item', 'Item'],
 		['weather', 'Weather'],
 		['music', 'Music'],
