@@ -46,7 +46,7 @@ module.exports = class RouletteCommand extends Command {
 		const balance = await currency.getBalance(msg.author.id);
 		let roulette = Roulette.findGame(msg.guild.id);
 
-		if (balance < 100) return msg.reply(`you need at least 100 🍩s to bet, but your current account balance is ${balance} 🍩s.`);
+		if (balance < bet) return msg.reply(`you need at least 100 🍩s to bet, but your current account balance is ${balance} 🍩s.`);
 		if (![100, 200, 300, 400, 500, 1000, 2000, 5000].includes(bet)) return msg.say('you need to bet either 100, 200, 300, 400, 500, 1000, 2000 or 5000 donuts.');
 
 		if (roulette) {
