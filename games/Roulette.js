@@ -7,8 +7,7 @@ const roulette = {
 };
 
 const spaces = new Discord.Collection([
-	['zero', { values: ['0'], multiplier: 36 }],
-	['numbers', { values: roulette.red.concat(roulette.black).map(item => item.toString()), multiplier: 36 }],
+	['numbers', { values: roulette.red.concat(roulette.black).concat([0]).map(item => item.toString()), multiplier: 36 }],
 	['dozens', { values: ['1-12', '13-24', '25-36'], multiplier: 3 }],
 	['columns', { values: ['1st', '2nd', '3rd'], multiplier: 3 }],
 	['halves', { values: ['1-18', '19-36'], multiplier: 2 }],
@@ -55,7 +54,7 @@ class Roulette {
 			}, time);
 		});
 	}
-};
+}
 
 function generateSpaces() {
 	const winNumber = Math.floor(Math.random() * 37);
