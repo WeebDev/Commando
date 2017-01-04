@@ -48,9 +48,9 @@ module.exports = class RouletteCommand extends Command {
 
 		if (balance < bet) return msg.reply(`you need at least 100 🍩s to bet, but your current account balance is ${balance} 🍩s.`);
 		if (![100, 200, 300, 400, 500, 1000, 2000, 5000].includes(bet)) return msg.say('you need to bet either 100, 200, 300, 400, 500, 1000, 2000 or 5000 donuts.');
+		if (!Roulette.hasSpace(space)) return msg.reply('that is not a valid betting space. Use `roulette-info` for more information');
 
 		if (roulette) {
-			if (!roulette.hasSpace(space)) return msg.reply('that is not a valid betting space. Use `roulette-info` for more information');
 			if (roulette.hasPlayer(msg.author.id)) return msg.reply('you have already put a bet in this game of roulette.');
 
 			roulette.join(msg.author, bet, space);
@@ -60,10 +60,6 @@ module.exports = class RouletteCommand extends Command {
 		}
 
 		roulette = new Roulette(msg.guild.id);
-		if (!roulette.hasSpace(space)) {
-			roulette.awaitPlayers(0);
-			return msg.reply('that is not a valid betting space. Use `roulette-info` for more information');
-		}
 		roulette.join(msg.author, bet, space);
 		currency.removeBalance(msg.author.id, bet);
 
