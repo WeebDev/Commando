@@ -2,7 +2,7 @@ const { Command } = require('discord.js-commando');
 const stripIndents = require('common-tags').stripIndents;
 
 const Currency = require('../../currency/Currency');
-const Roulette = require('../../Russian-roulette');
+const Roulette = require('../../games/Russian-roulette');
 
 const currency = new Currency();
 
@@ -27,13 +27,10 @@ module.exports = class RussianRouletteCommand extends Command {
 		const balance = await currency.getBalance(msg.author.id);
 		let roulette = Roulette.findGame(msg.guild.id);
 
-		if (balance < donuts) {
-			return msg.reply(`you don't have enough donuts. You need ${donuts} 🍩s to join, but your current account balance is ${balance} 🍩s.`);
-		}
+		if (balance < donuts) return msg.reply(`you don't have enough donuts. You need ${donuts} 🍩s to join, but your current account balance is ${balance} 🍩s.`);
 
 		if (roulette) {
 			if (roulette.hasPlayer(msg.author.id)) return msg.reply('you have already joined this game of russian roulette.');
-
 			if (roulette.players.length === 6) return msg.reply('only 6 people can join at a time. You\'ll have to wait for the next round');
 
 			roulette.join(msg.author, donuts);

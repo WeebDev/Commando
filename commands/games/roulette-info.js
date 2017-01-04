@@ -14,7 +14,6 @@ module.exports = class RouletteInfo extends Command {
 
 	async run(msg) {
 		return msg.embed({
-			image: { url: 'https://a.cuntflaps.me/lcfoa.png' },
 			description: stripIndents`
 				To start a game or place a bet use \`roulette <donuts> <space>\`
 
@@ -23,17 +22,18 @@ module.exports = class RouletteInfo extends Command {
 				\`<space>\` is the space you want to bet on. Those should be written exactly as in the image below.
 
 				**Payout multipliers:**
-				*Single number* - 36x\`<donuts>\`
-				*Dozens* - 3x\`<donuts>\`
-				*Columns* - 3x\`<donuts>\`
-				*Halves* - 2x\`<donuts>\`
-				*Odd/Even* - 2x\`<donuts>\`
-				*Colors* - 2x\`<donuts>\`
+				*Single number* - 36x
+				*Dozens* - 3x
+				*Columns* - 3x
+				*Halves* - 2x
+				*Odd/Even* - 2x
+				*Colors* - 2x
 
 				**Examples:**
 				\`roulette 300 2nd\`
-				\`bet 200 odd\`
-			`
+				\`roulette 200 odd\`
+			`,
+			image: { url: 'https://a.cuntflaps.me/lcfoa.png' }
 		});
 	}
 };
