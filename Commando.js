@@ -5,15 +5,15 @@ const Currency = require('./currency/Currency');
 const oneLine = require('common-tags').oneLine;
 const path = require('path');
 const Raven = require('raven');
-const sqlite = require('sqlite');
 const winston = require('winston');
 
 const Redis = require('./redis/Redis');
-const Database = require('./postgreSQL/postgreSQL');
+const Database = require('./postgreSQL/PostgreSQL');
+const SequelizeProvider = require('./postgreSQL/SequelizeProvider');
 const config = require('./settings');
 
-const database = new Database();
 const redis = new Redis();
+const database = new Database();
 const currency = new Currency();
 const client = new commando.Client({
 	owner: config.owner,
@@ -30,9 +30,7 @@ let earnedRecently = [];
 database.start();
 redis.start();
 
-client.setProvider(sqlite.open(path.join(__dirname, 'settings.db'))
-	.then(db => new commando.SQLiteProvider(db)))
-	.catch(error => { winston.error(error); });
+client.setProvider(new SequelizeProvider(database.db));
 
 client.on('error', winston.error)
 	.on('warn', winston.warn)
