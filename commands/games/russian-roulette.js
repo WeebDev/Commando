@@ -2,7 +2,7 @@ const { Command } = require('discord.js-commando');
 const stripIndents = require('common-tags').stripIndents;
 
 const Currency = require('../../currency/Currency');
-const Roulette = require('../../games/Russian-roulette');
+const RussianRoulette = require('../../games/Russian-roulette');
 
 const currency = new Currency();
 

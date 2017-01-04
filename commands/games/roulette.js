@@ -47,7 +47,7 @@ module.exports = class RouletteCommand extends Command {
 		let roulette = Roulette.findGame(msg.guild.id);
 
 		if (balance < 100) return msg.reply(`you need at least 100 🍩s to bet, but your current account balance is ${balance} 🍩s.`);
-		if (![100, 200, 300, 400, 500, 1000, 2000, 5000].includes(bet)) return msg.say('you need to bet either 100 - 5000 donuts. Anything else does not work.');
+		if (![100, 200, 300, 400, 500, 1000, 2000, 5000].includes(bet)) return msg.say('you need to bet either 100, 200, 300, 400, 500, 1000, 2000 or 5000 donuts.');
 
 		if (roulette) {
 			if (!roulette.hasSpace(space)) return msg.reply('that is not a valid betting space. Use `roulette-info` for more information');
@@ -68,8 +68,8 @@ module.exports = class RouletteCommand extends Command {
 			Use \`roulette <donuts> <space>\` in the next 15 seconds to place your bet.
 		`)
 			.then(async () => {
-				setTimeout(() => msg.say('10 seconds left for you to bet'), 5000);
-				setTimeout(() => msg.say('5 more seconds for new people to bet'), 10000);
+				setTimeout(() => msg.say('10 seconds left for you to bet.'), 5000);
+				setTimeout(() => msg.say('5 more seconds for new people to bet.'), 10000);
 				setTimeout(() => msg.say('The roulette starts spinning!'), 14500);
 
 				const winners = await roulette.awaitPlayers(16000).filter(player => player.winnings !== 0);
