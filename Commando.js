@@ -6,11 +6,11 @@ const fs = require('fs');
 const oneLine = require('common-tags').oneLine;
 const path = require('path');
 const Raven = require('raven');
-const sqlite = require('sqlite');
 const winston = require('winston');
 
 const Redis = require('./redis/Redis');
-const Database = require('./postgreSQL/postgreSQL');
+const Database = require('./postgreSQL/PostgreSQL');
+const SequelizeProvider = require('./postgreSQL/SequelizeProvider');
 const config = require('./settings');
 
 const data = require('./docsdata.json');
@@ -22,8 +22,8 @@ const docs = new Docs(data);
 const lookup = new Lookup(data, docs);
 const commands = new Commands(data, docs);
 
-const database = new Database();
 const redis = new Redis();
+const database = new Database();
 const currency = new Currency();
 const client = new commando.Client({
 	owner: config.owner,
@@ -34,15 +34,13 @@ const client = new commando.Client({
 
 let earnedRecently = [];
 
-Raven.config(config.ravenKey);
-Raven.install();
+//Raven.config(config.ravenKey);
+//Raven.install();
 
 database.start();
 redis.start();
 
-client.setProvider(sqlite.open(path.join(__dirname, 'settings.db'))
-	.then(db => new commando.SQLiteProvider(db)))
-	.catch(error => { winston.error(error); });
+client.setProvider(new SequelizeProvider(database.db));
 
 client.on('error', winston.error)
 	.on('warn', winston.warn)

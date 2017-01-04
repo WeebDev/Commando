@@ -1,6 +1,6 @@
 const games = new Map();
 
-module.exports = class Roulette {
+class RussianRoulette {
 	constructor(guildID) {
 		this.guildID = guildID;
 		this.players = [];
@@ -34,3 +34,5 @@ module.exports = class Roulette {
 		});
 	}
 };
+
+module.exports = RussianRoulette;

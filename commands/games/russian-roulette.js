@@ -2,17 +2,17 @@ const { Command } = require('discord.js-commando');
 const stripIndents = require('common-tags').stripIndents;
 
 const Currency = require('../../currency/Currency');
-const Roulette = require('../../Roulette');
+const Roulette = require('../../games/Russian-roulette');
 
 const currency = new Currency();
 
-module.exports = class RouletteCommand extends Command {
+module.exports = class RussianRouletteCommand extends Command {
 	constructor(client) {
 		super(client, {
 			name: 'russian-roulette',
-			aliases: ['roulette'],
+			aliases: ['rus-roulette'],
 			group: 'games',
-			memberName: 'roulette',
+			memberName: 'russian-roulette',
 			description: 'Play a game of russian roulette for donuts!',
 			details: 'Play a game of russian roulette for donuts.',
 			throttling: {
@@ -27,13 +27,10 @@ module.exports = class RouletteCommand extends Command {
 		const balance = await currency.getBalance(msg.author.id);
 		let roulette = Roulette.findGame(msg.guild.id);
 
-		if (balance < donuts) {
-			return msg.reply(`you don't have enough donuts. You need ${donuts} 🍩s to join, but your current account balance is ${balance} 🍩s.`);
-		}
+		if (balance < donuts) return msg.reply(`you don't have enough donuts. You need ${donuts} 🍩s to join, but your current account balance is ${balance} 🍩s.`);
 
 		if (roulette) {
 			if (roulette.hasPlayer(msg.author.id)) return msg.reply('you have already joined this game of russian roulette.');
-
 			if (roulette.players.length === 6) return msg.reply('only 6 people can join at a time. You\'ll have to wait for the next round');
 
 			roulette.join(msg.author, donuts);
@@ -41,12 +38,12 @@ module.exports = class RouletteCommand extends Command {
 			return msg.reply('you have successfully joined the game.');
 		}
 
-		roulette = new Roulette(msg.guild.id);
+		roulette = new RussianRoulette(msg.guild.id);
 		roulette.join(msg.author, donuts);
 
 		const barrel = this.generateBarrel();
 
-		return msg.say('A new game of roulette has been initiated! Use the `roulette` command in the next 15 seconds to join!').then(async () => {
+		return msg.say('A new game of russian roulette has been initiated! Use the `roulette` command in the next 15 seconds to join!').then(async () => {
 			setTimeout(() => msg.say('10 seconds left for you to join'), 5000);
 			setTimeout(() => msg.say('5 more seconds for new people to join'), 10000);
 			setTimeout(() => {
@@ -86,10 +83,5 @@ module.exports = class RouletteCommand extends Command {
 		let barrel = [0, 0, 0, 0, 0, 0];
 		barrel[Math.floor(Math.random() * barrel.length)] = 1;
 		return barrel;
-	}
-
-	removeDuplicates(array) {
-		let seen = [];
-		return array.filter(element => !seen.includes(element) && seen.push(element));
 	}
 };
