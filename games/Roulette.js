@@ -16,7 +16,7 @@ const spaces = new Discord.Collection([
 	['colors', { values: ['red', 'black'], multiplier: 2 }]
 ]);
 
-module.exports = class Roulette {
+class Roulette {
 	constructor(guildID) {
 		this.guildID = guildID;
 		this.players = [];
@@ -91,3 +91,5 @@ function getColumn(number) {
 		return spaces.get('columns').values[number % spaces.get('columns').values.length];
 	}
 }
+
+module.exports = Roulette;

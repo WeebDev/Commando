@@ -27,7 +27,7 @@ redis.db.hgetAsync('money', 'SLOTMACHINE').then(balance => {
 	return; // eslint-disable-line consistent-return
 });
 
-module.exports = class Currency {
+class Currency {
 	addBalance(user, earned) {
 		redis.db.hgetAsync('money', user).then(balance => {
 			balance = parseInt(balance) || 0;
@@ -43,3 +43,5 @@ module.exports = class Currency {
 		return redis.db.hgetAsync('money', user);
 	}
 };
+
+module.exports = Currency;

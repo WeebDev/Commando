@@ -38,7 +38,7 @@ module.exports = class RussianRouletteCommand extends Command {
 			return msg.reply('you have successfully joined the game.');
 		}
 
-		roulette = new Roulette(msg.guild.id);
+		roulette = new RussianRoulette(msg.guild.id);
 		roulette.join(msg.author, donuts);
 
 		const barrel = this.generateBarrel();

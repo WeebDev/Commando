@@ -23,7 +23,7 @@ setInterval(() => {
 	});
 }, 60 * 60 * 1000);
 
-module.exports = class Inventory {
+class Inventory {
 	constructor(user, content) {
 		this.user = user;
 		this.content = content || {};
@@ -69,3 +69,5 @@ module.exports = class Inventory {
 		return redis.db.hsetAsync('inventory', this.user, JSON.stringify(this.content));
 	}
 };
+
+module.exports = Inventory;
