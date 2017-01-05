@@ -25,7 +25,7 @@ module.exports = class RussianRouletteCommand extends Command {
 	async run(msg) {
 		const donuts = 120;
 		const balance = await currency.getBalance(msg.author.id);
-		let roulette = Roulette.findGame(msg.guild.id);
+		let roulette = RussianRoulette.findGame(msg.guild.id);
 
 		if (balance < donuts) return msg.reply(`you don't have enough donuts. You need ${donuts} 🍩s to join, but your current account balance is ${balance} 🍩s.`);
 

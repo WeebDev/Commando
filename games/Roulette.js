@@ -42,7 +42,7 @@ class Roulette {
 		return !!this.players.find(player => player.user.id === userID);
 	}
 
-	hasSpace(space) {
+	static hasSpace(space) {
 		return !!spaces.find(spc => spc.values.includes(space));
 	}
 
