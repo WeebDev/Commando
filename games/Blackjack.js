@@ -32,8 +32,8 @@ class Blackjack {
 		let value = 0;
 		let aces = 0;
 		hand.forEach(card => {
-			value += this.cardValue(card);
-			if (this.cardValue(card) === 11) aces++;
+			value += cardValue(card);
+			if (cardValue(card) === 11) aces++;
 		});
 		while (value > 21 && aces > 0) {
 			value -= 10;
@@ -43,15 +43,15 @@ class Blackjack {
 		return value;
 	}
 
-	cardValue(card) {
-		const index = ranks.indexOf(card.substring(0, card.length - 1));
-		if (index === 0) return 11;
-		return index >= 10 ? 10 : index + 1;
-	}
-
 	endGame() {
 		games.delete(this.playerID);
 	}
+}
+
+function cardValue(card) {
+	const index = ranks.indexOf(card.substring(0, card.length - 1));
+	if (index === 0) return 11;
+	return index >= 10 ? 10 : index + 1;
 }
 
 function shuffle(array) {
