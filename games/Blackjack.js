@@ -5,7 +5,7 @@ const suits = ['♣', '♦', '❤', '♠'];
 const deck = suits
 	.map(suit => ranks
 		.map(rank => rank + suit))
-			.reduce((coolArray, array) => coolArray.concat(array));
+			.reduce((array, arr) => array.concat(arr));
 
 class Blackjack {
 	constructor(playerID) {

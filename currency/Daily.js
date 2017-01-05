@@ -20,6 +20,7 @@ module.exports = class Daily {
 
 	static async nextDaily(userID) {
 		const lastDaily = await redis.db.getAsync(`daily${userID}`);
+
 		return dayInMS - (Date.now() - lastDaily);
 	}
 

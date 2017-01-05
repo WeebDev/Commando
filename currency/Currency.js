@@ -24,6 +24,7 @@ setInterval(() => {
 
 redis.db.hgetAsync('money', 'SLOTMACHINE').then(balance => {
 	if (!balance) return redis.db.hsetAsync('money', 'SLOTMACHINE', 5000);
+
 	return; // eslint-disable-line consistent-return
 });
 
