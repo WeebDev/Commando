@@ -37,7 +37,6 @@ module.exports = class BlackjackCommand extends Command {
 		if (![100, 200, 300, 400, 500, 1000].includes(bet)) return msg.say('you need to bet either 100, 200, 300, 400, 500 or 1000 donuts.');
 		if (Blackjack.gameExists(msg.author.id)) return msg.reply(`you can't start 2 games of blackjack at the same time.`);
 
-		currency.removeBalance(msg.author.id, bet);
 		const blackjack = new Blackjack(msg.author.id);
 
 		return msg.say(`New game of blackjack started with ${msg.member.displayName} with a bet of ${bet} 🍩s!`)
@@ -57,6 +56,8 @@ module.exports = class BlackjackCommand extends Command {
 				blackjack.endGame();
 
 				if (Blackjack.handValue(playerHand) > 21) {
+					currency.removeBalance(msg.author.id, bet);
+
 					return msg.embed({
 						title: `Blackjack | ${msg.member.displayName}`,
 						description: 'You busted and lost your 🍩s. Better luck next time.',
@@ -82,7 +83,7 @@ module.exports = class BlackjackCommand extends Command {
 				}
 
 				if (Blackjack.handValue(dealerHand) > 21) {
-					currency.addBalance(msg.author.id, bet + (bet / 2));
+					currency.addBalance(msg.author.id, bet / 2);
 
 					return msg.embed({
 						title: `Blackjack | ${msg.member.displayName}`,
@@ -111,6 +112,8 @@ module.exports = class BlackjackCommand extends Command {
 				const gameResult = this.gameResult(playerValue, dealerValue);
 
 				if (gameResult === 'loss') {
+					currency.removeBalance(msg.author.id, bet);
+
 					return msg.embed({
 						title: `Blackjack | ${msg.member.displayName}`,
 						description: `The dealer has a greater hand value. You lost your 🍩s`,
@@ -136,8 +139,6 @@ module.exports = class BlackjackCommand extends Command {
 				}
 
 				if (gameResult === 'push') {
-					currency.addBalance(msg.author.id, bet);
-
 					return msg.embed({
 						title: `Blackjack | ${msg.member.displayName}`,
 						description: `Equal hand values. You got back the 🍩s you bet.`,
@@ -162,7 +163,7 @@ module.exports = class BlackjackCommand extends Command {
 					});
 				}
 
-				currency.addBalance(msg.author.id, bet + (bet / 2));
+				currency.addBalance(msg.author.id, bet / 2);
 
 				return msg.embed({
 					title: `Blackjack | ${msg.member.displayName}`,
