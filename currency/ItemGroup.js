@@ -3,6 +3,6 @@ class ItemGroup {
 		this.item = item;
 		this.amount = amount;
 	}
-};
+}
 
 module.exports = ItemGroup;
