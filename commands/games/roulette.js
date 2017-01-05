@@ -26,7 +26,7 @@ module.exports = class RouletteCommand extends Command {
 			},
 			args: [
 				{
-					key: 'donuts',
+					key: 'bet',
 					prompt: 'How many donuts do you want to bet?',
 					type: 'integer'
 				},
@@ -40,7 +40,7 @@ module.exports = class RouletteCommand extends Command {
 	}
 
 	async run(msg, args) {
-		const bet = args.donuts;
+		const bet = args.bet;
 		const space = args.space.toLowerCase();
 
 		const balance = await currency.getBalance(msg.author.id);
