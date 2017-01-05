@@ -157,7 +157,7 @@ module.exports = class BlackjackCommand extends Command {
 			currency.addBalance(msg.author.id, bet + (bet / 2));
 			return msg.embed({
 				title: `Blackjack | ${msg.member.displayName}`,
-				description: `Congratulations! You have a greate hand value. You won ${bet + (bet / 2)} 🍩s`,
+				description: `Congratulations! You have a greater hand value. You won ${bet + (bet / 2)} 🍩s`,
 				fields: [
 					{
 						name: '**Your hand**',
