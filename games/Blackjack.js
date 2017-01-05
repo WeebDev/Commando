@@ -34,13 +34,20 @@ class Blackjack {
 	}
 }
 
-function shuffle(array) {
-	for (let i = array.length; i; i--) {
-		let j = Math.floor(Math.random() * i);
-		[array[i - 1], array[j]] = [array[j], array[i - 1]];
+function shuffle(arr) {
+	let rand;
+	let tmp;
+	let len = arr.length;
+	let ret = arr.slice();
+
+	while (len) {
+		rand = Math.floor(Math.random() * len--);
+		tmp = ret[len];
+		ret[len] = ret[rand];
+		ret[rand] = tmp;
 	}
 
-	return array;
+	return ret;
 }
 
 module.exports = Blackjack;
