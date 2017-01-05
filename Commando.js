@@ -34,8 +34,8 @@ const client = new commando.Client({
 
 let earnedRecently = [];
 
-//Raven.config(config.ravenKey);
-//Raven.install();
+Raven.config(config.ravenKey);
+Raven.install();
 
 database.start();
 redis.start();
