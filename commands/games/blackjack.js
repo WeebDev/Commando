@@ -216,10 +216,10 @@ module.exports = class BlackjackCommand extends Command {
 					maxMatches: 1,
 					time: 20e3
 				});
-				if (!responses) resolve(playerHand);
-				if (responses.first().content.toLowerCase() === 'stand') resolve(playerHand);
+				if (!responses) return resolve(playerHand);
+				if (responses.first().content.toLowerCase() === 'stand') return resolve(playerHand);
 				if (responses.first().content.toLowerCase() === 'hit') playerHand = blackjack.hit(playerHand);
-				if (Blackjack.handValue(playerHand) >= 21) resolve(playerHand);
+				if (Blackjack.handValue(playerHand) >= 21) return resolve(playerHand);
 			}
 		});
 	}
