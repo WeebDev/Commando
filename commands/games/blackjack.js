@@ -255,7 +255,7 @@ module.exports = class BlackjackCommand extends Command {
 					time: 20e3
 				});
 
-				if (!responses) return resolve(playerHand);
+				if (responses.size === 0) return resolve(playerHand);
 				if (responses.first().content.toLowerCase() === 'stand') return resolve(playerHand);
 				if (responses.first().content.toLowerCase() === 'hit') playerHand = blackjack.hit(playerHand);
 				if (this.handValue(playerHand) >= 21) return resolve(playerHand);
