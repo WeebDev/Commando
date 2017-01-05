@@ -83,6 +83,7 @@ module.exports = class BlackjackCommand extends Command {
 
 				if (Blackjack.handValue(dealerHand) > 21) {
 					currency.addBalance(msg.author.id, bet + (bet / 2));
+
 					return msg.embed({
 						title: `Blackjack | ${msg.member.displayName}`,
 						description: `The dealer busted. You won ${bet + (bet / 2)} 🍩s`,
@@ -136,6 +137,7 @@ module.exports = class BlackjackCommand extends Command {
 
 				if (gameResult === 'push') {
 					currency.addBalance(msg.author.id, bet);
+
 					return msg.embed({
 						title: `Blackjack | ${msg.member.displayName}`,
 						description: `Equal hand values. You got back the 🍩s you bet.`,
@@ -161,6 +163,7 @@ module.exports = class BlackjackCommand extends Command {
 				}
 
 				currency.addBalance(msg.author.id, bet + (bet / 2));
+
 				return msg.embed({
 					title: `Blackjack | ${msg.member.displayName}`,
 					description: `Congratulations! You have a greater hand value. You won ${bet + (bet / 2)} 🍩s`,
@@ -193,7 +196,7 @@ module.exports = class BlackjackCommand extends Command {
 	}
 
 	getFinalHand(msg, playerHand, dealerHand, blackjack) {
-		return new Promise(async resolve => {
+		return new Promise(async resolve => { // eslint-disable-line consistent-return
 			while (Blackjack.handValue(playerHand) < 21) {
 				await msg.embed({
 					title: `Blackjack | ${msg.member.displayName}`,
