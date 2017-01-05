@@ -18,6 +18,7 @@ module.exports = class BlackjackCommand extends Command {
 				duration: 60,
 				usages: 1
 			},
+
 			args: [
 				{
 					key: 'bet',
@@ -39,146 +40,150 @@ module.exports = class BlackjackCommand extends Command {
 		currency.removeBalance(msg.author.id, bet);
 		const blackjack = new Blackjack(msg.author.id);
 
-		return msg.say(`New game of blackjack started with ${msg.member.displayName} with a bet of ${bet} 🍩s!`).then(async () => {
-			let playerHand = blackjack.getHand();
-			let dealerHand = blackjack.getHand();
+		return msg.say(`New game of blackjack started with ${msg.member.displayName} with a bet of ${bet} 🍩s!`)
+			.then(async () => {
+				let playerHand = blackjack.getHand();
+				let dealerHand = blackjack.getHand();
 
-			playerHand = Blackjack.handValue(playerHand) === 'Blackjack' ? playerHand : await this.getFinalHand(msg, playerHand, dealerHand, blackjack);
-			const playerValue = Blackjack.handValue(playerHand);
+				playerHand = Blackjack.handValue(playerHand) === 'Blackjack'
+				? playerHand
+				: await this.getFinalHand(msg, playerHand, dealerHand, blackjack);
 
-			while (Blackjack.handValue(dealerHand) < 17) dealerHand = blackjack.hit(dealerHand);
-			const dealerValue = Blackjack.handValue(dealerHand);
+				const playerValue = Blackjack.handValue(playerHand);
 
-			blackjack.endGame();
+				while (Blackjack.handValue(dealerHand) < 17) dealerHand = blackjack.hit(dealerHand);
+				const dealerValue = Blackjack.handValue(dealerHand);
 
-			if (Blackjack.handValue(playerHand) > 21) {
-				return msg.embed({
-					title: `Blackjack | ${msg.member.displayName}`,
-					description: 'You busted and lost your 🍩s. Better luck next time.',
-					fields: [
-						{
-							name: '**Your hand**',
-							value: stripIndents`
+				blackjack.endGame();
+
+				if (Blackjack.handValue(playerHand) > 21) {
+					return msg.embed({
+						title: `Blackjack | ${msg.member.displayName}`,
+						description: 'You busted and lost your 🍩s. Better luck next time.',
+						fields: [
+							{
+								name: '**Your hand**',
+								value: stripIndents`
 									${playerHand.join(' - ')}
 									Value: ${Blackjack.handValue(playerHand)}
 								`,
-							inline: true
-						},
-						{
-							name: '**Dealer hand**',
-							value: stripIndents`
+								inline: true
+							},
+							{
+								name: '**Dealer hand**',
+								value: stripIndents`
 									${dealerHand[0]} - XX
 									Value: ${Blackjack.handValue([dealerHand[0]])}
 								`,
-							inline: true
-						}
-					]
-				});
-			}
+								inline: true
+							}
+						]
+					});
+				}
 
-			if (Blackjack.handValue(dealerHand) > 21) {
-				currency.addBalance(msg.author.id, bet + (bet / 2));
-				return msg.embed({
-					title: `Blackjack | ${msg.member.displayName}`,
-					description: `The dealer busted. You won ${bet + (bet / 2)} 🍩s`,
-					fields: [
-						{
-							name: '**Your hand**',
-							value: stripIndents`
+				if (Blackjack.handValue(dealerHand) > 21) {
+					currency.addBalance(msg.author.id, bet + (bet / 2));
+					return msg.embed({
+						title: `Blackjack | ${msg.member.displayName}`,
+						description: `The dealer busted. You won ${bet + (bet / 2)} 🍩s`,
+						fields: [
+							{
+								name: '**Your hand**',
+								value: stripIndents`
 									${playerHand.join(' - ')}
 									Value: ${Blackjack.handValue(playerHand)}
 								`,
-							inline: true
-						},
-						{
-							name: '**Dealer hand**',
-							value: stripIndents`
+								inline: true
+							},
+							{
+								name: '**Dealer hand**',
+								value: stripIndents`
 									${dealerHand.join(' - ')}
 									Value: ${Blackjack.handValue(dealerHand)}
 								`,
-							inline: true
-						}
-					]
-				});
-			}
+								inline: true
+							}
+						]
+					});
+				}
 
-			const gameResult = this.gameResult(playerValue, dealerValue);
+				const gameResult = this.gameResult(playerValue, dealerValue);
 
-			if (gameResult === 'loss') {
+				if (gameResult === 'loss') {
+					return msg.embed({
+						title: `Blackjack | ${msg.member.displayName}`,
+						description: `The dealer has a greater hand value. You lost your 🍩s`,
+						fields: [
+							{
+								name: '**Your hand**',
+								value: stripIndents`
+									${playerHand.join(' - ')}
+									Value: ${playerValue}
+								`,
+								inline: true
+							},
+							{
+								name: '**Dealer hand**',
+								value: stripIndents`
+									${dealerHand.join(' - ')}
+									Value: ${dealerValue}
+								`,
+								inline: true
+							}
+						]
+					});
+				}
+
+				if (gameResult === 'push') {
+					currency.addBalance(msg.author.id, bet);
+					return msg.embed({
+						title: `Blackjack | ${msg.member.displayName}`,
+						description: `Equal hand values. You got back the 🍩s you bet.`,
+						fields: [
+							{
+								name: '**Your hand**',
+								value: stripIndents`
+									${playerHand.join(' - ')}
+									Value: ${playerValue}
+								`,
+								inline: true
+							},
+							{
+								name: '**Dealer hand**',
+								value: stripIndents`
+									${dealerHand.join(' - ')}
+									Value: ${dealerValue}
+								`,
+								inline: true
+							}
+						]
+					});
+				}
+
+				currency.addBalance(msg.author.id, bet + (bet / 2));
 				return msg.embed({
 					title: `Blackjack | ${msg.member.displayName}`,
-					description: `The dealer has a greater hand value. You lost your 🍩s`,
+					description: `Congratulations! You have a greater hand value. You won ${bet + (bet / 2)} 🍩s`,
 					fields: [
 						{
 							name: '**Your hand**',
 							value: stripIndents`
-									${playerHand.join(' - ')}
-									Value: ${playerValue}
-								`,
-							inline: true
-						},
-						{
-							name: '**Dealer hand**',
-							value: stripIndents`
-									${dealerHand.join(' - ')}
-									Value: ${dealerValue}
-								`,
-							inline: true
-						}
-					]
-				});
-			}
-
-			if (gameResult === 'push') {
-				currency.addBalance(msg.author.id, bet);
-				return msg.embed({
-					title: `Blackjack | ${msg.member.displayName}`,
-					description: `Equal hand values. You got back the 🍩s you bet.`,
-					fields: [
-						{
-							name: '**Your hand**',
-							value: stripIndents`
-									${playerHand.join(' - ')}
-									Value: ${playerValue}
-								`,
-							inline: true
-						},
-						{
-							name: '**Dealer hand**',
-							value: stripIndents`
-									${dealerHand.join(' - ')}
-									Value: ${dealerValue}
-								`,
-							inline: true
-						}
-					]
-				});
-			}
-
-			currency.addBalance(msg.author.id, bet + (bet / 2));
-			return msg.embed({
-				title: `Blackjack | ${msg.member.displayName}`,
-				description: `Congratulations! You have a greater hand value. You won ${bet + (bet / 2)} 🍩s`,
-				fields: [
-					{
-						name: '**Your hand**',
-						value: stripIndents`
 								${playerHand.join(' - ')}
 								Value: ${playerValue}
 							`,
-						inline: true
-					},
-					{
-						name: '**Dealer hand**',
-						value: stripIndents`
+							inline: true
+						},
+						{
+							name: '**Dealer hand**',
+							value: stripIndents`
 								${dealerHand.join(' - ')}
 								Value: ${dealerValue}
 							`,
-						inline: true
-					}
-				]
+							inline: true
+						}
+					]
+				});
 			});
-		});
 	}
 
 	gameResult(playerValue, dealerValue) {
@@ -197,17 +202,17 @@ module.exports = class BlackjackCommand extends Command {
 						{
 							name: '**Your hand**',
 							value: stripIndents`
-									${playerHand.join(' - ')}
-									Value: ${Blackjack.handValue(playerHand)}
-								`,
+								${playerHand.join(' - ')}
+								Value: ${Blackjack.handValue(playerHand)}
+							`,
 							inline: true
 						},
 						{
 							name: '**Dealer hand**',
 							value: stripIndents`
-									${dealerHand[0]} - XX
-						 			Value: ${Blackjack.handValue([dealerHand[0]])}
-								`,
+								${dealerHand[0]} - XX
+						 		Value: ${Blackjack.handValue([dealerHand[0]])}
+							`,
 							inline: true
 						}
 					]
@@ -219,6 +224,7 @@ module.exports = class BlackjackCommand extends Command {
 						maxMatches: 1,
 						time: 20e3
 				});
+
 				if (!responses) return resolve(playerHand);
 				if (responses.first().content.toLowerCase() === 'stand') return resolve(playerHand);
 				if (responses.first().content.toLowerCase() === 'hit') playerHand = blackjack.hit(playerHand);
