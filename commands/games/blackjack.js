@@ -15,7 +15,7 @@ module.exports = class BlackjackCommand extends Command {
 			description: 'Play a game of blackjack for donuts!',
 			details: 'Play a game of blackjack for donuts.',
 			throttling: {
-				duration: 60,
+				duration: 30,
 				usages: 1
 			},
 
