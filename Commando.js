@@ -53,7 +53,7 @@ client.on('error', winston.error)
 		if (earnedRecently.includes(message.author.id)) return;
 
 		const hasImageAttachment = message.attachments.some(attachment => attachment.url.match(/\.(png|jpg|jpeg|gif|webp)$/));
-		const moneyEarned = hasImageAttachment ? 8 : 4;
+		const moneyEarned = hasImageAttachment ? Math.ceil(Math.random() * 7) + 1 : Math.ceil(Math.random() * 7) + 5;
 
 		currency.addBalance(message.author.id, moneyEarned);
 
