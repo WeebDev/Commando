@@ -2,8 +2,6 @@ const { Command } = require('discord.js-commando');
 
 const Currency = require('../../currency/Currency');
 
-const currency = new Currency();
-
 module.exports = class MoneyRemoveCommand extends Command {
 	constructor(client) {
 		super(client, {
@@ -37,7 +35,7 @@ module.exports = class MoneyRemoveCommand extends Command {
 		const user = args.member;
 		const donuts = args.donuts;
 
-		currency.removeBalance(user.id, donuts);
+		Currency.removeBalance(user.id, donuts);
 
 		return msg.reply(`successfully removed ${donuts} 🍩s from ${user.displayName}'s balance.`);
 	}

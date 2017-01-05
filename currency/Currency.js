@@ -28,18 +28,18 @@ redis.db.hgetAsync('money', 'SLOTMACHINE').then(balance => {
 });
 
 class Currency {
-	addBalance(user, earned) {
+	static addBalance(user, earned) {
 		redis.db.hgetAsync('money', user).then(balance => {
 			balance = parseInt(balance) || 0;
 			redis.db.hsetAsync('money', user, earned + parseInt(balance));
 		});
 	}
 
-	removeBalance(user, earned) {
-		this.addBalance(user, -earned);
+	static removeBalance(user, earned) {
+		Currency.addBalance(user, -earned);
 	}
 
-	getBalance(user) {
+	static getBalance(user) {
 		return redis.db.hgetAsync('money', user);
 	}
 }

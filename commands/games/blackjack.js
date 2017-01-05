@@ -4,8 +4,6 @@ const stripIndents = require('common-tags').stripIndents;
 const Currency = require('../../currency/Currency');
 const Blackjack = require('../../games/Blackjack');
 
-const currency = new Currency();
-
 const ranks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
 
 module.exports = class BlackjackCommand extends Command {
@@ -33,7 +31,7 @@ module.exports = class BlackjackCommand extends Command {
 
 	async run(msg, args) {
 		const bet = args.bet;
-		const balance = await currency.getBalance(msg.author.id);
+		const balance = await Currency.getBalance(msg.author.id);
 
 		if (balance < bet) return msg.reply(`you don't have enough donuts. Your current account balance is ${balance} 🍩s.`);
 		if (![100, 200, 300, 400, 500, 1000].includes(bet)) return msg.say('you need to bet either 100, 200, 300, 400, 500 or 1000 donuts.');
@@ -55,7 +53,7 @@ module.exports = class BlackjackCommand extends Command {
 				blackjack.endGame();
 
 				if (this.handValue(playerHand) > 21) {
-					currency.removeBalance(msg.author.id, bet);
+					Currency.removeBalance(msg.author.id, bet);
 
 					return msg.embed({
 						title: `Blackjack | ${msg.member.displayName}`,
@@ -82,7 +80,7 @@ module.exports = class BlackjackCommand extends Command {
 				}
 
 				if (this.handValue(dealerHand) > 21) {
-					currency.addBalance(msg.author.id, bet / 2);
+					Currency.addBalance(msg.author.id, bet / 2);
 
 					return msg.embed({
 						title: `Blackjack | ${msg.member.displayName}`,
@@ -111,7 +109,7 @@ module.exports = class BlackjackCommand extends Command {
 				const gameResult = this.gameResult(playerValue, dealerValue);
 
 				if (gameResult === 'loss') {
-					currency.removeBalance(msg.author.id, bet);
+					Currency.removeBalance(msg.author.id, bet);
 
 					return msg.embed({
 						title: `Blackjack | ${msg.member.displayName}`,
@@ -162,7 +160,7 @@ module.exports = class BlackjackCommand extends Command {
 					});
 				}
 
-				currency.addBalance(msg.author.id, bet / 2);
+				Currency.addBalance(msg.author.id, bet / 2);
 
 				return msg.embed({
 					title: `Blackjack | ${msg.member.displayName}`,

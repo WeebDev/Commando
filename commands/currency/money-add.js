@@ -2,8 +2,6 @@ const { Command } = require('discord.js-commando');
 
 const Currency = require('../../currency/Currency');
 
-const currency = new Currency();
-
 module.exports = class MoneyAddCommand extends Command {
 	constructor(client) {
 		super(client, {
@@ -37,7 +35,7 @@ module.exports = class MoneyAddCommand extends Command {
 		const user = args.member;
 		const donuts = args.donuts;
 
-		currency.addBalance(user.id, donuts);
+		Currency.addBalance(user.id, donuts);
 
 		return msg.reply(`successfully added ${donuts} 🍩s to ${user.displayName}'s balance.`);
 	}

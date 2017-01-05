@@ -14,7 +14,6 @@ const config = require('./settings');
 
 const redis = new Redis();
 const database = new Database();
-const currency = new Currency();
 const client = new commando.Client({
 	owner: config.owner,
 	commandPrefix: '?',
@@ -55,7 +54,7 @@ client.on('error', winston.error)
 		const hasImageAttachment = message.attachments.some(attachment => attachment.url.match(/\.(png|jpg|jpeg|gif|webp)$/));
 		const moneyEarned = hasImageAttachment ? Math.ceil(Math.random() * 7) + 1 : Math.ceil(Math.random() * 7) + 5;
 
-		currency.addBalance(message.author.id, moneyEarned);
+		Currency.addBalance(message.author.id, moneyEarned);
 
 		earnedRecently.push(message.author.id);
 		setTimeout(() => {
