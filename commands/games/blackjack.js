@@ -41,10 +41,11 @@ module.exports = class BlackjackCommand extends Command {
 
 		return msg.say(`New game of blackjack started with ${msg.member.displayName} with a bet of ${bet} 🍩s!`).then(async () => {
 			let playerHand = blackjack.getHand();
+			let dealerHand = blackjack.getHand();
+
 			playerHand = Blackjack.handValue(playerHand) === 'Blackjack' ? playerHand : await this.getFinalHand(msg, playerHand, dealerHand, blackjack);
 			const playerValue = Blackjack.handValue(playerHand);
 
-			let dealerHand = blackjack.getHand();
 			while (Blackjack.handValue(dealerHand) < 17) dealerHand = blackjack.hit(dealerHand);
 			const dealerValue = Blackjack.handValue(dealerHand);
 
