@@ -6,9 +6,9 @@ const Roulette = require('../../games/Roulette');
 
 const currency = new Currency();
 
-colors = {
-	'red': 0xBE1931,
-	'black': 0x0C0C0C
+const colors = {
+	red: 0xBE1931,
+	black: 0x0C0C0C
 };
 
 module.exports = class RouletteCommand extends Command {
@@ -60,6 +60,7 @@ module.exports = class RouletteCommand extends Command {
 		}
 
 		roulette = new Roulette(msg.guild.id);
+		if (!roulette.hasSpace(space)) return msg.reply('that is not a valid betting space. Use `roulette-info` for more information');
 		roulette.join(msg.author, bet, space);
 		currency.removeBalance(msg.author.id, bet);
 
@@ -75,7 +76,7 @@ module.exports = class RouletteCommand extends Command {
 				const winners = await roulette.awaitPlayers(16000).filter(player => player.winnings !== 0);
 
 				winners.forEach(winner => {
-					currency.addBalance(winner.user.id, winner.winnings)
+					currency.addBalance(winner.user.id, winner.winnings);
 				});
 
 				return msg.embed({
@@ -89,6 +90,6 @@ module.exports = class RouletteCommand extends Command {
 							: '__**No winner.**__'}
 					`
 				});
-		});
+			});
 	}
 };
