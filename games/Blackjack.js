@@ -35,12 +35,19 @@ class Blackjack {
 }
 
 function shuffle(array) {
-	for (let i = array.length; i; i--) {
-		let j = Math.floor(Math.random() * i);
-		[array[i - 1], array[j]] = [array[j], array[i - 1]];
+	let random;
+	let temp;
+	let length = array.length;
+	let value = array.slice();
+
+	while (length) {
+		random = Math.floor(Math.random() * length--);
+		temp = value[length];
+		value[length] = value[random];
+		value[random] = temp;
 	}
 
-	return array;
+	return value;
 }
 
 module.exports = Blackjack;

@@ -42,6 +42,6 @@ class Currency {
 	getBalance(user) {
 		return redis.db.hgetAsync('money', user);
 	}
-};
+}
 
 module.exports = Currency;

@@ -68,6 +68,6 @@ class Inventory {
 	save() {
 		return redis.db.hsetAsync('inventory', this.user, JSON.stringify(this.content));
 	}
-};
+}
 
 module.exports = Inventory;
