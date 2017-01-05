@@ -68,7 +68,6 @@ module.exports = class BlackjackCommand extends Command {
 							name: '**Dealer hand**',
 							value: stripIndents`
 									${dealerHand[0]} - XX
-									Value: ${Blackjack.handValue(dealerHand)}
 								`,
 							inline: true
 						}
@@ -206,7 +205,6 @@ module.exports = class BlackjackCommand extends Command {
 							name: '**Dealer hand**',
 							value: stripIndents`
 									${dealerHand[0]} - XX
-									Value: ${Blackjack.handValue(dealerHand)}
 								`,
 							inline: true
 						}
