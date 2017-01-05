@@ -213,7 +213,7 @@ module.exports = class BlackjackCommand extends Command {
 					]
 				});
 				const responses = await msg.channel.awaitMessages(msg2 => {
-					msg2.author.id === msg.author.id && (msg.content === 'hit' || msg.content === 'stand'))
+					msg2.author.id === msg.author.id && (msg2.content === 'hit' || msg2.content === 'stand'))
 				}, 
 				{
 						maxMatches: 1,
