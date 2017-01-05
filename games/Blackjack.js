@@ -53,7 +53,7 @@ class Blackjack {
 	}
 }
 
-function 	cardValue(card) {
+function cardValue(card) {
 	const index = ranks.indexOf(card.substring(0, card.length - 1));
 
 	if (index === 0) return 11;
