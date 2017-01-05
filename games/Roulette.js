@@ -50,7 +50,7 @@ class Roulette {
 		return new Promise((resolve) => {
 			setTimeout(() => {
 				games.delete(this.guildID);
-				resolve(this.players);
+				return resolve(this.players);
 			}, time);
 		});
 	}
@@ -86,7 +86,7 @@ function getColumn(number) {
 	if (number === 0) return null;
 	if (number % spaces.get('columns').values.length === 0) {
 		return spaces.get('columns').values[spaces.get('columns').values.length - 1];
-	}	else {
+	} else {
 		return spaces.get('columns').values[number % spaces.get('columns').values.length];
 	}
 }

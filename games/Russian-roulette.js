@@ -29,10 +29,10 @@ class RussianRoulette {
 		return new Promise((resolve) => {
 			setTimeout(() => {
 				games.delete(this.guildID);
-				resolve(this.players);
+				return resolve(this.players);
 			}, time);
 		});
 	}
-};
+}
 
 module.exports = RussianRoulette;
