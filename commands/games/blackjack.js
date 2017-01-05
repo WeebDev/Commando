@@ -217,12 +217,12 @@ module.exports = class BlackjackCommand extends Command {
 						}
 					]
 				});
+
 				const responses = await msg.channel.awaitMessages(msg2 => {
-					return msg2.author.id === msg.author.id && (msg2.content === 'hit' || msg2.content === 'stand')
-				}, 
-				{
-						maxMatches: 1,
-						time: 20e3
+					return msg2.author.id === msg.author.id && (msg2.content === 'hit' || msg2.content === 'stand');
+				}, {
+					maxMatches: 1,
+					time: 20e3
 				});
 
 				if (!responses) return resolve(playerHand);
