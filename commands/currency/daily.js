@@ -15,13 +15,12 @@ module.exports = class DailyCommand extends Command {
 	}
 
 	async run(msg) {
-		if (await Daily.hasReceived(msg.author.id)) {
-			const nextDaily = await Daily.getNextDaily(msg.author.id);
-			console.log(nextDaily);
+		if (await Daily.received(msg.author.id)) {
+			const nextDaily = await Daily.nextDaily(msg.author.id);
 			return msg.reply(`You have already received your daily donuts. You can receive your next daily in ${moment.duration(nextDaily).format('hh [Hours] mm [Minutes]')}`);
 		}
 
-		Daily.letReceive(msg.author.id);
+		Daily.receive(msg.author.id);
 		return msg.reply(`You have successfully received your daily ${Daily.dailyDonuts} 🍩s.`);
 	}
 };
