@@ -39,7 +39,9 @@ class Blackjack {
 	}
 
 	getHand() {
-		return [this.deck.pop(), this.deck.pop()];
+		return new Promise(resolve => {
+			resolve([this.deck.pop(), this.deck.pop()]);
+		});
 	}
 
 	hit(hand) {
