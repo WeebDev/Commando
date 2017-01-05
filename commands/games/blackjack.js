@@ -41,16 +41,16 @@ module.exports = class BlackjackCommand extends Command {
 
 		return msg.say(`New game of blackjack started with ${msg.member.displayName} with a bet of ${bet} 🍩s!`).then(async () => {
 			let playerHand = blackjack.getHand();
-			playerHand = blackjack.handValue(playerHand) === 'Blackjack' ? playerHand : await this.getFinalHand(msg, playerHand, dealerHand, blackjack);
-			const playerValue = blackjack.handValue(playerHand);
+			playerHand = Blackjack.handvalue(playerHand) === 'Blackjack' ? playerHand : await this.getFinalHand(msg, playerHand, dealerHand, blackjack);
+			const playerValue = Blackjack.handvalue(playerHand);
 
 			let dealerHand = blackjack.getHand();
-			while (blackjack.handValue(dealerHand) < 17) dealerHand = blackjack.hit(dealerHand);
-			const dealerValue = blackjack.handValue(dealerHand);
+			while (Blackjack.handvalue(dealerHand) < 17) dealerHand = blackjack.hit(dealerHand);
+			const dealerValue = Blackjack.handvalue(dealerHand);
 
 			blackjack.endGame();
 
-			if (blackjack.handValue(playerHand) > 21) {
+			if (Blackjack.handvalue(playerHand) > 21) {
 				return msg.embed({
 					title: `Blackjack | ${msg.member.displayName}`,
 					description: 'You busted and lost your 🍩s. Better luck next time.',
@@ -59,7 +59,7 @@ module.exports = class BlackjackCommand extends Command {
 							name: '**Your hand**',
 							value: stripIndents`
 									${playerHand.join(' - ')}
-									Value: ${blackjack.handValue(playerHand)}
+									Value: ${Blackjack.handvalue(playerHand)}
 								`,
 							inline: true
 						},
@@ -67,7 +67,7 @@ module.exports = class BlackjackCommand extends Command {
 							name: '**Dealer hand**',
 							value: stripIndents`
 									${dealerHand[0]} - XX
-									Value: ${blackjack.handValue(dealerHand)}
+									Value: ${Blackjack.handvalue(dealerHand)}
 								`,
 							inline: true
 						}
@@ -75,7 +75,7 @@ module.exports = class BlackjackCommand extends Command {
 				});
 			}
 
-			if (blackjack.handValue(dealerHand) > 21) {
+			if (Blackjack.handvalue(dealerHand) > 21) {
 				currency.addBalance(msg.author.id, bet + (bet / 2));
 				return msg.embed({
 					title: `Blackjack | ${msg.member.displayName}`,
@@ -85,7 +85,7 @@ module.exports = class BlackjackCommand extends Command {
 							name: '**Your hand**',
 							value: stripIndents`
 									${playerHand.join(' - ')}
-									Value: ${blackjack.handValue(playerHand)}
+									Value: ${Blackjack.handvalue(playerHand)}
 								`,
 							inline: true
 						},
@@ -93,7 +93,7 @@ module.exports = class BlackjackCommand extends Command {
 							name: '**Dealer hand**',
 							value: stripIndents`
 									${dealerHand.join(' - ')}
-									Value: ${blackjack.handValue(dealerHand)}
+									Value: ${Blackjack.handvalue(dealerHand)}
 								`,
 							inline: true
 						}
@@ -157,7 +157,7 @@ module.exports = class BlackjackCommand extends Command {
 			currency.addBalance(msg.author.id, bet + (bet / 2));
 			return msg.embed({
 				title: `Blackjack | ${msg.member.displayName}`,
-				description: `The dealer busted. You won ${bet + (bet / 2)} 🍩s`,
+				description: `Congratulations! You have a greate hand value. You won ${bet + (bet / 2)} 🍩s`,
 				fields: [
 					{
 						name: '**Your hand**',
@@ -188,7 +188,7 @@ module.exports = class BlackjackCommand extends Command {
 
 	getFinalHand(msg, playerHand, dealerHand, blackjack) {
 		return new Promise(async resolve => {
-			while (blackjack.handValue(playerHand) < 21) {
+			while (Blackjack.handvalue(playerHand) < 21) {
 				await msg.embed({
 					title: `Blackjack | ${msg.member.displayName}`,
 					description: 'Type `hit` to draw another card or `stand` to pass.',
@@ -197,7 +197,7 @@ module.exports = class BlackjackCommand extends Command {
 							name: '**Your hand**',
 							value: stripIndents`
 									${playerHand.join(' - ')}
-									Value: ${blackjack.handValue(playerHand)}
+									Value: ${Blackjack.handvalue(playerHand)}
 								`,
 							inline: true
 						},
@@ -205,7 +205,7 @@ module.exports = class BlackjackCommand extends Command {
 							name: '**Dealer hand**',
 							value: stripIndents`
 									${dealerHand[0]} - XX
-									Value: ${blackjack.handValue(dealerHand)}
+									Value: ${Blackjack.handvalue(dealerHand)}
 								`,
 							inline: true
 						}
@@ -218,7 +218,7 @@ module.exports = class BlackjackCommand extends Command {
 				if (!responses) resolve(playerHand);
 				if (responses.first().content.toLowerCase() === 'stand') resolve(playerHand);
 				if (responses.first().content.toLowerCase() === 'hit') playerHand = blackjack.hit(playerHand);
-				if (blackjack.handValue(playerHand) >= 21) resolve(playerHand);
+				if (Blackjack.handvalue(playerHand) >= 21) resolve(playerHand);
 			}
 		});
 	}

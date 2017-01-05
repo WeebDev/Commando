@@ -19,16 +19,7 @@ class Blackjack {
 		return games.has(playerID);
 	}
 
-	getHand() {
-		return [this.deck.pop(), this.deck.pop()];
-	}
-
-	hit(hand) {
-		hand.push(this.deck.pop());
-		return hand;
-	}
-
-	handValue(hand) {
+	static handValue(hand) {
 		let value = 0;
 		let aces = 0;
 		hand.forEach(card => {
@@ -41,6 +32,15 @@ class Blackjack {
 		}
 		if (value === 21 && hand.length === 2) return 'Blackjack';
 		return value;
+	}
+
+	getHand() {
+		return [this.deck.pop(), this.deck.pop()];
+	}
+
+	hit(hand) {
+		hand.push(this.deck.pop());
+		return hand;
 	}
 
 	endGame() {
