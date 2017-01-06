@@ -6,7 +6,6 @@ const fs = global.Promise.promisifyAll(require('fs'));
 const moment = require('moment');
 const path = require('path');
 const request = require('request-promise');
-const winston = require('winston');
 
 const config = require('../../settings');
 const version = require('../../package').version;
@@ -53,11 +52,11 @@ module.exports = class WeatherCommand extends Command {
 
 		return request({
 			uri: `https://maps.googleapis.com/maps/api/geocode/json?address=${locationURI}&key=${config.GoogleAPIKey}`,
-			headers: { 'User-Agent': `Hamakaze v${version} (https://github.com/WeebDev/Hamakaze/)` },
+			headers: { 'User-Agent': `Commando v${version} (https://github.com/WeebDev/Commando/)` },
 			json: true
 		}).then(response => {
-			if (response.status !== 'OK') return this.handleNotOK(msg, response.status);
-			if (response.results.length === 0) return msg.reply('I couldn\'t find the location you provided me');
+			if (response.status !== 'OK') return msg.reply(this.handleNotOK(msg, response.status));
+			if (response.results.length === 0) return msg.reply('your request returned no results.');
 
 			let geocodelocation = response.results[0].formatted_address;
 			let addressComponents = response.results[0].address_components;
@@ -66,7 +65,7 @@ module.exports = class WeatherCommand extends Command {
 
 			return request({
 				uri: `https://api.darksky.net/forecast/${wAPIKey}/${params}?exclude=minutely,hourly,flags&units=auto`,
-				headers: { 'User-Agent': `Hamakaze v${version} (https://github.com/WeebDev/Hamakaze/)` },
+				headers: { 'User-Agent': `Commando v${version} (https://github.com/WeebDev/Commando/)` },
 				json: true
 			}).then(async res => {
 				let datetime = moment().utcOffset(res.timezone).format('D MMMM, h:mma');
@@ -176,23 +175,22 @@ module.exports = class WeatherCommand extends Command {
 				windDir.src = await fs.readFileAsync(path.join(__dirname, `../../assets/weather/pointer.png`));
 				generate();
 
-				return msg.channel.sendFile(canvas.toBuffer(), `${geocodelocation}.png`)
-					.catch(error => { winston.error(error); });
-			}).catch(error => { winston.error(error); });
-		}).catch(error => { winston.error(error); });
+				return msg.channel.sendFile(canvas.toBuffer(), `${geocodelocation}.png`);
+			});
+		});
 	}
 
 	handleNotOK(msg, status) {
 		if (status === 'ZERO_RESULTS') {
-			return `${msg.author}, your request returned no results.`;
+			return `your request returned no results.`;
 		} else if (status === 'REQUEST_DENIED') {
-			return `Error: Geocode API Request was denied.`;
+			return `Geocode API Request was denied.`;
 		} else if (status === 'INVALID_REQUEST') {
-			return `Error: Invalid Request,`;
+			return `Invalid Request,`;
 		} else if (status === 'OVER_QUERY_LIMIT') {
-			return `${msg.author}, Query Limit Exceeded. Try again tomorrow.`;
+			return `Query Limit Exceeded. Try again tomorrow.`;
 		} else {
-			return `Error: Unknown.`;
+			return `Unknown.`;
 		}
 	}
 
@@ -200,11 +198,15 @@ module.exports = class WeatherCommand extends Command {
 		if (icon === 'clear-night' || icon === 'partly-cloudly-night') {
 			return path.join(__dirname, '../../assets/weather/base/moon.png');
 		}
+
 		if (icon === 'rain') return path.join(__dirname, '../../assets/weather/base/rain.png');
+
 		if (icon === 'snow' || icon === 'sleet' || icon === 'fog' || icon === 'wind') {
 			return path.join(__dirname, '../../assets/weather/base/snow.png');
 		}
+
 		if (icon === 'cloudy') return path.join(__dirname, '../../assets/weather/base/cloud.png');
+
 		return path.join(__dirname, '../../assets/weather/base/sun.png');
 	}
 
@@ -214,6 +216,7 @@ module.exports = class WeatherCommand extends Command {
 		if (unit === undefined) return 'm/s';
 		if (unit.short_name === 'US' || unit.short_name === 'GB') return 'mph';
 		if (unit.short_name === 'CA') return 'kph';
+
 		return 'm/s';
 	}
 
@@ -222,6 +225,7 @@ module.exports = class WeatherCommand extends Command {
 
 		if (unit === undefined) return 'C';
 		if (unit.short_name === 'US') return 'F';
+
 		return 'C';
 	}
 };
