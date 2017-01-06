@@ -95,7 +95,7 @@ function getColumn(number) {
 function getParity(number) {
 	if (number === 0) return null;
 
-	return spaces.get('parity').values[winNumber % 2]
+	return spaces.get('parity').values[number % 2];
 }
 
 module.exports = Roulette;

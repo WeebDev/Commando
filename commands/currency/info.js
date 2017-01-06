@@ -8,7 +8,7 @@ module.exports = class MoneyInfoCommand extends Command {
 			name: 'money',
 			aliases: ['donut', 'donuts'],
 			group: 'currency',
-			memberName: 'info',
+			memberName: 'money',
 			description: 'Displays the money you have earned.',
 			details: 'Display the amount of money you have earned.',
 
