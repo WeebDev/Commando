@@ -5,7 +5,7 @@
   "license": "MIT",
   "author": "Crawl",
   "scripts": {
-    "test": "eslint src/ silent"
+    "test": "eslint . silent"
   },
   "repository": {
     "type": "git",
@@ -22,7 +22,7 @@
   "dependencies": {
     "Sherlock": "neilgupta/Sherlock",
     "bluebird": "^3.4.7",
-    "canvas": "^1.6.2",
+    "canvas": "automattic/node-canvas",
     "discord.js": "hydrabolt/discord.js#indev-prism",
     "discord.js-commando": "gawdl3y/discord.js-commando",
     "erlpack": "hammerandchisel/erlpack#master",

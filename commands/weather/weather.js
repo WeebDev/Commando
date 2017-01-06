@@ -37,18 +37,12 @@ module.exports = class WeatherCommand extends Command {
 		const location = args.location;
 		const Image = Canvas.Image;
 
-		// Because Windows is fucking stupid
-		if (process.platform.startsWith('win')) {
-			const Front = Canvas.Font; // eslint-disable-line no-unused-vars
-		} else {
-			const Font = Canvas.Font;
-			const Roboto = new Font('Roboto', path.join(__dirname, '../../assets/weather/fonts/Roboto.ttf')); // eslint-disable-line no-unused-vars
-		}
+		Canvas.registerFont(path.join(__dirname, '../../assets/weather/fonts/Roboto.ttf'), { family: 'Roboto' });
 
 		if (!config.GoogleAPIKey) return msg.reply('my Commander has not set the Google API Key. Go yell at him.');
 		if (!config.WeatherAPIKey) return msg.reply('my Commander has not set the Weather API Key. Go yell at him.');
 
-		let locationURI = encodeURIComponent(location.replace(/ /g, '+'));
+		const locationURI = encodeURIComponent(location.replace(/ /g, '+'));
 
 		return request({
 			uri: `https://maps.googleapis.com/maps/api/geocode/json?address=${locationURI}&key=${config.GoogleAPIKey}`,
@@ -58,38 +52,33 @@ module.exports = class WeatherCommand extends Command {
 			if (response.status !== 'OK') return msg.reply(this.handleNotOK(msg, response.status));
 			if (response.results.length === 0) return msg.reply('your request returned no results.');
 
-			let geocodelocation = response.results[0].formatted_address;
-			let addressComponents = response.results[0].address_components;
-			let wAPIKey = config.WeatherAPIKey;
-			let params = `${response.results[0].geometry.location.lat},${response.results[0].geometry.location.lng}`;
+			const geocodelocation = response.results[0].formatted_address;
+			const addressComponents = response.results[0].address_components;
+			const wAPIKey = config.WeatherAPIKey;
+			const params = `${response.results[0].geometry.location.lat},${response.results[0].geometry.location.lng}`;
 
 			return request({
 				uri: `https://api.darksky.net/forecast/${wAPIKey}/${params}?exclude=minutely,hourly,flags&units=auto`,
 				headers: { 'User-Agent': `Commando v${version} (https://github.com/WeebDev/Commando/)` },
 				json: true
 			}).then(async res => {
-				let datetime = moment().utcOffset(res.timezone).format('D MMMM, h:mma');
-				let condition = res.currently.summary;
-				let icon = res.currently.icon;
-				let chanceofrain = Math.round((res.currently.precipProbability * 100) / 5) * 5;
-				let temperature = Math.round(res.currently.temperature * 10) / 10;
-				let temperatureMin = Math.round(res.daily.data[0].temperatureMin * 10) / 10;
-				let temperatureMax = Math.round(res.daily.data[0].temperatureMax * 10) / 10;
-				let feelslike = Math.round(res.currently.apparentTemperature * 10) / 10;
-				let humidity = Math.round(res.currently.humidity * 100);
-				let windspeed = res.currently.windSpeed;
-				let windBearing = res.currently.windBearing;
+				const datetime = moment().utcOffset(res.timezone).format('D MMMM, h:mma');
+				const condition = res.currently.summary;
+				const icon = res.currently.icon;
+				const chanceofrain = Math.round((res.currently.precipProbability * 100) / 5) * 5;
+				const temperature = Math.round(res.currently.temperature * 10) / 10;
+				const temperatureMin = Math.round(res.daily.data[0].temperatureMin * 10) / 10;
+				const temperatureMax = Math.round(res.daily.data[0].temperatureMax * 10) / 10;
+				const feelslike = Math.round(res.currently.apparentTemperature * 10) / 10;
+				const humidity = Math.round(res.currently.humidity * 100);
+				const windspeed = res.currently.windSpeed;
 
-				let canvas = new Canvas(400, 290);
-				let ctx = canvas.getContext('2d');
-				let base = new Image();
-				let cond = new Image();
+				const canvas = new Canvas(400, 290);
+				const ctx = canvas.getContext('2d');
+				const base = new Image();
+				const cond = new Image();
 
-				let pointer = new Canvas(15, 15);
-				let pntr = pointer.getContext('2d');
-				let windDir = new Image();
-
-				let generate = () => {
+				const generate = () => {
 					// Environment Variables
 					ctx.drawImage(base, 0, 0);
 					ctx.scale(1, 1);
@@ -100,20 +89,13 @@ module.exports = class WeatherCommand extends Command {
 					ctx.shadowOffsetY = 2;
 					ctx.shadowBlur = 2;
 
-					// Wind Bearing
-					pntr.patternQuality = 'billinear';
-					pntr.filter = 'billinear';
-					pntr.antialias = 'subpixel';
-					pntr.translate(7.5, 7.5);
-					pntr.rotate((windBearing || 0) * Math.PI / 180 / 10);
-					pntr.drawImage(windDir, -7.5, -7.5, 15, 15);
-
 					// Time
 					ctx.font = '12px Roboto';
 					ctx.fillStyle = '#000000';
 					ctx.shadowColor = 'rgba(255, 255, 255, 0.4)';
 					ctx.fillText(datetime, 20, 30);
 
+					// Location
 					if (geocodelocation.length > 30) {
 						ctx.font = '16px Roboto';
 					} else {
@@ -121,58 +103,52 @@ module.exports = class WeatherCommand extends Command {
 					}
 					ctx.fillStyle = '#FFFFFF';
 					ctx.shadowColor = 'rgba(0, 0, 0, 0.4)';
-					ctx.fillText(geocodelocation.substr(0, 35), 25, 52);
+					ctx.fillText(geocodelocation.substr(0, 35), 20, 52);
 
 					// Temperature
 					ctx.font = '88px Roboto';
-					ctx.fillText(`${temperature}°${this.getTempUnit(addressComponents)}`, 19, 130);
+					ctx.fillText(`${temperature}°${this.getTempUnit(addressComponents)}`, 20, 130);
 
 					ctx.font = '16px Roboto';
-					ctx.fillText(`High ${temperatureMax}°${this.getTempUnit(addressComponents)}`, 20, 157);
-					ctx.fillText(`Low ${temperatureMin}°${this.getTempUnit(addressComponents)}`, 110, 157);
+					ctx.fillText(`High ${temperatureMax}°${this.getTempUnit(addressComponents)}`, 20, 160);
+					ctx.fillText(`Low ${temperatureMin}°${this.getTempUnit(addressComponents)}`, 115, 160);
 
 					// Condition
 					ctx.font = '14px Roboto';
 					ctx.textAlign = 'center';
-					ctx.fillText(condition, 328, 148);
+					ctx.fillText(condition, 342, 148);
 
 					// Condition Image
 					ctx.shadowBlur = 5;
 					ctx.shadowColor = 'rgba(0, 0, 0, 0.2)';
-					ctx.drawImage(cond, 276, 22, 105, 105);
+					ctx.drawImage(cond, 290, 22, 105, 105);
 
 					// Details
 					ctx.font = '14px Roboto';
 					ctx.shadowColor = 'rgba(0, 0, 0, 0)';
 					ctx.textAlign = 'left';
 					ctx.fillStyle = '#000000';
-					ctx.fillText('Current details', 20, 188);
+					ctx.fillText('Current details', 20, 186);
 
 					// Titles
 					ctx.font = '14px Roboto';
 					ctx.fillStyle = '#777777';
-					ctx.fillText('Feels like', 20, 210);
-					ctx.fillText('Humidity', 20, 230);
-					ctx.fillText('Wind Speed', 20, 250);
-					ctx.fillText('Chance of rain', 20, 270);
+					ctx.fillText('Feels like', 20, 206);
+					ctx.fillText('Humidity', 20, 226);
+					ctx.fillText('Wind Speed', 20, 246);
+					ctx.fillText('Chance of rain', 20, 266);
 
 					// Values
-					ctx.fillText(`${feelslike}°${this.getTempUnit(addressComponents)}`, 170, 210);
-					ctx.fillText(`${humidity}%`, 170, 230);
-					ctx.fillText(`${windspeed.toFixed(2)} ${this.getWindspeedUnit(addressComponents)}`, 170, 250);
-					if (windspeed.toString().length < 4) {
-						ctx.drawImage(pointer, 240, 237);
-					} else if (windspeed.toString().length < 3) {
-						ctx.drawImage(pointer, 230, 237);
-					} else {
-						ctx.drawImage(pointer, 250, 237);
-					}
-					ctx.fillText(`${chanceofrain}%`, 170, 270);
+					ctx.font = '14px Roboto';
+					ctx.fillStyle = '#000000';
+					ctx.fillText(`${feelslike}°${this.getTempUnit(addressComponents)}`, 170, 206);
+					ctx.fillText(`${humidity}%`, 170, 226);
+					ctx.fillText(`${windspeed.toFixed(2)} ${this.getWindspeedUnit(addressComponents)}`, 170, 246);
+					ctx.fillText(`${chanceofrain}%`, 170, 266);
 				};
 
 				base.src = await fs.readFileAsync(this.getBase(icon));
-				cond.src = await fs.readFileAsync(path.join(__dirname, `../../assets/weather/icons/${icon}.png`));
-				windDir.src = await fs.readFileAsync(path.join(__dirname, `../../assets/weather/pointer.png`));
+				cond.src = await fs.readFileAsync(path.join(__dirname, `../../assets/weather/icons/partly-cloudy-night.png`));
 				generate();
 
 				return msg.channel.sendFile(canvas.toBuffer(), `${geocodelocation}.png`);
@@ -195,19 +171,17 @@ module.exports = class WeatherCommand extends Command {
 	}
 
 	getBase(icon) {
-		if (icon === 'clear-night' || icon === 'partly-cloudly-night') {
+		if (icon === 'clear-day' || icon === 'partly-cloudy-day') {
+			return path.join(__dirname, '../../assets/weather/base/sun.png');
+		} else if (icon === 'clear-night' || icon === 'partly-cloudy-night') {
 			return path.join(__dirname, '../../assets/weather/base/moon.png');
-		}
-
-		if (icon === 'rain') return path.join(__dirname, '../../assets/weather/base/rain.png');
-
-		if (icon === 'snow' || icon === 'sleet' || icon === 'fog' || icon === 'wind') {
+		} else if (icon === 'rain') {
+			return path.join(__dirname, '../../assets/weather/base/rain.png');
+		} else if (icon === 'snow' || icon === 'sleet' || icon === 'fog' || icon === 'wind') {
 			return path.join(__dirname, '../../assets/weather/base/snow.png');
+		} else {
+			return path.join(__dirname, '../../assets/weather/base/cloud.png');
 		}
-
-		if (icon === 'cloudy') return path.join(__dirname, '../../assets/weather/base/cloud.png');
-
-		return path.join(__dirname, '../../assets/weather/base/sun.png');
 	}
 
 	getWindspeedUnit(units) {
