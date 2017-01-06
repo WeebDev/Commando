@@ -8,8 +8,8 @@ const path = require('path');
 const Raven = require('raven');
 const winston = require('winston');
 
-const Redis = require('./redis/Redis');
 const Database = require('./postgreSQL/PostgreSQL');
+const Redis = require('./redis/Redis');
 const SequelizeProvider = require('./postgreSQL/SequelizeProvider');
 const config = require('./settings');
 
@@ -22,8 +22,8 @@ const docs = new Docs(data);
 const lookup = new Lookup(data, docs);
 const commands = new Commands(data, docs);
 
-const redis = new Redis();
 const database = new Database();
+const redis = new Redis();
 const client = new commando.Client({
 	owner: config.owner,
 	commandPrefix: '?',
@@ -47,6 +47,7 @@ client.on('error', winston.error)
 		winston.info(oneLine`
 			Client ready... Logged in as ${client.user.username}#${client.user.discriminator} (${client.user.id})
 		`);
+		Currency.leaderboard();
 	})
 	.on('disconnect', () => { winston.warn('Disconnected!'); })
 	.on('reconnect', () => { winston.warn('Reconnecting...'); })

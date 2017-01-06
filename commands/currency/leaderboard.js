@@ -1,4 +1,5 @@
 const { Command, util } = require('discord.js-commando');
+const moment = require('moment');
 const stripIndents = require('common-tags').stripIndents;
 
 const config = require('../../settings');
@@ -32,6 +33,9 @@ module.exports = class MoneyLeaderboardCommand extends Command {
 	async run(msg, args) {
 		const page = args.page;
 
+		const lastUpdate = await redis.db.getAsync('moneyleaderboardreset');
+		const cooldown = 30 * 60 * 1000;
+		const reset = cooldown - (Date.now() - lastUpdate);
 		const money = await this.findCached();
 		const paginated = util.paginate(JSON.parse(money), page, Math.floor(config.paginationItems));
 		let ranking = config.paginationItems * (paginated.page - 1);
@@ -44,6 +48,8 @@ module.exports = class MoneyLeaderboardCommand extends Command {
 				__**Donut leaderboard, page ${paginated.page}**__
 
 				${paginated.items.map(user => `**${++ranking} -** ${`${this.client.users.get(user.userID).username}#${this.client.users.get(user.userID).discriminator}`} (**${user.money}** 🍩)`).join('\n')}
+
+				${moment.duration(reset).format('hh [hours] mm [minutes]')} until the next update.
 			`,
 			footer: { text: paginated.maxPage > 1 ? 'Use \'leaderboard <page>\' to view a specific page.' : '' }
 		});
@@ -58,7 +64,7 @@ module.exports = class MoneyLeaderboardCommand extends Command {
 				if (!money) return `No money, biatch`;
 
 				redis.db.setAsync('moneyleaderboard', JSON.stringify(money));
-				redis.db.expire('moneyleaderboard', 3700);
+				redis.db.expire('moneyleaderboard', 3600);
 
 				return JSON.stringify(money);
 			}

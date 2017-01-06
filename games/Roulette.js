@@ -65,7 +65,7 @@ function generateSpaces() {
 		getRange(winNumber, 'dozens'),
 		getColumn(winNumber),
 		getRange(winNumber, 'halves'),
-		spaces.get('parity').values[winNumber % 2]
+		getParity(winNumber)
 	];
 }
 
@@ -88,11 +88,14 @@ function getRange(number, size) {
 
 function getColumn(number) {
 	if (number === 0) return null;
-	if (number % spaces.get('columns').values.length === 0) {
-		return spaces.get('columns').values[spaces.get('columns').values.length - 1];
-	} else {
-		return spaces.get('columns').values[number % spaces.get('columns').values.length];
-	}
+
+	return spaces.get('columns').values[(number - 1) % 3];
+}
+
+function getParity(number) {
+	if (number === 0) return null;
+
+	return spaces.get('parity').values[winNumber % 2]
 }
 
 module.exports = Roulette;

@@ -78,26 +78,15 @@ module.exports = class CleanCommand extends Command {
 		}
 
 		if (!filter) {
-			return msg.channel.fetchMessages({ limit: limit })
-			.then(messagesToDelete => {
-				msg.channel.bulkDelete(messagesToDelete.array().reverse()).catch(error => { winston.error(error); });
-			})
-			.then(() => {
-				msg.say(`I cleaned up the number of messages you requested, ${msg.author}.`)
-					.then(sentMessage => { sentMessage.delete(4000); });
-			})
-			.catch(error => { winston.error(error); });
+			const messagesToDelete = await msg.channel.fetchMessages({ limit: limit });
+
+			return msg.channel.bulkDelete(messagesToDelete.array().reverse());
 		}
-		return msg.channel.fetchMessages({ limit: limit })
-			.then(messages => {
-				let messagesToDelete = messages.filter(messageFilter);
-				msg.channel.bulkDelete(messagesToDelete).catch(error => { winston.error(error); });
-			})
-			.then(() => {
-				msg.say(`I cleaned up the number of messages you requested, ${msg.author}.`)
-					.then(sentMessage => { sentMessage.delete(4000); });
-			})
-			.catch(error => { winston.error(error); });
+
+		const messages = await msg.channel.fetchMessages({ limit: limit });
+		const messagesToDelete = messages.filter(messageFilter);
+
+		return msg.channel.bulkDelete(messagesToDelete.array().reverse());
 	}
 };
 
