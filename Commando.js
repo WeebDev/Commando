@@ -7,13 +7,13 @@ const path = require('path');
 const Raven = require('raven');
 const winston = require('winston');
 
-const Redis = require('./redis/Redis');
 const Database = require('./postgreSQL/PostgreSQL');
+const Redis = require('./redis/Redis');
 const SequelizeProvider = require('./postgreSQL/SequelizeProvider');
 const config = require('./settings');
 
-const redis = new Redis();
 const database = new Database();
+const redis = new Redis();
 const client = new commando.Client({
 	owner: config.owner,
 	commandPrefix: '?',

@@ -44,7 +44,7 @@ module.exports = class TagDeleteCommand extends Command {
 			.then(() => {
 				Tag.destroy({ where: { name, guildID: msg.guild.id } });
 
-				redis.db.delAsync(name + msg.guild.id);
+				redis.db.delAsync(`tag${name}${msg.guild.id}`);
 
 				if (tag.example) msg.guild.channels.get(config.exampleChannel).fetchMessage(tag.exampleID).then(del => del.delete());
 				return msg.say(`The tag **${name}** has been deleted, ${msg.author}`);

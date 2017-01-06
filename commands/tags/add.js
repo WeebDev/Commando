@@ -72,7 +72,7 @@ module.exports = class TagAddCommand extends Command {
 					content: cleanContent
 				});
 
-				redis.db.setAsync(name + msg.guild.id, cleanContent);
+				redis.db.setAsync(`tag${name}${msg.guild.id}`, cleanContent);
 
 				return msg.say(`A tag with the name **${name}** has been added, ${msg.author}`);
 			})

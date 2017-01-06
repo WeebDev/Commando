@@ -81,7 +81,7 @@ module.exports = class ExampleAddCommand extends Command {
 					example: true
 				});
 
-				redis.db.setAsync(name + msg.guild.id, cleanContent);
+				redis.db.setAsync(`tag${name}${msg.guild.id}`, cleanContent);
 
 				msg.guild.channels.get(config.exampleChannel).sendMessage(cleanContent)
 					.then(ex => {
