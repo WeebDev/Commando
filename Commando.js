@@ -37,6 +37,7 @@ client.on('error', winston.error)
 		winston.info(oneLine`
 			Client ready... Logged in as ${client.user.username}#${client.user.discriminator} (${client.user.id})
 		`);
+		Currency.leaderboard();
 	})
 	.on('disconnect', () => { winston.warn('Disconnected!'); })
 	.on('reconnect', () => { winston.warn('Reconnecting...'); })

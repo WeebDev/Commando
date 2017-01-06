@@ -4,23 +4,8 @@ const Money = require('../postgreSQL/models/Money');
 const redis = new Redis();
 
 setInterval(() => {
-	redis.db.hgetallAsync('money').then(balances => {
-		const ids = Object.keys(balances);
-
-		for (const id of ids) {
-			Money.findOne({ where: { userID: id } }).then(user => {
-				if (!user) {
-					Money.create({
-						userID: id,
-						money: balances[id]
-					});
-				} else {
-					user.update({ money: balances[id] });
-				}
-			});
-		}
-	});
-}, 60 * 60 * 1000);
+	Currency.leaderboard();
+}, 30 * 60 * 1000);
 
 redis.db.hgetAsync('money', 'SLOTMACHINE').then(balance => {
 	if (!balance) return redis.db.hsetAsync('money', 'SLOTMACHINE', 5000);
@@ -42,6 +27,28 @@ class Currency {
 
 	static getBalance(user) {
 		return redis.db.hgetAsync('money', user);
+	}
+
+	static leaderboard() {
+		redis.db.hgetallAsync('money').then(balances => {
+			const ids = Object.keys(balances);
+
+			for (const id of ids) {
+				Money.findOne({ where: { userID: id } }).then(user => {
+					if (!user) {
+						Money.create({
+							userID: id,
+							money: balances[id]
+						});
+					} else {
+						user.update({ money: balances[id] });
+					}
+				});
+			}
+		});
+
+		redis.db.setAsync('moneyleaderboardreset', Date.now());
+		redis.db.expire('moneyleaderboardreset', 30 * 60 * 1000);
 	}
 }
 
