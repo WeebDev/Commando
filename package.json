@@ -5,6 +5,8 @@
   "license": "MIT",
   "author": "Crawl",
   "scripts": {
+    "start": "node --harmony Commando.js",
+    "update": "npm update",
     "test": "eslint . silent"
   },
   "repository": {
@@ -26,6 +28,7 @@
     "discord.js": "hydrabolt/discord.js#indev-prism",
     "discord.js-commando": "gawdl3y/discord.js-commando",
     "erlpack": "hammerandchisel/erlpack#master",
+    "jimp": "^0.2.27",
     "moment": "^2.17.1",
     "moment-duration-format": "^1.3.0",
     "nani": "^1.2.0",
