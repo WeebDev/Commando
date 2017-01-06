@@ -29,14 +29,6 @@ class Inventory {
 		this.content = content || {};
 	}
 
-	static fetchInventory(user) {
-		return new Promise((resolve, reject) => {
-			redis.db.hgetAsync('inventory', user).then(content => {
-				resolve(new Inventory(user, JSON.parse(content)));
-			}).catch(reject);
-		});
-	}
-
 	addItem(item) {
 		const itemGroup = new ItemGroup(item, 1);
 		this.addItems(itemGroup);
@@ -67,6 +59,14 @@ class Inventory {
 
 	save() {
 		return redis.db.hsetAsync('inventory', this.user, JSON.stringify(this.content));
+	}
+
+	static fetchInventory(user) {
+		return new Promise((resolve, reject) => {
+			redis.db.hgetAsync('inventory', user).then(content => {
+				resolve(new Inventory(user, JSON.parse(content)));
+			}).catch(reject);
+		});
 	}
 }
 

@@ -4,10 +4,6 @@ const stripIndents = require('common-tags').stripIndents;
 const Currency = require('../../currency/Currency');
 const Blackjack = require('../../games/Blackjack');
 
-const currency = new Currency();
-
-const ranks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
-
 module.exports = class BlackjackCommand extends Command {
 	constructor(client) {
 		super(client, {
@@ -33,7 +29,7 @@ module.exports = class BlackjackCommand extends Command {
 
 	async run(msg, args) {
 		const bet = args.bet;
-		const balance = await currency.getBalance(msg.author.id);
+		const balance = await Currency.getBalance(msg.author.id);
 
 		if (balance < bet) return msg.reply(`you don't have enough donuts. Your current account balance is ${balance} 🍩s.`);
 		if (![100, 200, 300, 400, 500, 1000].includes(bet)) return msg.say('you need to bet either 100, 200, 300, 400, 500 or 1000 donuts.');
@@ -46,16 +42,16 @@ module.exports = class BlackjackCommand extends Command {
 				let playerHand = blackjack.getHand();
 				let dealerHand = blackjack.getHand();
 
-				if (this.handValue(playerHand) !== 'Blackjack') playerHand = await this.getFinalHand(msg, playerHand, dealerHand, blackjack);
-				const playerValue = this.handValue(playerHand);
+				if (Blackjack.handValue(playerHand) !== 'Blackjack') playerHand = await this.getFinalHand(msg, playerHand, dealerHand, blackjack);
+				const playerValue = Blackjack.handValue(playerHand);
 
-				while (this.handValue(dealerHand) < 17) dealerHand = blackjack.hit(dealerHand);
-				const dealerValue = this.handValue(dealerHand);
+				while (Blackjack.handValue(dealerHand) < 17) dealerHand = blackjack.hit(dealerHand);
+				const dealerValue = Blackjack.handValue(dealerHand);
 
 				blackjack.endGame();
 
-				if (this.handValue(playerHand) > 21) {
-					currency.removeBalance(msg.author.id, bet);
+				if (Blackjack.handValue(playerHand) > 21) {
+					Currency.removeBalance(msg.author.id, bet);
 
 					return msg.embed({
 						title: `Blackjack | ${msg.member.displayName}`,
@@ -65,7 +61,7 @@ module.exports = class BlackjackCommand extends Command {
 								name: '**Your hand**',
 								value: stripIndents`
 									${playerHand.join(' - ')}
-									Value: ${this.handValue(playerHand)}
+									Value: ${Blackjack.handValue(playerHand)}
 								`,
 								inline: true
 							},
@@ -73,7 +69,7 @@ module.exports = class BlackjackCommand extends Command {
 								name: '**Dealer hand**',
 								value: stripIndents`
 									${dealerHand[0]} - XX
-									Value: ${this.handValue([dealerHand[0]])}
+									Value: ${Blackjack.handValue([dealerHand[0]])}
 								`,
 								inline: true
 							}
@@ -81,8 +77,8 @@ module.exports = class BlackjackCommand extends Command {
 					});
 				}
 
-				if (this.handValue(dealerHand) > 21) {
-					currency.addBalance(msg.author.id, bet / 2);
+				if (Blackjack.handValue(dealerHand) > 21) {
+					Currency.addBalance(msg.author.id, bet / 2);
 
 					return msg.embed({
 						title: `Blackjack | ${msg.member.displayName}`,
@@ -92,7 +88,7 @@ module.exports = class BlackjackCommand extends Command {
 								name: '**Your hand**',
 								value: stripIndents`
 									${playerHand.join(' - ')}
-									Value: ${this.handValue(playerHand)}
+									Value: ${Blackjack.handValue(playerHand)}
 								`,
 								inline: true
 							},
@@ -100,7 +96,7 @@ module.exports = class BlackjackCommand extends Command {
 								name: '**Dealer hand**',
 								value: stripIndents`
 									${dealerHand.join(' - ')}
-									Value: ${this.handValue(dealerHand)}
+									Value: ${Blackjack.handValue(dealerHand)}
 								`,
 								inline: true
 							}
@@ -111,7 +107,7 @@ module.exports = class BlackjackCommand extends Command {
 				const gameResult = this.gameResult(playerValue, dealerValue);
 
 				if (gameResult === 'loss') {
-					currency.removeBalance(msg.author.id, bet);
+					Currency.removeBalance(msg.author.id, bet);
 
 					return msg.embed({
 						title: `Blackjack | ${msg.member.displayName}`,
@@ -162,7 +158,7 @@ module.exports = class BlackjackCommand extends Command {
 					});
 				}
 
-				currency.addBalance(msg.author.id, bet / 2);
+				Currency.addBalance(msg.author.id, bet / 2);
 
 				return msg.embed({
 					title: `Blackjack | ${msg.member.displayName}`,
@@ -189,33 +185,6 @@ module.exports = class BlackjackCommand extends Command {
 			});
 	}
 
-	handValue(hand) {
-		let value = 0;
-		let aces = 0;
-
-		hand.forEach(card => {
-			value += this.cardValue(card);
-			if (this.cardValue(card) === 11) aces++;
-		});
-
-		while (value > 21 && aces > 0) {
-			value -= 10;
-			aces--;
-		}
-
-		if (value === 21 && hand.length === 2) return 'Blackjack';
-
-		return value;
-	}
-
-	cardValue(card) {
-		const index = ranks.indexOf(card.substring(0, card.length - 1));
-
-		if (index === 0) return 11;
-
-		return index >= 10 ? 10 : index + 1;
-	}
-
 	gameResult(playerValue, dealerValue) {
 		if (playerValue === dealerValue) return 'push';
 		if (playerValue === 'Blackjack' || playerValue > dealerValue) return 'win';
@@ -224,7 +193,7 @@ module.exports = class BlackjackCommand extends Command {
 
 	getFinalHand(msg, playerHand, dealerHand, blackjack) {
 		return new Promise(async resolve => { // eslint-disable-line consistent-return
-			while (this.handValue(playerHand) < 21) {
+			while (Blackjack.handValue(playerHand) < 21) {
 				await msg.embed({
 					title: `Blackjack | ${msg.member.displayName}`,
 					description: 'Type `hit` to draw another card or `stand` to pass.',
@@ -233,7 +202,7 @@ module.exports = class BlackjackCommand extends Command {
 							name: '**Your hand**',
 							value: stripIndents`
 								${playerHand.join(' - ')}
-								Value: ${this.handValue(playerHand)}
+								Value: ${Blackjack.handValue(playerHand)}
 							`,
 							inline: true
 						},
@@ -241,7 +210,7 @@ module.exports = class BlackjackCommand extends Command {
 							name: '**Dealer hand**',
 							value: stripIndents`
 								${dealerHand[0]} - XX
-						 		Value: ${this.handValue([dealerHand[0]])}
+						 		Value: ${Blackjack.handValue([dealerHand[0]])}
 							`,
 							inline: true
 						}
@@ -258,7 +227,7 @@ module.exports = class BlackjackCommand extends Command {
 				if (responses.size === 0) return resolve(playerHand);
 				if (responses.first().content.toLowerCase() === 'stand') return resolve(playerHand);
 				if (responses.first().content.toLowerCase() === 'hit') playerHand = blackjack.hit(playerHand);
-				if (this.handValue(playerHand) >= 21) return resolve(playerHand);
+				if (Blackjack.handValue(playerHand) >= 21) return resolve(playerHand);
 			}
 		});
 	}

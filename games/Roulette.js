@@ -24,10 +24,6 @@ class Roulette {
 		games.set(this.guildID, this);
 	}
 
-	static findGame(guildID) {
-		return games.get(guildID) || null;
-	}
-
 	join(user, donuts, space) {
 		const multiplier = this.winSpaces.includes(space) ? spaces.find(spc => spc.values.includes(space)).multiplier : 0;
 		this.players.push({
@@ -42,10 +38,6 @@ class Roulette {
 		return !!this.players.find(player => player.user.id === userID);
 	}
 
-	static hasSpace(space) {
-		return !!spaces.find(spc => spc.values.includes(space));
-	}
-
 	awaitPlayers(time) {
 		return new Promise((resolve) => {
 			setTimeout(() => {
@@ -54,10 +46,19 @@ class Roulette {
 			}, time);
 		});
 	}
+
+	static findGame(guildID) {
+		return games.get(guildID) || null;
+	}
+
+	static hasSpace(space) {
+		return !!spaces.find(spc => spc.values.includes(space));
+	}
 }
 
 function generateSpaces() {
 	const winNumber = Math.floor(Math.random() * 37);
+
 	return [
 		winNumber.toString(),
 		getColor(winNumber),
@@ -70,14 +71,17 @@ function generateSpaces() {
 
 function getColor(number) {
 	if (number === 0) return null;
+
 	return roulette.red.includes(number) ? 'red' : 'black';
 }
 
 function getRange(number, size) {
 	if (number === 0) return null;
+
 	return spaces.get(size).values.find(value => {
 		const min = parseInt(value.split('-')[0]);
 		const max = parseInt(value.split('-')[1]);
+
 		return number >= min && number <= max;
 	});
 }

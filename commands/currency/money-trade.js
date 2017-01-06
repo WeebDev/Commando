@@ -3,8 +3,6 @@ const stripIndents = require('common-tags').stripIndents;
 
 const Currency = require('../../currency/Currency');
 
-const currency = new Currency();
-
 module.exports = class MoneyTradeCommand extends Command {
 	constructor(client) {
 		super(client, {
@@ -38,7 +36,7 @@ module.exports = class MoneyTradeCommand extends Command {
 		if (user.user.bot) return msg.reply('don\'t give your donuts to bots: they\'re bots, man.');
 		if (donuts <= 0) return msg.reply('man, get outta here!');
 
-		const userBalance = await currency.getBalance(msg.author.id);
+		const userBalance = await Currency.getBalance(msg.author.id);
 
 		if (userBalance < donuts) {
 			return msg.reply(stripIndents`
@@ -47,8 +45,8 @@ module.exports = class MoneyTradeCommand extends Command {
 			`);
 		}
 
-		currency.removeBalance(msg.author.id, donuts);
-		currency.addBalance(user.id, donuts);
+		Currency.removeBalance(msg.author.id, donuts);
+		Currency.addBalance(user.id, donuts);
 
 		return msg.reply(`${user.displayName} successfully received your ${donuts} 🍩s!`);
 	}

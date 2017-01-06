@@ -6,8 +6,6 @@ const Inventory = require('../../currency/Inventory');
 const ItemGroup = require('../../currency/ItemGroup');
 const Store = require('../../currency/Store');
 
-const currency = new Currency();
-
 module.exports = class BuyItemCommand extends Command {
 	constructor(client) {
 		super(client, {
@@ -48,7 +46,7 @@ module.exports = class BuyItemCommand extends Command {
 			`);
 		}
 
-		const balance = await currency.getBalance(msg.author.id);
+		const balance = await Currency.getBalance(msg.author.id);
 
 		const plural = amount > 1 || amount === 0;
 
@@ -61,7 +59,7 @@ module.exports = class BuyItemCommand extends Command {
 
 		let inventory = await Inventory.fetchInventory(msg.author.id);
 		inventory.addItems(new ItemGroup(storeItem, amount));
-		currency.removeBalance(msg.author.id, amount * storeItem.price);
+		Currency.removeBalance(msg.author.id, amount * storeItem.price);
 		inventory.save();
 
 		return msg.reply(`you have successfully purchased ${amount} ${itemName}${plural ? 's' : ''} for ${amount * storeItem.price} 🍩s.`);

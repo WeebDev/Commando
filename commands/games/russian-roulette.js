@@ -4,8 +4,6 @@ const stripIndents = require('common-tags').stripIndents;
 const Currency = require('../../currency/Currency');
 const RussianRoulette = require('../../games/Russian-roulette');
 
-const currency = new Currency();
-
 module.exports = class RussianRouletteCommand extends Command {
 	constructor(client) {
 		super(client, {
@@ -24,7 +22,7 @@ module.exports = class RussianRouletteCommand extends Command {
 
 	async run(msg) {
 		const donuts = 120;
-		const balance = await currency.getBalance(msg.author.id);
+		const balance = await Currency.getBalance(msg.author.id);
 		let roulette = RussianRoulette.findGame(msg.guild.id);
 
 		if (balance < donuts) return msg.reply(`you don't have enough donuts. You need ${donuts} 🍩s to join, but your current account balance is ${balance} 🍩s.`);
@@ -64,8 +62,8 @@ module.exports = class RussianRouletteCommand extends Command {
 
 			survivors = players.filter(player => player !== deadPlayer);
 
-			currency.removeBalance(deadPlayer.user.id, 100);
-			survivors.forEach(survivor => currency.addBalance(survivor.user.id, donuts / survivors.length));
+			Currency.removeBalance(deadPlayer.user.id, 100);
+			survivors.forEach(survivor => Currency.addBalance(survivor.user.id, donuts / survivors.length));
 
 			return msg.embed({
 				description: stripIndents`

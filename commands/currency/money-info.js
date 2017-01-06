@@ -2,8 +2,6 @@ const { Command } = require('discord.js-commando');
 
 const Currency = require('../../currency/Currency');
 
-const currency = new Currency();
-
 module.exports = class MoneyInfoCommand extends Command {
 	constructor(client) {
 		super(client, {
@@ -28,7 +26,7 @@ module.exports = class MoneyInfoCommand extends Command {
 	async run(msg, args) {
 		const user = args.member || msg.author;
 
-		const balance = await currency.getBalance(user.id);
+		const balance = await Currency.getBalance(user.id);
 
 		if (args.member) {
 			if (!balance) return msg.reply(`${user.displayName} hasn't earned any 🍩s yet.`);

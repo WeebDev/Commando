@@ -4,8 +4,6 @@ const stripIndents = require('common-tags').stripIndents;
 const Currency = require('../../currency/Currency');
 const Roulette = require('../../games/Roulette');
 
-const currency = new Currency();
-
 const colors = {
 	red: 0xBE1931,
 	black: 0x0C0C0C
@@ -43,7 +41,7 @@ module.exports = class RouletteCommand extends Command {
 		const bet = args.bet;
 		const space = args.space.toLowerCase();
 
-		const balance = await currency.getBalance(msg.author.id);
+		const balance = await Currency.getBalance(msg.author.id);
 		let roulette = Roulette.findGame(msg.guild.id);
 
 		if (balance < bet) return msg.reply(`you need at least 100 🍩s to bet, but your current account balance is ${balance} 🍩s.`);
@@ -54,14 +52,14 @@ module.exports = class RouletteCommand extends Command {
 			if (roulette.hasPlayer(msg.author.id)) return msg.reply('you have already put a bet in this game of roulette.');
 
 			roulette.join(msg.author, bet, space);
-			currency.removeBalance(msg.author.id, bet);
+			Currency.removeBalance(msg.author.id, bet);
 
 			return msg.reply(`you have successfully placed your bet of ${bet} on ${space}.`);
 		}
 
 		roulette = new Roulette(msg.guild.id);
 		roulette.join(msg.author, bet, space);
-		currency.removeBalance(msg.author.id, bet);
+		Currency.removeBalance(msg.author.id, bet);
 
 		return msg.say(stripIndents`
 			A new game of roulette has been initiated!
@@ -75,7 +73,7 @@ module.exports = class RouletteCommand extends Command {
 				const winners = await roulette.awaitPlayers(16000).filter(player => player.winnings !== 0);
 
 				winners.forEach(winner => {
-					currency.addBalance(winner.user.id, winner.winnings);
+					Currency.addBalance(winner.user.id, winner.winnings);
 				});
 
 				return msg.embed({

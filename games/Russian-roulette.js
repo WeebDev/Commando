@@ -8,10 +8,6 @@ class RussianRoulette {
 		games.set(this.guildID, this);
 	}
 
-	static findGame(guildID) {
-		return games.get(guildID) || null;
-	}
-
 	join(user, donuts) {
 		this.players.push({
 			user: user,
@@ -32,6 +28,10 @@ class RussianRoulette {
 				return resolve(this.players);
 			}, time);
 		});
+	}
+
+	static findGame(guildID) {
+		return games.get(guildID) || null;
 	}
 }
 
