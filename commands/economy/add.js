@@ -17,7 +17,7 @@ module.exports = class MoneyAddCommand extends Command {
 				'doughnut-add',
 				'doughnuts-add'
 			],
-			group: 'currency',
+			group: 'economy',
 			memberName: 'add',
 			description: 'Add money to a certain user.',
 			details: 'Add amount of money to a certain user.',

@@ -12,9 +12,9 @@ module.exports = class ProfileCommand extends Command {
 		super(client, {
 			name: 'profile',
 			aliases: ['p'],
-			group: 'weather',
+			group: 'social',
 			memberName: 'profile',
-			description: 'Get the weather.',
+			description: 'Display your profile.',
 			guildOnly: true,
 			throttling: {
 				usages: 1,
@@ -24,7 +24,7 @@ module.exports = class ProfileCommand extends Command {
 			args: [
 				{
 					key: 'member',
-					prompt: 'What user would you like to have information on?\n',
+					prompt: 'What user profile would you like to see?\n',
 					type: 'member',
 					default: ''
 				}
@@ -150,7 +150,7 @@ module.exports = class ProfileCommand extends Command {
 			ctx.drawImage(cond, 24, 21, 110, 110);
 		};
 
-		base.src = await fs.readFileAsync(path.join(__dirname, `../../assets/profile/backgrounds/test2.png`));
+		base.src = await fs.readFileAsync(path.join(__dirname, `../../assets/profile/backgrounds/test.png`));
 		cond.src = await request({ uri: user.user.avatarURL.replace(/(png|jpg|jpeg|gif|webp)\?size=1024/, 'png'), encoding: null });
 		await generate();
 
