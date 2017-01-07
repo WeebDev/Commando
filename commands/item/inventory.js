@@ -12,6 +12,11 @@ module.exports = class InventoryShowCommand extends Command {
 			memberName: 'inventory',
 			description: 'Displays the items you have in your inventory',
 			detail: 'Displays the items you have in your inventory',
+			guildOnly: true,
+			throttling: {
+				usages: 2,
+				duration: 3
+			},
 
 			args: [
 				{

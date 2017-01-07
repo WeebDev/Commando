@@ -16,6 +16,10 @@ module.exports = class CleanCommand extends Command {
 				__uploads:__ Messages containing an attachment
 				__links:__ Messages containing a link`,
 			guildOnly: true,
+			throttling: {
+				usages: 2,
+				duration: 3
+			},
 
 			args: [
 				{
@@ -44,7 +48,7 @@ module.exports = class CleanCommand extends Command {
 		return msg.member.roles.exists('name', 'Server Staff');
 	}
 
-	async run(msg, args) {
+	async run(msg, args) { // eslint-disable-line consistent-return
 		if (!args.limit) {
 			return msg.say(`${msg.author}, atleast provide me with a number!`);
 		}
@@ -80,13 +84,13 @@ module.exports = class CleanCommand extends Command {
 		if (!filter) {
 			const messagesToDelete = await msg.channel.fetchMessages({ limit: limit });
 
-			return msg.channel.bulkDelete(messagesToDelete.array().reverse());
+			msg.channel.bulkDelete(messagesToDelete.array().reverse());
 		}
 
 		const messages = await msg.channel.fetchMessages({ limit: limit });
 		const messagesToDelete = messages.filter(messageFilter);
 
-		return msg.channel.bulkDelete(messagesToDelete.array().reverse());
+		msg.channel.bulkDelete(messagesToDelete.array().reverse());
 	}
 };
 

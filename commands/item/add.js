@@ -13,6 +13,10 @@ module.exports = class ItemAddCommand extends Command {
 			memberName: 'add',
 			description: 'Adds an item to the store.',
 			details: 'Adds an item to the store.',
+			throttling: {
+				usages: 2,
+				duration: 3
+			},
 
 			args: [
 				{

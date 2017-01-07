@@ -11,7 +11,12 @@ module.exports = class DailyCommand extends Command {
 			group: 'currency',
 			memberName: 'daily',
 			description: 'Receive your daily donuts.',
-			details: 'Receive your daily donuts.'
+			details: 'Receive your daily donuts.',
+			guildOnly: true,
+			throttling: {
+				usages: 2,
+				duration: 3
+			}
 		});
 	}
 

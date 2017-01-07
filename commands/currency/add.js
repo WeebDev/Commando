@@ -9,8 +9,13 @@ module.exports = class MoneyAddCommand extends Command {
 			aliases: ['add-donut', 'add-donuts', 'money-add', 'donut-add', 'donuts-add'],
 			group: 'currency',
 			memberName: 'add',
-			description: 'Displays the money you have earned.',
-			details: 'Display the amount of money you have earned.',
+			description: 'Add money to a certain user.',
+			details: 'Add amount of money to a certain user.',
+			guildOnly: true,
+			throttling: {
+				usages: 2,
+				duration: 3
+			},
 
 			args: [
 				{

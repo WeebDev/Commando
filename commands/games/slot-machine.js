@@ -36,15 +36,16 @@ module.exports = class SlotMachineCommand extends Command {
 				Doubles your money if you win!
 			`,
 			throttling: {
-				duration: 5,
-				usages: 1
+				usages: 1,
+				duration: 5
 			},
 
 			args: [
 				{
 					key: 'coins',
 					prompt: 'How many coins do you want to bet?',
-					type: 'integer'
+					type: 'integer',
+					max: 5
 				}
 			]
 		});

@@ -18,6 +18,10 @@ module.exports = class MoneyLeaderboardCommand extends Command {
 			description: 'Displays the money members have earned.',
 			details: 'Display the amount of money members have earned in a leaderboard.',
 			guildOnly: true,
+			throttling: {
+				usages: 2,
+				duration: 3
+			},
 
 			args: [
 				{

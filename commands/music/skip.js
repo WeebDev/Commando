@@ -15,7 +15,11 @@ module.exports = class SkipSongCommand extends Command {
 				Each vote will add 5 seconds to the vote's timer.
 				Moderators can use the "force" parameter, which will immediately skip without a vote, no matter what.
 			`,
-			guildOnly: true
+			guildOnly: true,
+			throttling: {
+				usages: 2,
+				duration: 3
+			}
 		});
 
 		this.votes = new Map();

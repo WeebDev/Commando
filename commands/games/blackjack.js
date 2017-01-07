@@ -12,16 +12,18 @@ module.exports = class BlackjackCommand extends Command {
 			memberName: 'blackjack',
 			description: 'Play a game of blackjack for donuts!',
 			details: 'Play a game of blackjack for donuts.',
+			guildOnly: true,
 			throttling: {
-				duration: 30,
-				usages: 1
+				usages: 1,
+				duration: 30
 			},
 
 			args: [
 				{
 					key: 'bet',
 					prompt: 'How many donuts do you want to bet?',
-					type: 'integer'
+					type: 'integer',
+					max: 1000
 				}
 			]
 		});

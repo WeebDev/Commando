@@ -8,7 +8,11 @@ module.exports = class ResumeSongCommand extends Command {
 			memberName: 'resume',
 			description: 'Resumes the currently playing song.',
 			details: 'Only moderators may use this command.',
-			guildOnly: true
+			guildOnly: true,
+			throttling: {
+				usages: 2,
+				duration: 3
+			}
 		});
 	}
 

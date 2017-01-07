@@ -8,7 +8,12 @@ module.exports = class RouletteInfo extends Command {
 			group: 'games',
 			memberName: 'roulette-info',
 			description: 'Displays information about the roulette.',
-			details: 'Displays information about the roulette.'
+			details: 'Displays information about the roulette.',
+			guildOnly: true,
+			throttling: {
+				usages: 2,
+				duration: 3
+			}
 		});
 	}
 

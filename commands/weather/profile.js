@@ -21,6 +21,7 @@ module.exports = class ProfileCommand extends Command {
 			group: 'weather',
 			memberName: 'profile',
 			description: 'Get the weather.',
+			guildOnly: true,
 			throttling: {
 				usages: 1,
 				duration: 30

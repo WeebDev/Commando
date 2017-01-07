@@ -6,11 +6,16 @@ module.exports = class MoneyInfoCommand extends Command {
 	constructor(client) {
 		super(client, {
 			name: 'money',
-			aliases: ['donut', 'donuts'],
+			aliases: ['donut', 'donuts', 'doughnut', 'doughnuts'],
 			group: 'currency',
 			memberName: 'money',
 			description: 'Displays the money you have earned.',
 			details: 'Display the amount of money you have earned.',
+			guildOnly: true,
+			throttling: {
+				usages: 2,
+				duration: 3
+			},
 
 			args: [
 				{
