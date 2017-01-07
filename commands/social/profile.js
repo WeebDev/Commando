@@ -6,6 +6,7 @@ const path = require('path');
 const request = require('request-promise');
 
 const Currency = require('../../currency/Currency');
+const UserProfile = require('../../postgreSQL/models/UserProfile');
 
 module.exports = class ProfileCommand extends Command {
 	constructor(client) {
@@ -36,6 +37,8 @@ module.exports = class ProfileCommand extends Command {
 		const user = args.member || msg.member;
 		const Image = Canvas.Image;
 
+		const profile = await UserProfile.findOne({ where: { userID: user.id } });
+		const personalMessage = profile.personalMessage;
 		const balance = await Currency.getBalance(user.id);
 		const currentExp = await Experience.getCurrentExperience(user.id);
 		const level = await Experience.getLevel(user.id);
@@ -50,7 +53,7 @@ module.exports = class ProfileCommand extends Command {
 		const canvas = new Canvas(300, 300);
 		const ctx = canvas.getContext('2d');
 
-		const lines = this.wrapText(ctx, '', 108 - parseInt(12, 0));
+		const lines = this.wrapText(ctx, personalMessage, 110);
 
 		const base = new Image();
 		const cond = new Image();
