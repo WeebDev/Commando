@@ -38,7 +38,7 @@ module.exports = class ProfileCommand extends Command {
 		const Image = Canvas.Image;
 
 		const profile = await UserProfile.findOne({ where: { userID: user.id } });
-		const personalMessage = profile.personalMessage;
+		const personalMessage = profile.personalMessage || '';
 		const balance = await Currency.getBalance(user.id);
 		const currentExp = await Experience.getCurrentExperience(user.id);
 		const level = await Experience.getLevel(user.id);
