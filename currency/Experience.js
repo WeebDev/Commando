@@ -1,7 +1,9 @@
-const ExperienceSchema = require('../postgreSQL/models/Experience');
+const UserProfile = require('../postgreSQL/models/UserProfile');
 const Redis = require('../redis/Redis');
 
 const redis = new Redis();
+
+setInterval(() => Experience.saveExperience(), 5 * 1000);
 
 class Experience {
 	static addExperience(userID, earned) {
@@ -45,12 +47,12 @@ class Experience {
 
 	static saveExperience() {
 		redis.db.hgetallAsync('experience').then(experiences => {
-			const ids = Object.keys(experiences);
+			const ids = Object.keys(experiences || {});
 
 			for (const id of ids) {
-				ExperienceSchema.findOne({ where: { userID: id } }).then(user => {
+				UserProfile.findOne({ where: { userID: id } }).then(user => {
 					if (!user) {
-						ExperienceSchema.create({
+						UserProfile.create({
 							userID: id,
 							experience: experiences[id]
 						});
