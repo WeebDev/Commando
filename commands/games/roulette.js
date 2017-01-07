@@ -29,12 +29,25 @@ module.exports = class RouletteCommand extends Command {
 					key: 'bet',
 					prompt: 'How many donuts do you want to bet?',
 					type: 'integer',
-					max: 5000
+					validate: bet => {
+						if (![100, 200, 300, 400, 500, 1000, 2000, 5000].includes(bet)) {
+							return 'Please choose one of 100, 200, 300, 400, 500, 1000, 2000, 5000 for your bet.';
+						}
+
+						return true;
+					}
 				},
 				{
 					key: 'space',
 					prompt: 'On what space do you want to bet?',
-					type: 'string'
+					type: 'string',
+					validate: space => {
+						if (!Roulette.hasSpace(space)) {
+							return 'That is not a valid betting space. Use `roulette-info` for more information';
+						}
+
+						return true;
+					}
 				}
 			]
 		});
@@ -49,12 +62,6 @@ module.exports = class RouletteCommand extends Command {
 
 		if (balance < bet) {
 			return msg.reply(`you need at least 100 🍩s to bet, but your current account balance is ${balance} 🍩s.`);
-		}
-		if (![100, 200, 300, 400, 500, 1000, 2000, 5000].includes(bet)) {
-			return msg.reply('you need to bet either 100, 200, 300, 400, 500, 1000, 2000 or 5000 donuts.');
-		}
-		if (!Roulette.hasSpace(space)) {
-			return msg.reply('that is not a valid betting space. Use `roulette-info` for more information');
 		}
 
 		if (roulette) {

@@ -47,7 +47,13 @@ module.exports = class SlotMachineCommand extends Command {
 					key: 'coins',
 					prompt: 'How many coins do you want to bet?',
 					type: 'integer',
-					max: 5
+					validate: coins => {
+						if (![1, 3, 5].includes(coins)) {
+							return 'Sorry, you need to pay either 1, 3 or 5 coin(s). Anything else does not work.';
+						}
+
+						return true;
+					}
 				}
 			]
 		});
@@ -60,10 +66,6 @@ module.exports = class SlotMachineCommand extends Command {
 		const item = Store.getItem('coin');
 
 		const plural = userCoins > 1 || userCoins === 0;
-
-		if (![1, 3, 5].includes(coins)) {
-			return msg.say('Sorry, you need to pay either 1, 3 or 5 coin(s). Anything else does not work.');
-		}
 
 		if (userCoins < coins) {
 			return msg.say(stripIndents`
