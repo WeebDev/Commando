@@ -30,7 +30,7 @@ module.exports = class SlotMachineCommand extends Command {
 		super(client, {
 			name: 'slot-machine',
 			aliases: ['slot', 'slots'],
-			group: 'currency',
+			group: 'games',
 			memberName: 'slot-machine',
 			description: 'Let\'s you play a round with the slot machine',
 			details: stripIndents`
