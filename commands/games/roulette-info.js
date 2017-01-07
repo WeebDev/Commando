@@ -22,7 +22,7 @@ module.exports = class RouletteInfo extends Command {
 			description: stripIndents`
 				To start a game or place a bet use \`roulette <donuts> <space>\`
 
-				\`<donuts>\` is the amount of donuts you want to bet. Can only be 100, 200, 300, 400, 500, 1000, 2000 or 5000.
+				\`<donuts>\` for the amount donuts to bet. Can only be 100, 200, 300, 400, 500, 1000, 2000 or 5000.
 
 				\`<space>\` is the space you want to bet on. Those should be written exactly as in the image below.
 

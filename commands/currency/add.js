@@ -6,7 +6,17 @@ module.exports = class MoneyAddCommand extends Command {
 	constructor(client) {
 		super(client, {
 			name: 'add-money',
-			aliases: ['add-donut', 'add-donuts', 'money-add', 'donut-add', 'donuts-add'],
+			aliases: [
+				'money-add',
+				'add-donut',
+				'add-donuts',
+				'add-doughnut',
+				'add-doughnuts',
+				'donut-add',
+				'donuts-add',
+				'doughnut-add',
+				'doughnuts-add'
+			],
 			group: 'currency',
 			memberName: 'add',
 			description: 'Add money to a certain user.',

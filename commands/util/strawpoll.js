@@ -49,7 +49,7 @@ module.exports = class FortuneCommand extends Command {
 			method: 'POST',
 			uri: `https://strawpoll.me/api/v2/polls`,
 			followAllRedirects: true,
-			headers: { 'User-Agent': `Hamakaze v${version} (https://github.com/WeebDev/Hamakaze/)` },
+			headers: { 'User-Agent': `Commando v${version} (https://github.com/WeebDev/Commando/)` },
 			body: {
 				title: title,
 				options: options,

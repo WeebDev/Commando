@@ -1,5 +1,6 @@
 const { Command, util } = require('discord.js-commando');
 const moment = require('moment');
+const oneLine = require('common-tags').oneLine;
 const stripIndents = require('common-tags').stripIndents;
 
 const config = require('../../settings');
@@ -12,7 +13,13 @@ module.exports = class MoneyLeaderboardCommand extends Command {
 	constructor(client) {
 		super(client, {
 			name: 'leaderboard',
-			aliases: ['donut-leaderboard', 'donuts-leaderboard', 'money-leaderboard'],
+			aliases: [
+				'money-leaderboard',
+				'donut-leaderboard',
+				'donuts-leaderboard',
+				'doughnut-leaderboard',
+				'doughnuts-leaderboard'
+			],
 			group: 'currency',
 			memberName: 'leaderboard',
 			description: 'Displays the money members have earned.',
@@ -51,7 +58,11 @@ module.exports = class MoneyLeaderboardCommand extends Command {
 			description: stripIndents`
 				__**Donut leaderboard, page ${paginated.page}**__
 
-				${paginated.items.map(user => `**${++ranking} -** ${`${this.client.users.get(user.userID).username}#${this.client.users.get(user.userID).discriminator}`} (**${user.money}** 🍩)`).join('\n')}
+				${paginated.items.map(user => oneLine`
+					**${++ranking} -** 
+					${`${this.client.users.get(user.userID).username}
+					#${this.client.users.get(user.userID).discriminator}`} 
+					(**${user.money}** 🍩)`).join('\n')}
 
 				${moment.duration(reset).format('hh [hours] mm [minutes]')} until the next update.
 			`,

@@ -7,7 +7,7 @@ module.exports = class TagWhoCommand extends Command {
 	constructor(client) {
 		super(client, {
 			name: 'tag-info',
-			aliases: ['tag-who'],
+			aliases: ['info-tag', 'tag-who', 'who-tag'],
 			group: 'tags',
 			memberName: 'info',
 			description: 'Displays information about a tag.',

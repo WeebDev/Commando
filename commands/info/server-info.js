@@ -61,10 +61,6 @@ module.exports = class ServerInfoCommand extends Command {
 						• Created at: ${moment.utc(msg.guild.createdAt).format('dddd, MMMM Do YYYY, HH:mm:ss ZZ')}
 						• Verification Level: ${humanLevels[msg.guild.verificationLevel]}
 					`
-				},
-				{
-					name: '❯ Emojis',
-					value: `• Emojis: ${msg.guild.emojis.array().join(' ')}`
 				}
 			],
 			thumbnail: { url: msg.guild.iconURL }

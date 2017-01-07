@@ -7,7 +7,18 @@ module.exports = class MoneyTradeCommand extends Command {
 	constructor(client) {
 		super(client, {
 			name: 'trade',
-			aliases: ['trade-donut', 'donut-trade', 'trade-donuts', 'donuts-trade', 'trade-money', 'money-trade'],
+			aliases: [
+				'trade-money',
+				'trade-donut',
+				'trade-donuts',
+				'trade-doughnut',
+				'trade-doughnuts',
+				'money-trade',
+				'donut-trade',
+				'donuts-trade',
+				'doughnut-trade',
+				'doughnuts-trade'
+			],
 			group: 'currency',
 			memberName: 'trade',
 			description: 'Trades the money you have earned.',
