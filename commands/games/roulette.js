@@ -18,10 +18,12 @@ module.exports = class RouletteCommand extends Command {
 			memberName: 'roulette',
 			description: 'Play a game of roulette for donuts!',
 			details: 'Play a game of roulette for donuts.',
+			guildOnly: true,
 			throttling: {
-				duration: 30,
-				usages: 1
+				usages: 1,
+				duration: 30
 			},
+
 			args: [
 				{
 					key: 'bet',

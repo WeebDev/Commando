@@ -36,8 +36,8 @@ module.exports = class SlotMachineCommand extends Command {
 				Doubles your money if you win!
 			`,
 			throttling: {
-				duration: 5,
-				usages: 1
+				usages: 1,
+				duration: 5
 			},
 
 			args: [

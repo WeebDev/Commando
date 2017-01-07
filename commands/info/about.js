@@ -8,7 +8,11 @@ module.exports = class AboutCommand extends Command {
 			aliases: ['📓'],
 			group: 'info',
 			memberName: 'about',
-			description: 'Displays information about the command framework.'
+			description: 'Displays information about the command framework.',
+			throttling: {
+				usages: 2,
+				duration: 3
+			}
 		});
 	}
 

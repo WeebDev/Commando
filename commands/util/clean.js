@@ -16,6 +16,10 @@ module.exports = class CleanCommand extends Command {
 				__uploads:__ Messages containing an attachment
 				__links:__ Messages containing a link`,
 			guildOnly: true,
+			throttling: {
+				usages: 2,
+				duration: 3
+			},
 
 			args: [
 				{

@@ -11,6 +11,10 @@ module.exports = class StoreInfoCommand extends Command {
 			memberName: 'store',
 			description: 'Displays price of all items.',
 			display: 'Displays price of all items.',
+			throttling: {
+				usages: 2,
+				duration: 3
+			},
 
 			args: [
 				{

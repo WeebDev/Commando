@@ -11,6 +11,10 @@ module.exports = class RemindMeCommand extends Command {
 			memberName: 'remindme',
 			description: 'Reminds you of something.',
 			guildOnly: true,
+			throttling: {
+				usages: 2,
+				duration: 3
+			},
 
 			args: [
 				{

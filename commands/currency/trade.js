@@ -12,6 +12,11 @@ module.exports = class MoneyTradeCommand extends Command {
 			memberName: 'trade',
 			description: 'Trades the money you have earned.',
 			details: 'Trades the amount of money you have earned.',
+			guildOnly: true,
+			throttling: {
+				usages: 2,
+				duration: 3
+			},
 
 			args: [
 				{

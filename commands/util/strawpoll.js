@@ -14,6 +14,11 @@ module.exports = class FortuneCommand extends Command {
 			details: stripIndents`Create a strawpoll.
 				The first argument is always the title, if you provde it, otherwise your username will be used!
 				If you need to use spaces in your title make sure you put them in SingleQuotes => \`'topic here'\``,
+			guildOnly: true,
+			throttling: {
+				usages: 2,
+				duration: 3
+			},
 
 			args: [
 				{

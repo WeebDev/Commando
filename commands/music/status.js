@@ -11,7 +11,11 @@ module.exports = class MusicStatusCommand extends Command {
 			group: 'music',
 			memberName: 'status',
 			description: 'Shows the current status of the music.',
-			guildOnly: true
+			guildOnly: true,
+			throttling: {
+				usages: 2,
+				duration: 3
+			}
 		});
 	}
 

@@ -18,6 +18,10 @@ module.exports = class PlaySongCommand extends Command {
 			memberName: 'play',
 			description: 'Adds a song to the queue.',
 			guildOnly: true,
+			throttling: {
+				usages: 2,
+				duration: 3
+			},
 
 			args: [
 				{

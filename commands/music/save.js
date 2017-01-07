@@ -9,7 +9,11 @@ module.exports = class SaveQueueCommand extends Command {
 			group: 'music',
 			memberName: 'save',
 			description: 'Saves the queued songs.',
-			guildOnly: true
+			guildOnly: true,
+			throttling: {
+				usages: 2,
+				duration: 3
+			}
 		});
 	}
 

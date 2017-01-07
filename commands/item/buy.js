@@ -15,6 +15,10 @@ module.exports = class BuyItemCommand extends Command {
 			memberName: 'buy',
 			description: 'Buys an item at the store.',
 			details: 'Let\'s you exchange your hard earned donuts for other goods.',
+			throttling: {
+				usages: 2,
+				duration: 3
+			},
 
 			args: [
 				{

@@ -9,8 +9,13 @@ module.exports = class MoneyRemoveCommand extends Command {
 			aliases: ['remove-donut', 'remove-donuts', 'money-remove', 'donut-remove', 'donuts-remove'],
 			group: 'currency',
 			memberName: 'remove',
-			description: 'Displays the money you have earned.',
-			details: 'Display the amount of money you have earned.',
+			description: 'Remove money from a certain user.',
+			details: 'Remove amount of money from a certain user.',
+			guildOnly: true,
+			throttling: {
+				usages: 2,
+				duration: 3
+			},
 
 			args: [
 				{
