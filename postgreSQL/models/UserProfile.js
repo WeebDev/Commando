@@ -8,19 +8,19 @@ let UserProfile = database.db.define('userProfiles', {
 	userID: Sequelize.STRING,
 	inventory: {
 		type: Sequelize.STRING,
-		default: '[]'
+		defaultValue: '[]'
 	},
 	money: {
 		type: Sequelize.BIGINT(), // eslint-disable-line new-cap
-		default: 0
+		defaultValue: 0
 	},
 	experience: {
 		type: Sequelize.BIGINT(), // eslint-disable-line new-cap
-		default: 0
+		defaultValue: 0
 	},
 	personalMessage: {
 		type: Sequelize.STRING,
-		default: ''
+		defaultValue: ''
 	}
 });
 
