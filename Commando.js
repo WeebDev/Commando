@@ -78,7 +78,6 @@ client.on('error', winston.error)
 
 				if (newLevel > oldLevel) {
 					Currency.addBalance(message.author.id, 100 * newLevel);
-					message.channel.sendMessage(`You leveled up to level ${newLevel}! Wooooooooo`);
 				}
 			}).catch(winston.error);
 
