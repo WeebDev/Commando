@@ -60,14 +60,13 @@ client.on('error', winston.error)
 		? Math.ceil(Math.random() * 7) + 1
 		: Math.ceil(Math.random() * 7) + 5;
 
-			Currency.addBalance(message.author.id, moneyEarned);
+		Currency.addBalance(message.author.id, moneyEarned);
 
-			earnedRecently.push(message.author.id);
-			setTimeout(() => {
-				const index = earnedRecently.indexOf(message.author.id);
-				earnedRecently.splice(index, 1);
-			}, 8000);
-		}
+		earnedRecently.push(message.author.id);
+		setTimeout(() => {
+			const index = earnedRecently.indexOf(message.author.id);
+			earnedRecently.splice(index, 1);
+		}, 8000);
 
 		if (!gainedXPRecently.includes(message.author.id)) {
 			const xpEarned = Math.ceil(Math.random() * 9) + 3;
