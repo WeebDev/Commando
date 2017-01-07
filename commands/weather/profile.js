@@ -2,14 +2,10 @@ const Canvas = require('canvas');
 const { Command } = require('discord.js-commando');
 const Experience = require('../../currency/Experience');
 const fs = global.Promise.promisifyAll(require('fs'));
-const moment = require('moment');
 const path = require('path');
 const request = require('request-promise');
 
 const Currency = require('../../currency/Currency');
-
-const config = require('../../settings');
-const version = require('../../package').version;
 
 module.exports = class ProfileCommand extends Command {
 	constructor(client) {
@@ -22,13 +18,22 @@ module.exports = class ProfileCommand extends Command {
 			guildOnly: true,
 			throttling: {
 				usages: 1,
-				duration: 30
-			}
+				duration: 60
+			},
+
+			args: [
+				{
+					key: 'member',
+					prompt: 'What user would you like to have information on?\n',
+					type: 'member',
+					default: ''
+				}
+			]
 		});
 	}
 
 	async run(msg, args) {
-		const user = args.member || msg.author;
+		const user = args.member || msg.member;
 		const Image = Canvas.Image;
 
 		const balance = await Currency.getBalance(user.id);
@@ -36,6 +41,8 @@ module.exports = class ProfileCommand extends Command {
 		const level = await Experience.getLevel(user.id);
 		const levelBounds = await Experience.getLevelBounds(level);
 		const totalExp = await Experience.getTotalExperience(user.id);
+
+		const fillValue = Math.min(Math.max(currentExp / (levelBounds.upperBound - levelBounds.lowerBound), 0), 1);
 
 		Canvas.registerFont(path.join(__dirname, '../../assets/profile/fonts/Roboto.ttf'), { family: 'Roboto' });
 
@@ -61,7 +68,14 @@ module.exports = class ProfileCommand extends Command {
 			// Username
 			ctx.font = '20px Roboto';
 			ctx.fillStyle = '#FFFFFF';
-			ctx.fillText(user.username, 50, 173);
+			ctx.fillText(user.displayName, 50, 173);
+
+			// EXP
+			ctx.font = '10px Roboto';
+			ctx.textAlign = 'center';
+			ctx.fillStyle = '#3498DB';
+			ctx.shadowColor = 'rgba(0, 0, 0, 0)';
+			ctx.fillRect(10, 191, fillValue * 135, 17);
 
 			// EXP
 			ctx.font = '10px Roboto';
@@ -136,8 +150,8 @@ module.exports = class ProfileCommand extends Command {
 			ctx.drawImage(cond, 24, 21, 110, 110);
 		};
 
-		base.src = await fs.readFileAsync(path.join(__dirname, `../../assets/profile/backgrounds/test.png`));
-		cond.src = await request({ uri: msg.author.avatarURL.replace(/(png|jpg|jpeg|gif|webp)\?size=1024/, 'png'), encoding: null });
+		base.src = await fs.readFileAsync(path.join(__dirname, `../../assets/profile/backgrounds/test2.png`));
+		cond.src = await request({ uri: user.user.avatarURL.replace(/(png|jpg|jpeg|gif|webp)\?size=1024/, 'png'), encoding: null });
 		await generate();
 
 		return msg.channel.sendFile(await canvas.toBuffer(), `profile.png`);
