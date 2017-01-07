@@ -149,7 +149,7 @@ module.exports = class WeatherCommand extends Command {
 		};
 
 		base.src = await fs.readFileAsync(this.getBase(icon));
-		cond.src = await fs.readFileAsync(path.join(__dirname, `../../assets/weather/icons/partly-cloudy-night.png`));
+		cond.src = await fs.readFileAsync(path.join(__dirname, `../../assets/weather/icons/${icon}.png`));
 		generate();
 
 		return msg.channel.sendFile(canvas.toBuffer(), `${geocodelocation}.png`);
