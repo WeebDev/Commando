@@ -45,11 +45,12 @@ module.exports = class ProfileCommand extends Command {
 		const fillValue = Math.min(Math.max(currentExp / (levelBounds.upperBound - levelBounds.lowerBound), 0), 1);
 
 		Canvas.registerFont(path.join(__dirname, '../../assets/profile/fonts/Roboto.ttf'), { family: 'Roboto' });
+		Canvas.registerFont(path.join(__dirname, '../../assets/profile/fonts/NotoEmoji-Regular.ttf'), { family: 'Roboto' });
 
 		const canvas = new Canvas(300, 300);
 		const ctx = canvas.getContext('2d');
 
-		const lines = this.wrapText(ctx, 'asdasdiaushdiahsdiahsdihasidhiashdiahsidhasidhigvdhfighdighidrhgduirg', 108 - parseInt(12, 0));
+		const lines = this.wrapText(ctx, '', 108 - parseInt(12, 0));
 
 		const base = new Image();
 		const cond = new Image();
