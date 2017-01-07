@@ -25,8 +25,8 @@ const client = new commando.Client({
 let earnedRecently = [];
 let gainedXPRecently = [];
 
-/*Raven.config(config.ravenKey);
-Raven.install();*/
+Raven.config(config.ravenKey);
+Raven.install();
 
 database.start();
 redis.start();
@@ -78,7 +78,6 @@ client.on('error', winston.error)
 
 				if (newLevel > oldLevel) {
 					Currency.addBalance(message.author.id, 100 * newLevel);
-					message.channel.sendMessage(`You leveled up to level ${newLevel}! Wooooooooo`);
 				}
 			}).catch(winston.error);
 
@@ -123,7 +122,8 @@ client.on('error', winston.error)
 client.registry
 	.registerGroups([
 		['info', 'Info'],
-		['currency', 'Currency'],
+		['economy', 'Economy'],
+		['social', 'Social'],
 		['games', 'Games'],
 		['item', 'Item'],
 		['weather', 'Weather'],

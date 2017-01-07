@@ -19,7 +19,7 @@ module.exports = class MoneyTradeCommand extends Command {
 				'doughnut-trade',
 				'doughnuts-trade'
 			],
-			group: 'currency',
+			group: 'economy',
 			memberName: 'trade',
 			description: 'Trades the money you have earned.',
 			details: 'Trades the amount of money you have earned.',

@@ -17,7 +17,7 @@ module.exports = class MoneyRemoveCommand extends Command {
 				'doughnut-remove',
 				'doughnuts-remove'
 			],
-			group: 'currency',
+			group: 'economy',
 			memberName: 'remove',
 			description: 'Remove money from a certain user.',
 			details: 'Remove amount of money from a certain user.',

@@ -8,7 +8,7 @@ module.exports = class DailyCommand extends Command {
 	constructor(client) {
 		super(client, {
 			name: 'daily',
-			group: 'currency',
+			group: 'economy',
 			memberName: 'daily',
 			description: 'Receive your daily donuts.',
 			details: 'Receive your daily donuts.',

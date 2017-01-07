@@ -30,4 +30,4 @@ node_modules
 settings.json
 settings.db
 docsdata.json
-assets/profile/backgrounds/*.psd
+assets/profile/backgrounds/**

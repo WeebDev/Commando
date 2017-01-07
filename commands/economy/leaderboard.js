@@ -20,7 +20,7 @@ module.exports = class MoneyLeaderboardCommand extends Command {
 				'doughnut-leaderboard',
 				'doughnuts-leaderboard'
 			],
-			group: 'currency',
+			group: 'economy',
 			memberName: 'leaderboard',
 			description: 'Displays the money members have earned.',
 			details: 'Display the amount of money members have earned in a leaderboard.',

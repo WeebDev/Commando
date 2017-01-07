@@ -2,33 +2,38 @@ const Canvas = require('canvas');
 const { Command } = require('discord.js-commando');
 const Experience = require('../../currency/Experience');
 const fs = global.Promise.promisifyAll(require('fs'));
-const moment = require('moment');
 const path = require('path');
 const request = require('request-promise');
 
 const Currency = require('../../currency/Currency');
-
-const config = require('../../settings');
-const version = require('../../package').version;
 
 module.exports = class ProfileCommand extends Command {
 	constructor(client) {
 		super(client, {
 			name: 'profile',
 			aliases: ['p'],
-			group: 'weather',
+			group: 'social',
 			memberName: 'profile',
-			description: 'Get the weather.',
+			description: 'Display your profile.',
 			guildOnly: true,
 			throttling: {
 				usages: 1,
-				duration: 30
-			}
+				duration: 60
+			},
+
+			args: [
+				{
+					key: 'member',
+					prompt: 'What user profile would you like to see?\n',
+					type: 'member',
+					default: ''
+				}
+			]
 		});
 	}
 
 	async run(msg, args) {
-		const user = args.member || msg.author;
+		const user = args.member || msg.member;
 		const Image = Canvas.Image;
 
 		const balance = await Currency.getBalance(user.id);
@@ -36,6 +41,8 @@ module.exports = class ProfileCommand extends Command {
 		const level = await Experience.getLevel(user.id);
 		const levelBounds = await Experience.getLevelBounds(level);
 		const totalExp = await Experience.getTotalExperience(user.id);
+
+		const fillValue = Math.min(Math.max(currentExp / (levelBounds.upperBound - levelBounds.lowerBound), 0), 1);
 
 		Canvas.registerFont(path.join(__dirname, '../../assets/profile/fonts/Roboto.ttf'), { family: 'Roboto' });
 
@@ -61,7 +68,14 @@ module.exports = class ProfileCommand extends Command {
 			// Username
 			ctx.font = '20px Roboto';
 			ctx.fillStyle = '#FFFFFF';
-			ctx.fillText(user.username, 50, 173);
+			ctx.fillText(user.displayName, 50, 173);
+
+			// EXP
+			ctx.font = '10px Roboto';
+			ctx.textAlign = 'center';
+			ctx.fillStyle = '#3498DB';
+			ctx.shadowColor = 'rgba(0, 0, 0, 0)';
+			ctx.fillRect(10, 191, fillValue * 135, 17);
 
 			// EXP
 			ctx.font = '10px Roboto';
@@ -93,7 +107,7 @@ module.exports = class ProfileCommand extends Command {
 			ctx.fillStyle = '#E5E5E5';
 			ctx.fillText(totalExp, 86, 254);
 
-			// Global Rank
+			/*// Global Rank
 			ctx.font = '14px Roboto';
 			ctx.fillStyle = '#E5E5E5';
 			ctx.fillText('Rank', 12, 270);
@@ -101,7 +115,7 @@ module.exports = class ProfileCommand extends Command {
 			// Global Rank Number
 			ctx.font = '14px Roboto';
 			ctx.fillStyle = '#E5E5E5';
-			ctx.fillText('#1', 86, 270);
+			ctx.fillText('#1', 86, 270);*/
 
 			// Currency
 			ctx.font = '14px Roboto';
@@ -137,7 +151,7 @@ module.exports = class ProfileCommand extends Command {
 		};
 
 		base.src = await fs.readFileAsync(path.join(__dirname, `../../assets/profile/backgrounds/test.png`));
-		cond.src = await request({ uri: msg.author.avatarURL.replace(/(png|jpg|jpeg|gif|webp)\?size=1024/, 'png'), encoding: null });
+		cond.src = await request({ uri: user.user.avatarURL.replace(/(png|jpg|jpeg|gif|webp)\?size=1024/, 'png'), encoding: null });
 		await generate();
 
 		return msg.channel.sendFile(await canvas.toBuffer(), `profile.png`);
