@@ -23,8 +23,10 @@ class Currency {
 		Currency.addBalance(user, -earned);
 	}
 
-	static getBalance(user) {
-		return redis.db.hgetAsync('money', user);
+	static async getBalance(user) {
+		const money = await redis.db.hgetAsync('money', user) || 0;
+
+		return money;
 	}
 
 	static leaderboard() {
