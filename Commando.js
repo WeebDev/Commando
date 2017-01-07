@@ -52,6 +52,7 @@ client.on('error', winston.error)
 	})
 	.on('message', async (message) => {
 		if (message.author.bot) return;
+		if (message.channel.type === 'dm') return;
 
 		if (!earnedRecently.includes(message.author.id)) {
 			const hasImageAttachment = message.attachments.some(attachment => {
