@@ -7,7 +7,7 @@ const database = new Database();
 let Experience = database.db.define('experience', {
 	userID: Sequelize.STRING,
 	experience: {
-		type: Sequelize.INTEGER,
+		type: Sequelize.BIGINT(), // eslint-disable-line new-cap
 		defaultValue: 0
 	}
 });
