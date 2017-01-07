@@ -1,6 +1,7 @@
 const { Command } = require('discord.js-commando');
 const moment = require('moment');
 const sherlock = require('Sherlock');
+const stripIndents = require('common-tags').stripIndents;
 
 module.exports = class RemindMeCommand extends Command {
 	constructor(client) {
@@ -11,6 +12,10 @@ module.exports = class RemindMeCommand extends Command {
 			memberName: 'remindme',
 			description: 'Reminds you of something.',
 			guildOnly: true,
+			throttling: {
+				usages: 2,
+				duration: 3
+			},
 
 			args: [
 				{
@@ -29,9 +34,13 @@ module.exports = class RemindMeCommand extends Command {
 		const remindTime = sherlock.parse(remind);
 		const time = remindTime.startDate.getTime() - Date.now();
 
-		const preRemind = await msg.say(`I will remind you '${remindTime.eventTitle}' ${moment().add(time, 'ms').fromNow()}.`);
+		const preRemind = await msg.say(
+			stripIndents`I will remind you '${remindTime.eventTitle}' ${moment().add(time, 'ms').fromNow()}.
+		`);
 		const remindMessage = await new Promise(resolve => {
-			setTimeout(() => resolve(msg.say(`${msg.author} you wanted me to remind you of: '${remindTime.eventTitle}'`)), time);
+			setTimeout(() => resolve(msg.say(stripIndents`
+				${msg.author} you wanted me to remind you of: '${remindTime.eventTitle}'
+			`)), time);
 		});
 
 		return [preRemind, remindMessage];

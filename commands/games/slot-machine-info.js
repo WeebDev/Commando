@@ -9,7 +9,11 @@ module.exports = class SlotMachineInfo extends Command {
 			group: 'games',
 			memberName: 'slotmachine-info',
 			description: 'Displays information about the slotmachine.',
-			details: 'Displays information about the slotmachine.'
+			details: 'Displays information about the slotmachine.',
+			throttling: {
+				usages: 2,
+				duration: 3
+			}
 		});
 	}
 

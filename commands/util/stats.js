@@ -13,7 +13,11 @@ module.exports = class StatsCommand extends Command {
 			group: 'util',
 			memberName: 'stats',
 			description: 'Displays statistics about the bot.',
-			guildOnly: true
+			guildOnly: true,
+			throttling: {
+				usages: 2,
+				duration: 3
+			}
 		});
 	}
 

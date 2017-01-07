@@ -2,6 +2,7 @@ global.Promise = require('bluebird');
 
 const commando = require('discord.js-commando');
 const Currency = require('./currency/Currency');
+const Experience = require('./currency/Experience');
 const fs = require('fs');
 const oneLine = require('common-tags').oneLine;
 const path = require('path');
@@ -32,9 +33,10 @@ const client = new commando.Client({
 });
 
 let earnedRecently = [];
+let gainedXPRecently = [];
 
-Raven.config(config.ravenKey);
-Raven.install();
+/*Raven.config(config.ravenKey);
+Raven.install();*/
 
 database.start();
 redis.start();
@@ -58,20 +60,43 @@ client.on('error', winston.error)
 			${Object.values(args)[0] !== '' ? `>>> ${Object.values(args)}` : ''}
 		`);
 	})
-	.on('message', (message) => {
+	.on('message', async (message) => {
 		if (message.author.bot) return;
-		if (earnedRecently.includes(message.author.id)) return;
 
-		const hasImageAttachment = message.attachments.some(attachment => attachment.url.match(/\.(png|jpg|jpeg|gif|webp)$/));
-		const moneyEarned = hasImageAttachment ? Math.ceil(Math.random() * 7) + 1 : Math.ceil(Math.random() * 7) + 5;
+		if (!earnedRecently.includes(message.author.id)) {
+			const hasImageAttachment = message.attachments.some(attachment => {
+				return attachment.url.match(/\.(png|jpg|jpeg|gif|webp)$/);
+			});
+			const moneyEarned = hasImageAttachment
+				? Math.ceil(Math.random() * 7) + 1
+				: Math.ceil(Math.random() * 7) + 5;
 
-		Currency.addBalance(message.author.id, moneyEarned);
+			Currency.addBalance(message.author.id, moneyEarned);
 
-		earnedRecently.push(message.author.id);
-		setTimeout(() => {
-			const index = earnedRecently.indexOf(message.author.id);
-			earnedRecently.splice(index, 1);
-		}, 8000);
+			earnedRecently.push(message.author.id);
+			setTimeout(() => {
+				const index = earnedRecently.indexOf(message.author.id);
+				earnedRecently.splice(index, 1);
+			}, 8000);
+		}
+
+		if (!gainedXPRecently.includes(message.author.id)) {
+			const xpEarned = Math.ceil(Math.random() * 9) + 3;
+			const oldLevel = await Experience.getLevel(message.author.id);
+			Experience.addExperience(message.author.id, xpEarned).then(async () => {
+				const newLevel = await Experience.getLevel(message.author.id);
+
+				if (newLevel > oldLevel) {
+					Currency.addBalance(message.author.id, 100 * newLevel);
+				}
+			}).catch(winston.error);
+
+			gainedXPRecently.push(message.author.id);
+			setTimeout(() => {
+				const index = gainedXPRecently.indexOf(message.author.id);
+				gainedXPRecently.splice(index, 1);
+			}, 60 * 1000);
+		}
 	})
 	.on('message', msg => {
 		if (msg.author.bot) return;
@@ -205,7 +230,8 @@ client.on('error', winston.error)
 client.registry
 	.registerGroups([
 		['info', 'Info'],
-		['currency', 'Currency'],
+		['currency', 'Economy'],
+		['social', 'Social'],
 		['games', 'Games'],
 		['item', 'Item'],
 		['weather', 'Weather'],

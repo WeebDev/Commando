@@ -11,7 +11,7 @@ module.exports = class ExampleAddCommand extends Command {
 	constructor(client) {
 		super(client, {
 			name: 'add-example',
-			aliases: ['tag-add-example', 'example-add', 'add-example-tag'],
+			aliases: ['example-add', 'tag-add-example', 'add-example-tag'],
 			group: 'tags',
 			memberName: 'add-example',
 			description: 'Adds an example.',

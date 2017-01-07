@@ -9,7 +9,11 @@ module.exports = class StopMusicCommand extends Command {
 			memberName: 'stop',
 			description: 'Stops the music and wipes the queue.',
 			details: 'Only moderators may use this command.',
-			guildOnly: true
+			guildOnly: true,
+			throttling: {
+				usages: 2,
+				duration: 3
+			}
 		});
 	}
 

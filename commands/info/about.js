@@ -5,10 +5,13 @@ module.exports = class AboutCommand extends Command {
 	constructor(client) {
 		super(client, {
 			name: 'about',
-			aliases: ['📓'],
 			group: 'info',
 			memberName: 'about',
-			description: 'Displays information about the command framework.'
+			description: 'Displays information about the command framework.',
+			throttling: {
+				usages: 2,
+				duration: 3
+			}
 		});
 	}
 

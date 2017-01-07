@@ -10,11 +10,15 @@ module.exports = class BuyItemCommand extends Command {
 	constructor(client) {
 		super(client, {
 			name: 'buy-item',
-			aliases: ['buy', 'item-buy'],
+			aliases: ['item-buy', 'buy'],
 			group: 'item',
 			memberName: 'buy',
 			description: 'Buys an item at the store.',
 			details: 'Let\'s you exchange your hard earned donuts for other goods.',
+			throttling: {
+				usages: 2,
+				duration: 3
+			},
 
 			args: [
 				{
@@ -52,7 +56,13 @@ module.exports = class BuyItemCommand extends Command {
 
 		if (balance < storeItem.price * amount) {
 			return msg.reply(stripIndents`
-				you don't have enough donuts to buy ${amount} ${itemName}${plural ? 's' : ''}. ${amount} ${itemName}${plural ? 's' : ''} cost${plural ? '' : 's'} ${amount * storeItem.price} 🍩s.
+				you don't have enough donuts to buy ${amount} ${itemName}${plural
+					? 's'
+					: ''}. ${amount} ${itemName}${plural
+						? 's'
+						: ''} cost${plural
+							? ''
+							: 's'} ${amount * storeItem.price} 🍩s.
 				Your current account balance is ${balance} 🍩s.
 			`);
 		}
@@ -62,6 +72,10 @@ module.exports = class BuyItemCommand extends Command {
 		Currency.removeBalance(msg.author.id, amount * storeItem.price);
 		inventory.save();
 
-		return msg.reply(`you have successfully purchased ${amount} ${itemName}${plural ? 's' : ''} for ${amount * storeItem.price} 🍩s.`);
+		return msg.reply(stripIndents`
+			you have successfully purchased ${amount} ${itemName}${plural
+				? 's'
+				: ''} for ${amount * storeItem.price} 🍩s.
+		`);
 	}
 };

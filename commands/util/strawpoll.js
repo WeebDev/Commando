@@ -14,6 +14,11 @@ module.exports = class FortuneCommand extends Command {
 			details: stripIndents`Create a strawpoll.
 				The first argument is always the title, if you provde it, otherwise your username will be used!
 				If you need to use spaces in your title make sure you put them in SingleQuotes => \`'topic here'\``,
+			guildOnly: true,
+			throttling: {
+				usages: 2,
+				duration: 3
+			},
 
 			args: [
 				{
@@ -44,7 +49,7 @@ module.exports = class FortuneCommand extends Command {
 			method: 'POST',
 			uri: `https://strawpoll.me/api/v2/polls`,
 			followAllRedirects: true,
-			headers: { 'User-Agent': `Hamakaze v${version} (https://github.com/WeebDev/Hamakaze/)` },
+			headers: { 'User-Agent': `Commando v${version} (https://github.com/WeebDev/Commando/)` },
 			body: {
 				title: title,
 				options: options,

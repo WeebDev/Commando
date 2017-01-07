@@ -9,6 +9,7 @@ module.exports = class TagSourceCommand extends Command {
 	constructor(client) {
 		super(client, {
 			name: 'tag-source',
+			aliases: ['source-tag'],
 			group: 'tags',
 			memberName: 'source',
 			description: 'Displays a tags source.',

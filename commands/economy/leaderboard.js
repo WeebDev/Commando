@@ -1,10 +1,11 @@
 const { Command, util } = require('discord.js-commando');
 const moment = require('moment');
+const oneLine = require('common-tags').oneLine;
 const stripIndents = require('common-tags').stripIndents;
 
 const config = require('../../settings');
-const Money = require('../../postgreSQL/models/Money');
 const Redis = require('../../redis/Redis');
+const UserProfile = require('../../postgreSQL/models/UserProfile');
 
 const redis = new Redis();
 
@@ -12,12 +13,22 @@ module.exports = class MoneyLeaderboardCommand extends Command {
 	constructor(client) {
 		super(client, {
 			name: 'leaderboard',
-			aliases: ['donut-leaderboard', 'donuts-leaderboard', 'money-leaderboard'],
-			group: 'currency',
+			aliases: [
+				'money-leaderboard',
+				'donut-leaderboard',
+				'donuts-leaderboard',
+				'doughnut-leaderboard',
+				'doughnuts-leaderboard'
+			],
+			group: 'economy',
 			memberName: 'leaderboard',
 			description: 'Displays the money members have earned.',
 			details: 'Display the amount of money members have earned in a leaderboard.',
 			guildOnly: true,
+			throttling: {
+				usages: 2,
+				duration: 3
+			},
 
 			args: [
 				{
@@ -47,7 +58,11 @@ module.exports = class MoneyLeaderboardCommand extends Command {
 			description: stripIndents`
 				__**Donut leaderboard, page ${paginated.page}**__
 
-				${paginated.items.map(user => `**${++ranking} -** ${`${this.client.users.get(user.userID).username}#${this.client.users.get(user.userID).discriminator}`} (**${user.money}** 🍩)`).join('\n')}
+				${paginated.items.map(user => oneLine`
+					**${++ranking} -**
+					${`${this.client.users.get(user.userID).username}
+					#${this.client.users.get(user.userID).discriminator}`}
+					(**${user.money}** 🍩)`).join('\n')}
 
 				${moment.duration(reset).format('hh [hours] mm [minutes]')} until the next update.
 			`,
@@ -60,7 +75,7 @@ module.exports = class MoneyLeaderboardCommand extends Command {
 			if (reply) {
 				return reply;
 			} else {
-				const money = await Money.findAll({ where: { userID: { $ne: 'SLOTMACHINE' } }, order: 'money DESC' });
+				const money = await UserProfile.findAll({ where: { userID: { $ne: 'SLOTMACHINE' } }, order: 'money DESC' });
 				if (!money) return `No money, biatch`;
 
 				redis.db.setAsync('moneyleaderboard', JSON.stringify(money));

@@ -13,20 +13,23 @@ module.exports = class RouletteCommand extends Command {
 	constructor(client) {
 		super(client, {
 			name: 'roulette',
-			aliases: ['roulette', 'bet'],
+			aliases: ['roulette'],
 			group: 'games',
 			memberName: 'roulette',
 			description: 'Play a game of roulette for donuts!',
 			details: 'Play a game of roulette for donuts.',
+			guildOnly: true,
 			throttling: {
-				duration: 30,
-				usages: 1
+				usages: 1,
+				duration: 30
 			},
+
 			args: [
 				{
 					key: 'bet',
 					prompt: 'How many donuts do you want to bet?',
-					type: 'integer'
+					type: 'integer',
+					max: 5000
 				},
 				{
 					key: 'space',
@@ -44,12 +47,20 @@ module.exports = class RouletteCommand extends Command {
 		const balance = await Currency.getBalance(msg.author.id);
 		let roulette = Roulette.findGame(msg.guild.id);
 
-		if (balance < bet) return msg.reply(`you need at least 100 🍩s to bet, but your current account balance is ${balance} 🍩s.`);
-		if (![100, 200, 300, 400, 500, 1000, 2000, 5000].includes(bet)) return msg.say('you need to bet either 100, 200, 300, 400, 500, 1000, 2000 or 5000 donuts.');
-		if (!Roulette.hasSpace(space)) return msg.reply('that is not a valid betting space. Use `roulette-info` for more information');
+		if (balance < bet) {
+			return msg.reply(`you need at least 100 🍩s to bet, but your current account balance is ${balance} 🍩s.`);
+		}
+		if (![100, 200, 300, 400, 500, 1000, 2000, 5000].includes(bet)) {
+			return msg.reply('you need to bet either 100, 200, 300, 400, 500, 1000, 2000 or 5000 donuts.');
+		}
+		if (!Roulette.hasSpace(space)) {
+			return msg.reply('that is not a valid betting space. Use `roulette-info` for more information');
+		}
 
 		if (roulette) {
-			if (roulette.hasPlayer(msg.author.id)) return msg.reply('you have already put a bet in this game of roulette.');
+			if (roulette.hasPlayer(msg.author.id)) {
+				return msg.reply('you have already put a bet in this game of roulette.');
+			}
 
 			roulette.join(msg.author, bet, space);
 			Currency.removeBalance(msg.author.id, bet);
@@ -79,7 +90,9 @@ module.exports = class RouletteCommand extends Command {
 				return msg.embed({
 					color: colors[roulette.winSpaces[1]] || null,
 					description: stripIndents`
-						The ball landed on: **${roulette.winSpaces[1] ? roulette.winSpaces[1] : ''} ${roulette.winSpaces[0]}**!
+						The ball landed on: **${roulette.winSpaces[1]
+							? roulette.winSpaces[1]
+							: ''} ${roulette.winSpaces[0]}**!
 
 						${winners.length !== 0
 							? `__**Winners:**__

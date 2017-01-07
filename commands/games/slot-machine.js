@@ -12,6 +12,7 @@ const reels = [
 	['💎', '🔅', '❤', '🍒', '🎉', '⚜', '🎲', '⭐', '💰'],
 	['❤', '🎲', '💎', '⭐', '⚜', '🍒', '💰', '🎉', '🔅']
 ];
+
 const values = {
 	'💎': 500,
 	'⚜': 400,
@@ -28,6 +29,7 @@ module.exports = class SlotMachineCommand extends Command {
 	constructor(client) {
 		super(client, {
 			name: 'slot-machine',
+			aliases: ['slot', 'slots'],
 			group: 'currency',
 			memberName: 'slot-machine',
 			description: 'Let\'s you play a round with the slot machine',
@@ -36,15 +38,16 @@ module.exports = class SlotMachineCommand extends Command {
 				Doubles your money if you win!
 			`,
 			throttling: {
-				duration: 5,
-				usages: 1
+				usages: 1,
+				duration: 5
 			},
 
 			args: [
 				{
 					key: 'coins',
 					prompt: 'How many coins do you want to bet?',
-					type: 'integer'
+					type: 'integer',
+					max: 5
 				}
 			]
 		});

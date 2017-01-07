@@ -1,4 +1,4 @@
-const InventoryDB = require('../postgreSQL/models/Inventory');
+const UserProfile = require('../postgreSQL/models/UserProfile');
 const ItemGroup = require('./ItemGroup');
 const Redis = require('../redis/Redis');
 
@@ -6,22 +6,22 @@ const redis = new Redis();
 
 setInterval(() => {
 	redis.db.hgetallAsync('inventory').then(inventories => {
-		const ids = Object.keys(inventories);
+		const ids = Object.keys(inventories || {});
 
 		for (const id of ids) {
-			InventoryDB.findOne({ where: { userID: id } }).then(user => {
+			UserProfile.findOne({ where: { userID: id } }).then(user => {
 				if (!user) {
-					InventoryDB.create({
+					UserProfile.create({
 						userID: id,
-						content: JSON.stringify(inventories[id])
+						inventory: JSON.stringify(inventories[id])
 					});
 				} else {
-					user.update({ content: JSON.stringify(inventories[id]) });
+					user.update({ inventory: JSON.stringify(inventories[id]) });
 				}
 			});
 		}
 	});
-}, 60 * 60 * 1000);
+}, 5 * 1000);
 
 class Inventory {
 	constructor(user, content) {

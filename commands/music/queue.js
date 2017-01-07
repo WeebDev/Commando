@@ -14,6 +14,10 @@ module.exports = class ViewQueueCommand extends Command {
 			memberName: 'queue',
 			description: 'Lists the queued songs.',
 			guildOnly: true,
+			throttling: {
+				usages: 2,
+				duration: 3
+			},
 
 			args: [
 				{

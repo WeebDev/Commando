@@ -31,4 +31,4 @@ settings.json
 settings.db
 repos/*
 docsdata.json
-assets/profile/backgrounds/*.psd
+assets/profile/backgrounds/**

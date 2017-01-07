@@ -12,16 +12,18 @@ module.exports = class BlackjackCommand extends Command {
 			memberName: 'blackjack',
 			description: 'Play a game of blackjack for donuts!',
 			details: 'Play a game of blackjack for donuts.',
+			guildOnly: true,
 			throttling: {
-				duration: 30,
-				usages: 1
+				usages: 1,
+				duration: 30
 			},
 
 			args: [
 				{
 					key: 'bet',
 					prompt: 'How many donuts do you want to bet?',
-					type: 'integer'
+					type: 'integer',
+					max: 1000
 				}
 			]
 		});
@@ -31,9 +33,15 @@ module.exports = class BlackjackCommand extends Command {
 		const bet = args.bet;
 		const balance = await Currency.getBalance(msg.author.id);
 
-		if (balance < bet) return msg.reply(`you don't have enough donuts. Your current account balance is ${balance} 🍩s.`);
-		if (![100, 200, 300, 400, 500, 1000].includes(bet)) return msg.say('you need to bet either 100, 200, 300, 400, 500 or 1000 donuts.');
-		if (Blackjack.gameExists(msg.author.id)) return msg.reply(`you can't start 2 games of blackjack at the same time.`);
+		if (balance < bet) {
+			return msg.reply(`you don't have enough donuts. Your current account balance is ${balance} 🍩s.`);
+		}
+		if (![100, 200, 300, 400, 500, 1000].includes(bet)) {
+			return msg.reply('you need to bet either 100, 200, 300, 400, 500 or 1000 donuts.');
+		}
+		if (Blackjack.gameExists(msg.author.id)) {
+			return msg.reply(`you can't start 2 games of blackjack at the same time.`);
+		}
 
 		const blackjack = new Blackjack(msg.author.id);
 
@@ -42,7 +50,9 @@ module.exports = class BlackjackCommand extends Command {
 				let playerHand = blackjack.getHand();
 				let dealerHand = blackjack.getHand();
 
-				if (Blackjack.handValue(playerHand) !== 'Blackjack') playerHand = await this.getFinalHand(msg, playerHand, dealerHand, blackjack);
+				if (Blackjack.handValue(playerHand) !== 'Blackjack') {
+					playerHand = await this.getFinalHand(msg, playerHand, dealerHand, blackjack);
+				}
 				const playerValue = Blackjack.handValue(playerHand);
 
 				while (Blackjack.handValue(dealerHand) < 17) dealerHand = blackjack.hit(dealerHand);

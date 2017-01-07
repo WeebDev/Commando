@@ -6,11 +6,26 @@ module.exports = class MoneyRemoveCommand extends Command {
 	constructor(client) {
 		super(client, {
 			name: 'remove-money',
-			aliases: ['remove-donut', 'remove-donuts', 'money-remove', 'donut-remove', 'donuts-remove'],
-			group: 'currency',
+			aliases: [
+				'money-remove',
+				'remove-donut',
+				'remove-donuts',
+				'remove-doughnut',
+				'remove-doughnuts',
+				'donut-remove',
+				'donuts-remove',
+				'doughnut-remove',
+				'doughnuts-remove'
+			],
+			group: 'economy',
 			memberName: 'remove',
-			description: 'Displays the money you have earned.',
-			details: 'Display the amount of money you have earned.',
+			description: 'Remove money from a certain user.',
+			details: 'Remove amount of money from a certain user.',
+			guildOnly: true,
+			throttling: {
+				usages: 2,
+				duration: 3
+			},
 
 			args: [
 				{
