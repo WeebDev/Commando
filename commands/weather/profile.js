@@ -10,6 +10,9 @@ const Currency = require('../../currency/Currency');
 const config = require('../../settings');
 const version = require('../../package').version;
 
+const canvas = new Canvas(300, 300);
+const ctx = canvas.getContext('2d');
+
 module.exports = class ProfileCommand extends Command {
 	constructor(client) {
 		super(client, {
@@ -33,8 +36,8 @@ module.exports = class ProfileCommand extends Command {
 
 		Canvas.registerFont(path.join(__dirname, '../../assets/weather/fonts/Roboto.ttf'), { family: 'Roboto' });
 
-		const canvas = new Canvas(300, 300);
-		const ctx = canvas.getContext('2d');
+		const lines = this.wrapText('asdasdiaushdiahsdiahsdihasidhiashdiahsidhasidhigvdhfighdighidrhgduirg', 108 - parseInt(12, 0));
+
 		const base = new Image();
 		const cond = new Image();
 
@@ -49,25 +52,73 @@ module.exports = class ProfileCommand extends Command {
 			ctx.shadowOffsetY = 2;
 			ctx.shadowBlur = 2;
 
-			// Location
+			// Username
 			ctx.font = '20px Roboto';
-			ctx.textAlign = 'center';
 			ctx.fillStyle = '#FFFFFF';
-			ctx.shadowColor = 'rgba(0, 0, 0, 1)';
-			ctx.fillText(user.username, 72, 173);
+			ctx.fillText(user.username, 50, 173);
 
-			// Location
-			ctx.font = '16px Roboto';
+			// EXP
+			ctx.font = '10px Roboto';
+			ctx.textAlign = 'center';
+			ctx.fillStyle = '#333333';
+			ctx.shadowColor = 'rgba(0, 0, 0, 0)';
+			ctx.fillText('EXP: 9999999/9999999', 78, 203);
+
+			// LVL
+			ctx.font = '30px Roboto';
 			ctx.textAlign = 'left';
-			ctx.fillStyle = '#CCCCCC';
-			ctx.shadowColor = 'rgba(0, 0, 0, 1)';
-			ctx.fillText('Currency:', 140, 205);
+			ctx.fillStyle = '#E5E5E5';
+			ctx.shadowColor = 'rgba(0, 0, 0, 0.4)';
+			ctx.fillText('LVL.', 12, 235);
 
-			// Location
-			ctx.font = '16px Roboto';
-			ctx.fillStyle = '#CCCCCC';
-			ctx.shadowColor = 'rgba(0, 0, 0, 1)';
-			ctx.fillText(balance, 210, 205);
+			// LVL Number
+			ctx.font = '30px Roboto';
+			ctx.fillStyle = '#E5E5E5';
+			ctx.fillText('100', 86, 235);
+
+			// Total EXP
+			ctx.font = '14px Roboto';
+			ctx.fillStyle = '#E5E5E5';
+			ctx.shadowColor = 'rgba(0, 0, 0, 0.6)';
+			ctx.fillText('Total EXP', 12, 254);
+
+			// EXP Number
+			ctx.font = '14px Roboto';
+			ctx.fillStyle = '#E5E5E5';
+			ctx.fillText('9999999', 86, 254);
+
+			// Global Rank
+			ctx.font = '14px Roboto';
+			ctx.fillStyle = '#E5E5E5';
+			ctx.fillText('Rank', 12, 270);
+
+			// Global Rank Number
+			ctx.font = '14px Roboto';
+			ctx.fillStyle = '#E5E5E5';
+			ctx.fillText('#1', 86, 270);
+
+			// Currency
+			ctx.font = '14px Roboto';
+			ctx.fillStyle = '#E5E5E5';
+			ctx.fillText('Currency', 12, 287);
+
+			// Currency Number
+			ctx.font = '14px Roboto';
+			ctx.fillStyle = '#E5E5E5';
+			ctx.fillText(balance, 86, 287);
+
+			// Info title
+			ctx.font = '12px Roboto';
+			ctx.fillStyle = '#333333';
+			ctx.shadowColor = 'rgba(0, 0, 0, 0)';
+			ctx.fillText('Info Box', 182, 207);
+
+			// Info
+			ctx.font = '12px Roboto';
+			ctx.fillStyle = '#333333';
+			lines.forEach((line, i) => {
+				ctx.fillText(line, 162, (i + 18.6) * parseInt(12, 0));
+			});
 
 			// Image
 			ctx.beginPath();
@@ -98,5 +149,37 @@ module.exports = class ProfileCommand extends Command {
 		} else {
 			return path.join(__dirname, '../../assets/weather/base/cloud.png');
 		}
+	}
+
+	wrapText(text, maxWidth) {
+		const words = text.split(' ');
+		let lines = [];
+		let line = '';
+		if (ctx.measureText(text).width < maxWidth) {
+			return [text];
+		}
+		while (words.length > 0) {
+			let split = false;
+			while (ctx.measureText(words[0]).width >= maxWidth) {
+				const tmp = words[0];
+				words[0] = tmp.slice(0, -1);
+				if (!split) {
+					split = true;
+					words.splice(1, 0, tmp.slice(-1));
+				} else {
+					words[1] = tmp.slice(-1) + words[1];
+				}
+			}
+			if (ctx.measureText(line + words[0]).width < maxWidth) {
+				line += `${words.shift()} `;
+			} else {
+				lines.push(line);
+				line = '';
+			}
+			if (words.length === 0) {
+				lines.push(line);
+			}
+		}
+		return lines;
 	}
 };
