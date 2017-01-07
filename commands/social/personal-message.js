@@ -6,16 +6,16 @@ module.exports = class PersonalMessageCommand extends Command {
 	constructor(client) {
 		super(client, {
 			name: 'personal-message',
-			aliases: ['set-personal-message',
-				'set-biography',
-				'biography',
-				'set-bio',
-				'bio'
-			],
+			aliases: ['set-personal-message', 'set-biography', 'biography', 'set-bio', 'bio'],
 			group: 'social',
 			memberName: 'personal-message',
 			description: 'Set your personal message for your profile.',
 			details: 'Set your personal message for your profile.',
+			guildOnly: true,
+			throttling: {
+				usages: 1,
+				duration: 30
+			},
 
 			args: [
 				{
@@ -23,7 +23,7 @@ module.exports = class PersonalMessageCommand extends Command {
 					prompt: 'What message would you like to set as your person message?',
 					type: 'string',
 					validate: value => {
-						if (value.length > 130) return `Your message was ${value.length} characters long. Please limit your personal message to 130 characters.`;
+						if (value.length > 130) return `your message was ${value.length} characters long. Please limit your personal message to 130 characters.`;
 						return true;
 					}
 				}
@@ -39,15 +39,15 @@ module.exports = class PersonalMessageCommand extends Command {
 		if (!profile) {
 			return UserProfile.create({
 				userID: msg.author.id,
-				personalMessage: personalMessage
+				personalMessage
 			}).then(() => {
-				return msg.reply('Your message has been updated!');
+				return msg.reply('your message has been updated!');
 			});
 		}
 
 		profile.personalMessage = personalMessage;
 		return profile.save().then(() => {
-			msg.reply('Your message has been updated!');
+			msg.reply('your message has been updated!');
 		});
 	}
 };
