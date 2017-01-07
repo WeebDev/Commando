@@ -17,8 +17,9 @@ class Experience {
 		Experience.addExperience(userID, -earned);
 	}
 
-	static getTotalExperience(userID) {
-		return redis.db.hgetAsync('experience', userID);
+	static async getTotalExperience(userID) {
+		const experience = await redis.db.hgetAsync('experience', userID) || 0;
+		return experience;
 	}
 
 	static async getCurrentExperience(userID) {
