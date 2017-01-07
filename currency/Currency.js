@@ -3,7 +3,7 @@ const UserProfile = require('../postgreSQL/models/UserProfile');
 
 const redis = new Redis();
 
-setInterval(() => Currency.leaderboard(), 60 * 60 * 1000);
+setInterval(() => Currency.leaderboard(), 30 * 60 * 1000);
 
 redis.db.hgetAsync('money', 'SLOTMACHINE').then(balance => {
 	if (!balance) return redis.db.hsetAsync('money', 'SLOTMACHINE', 5000);
