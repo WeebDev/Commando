@@ -1,5 +1,6 @@
 const Canvas = require('canvas');
 const { Command } = require('discord.js-commando');
+const Experience = require('../../currency/Experience');
 const fs = global.Promise.promisifyAll(require('fs'));
 const moment = require('moment');
 const path = require('path');
@@ -9,9 +10,6 @@ const Currency = require('../../currency/Currency');
 
 const config = require('../../settings');
 const version = require('../../package').version;
-
-const canvas = new Canvas(300, 300);
-const ctx = canvas.getContext('2d');
 
 module.exports = class ProfileCommand extends Command {
 	constructor(client) {
@@ -34,10 +32,17 @@ module.exports = class ProfileCommand extends Command {
 		const Image = Canvas.Image;
 
 		const balance = await Currency.getBalance(user.id);
+		const currentExp = await Experience.getCurrentExperience(user.id);
+		const level = await Experience.getLevel(user.id);
+		const levelBounds = await Experience.getLevelBounds(level);
+		const totalExp = await Experience.getTotalExperience(user.id);
 
-		Canvas.registerFont(path.join(__dirname, '../../assets/weather/fonts/Roboto.ttf'), { family: 'Roboto' });
+		Canvas.registerFont(path.join(__dirname, '../../assets/profile/fonts/Roboto.ttf'), { family: 'Roboto' });
 
-		const lines = this.wrapText('asdasdiaushdiahsdiahsdihasidhiashdiahsidhasidhigvdhfighdighidrhgduirg', 108 - parseInt(12, 0));
+		const canvas = new Canvas(300, 300);
+		const ctx = canvas.getContext('2d');
+
+		const lines = this.wrapText(ctx, 'asdasdiaushdiahsdiahsdihasidhiashdiahsidhasidhigvdhfighdighidrhgduirg', 108 - parseInt(12, 0));
 
 		const base = new Image();
 		const cond = new Image();
@@ -63,7 +68,7 @@ module.exports = class ProfileCommand extends Command {
 			ctx.textAlign = 'center';
 			ctx.fillStyle = '#333333';
 			ctx.shadowColor = 'rgba(0, 0, 0, 0)';
-			ctx.fillText('EXP: 9999999/9999999', 78, 203);
+			ctx.fillText(`EXP: ${currentExp}/${levelBounds.upperBound - levelBounds.lowerBound}`, 78, 203);
 
 			// LVL
 			ctx.font = '30px Roboto';
@@ -75,7 +80,7 @@ module.exports = class ProfileCommand extends Command {
 			// LVL Number
 			ctx.font = '30px Roboto';
 			ctx.fillStyle = '#E5E5E5';
-			ctx.fillText('100', 86, 235);
+			ctx.fillText(level, 86, 235);
 
 			// Total EXP
 			ctx.font = '14px Roboto';
@@ -83,10 +88,10 @@ module.exports = class ProfileCommand extends Command {
 			ctx.shadowColor = 'rgba(0, 0, 0, 0.6)';
 			ctx.fillText('Total EXP', 12, 254);
 
-			// EXP Number
+			// Total EXP Number
 			ctx.font = '14px Roboto';
 			ctx.fillStyle = '#E5E5E5';
-			ctx.fillText('9999999', 86, 254);
+			ctx.fillText(totalExp, 86, 254);
 
 			// Global Rank
 			ctx.font = '14px Roboto';
@@ -152,7 +157,7 @@ module.exports = class ProfileCommand extends Command {
 		}
 	}
 
-	wrapText(text, maxWidth) {
+	wrapText(ctx, text, maxWidth) {
 		const words = text.split(' ');
 		let lines = [];
 		let line = '';
