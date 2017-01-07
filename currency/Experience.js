@@ -19,6 +19,7 @@ class Experience {
 
 	static async getTotalExperience(userID) {
 		const experience = await redis.db.hgetAsync('experience', userID) || 0;
+
 		return experience;
 	}
 
