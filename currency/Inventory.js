@@ -21,7 +21,7 @@ setInterval(() => {
 			});
 		}
 	});
-}, 5 * 1000);
+}, 60 * 60 * 1000);
 
 class Inventory {
 	constructor(user, content) {
