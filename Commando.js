@@ -230,7 +230,7 @@ client.on('error', winston.error)
 client.registry
 	.registerGroups([
 		['info', 'Info'],
-		['currency', 'Economy'],
+		['economy', 'Economy'],
 		['social', 'Social'],
 		['games', 'Games'],
 		['item', 'Item'],
