@@ -44,7 +44,8 @@ module.exports = class SlotMachineCommand extends Command {
 				{
 					key: 'coins',
 					prompt: 'How many coins do you want to bet?',
-					type: 'integer'
+					type: 'integer',
+					max: 5
 				}
 			]
 		});

@@ -28,7 +28,8 @@ module.exports = class RouletteCommand extends Command {
 				{
 					key: 'bet',
 					prompt: 'How many donuts do you want to bet?',
-					type: 'integer'
+					type: 'integer',
+					max: 5000
 				},
 				{
 					key: 'space',

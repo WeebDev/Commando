@@ -22,7 +22,8 @@ module.exports = class BlackjackCommand extends Command {
 				{
 					key: 'bet',
 					prompt: 'How many donuts do you want to bet?',
-					type: 'integer'
+					type: 'integer',
+					max: 1000
 				}
 			]
 		});
