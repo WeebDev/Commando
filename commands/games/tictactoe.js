@@ -130,6 +130,12 @@ module.exports = class TicTacToeCommand extends Command {
 
 				if (responses.size === 0) return resolve(turn === 'x' ? 'o' : 'x');
 
+				if (!field.includes(parseInt(responses.first().content))) {
+					msg.say(`Space already occupied.`).then(msg3 => {
+						setTimeout(() => msg3.delete(), 2000);
+					});
+				}
+
 				if (field.includes(parseInt(responses.first().content))) {
 					field[field.indexOf(parseInt(responses.first().content))] = turn;
 					turn = turn === 'x' ? 'o' : 'x';
@@ -143,13 +149,18 @@ module.exports = class TicTacToeCommand extends Command {
 	}
 
 	getField(field, players, turn) {
+		const unicodeField = field.map(space => {
+			if (space === 'x') return '❌';
+			if (space === 'o') return '⭕';
+			return space;
+		});
 		return stripIndents`
 			\`\`\`
-			${field[0]} | ${field[1]} | ${field[2]}    |   TicTacToe | ${players.x.displayName}(x) vs ${players.o.displayName}(o)
+			${unicodeField[0]} | ${unicodeField[1]} | ${unicodeField[2]}    |   TicTacToe | ${players.x.displayName}(x) vs ${players.o.displayName}(o)
 			----------   |   Turn: ${turn} - ${players[turn].displayName}
-			${field[3]} | ${field[4]} | ${field[5]}    |   Type the number of the space you want to occupy.
+			${unicodeField[3]} | ${unicodeField[4]} | ${unicodeField[5]}    |   Type the number of the space you want to occupy.
 			----------   |
-			${field[6]} | ${field[7]} | ${field[8]}    |   If you don't respond within 20 seconds you lose automatically.
+			${unicodeField[6]} | ${unicodeField[7]} | ${unicodeField[8]}    |   If you don't respond within 20 seconds you lose automatically.
 			\`\`\`
 			`;
 	}
