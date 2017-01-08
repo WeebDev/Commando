@@ -7,7 +7,11 @@ module.exports = class UnlockCommand extends Command {
 			group: 'economy',
 			memberName: 'unlock',
 			description: 'Enable donut and xp gaining in a channel.',
-			guildOnly: true
+			guildOnly: true,
+			throttling: {
+				usages: 2,
+				duration: 3
+			},
 
 			args: [
 				{
@@ -18,6 +22,10 @@ module.exports = class UnlockCommand extends Command {
 				}
 			]
 		});
+	}
+
+	hasPermission(msg) {
+		return msg.member.hasPermission('MANAGE_GUILD');
 	}
 
 	async run(msg, args) {
