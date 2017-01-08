@@ -36,7 +36,7 @@ module.exports = class TicTacToeCommand extends Command {
 						if (balance < bet) {
 							return stripIndents`
 								You don't have enough donuts. Your current account balance is ${balance} 🍩s.
-								Please specify a valid amount of donuts.
+								Please specify a bet you can afford to make.
 								`;
 						}
 
@@ -105,15 +105,16 @@ module.exports = class TicTacToeCommand extends Command {
 					time: 20e3
 				});
 
-				if (responses.size === 0) return resolve(turn);
+				if (responses.size === 0) return resolve(turn === 'x' ? 'o' : 'x');
 
-				if (field.includes(parseInt(responses.first.content))) {
-					field[field.indexOf(parseInt(responses.first.content))] = turn;
+				if (field.includes(parseInt(responses.first().content))) {
+					field[field.indexOf(parseInt(responses.first().content))] = turn;
 					turn = turn === 'x' ? 'o' : 'x';
 
 					if (this.gameWon(field)) return resolve(turn);
 					if (field.every(space => typeof space === 'string')) return resolve(null);
 				}
+				responses.first().delete();
 			}
 		});
 	}
