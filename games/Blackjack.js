@@ -33,7 +33,7 @@ class Blackjack {
 		return games.has(playerID);
 	}
 
-	static 	handValue(hand) {
+	static handValue(hand) {
 		let value = 0;
 		let aces = 0;
 
@@ -54,7 +54,7 @@ class Blackjack {
 }
 
 function cardValue(card) {
-	const index = ranks.indexOf(card.substring(0, -1));
+	const index = ranks.indexOf(card.slice(0, -1));
 
 	if (index === 0) return 11;
 

@@ -124,7 +124,6 @@ module.exports = class BlackjackCommand extends Command {
 			const hands = [
 				{
 					cards: playerHand,
-					split: false,
 					doubled: false
 				}
 			];
@@ -200,10 +199,8 @@ module.exports = class BlackjackCommand extends Command {
 					totalBet += bet;
 					hands.push({
 						cards: [currentHand.cards.pop()],
-						split: false,
 						doubled: false
 					});
-					currentHand.split = true;
 					blackjack.hit(currentHand.cards);
 				}
 				if (action === 'double down' && canDoubleDown) {
