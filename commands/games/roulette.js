@@ -34,7 +34,10 @@ module.exports = class RouletteCommand extends Command {
 						const balance = await Currency.getBalance(msg.author.id);
 
 						if (balance < bet) {
-							return `You don't have enough donuts. Your current account balance is ${balance} 🍩s.`;
+							return stripIndents`
+								You don't have enough donuts. Your current account balance is ${balance} 🍩s.
+								Please specify a valid amount of donuts.
+								`;
 						}
 
 						if (![100, 200, 300, 400, 500, 1000, 2000, 5000].includes(bet)) {
