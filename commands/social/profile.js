@@ -111,7 +111,7 @@ module.exports = class ProfileCommand extends Command {
 			ctx.fillStyle = '#E5E5E5';
 			ctx.fillText(totalExp, 86, 254);
 
-			/*// Global Rank
+			/* // Global Rank
 			ctx.font = '14px Roboto';
 			ctx.fillStyle = '#E5E5E5';
 			ctx.fillText('Rank', 12, 270);
@@ -119,7 +119,7 @@ module.exports = class ProfileCommand extends Command {
 			// Global Rank Number
 			ctx.font = '14px Roboto';
 			ctx.fillStyle = '#E5E5E5';
-			ctx.fillText('#1', 86, 270);*/
+			ctx.fillText('#1', 86, 270); */
 
 			// Currency
 			ctx.font = '14px Roboto';
@@ -161,7 +161,7 @@ module.exports = class ProfileCommand extends Command {
 		return msg.channel.sendFile(await canvas.toBuffer(), `profile.png`);
 	}
 
-	getBase(icon) {
+	/* getBase(icon) {
 		if (icon === 'clear-day' || icon === 'partly-cloudy-day') {
 			return path.join(__dirname, '../../assets/weather/base/sun.png');
 		} else if (icon === 'clear-night' || icon === 'partly-cloudy-night') {
@@ -173,20 +173,24 @@ module.exports = class ProfileCommand extends Command {
 		} else {
 			return path.join(__dirname, '../../assets/weather/base/cloud.png');
 		}
-	}
+	} */
 
 	wrapText(ctx, text, maxWidth) {
 		const words = text.split(' ');
 		let lines = [];
 		let line = '';
+
 		if (ctx.measureText(text).width < maxWidth) {
 			return [text];
 		}
+
 		while (words.length > 0) {
 			let split = false;
+
 			while (ctx.measureText(words[0]).width >= maxWidth) {
 				const tmp = words[0];
 				words[0] = tmp.slice(0, -1);
+
 				if (!split) {
 					split = true;
 					words.splice(1, 0, tmp.slice(-1));
@@ -194,16 +198,19 @@ module.exports = class ProfileCommand extends Command {
 					words[1] = tmp.slice(-1) + words[1];
 				}
 			}
+
 			if (ctx.measureText(line + words[0]).width < maxWidth) {
 				line += `${words.shift()} `;
 			} else {
 				lines.push(line);
 				line = '';
 			}
+
 			if (words.length === 0) {
 				lines.push(line);
 			}
 		}
+
 		return lines;
 	}
 };
