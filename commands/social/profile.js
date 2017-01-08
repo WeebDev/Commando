@@ -155,7 +155,7 @@ module.exports = class ProfileCommand extends Command {
 		};
 
 		base.src = await fs.readFileAsync(path.join(__dirname, `../../assets/profile/backgrounds/test.png`));
-		cond.src = await request({ uri: user.user.avatarURL.replace(/(png|jpg|jpeg|gif|webp)\?size=1024/, 'png'), encoding: null });
+		cond.src = await request({ uri: user.user.displayAvatarURL.replace(/(png|jpg|jpeg|gif|webp)\?size=1024/, 'png'), encoding: null });
 		await generate();
 
 		return msg.channel.sendFile(await canvas.toBuffer(), `profile.png`);
