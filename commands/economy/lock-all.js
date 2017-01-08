@@ -6,7 +6,8 @@ module.exports = class LockCommand extends Command {
 			name: 'lock-all',
 			group: 'economy',
 			memberName: 'lock-all',
-			description: 'Enable donut and xp gaining in a channel'
+			description: 'Disable donut and xp earning on all channels in the server.',
+			guildOnly: true
 		});
 	}
 

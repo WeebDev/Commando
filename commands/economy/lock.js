@@ -6,7 +6,8 @@ module.exports = class LockCommand extends Command {
 			name: 'lock',
 			group: 'economy',
 			memberName: 'lock',
-			description: 'Disable donut and xp gaining in a channel',
+			description: 'Disable donut and xp earning in a channel.',
+			guildOnly: true,
 
 			args: [
 				{
