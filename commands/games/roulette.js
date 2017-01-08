@@ -30,6 +30,7 @@ module.exports = class RouletteCommand extends Command {
 					prompt: 'How many donuts do you want to bet?',
 					type: 'integer',
 					validate: bet => {
+						bet = parseInt(bet);
 						if (![100, 200, 300, 400, 500, 1000, 2000, 5000].includes(bet)) {
 							return 'Please choose one of 100, 200, 300, 400, 500, 1000, 2000, 5000 for your bet.';
 						}
@@ -84,7 +85,6 @@ module.exports = class RouletteCommand extends Command {
 			Use \`roulette <donuts> <space>\` in the next 15 seconds to place your bet.
 		`)
 			.then(async () => {
-				setTimeout(() => msg.say('10 seconds left for you to bet.'), 5000);
 				setTimeout(() => msg.say('5 more seconds for new people to bet.'), 10000);
 				setTimeout(() => msg.say('The roulette starts spinning!'), 14500);
 

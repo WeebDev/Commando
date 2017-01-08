@@ -25,7 +25,9 @@ class Roulette {
 	}
 
 	join(user, donuts, space) {
-		const multiplier = this.winSpaces.includes(space) ? spaces.find(spc => spc.values.includes(space)).multiplier : 0;
+		const multiplier = this.winSpaces.includes(space)
+			? spaces.find(spc => spc.values.includes(space)).multiplier
+			: 0;
 		this.players.push({
 			user: user,
 			winnings: donuts * multiplier
