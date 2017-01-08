@@ -68,7 +68,7 @@ module.exports = class TicTacToeCommand extends Command {
 			return msg.reply(`you can't start 2 games of Tic-Tac-Toe on the same server at once.`);
 		}
 
-		const confirmed = this.confrimed(user, bet, msg);
+		const confirmed = this.confirmed(user, bet, msg);
 		if (!confirmed) return msg.reply(`your challenge has not been accepted.`);
 
 		games.push(msg.guild.id);
