@@ -73,7 +73,7 @@ module.exports = class BlackjackCommand extends Command {
 
 				const dealerValue = Blackjack.handValue(dealerHand);
 				let winnings = 0;
-				const embed = { title: `Blackjack | ${msg.member.displayName}` };
+				const embed = { title: `Blackjack | ${msg.member.displayName}`, fields: [] };
 				playerHands.forEach((hand, i) => {
 					const playerValue = Blackjack.handValue(hand);
 					const result = this.gameResult(playerValue, dealerValue);
