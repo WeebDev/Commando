@@ -131,6 +131,7 @@ module.exports = class BlackjackCommand extends Command {
 			let totalBet = bet;
 			while (currentHand && Blackjack.handValue(currentHand.cards) < 21) {
 				const nextHand = () => { currentHand = hands[hands.indexOf(currentHand) + 1]; };
+				if (currentHand.cards.length === 1) blackjack.hit(currentHand.cards);
 				if (currentHand.double) {
 					blackjack.hit(currentHand.cards);
 					currentHand.cards.doubled = true;
@@ -156,7 +157,7 @@ module.exports = class BlackjackCommand extends Command {
 						}or \`stand\` to pass.`,
 					fields: [
 						{
-							name: '**Your hand**',
+							name: hands.length === 1 ? '**Your hand**' : `**Hand ${hands.indexOf(currentHand) + 1}**`,
 							value: stripIndents`
 								${currentHand.cards.join(' - ')}
 								Value: ${Blackjack.handValue(currentHand.cards)}
@@ -193,7 +194,6 @@ module.exports = class BlackjackCommand extends Command {
 					if (currentHand === hands[hands.length - 1]) break;
 					nextHand();
 				}
-
 				if (action === 'hit') blackjack.hit(currentHand.cards);
 				if (action === 'split' && canSplit) {
 					totalBet += bet;
