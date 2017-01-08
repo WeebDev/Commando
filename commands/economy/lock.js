@@ -8,6 +8,10 @@ module.exports = class LockCommand extends Command {
 			memberName: 'lock',
 			description: 'Disable donut and xp earning in a channel.',
 			guildOnly: true,
+			throttling: {
+				usages: 2,
+				duration: 3
+			},
 
 			args: [
 				{
@@ -18,6 +22,10 @@ module.exports = class LockCommand extends Command {
 				}
 			]
 		});
+	}
+
+	hasPermission(msg) {
+		return msg.member.hasPermission('MANAGE_GUILD');
 	}
 
 	async run(msg, args) {

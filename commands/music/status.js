@@ -33,6 +33,7 @@ module.exports = class MusicStatusCommand extends Command {
 			},
 			description: stripIndents`
 				${song.url.match(/^https?:\/\/(api.soundcloud.com)\/(.*)$/) ? `${song}` : `[${song}](${`${song.url}`})`}
+
 				We are ${Song.timeString(currentTime)} into the song, and have ${song.timeLeft(currentTime)} left.
 				${!song.playing ? 'The music is paused.' : ''}
 			`,

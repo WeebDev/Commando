@@ -7,8 +7,16 @@ module.exports = class LockAllCommand extends Command {
 			group: 'economy',
 			memberName: 'lock-all',
 			description: 'Disable donut and xp earning on all channels in the server.',
-			guildOnly: true
+			guildOnly: true,
+			throttling: {
+				usages: 2,
+				duration: 3
+			}
 		});
+	}
+
+	hasPermission(msg) {
+		return msg.member.hasPermission('MANAGE_GUILD');
 	}
 
 	async run(msg) {
