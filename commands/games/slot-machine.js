@@ -49,7 +49,8 @@ module.exports = class SlotMachineCommand extends Command {
 					type: 'integer',
 					validate: async (coins, msg) => {
 						coins = parseInt(coins);
-						const userCoins = (await Inventory.fetchInventory(msg.author.id).content.coin || { amount: 0 }).amount;
+						const inventory = await Inventory.fetchInventory(msg.author.id);
+						const userCoins = (inventory.content.coin || { amount: 0 }).amount;
 						const plural = userCoins > 1 || userCoins === 0;
 
 						if (userCoins < coins) {
