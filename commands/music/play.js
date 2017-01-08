@@ -111,7 +111,7 @@ module.exports = class PlaySongCommand extends Command {
 				color: 3447003,
 				author: {
 					name: `${msg.author.username}#${msg.author.discriminator} (${msg.author.id})`,
-					icon_url: msg.author.avatarURL ? msg.author.avatarURL : this.client.user.avatarURL // eslint-disable-line camelcase
+					icon_url: msg.author.displayAvatarURL // eslint-disable-line camelcase
 				},
 				description: result
 			};
@@ -140,7 +140,7 @@ module.exports = class PlaySongCommand extends Command {
 				color: 3447003,
 				author: {
 					name: `${msg.author.username}#${msg.author.discriminator} (${msg.author.id})`,
-					icon_url: msg.author.avatarURL ? msg.author.avatarURL : this.client.user.avatarURL // eslint-disable-line camelcase
+					icon_url: msg.author.displayAvatarURL // eslint-disable-line camelcase
 				},
 				description: result
 			};
@@ -202,7 +202,7 @@ module.exports = class PlaySongCommand extends Command {
 			color: 3447003,
 			author: {
 				name: song.username,
-				icon_url: song.avatar ? song.avatar : this.client.user.avatarURL // eslint-disable-line camelcase
+				icon_url: song.avatar // eslint-disable-line camelcase
 			},
 			description: `${song.url.match(/^https?:\/\/(api.soundcloud.com)\/(.*)$/) ? `${song}` : `[${song}](${`${song.url}`})`}`,
 			image: { url: song.thumbnail }

@@ -32,7 +32,7 @@ module.exports = class Song {
 	}
 
 	get avatar() {
-		let avatar = `${this.member.user.avatarURL}`;
+		let avatar = `${this.member.user.displayAvatarURL}`;
 		return avatar;
 	}
 
