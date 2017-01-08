@@ -5,6 +5,7 @@ const Currency = require('../../currency/Currency');
 
 const games = [];
 const combinations = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
+const unicodeNum = ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣'];
 
 module.exports = class TicTacToeCommand extends Command {
 	constructor(client) {
@@ -131,7 +132,7 @@ module.exports = class TicTacToeCommand extends Command {
 				if (responses.size === 0) return resolve(turn === 'x' ? 'o' : 'x');
 
 				if (!field.includes(parseInt(responses.first().content))) {
-					msg.say(`Space already occupied.`).then(msg3 => {
+					responses.first().channel.sendMessage(`Space already occupied.`).then(msg3 => {
 						setTimeout(() => msg3.delete(), 2000);
 					});
 				}
@@ -152,7 +153,7 @@ module.exports = class TicTacToeCommand extends Command {
 		const unicodeField = field.map(space => {
 			if (space === 'x') return '❌';
 			if (space === 'o') return '⭕';
-			return space;
+			return unicodeNum[space - 1];
 		});
 		return stripIndents`
 			\`\`\`
