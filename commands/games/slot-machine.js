@@ -47,8 +47,18 @@ module.exports = class SlotMachineCommand extends Command {
 					key: 'coins',
 					prompt: 'How many coins do you want to bet?',
 					type: 'integer',
-					validate: coins => {
+					validate: async (coins, msg) => {
 						coins = parseInt(coins);
+						const userCoins = (await Inventory.fetchInventory(msg.author.id).content.coin || { amount: 0 }).amount;
+						const plural = userCoins > 1 || userCoins === 0;
+
+						if (userCoins < coins) {
+							return msg.say(stripIndents`
+								You don't have enough coins to pay your bet!
+								Your current account balance is ${userCoins} coin${plural ? 's' : ''}
+							`);
+						}
+
 						if (![1, 3, 5].includes(coins)) {
 							return 'Sorry, you need to pay either 1, 3 or 5 coin(s). Anything else does not work.';
 						}
@@ -63,17 +73,7 @@ module.exports = class SlotMachineCommand extends Command {
 	async run(msg, args) {
 		const coins = args.coins;
 		const inventory = await Inventory.fetchInventory(msg.author.id);
-		const userCoins = (inventory.content.coin || { amount: 0 }).amount;
 		const item = Store.getItem('coin');
-
-		const plural = userCoins > 1 || userCoins === 0;
-
-		if (userCoins < coins) {
-			return msg.say(stripIndents`
-				You don't have enough coins to pay your bet!
-				Your current account balance is ${userCoins} coin${plural ? 's' : ''}
-			`);
-		}
 
 		inventory.removeItems(new ItemGroup(item, coins));
 		inventory.save();
