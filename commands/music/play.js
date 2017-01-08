@@ -1,8 +1,8 @@
-/* eslint-disable no-console */
 const { Command } = require('discord.js-commando');
 const escapeMarkdown = require('discord.js').escapeMarkdown;
 const oneLine = require('common-tags').oneLine;
 const request = require('request-promise');
+const winston = require('winston');
 const YouTube = require('simple-youtube-api');
 const ytdl = require('ytdl-core');
 
@@ -70,7 +70,7 @@ module.exports = class PlaySongCommand extends Command {
 			}).then(video => {
 				this.handleVideo(video, queue, voiceChannel, msg, statusMsg);
 			}).catch((error) => {
-				console.log(`${error.statusCode}: ${error.statusMessage}`);
+				winston.error(`${error.statusCode}: ${error.statusMessage}`);
 				statusMsg.edit(`${msg.author}, ❌ This track is not able to be streamed by SoundCloud.`);
 			});
 		} else {
@@ -83,7 +83,7 @@ module.exports = class PlaySongCommand extends Command {
 					this.youtube.getVideoByID(videos[0].id).then(video2 => {
 						this.handleVideo(video2, queue, voiceChannel, msg, statusMsg);
 					}).catch((error) => {
-						console.log(error);
+						winston.error(error);
 						statusMsg.edit(`${msg.author}, couldn't obtain the search result video's details.`);
 					});
 				}).catch(() => {
@@ -129,7 +129,7 @@ module.exports = class PlaySongCommand extends Command {
 				this.play(msg.guild, queue.songs[0]);
 				statusMsg.delete();
 			}).catch(err2 => {
-				console.log('Error occurred when joining voice channel.', err2);
+				winston.error('Error occurred when joining voice channel.', err2);
 				this.queue.delete(msg.guild.id);
 				statusMsg.edit(`${msg.author}, unable to join your voice channel.`);
 			});
@@ -172,7 +172,7 @@ module.exports = class PlaySongCommand extends Command {
 		}
 
 		// Add the song to the queue
-		console.log('Adding song to queue.', { song: video.id, guild: msg.guild.id });
+		winston.info('Adding song to queue.', { song: video.id, guild: msg.guild.id });
 		const song = new Song(video, msg.member);
 		queue.songs.push(song);
 
@@ -217,7 +217,7 @@ module.exports = class PlaySongCommand extends Command {
 			stream = ytdl(song.url, { audioonly: true })
 				.on('error', err => {
 					streamErrored = true;
-					console.log('Error occurred when streaming video:', err);
+					winston.error('Error occurred when streaming video:', err);
 					playing.then(msg => msg.edit(`❌ Couldn't play ${song}. What a drag!`));
 					queue.songs.shift();
 					this.play(guild, queue.songs[0]);
@@ -230,7 +230,7 @@ module.exports = class PlaySongCommand extends Command {
 				this.play(guild, queue.songs[0]);
 			})
 			.on('error', err => {
-				console.log('Error occurred in stream dispatcher:', err);
+				winston.error('Error occurred in stream dispatcher:', err);
 				queue.textChannel.sendMessage(`An error occurred while playing the song: \`${err}\``);
 			});
 		dispatcher.setVolumeLogarithmic(queue.volume / 5);

@@ -53,7 +53,8 @@ module.exports = class RussianRouletteCommand extends Command {
 
 		return msg.say(stripIndents`
 			A new game of russian roulette has been initiated!
-			Use the \`russian-roulette\` command in the next 15 seconds to join!
+
+			Use the ${msg.usage()} command in the next 15 seconds to join!
 		`).then(async () => {
 			setTimeout(() => msg.say('5 more seconds for new people to join'), 10000);
 			setTimeout(() => {
