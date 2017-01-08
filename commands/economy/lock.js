@@ -35,6 +35,6 @@ module.exports = class LockCommand extends Command {
 
 		this.client.provider.set(msg.guild.id, 'locks', channelLocks);
 
-		return msg.reply(`this channel has been locked. No more xp or donuts will be earned ${channel}.`);
+		return msg.reply(`this channel has been locked. No more xp or donuts will be earned in ${channel}.`);
 	}
 };
