@@ -23,7 +23,14 @@ module.exports = class BlackjackCommand extends Command {
 					key: 'bet',
 					prompt: 'How many donuts do you want to bet?',
 					type: 'integer',
-					max: 1000
+					max: 1000,
+					validate: bet => {
+						if (![100, 200, 300, 400, 500, 1000].includes(bet)) {
+							return 'Please choose on of 100, 200, 300, 400, 500, 1000 for your bet.';
+						}
+
+						return true;
+					}
 				}
 			]
 		});
@@ -36,9 +43,7 @@ module.exports = class BlackjackCommand extends Command {
 		if (balance < bet) {
 			return msg.reply(`you don't have enough donuts. Your current account balance is ${balance} 🍩s.`);
 		}
-		if (![100, 200, 300, 400, 500, 1000].includes(bet)) {
-			return msg.reply('you need to bet either 100, 200, 300, 400, 500 or 1000 donuts.');
-		}
+
 		if (Blackjack.gameExists(msg.author.id)) {
 			return msg.reply(`you can't start 2 games of blackjack at the same time.`);
 		}

@@ -61,6 +61,7 @@ client.on('error', winston.error)
 		`);
 	})
 	.on('message', async (message) => {
+		if (message.channel.type === 'dm') return;
 		if (message.author.bot) return;
 
 		if (!earnedRecently.includes(message.author.id)) {
