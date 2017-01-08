@@ -20,9 +20,8 @@ module.exports = class RemindMeCommand extends Command {
 			args: [
 				{
 					key: 'remind',
-					prompt: '\n',
-					type: 'string',
-					default: ''
+					prompt: 'what would you like me to remind you about?\n',
+					type: 'string'
 				}
 			]
 		});
