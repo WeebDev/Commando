@@ -70,9 +70,6 @@ module.exports = class TicTacToeCommand extends Command {
 
 		games.push(msg.guild.id);
 
-		Currency.removeBalance(msg.member.id, bet);
-		Currency.removeBalance(user.id, bet);
-
 		const players = {};
 		[players.x, players.o] = Math.random() > 0.5 ? [msg.member, user] : [user, msg.member];
 
@@ -85,8 +82,10 @@ module.exports = class TicTacToeCommand extends Command {
 				if (!winSym) return msg.say(`Game over! It's a tie. Both participants keep their 🍩s.`);
 
 				const winner = players[winSym];
+				const loser = players[winSym === 'x' ? 'o' : 'x'];
 
-				Currency.addBalance(winner.id, bet * 2);
+				Currency.removeBalance(loser.id, bet);
+				Currency.addBalance(winner.id, bet);
 
 				games.splice(games.indexOf(msg.guild.id), 1);
 
