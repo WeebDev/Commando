@@ -68,6 +68,8 @@ module.exports = class TicTacToeCommand extends Command {
 			return msg.reply(`you can't start 2 games of Tic-Tac-Toe on the same server at once.`);
 		}
 
+		if (await this.confirmed(user, bet, msg)) return msg.reply(`your challenge has not been accepted.`);
+
 		games.push(msg.guild.id);
 
 		const players = {};
@@ -93,11 +95,31 @@ module.exports = class TicTacToeCommand extends Command {
 			});
 	}
 
+	confirmed(user, bet, msg) {
+		return new Promise(async resolve => {
+			msg.say(stripIndents`
+				${user}, ${msg.member} challeges you to a game of tic-tac-toe for ${bet} 🍩s.
+				Type \`accept\`to accept or \`reject\`to reject the challenge.
+				Challenge will be automatically rejected in 30 seconds.
+				`);
+			const responses = await msg.channel.awaitMessages(msg2 => {
+				return msg2.author.id === user.id && (msg2.content === 'accept' || msg2.content === 'reject');
+			}, {
+				maxMatches: 1,
+				time: 30e3
+			});
+
+			if (responses.size === 0) return resolve(false);
+			if (responses.first().content.toLowerCase() === 'reject') return resolve(false);
+			return resolve(true);
+		});
+	}
+
 	getWinnerSymbol(field, players, msg) {
 		return new Promise(async resolve => {  // eslint-disable-line consistent-return
 			let turn = 'x';
 			while (!field.every(space => typeof space === 'string')) {
-				await msg.edit(this.getField(field, players, turn));
+				msg.edit(this.getField(field, players, turn));
 				const responses = await msg.channel.awaitMessages(msg2 => {
 					return msg2.author.id === players[turn].id && [1, 2, 3, 4, 5, 6, 7, 8, 9].includes(parseInt(msg2.content));
 				}, {
