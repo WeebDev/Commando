@@ -21,7 +21,7 @@ module.exports = class InventoryShowCommand extends Command {
 			args: [
 				{
 					key: 'page',
-					prompt: 'What page would you like to view?',
+					prompt: 'what page would you like to view?\n',
 					type: 'integer',
 					default: 1
 				}

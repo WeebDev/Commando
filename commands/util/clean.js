@@ -24,19 +24,19 @@ module.exports = class CleanCommand extends Command {
 			args: [
 				{
 					key: 'limit',
-					prompt: 'How many messages would you like to delete?\n',
+					prompt: 'how many messages would you like to delete?\n',
 					type: 'integer',
 					max: 100
 				},
 				{
 					key: 'filter',
-					prompt: 'What filter would you like to apply?\n',
+					prompt: 'what filter would you like to apply?\n',
 					type: 'string',
 					default: ''
 				},
 				{
 					key: 'member',
-					prompt: 'Whose messages would you like to delete?\n',
+					prompt: 'whose messages would you like to delete?\n',
 					type: 'member',
 					default: ''
 				}

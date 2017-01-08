@@ -26,7 +26,7 @@ module.exports = class PlaySongCommand extends Command {
 			args: [
 				{
 					key: 'url',
-					prompt: 'What music would you like to listen to?\n',
+					prompt: 'what music would you like to listen to?\n',
 					type: 'string'
 				}
 			]

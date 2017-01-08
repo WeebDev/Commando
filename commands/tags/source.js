@@ -23,7 +23,7 @@ module.exports = class TagSourceCommand extends Command {
 				{
 					key: 'name',
 					label: 'tagname',
-					prompt: 'What tag-source would you like to see?\n',
+					prompt: 'what tag source would you like to see?\n',
 					type: 'string'
 				}
 			]

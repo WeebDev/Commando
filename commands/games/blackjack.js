@@ -21,13 +21,23 @@ module.exports = class BlackjackCommand extends Command {
 			args: [
 				{
 					key: 'bet',
-					prompt: 'How many donuts do you want to bet?',
+					prompt: 'how many donuts do you want to bet?\n',
 					type: 'integer',
-					max: 1000,
-					validate: bet => {
+					validate: async (bet, msg) => {
 						bet = parseInt(bet);
+						const balance = await Currency.getBalance(msg.author.id);
+
+						if (balance < bet) {
+							return `
+								you don't have enough donuts. Your current account balance is ${balance} 🍩s.
+								Please specify a valid amount of donuts.
+							`;
+						}
+
 						if (![100, 200, 300, 400, 500, 1000].includes(bet)) {
-							return 'Please choose on of 100, 200, 300, 400, 500, 1000 for your bet.';
+							return `
+								please choose \`100, 200, 300, 400, 500, 1000\` for your bet.
+							`;
 						}
 
 						return true;
@@ -39,11 +49,6 @@ module.exports = class BlackjackCommand extends Command {
 
 	async run(msg, args) {
 		const bet = args.bet;
-		const balance = await Currency.getBalance(msg.author.id);
-
-		if (balance < bet) {
-			return msg.reply(`you don't have enough donuts. Your current account balance is ${balance} 🍩s.`);
-		}
 
 		if (Blackjack.gameExists(msg.author.id)) {
 			return msg.reply(`you can't start 2 games of blackjack at the same time.`);

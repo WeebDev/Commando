@@ -25,13 +25,13 @@ module.exports = class TagAddCommand extends Command {
 				{
 					key: 'name',
 					label: 'tagname',
-					prompt: 'What would you like to name it?\n',
+					prompt: 'what would you like to name it?\n',
 					type: 'string'
 				},
 				{
 					key: 'content',
 					label: 'tagcontent',
-					prompt: 'What content would you like to add?\n',
+					prompt: 'what content would you like to add?\n',
 					type: 'string',
 					max: 1800
 				}
