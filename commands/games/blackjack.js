@@ -105,7 +105,7 @@ module.exports = class BlackjackCommand extends Command {
 					`
 				});
 				embed.color = winnings > 0 ? 0x009900 : winnings < 0 ? 0x990000 : undefined;
-				embed.description = `You ${winnings > 0 ? 'won' : 'lost'} ${Math.abs(winnings)} 🍩s`;
+				embed.description = `You ${winnings === 0 ? 'broke even' : `${winnings > 0 ? 'won' : 'lost'} ${Math.abs(winnings)} 🍩s`}`;
 				if (winnings !== 0) Currency.addBalance(msg.author.id, winnings);
 				return msg.embed(embed);
 			});
@@ -179,8 +179,8 @@ module.exports = class BlackjackCommand extends Command {
 					return msg2.author.id === msg.author.id && (
 						msg2.content === 'hit'
 						|| msg2.content === 'stand'
-						|| msg2.content === 'split'
-						|| msg2.content === 'double down'
+						|| (msg2.content === 'split' && canSplit)
+						|| (msg2.content === 'double down' && canDoubleDown)
 					);
 				}, {
 					maxMatches: 1,
