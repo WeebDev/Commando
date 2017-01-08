@@ -30,12 +30,12 @@ module.exports = class MoneyAddCommand extends Command {
 			args: [
 				{
 					key: 'member',
-					prompt: 'What user would you like to give donuts?',
+					prompt: 'what user would you like to give donuts?\n',
 					type: 'member'
 				},
 				{
 					key: 'donuts',
-					prompt: 'How many donuts do you want to give that user?',
+					prompt: 'how many donuts do you want to give that user?\n',
 					type: 'integer'
 				}
 			]

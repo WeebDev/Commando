@@ -21,22 +21,23 @@ module.exports = class BlackjackCommand extends Command {
 			args: [
 				{
 					key: 'bet',
-					prompt: 'How many donuts do you want to bet?',
+					prompt: 'how many donuts do you want to bet?\n',
 					type: 'integer',
-					max: 1000,
 					validate: async (bet, msg) => {
 						bet = parseInt(bet);
 						const balance = await Currency.getBalance(msg.author.id);
 
 						if (balance < bet) {
-							return stripIndents`
-								You don't have enough donuts. Your current account balance is ${balance} 🍩s.
+							return `
+								you don't have enough donuts. Your current account balance is ${balance} 🍩s.
 								Please specify a valid amount of donuts.
-								`;
+							`;
 						}
 
 						if (![100, 200, 300, 400, 500, 1000].includes(bet)) {
-							return 'Please choose one of 100, 200, 300, 400, 500, 1000 for your bet.';
+							return `
+								please choose \`100, 200, 300, 400, 500, 1000\` for your bet.
+							`;
 						}
 
 						return true;

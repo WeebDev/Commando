@@ -20,7 +20,7 @@ module.exports = class StoreInfoCommand extends Command {
 			args: [
 				{
 					key: 'item',
-					prompt: 'Which item would you like to know the price of?',
+					prompt: 'which item would you like to know the price of?\n',
 					type: 'string'
 				}
 			]

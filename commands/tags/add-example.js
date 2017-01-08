@@ -26,13 +26,13 @@ module.exports = class ExampleAddCommand extends Command {
 				{
 					key: 'name',
 					label: 'examplename',
-					prompt: 'What would you like to name it?\n',
+					prompt: 'what would you like to name it?\n',
 					type: 'string'
 				},
 				{
 					key: 'content',
 					label: 'examplecontent',
-					prompt: 'What content would you like to add?\n',
+					prompt: 'what content would you like to add?\n',
 					type: 'string',
 					max: 1800
 				}

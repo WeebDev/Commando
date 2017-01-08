@@ -22,7 +22,7 @@ module.exports = class ViewQueueCommand extends Command {
 			args: [
 				{
 					key: 'page',
-					prompt: 'What page would you like to view?\n',
+					prompt: 'what page would you like to view?\n',
 					type: 'integer',
 					default: 1
 				}

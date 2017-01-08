@@ -19,7 +19,7 @@ module.exports = class StoreInfoCommand extends Command {
 			args: [
 				{
 					key: 'page',
-					prompt: 'Which page would you like to view?',
+					prompt: 'which page would you like to view?\n',
 					type: 'integer',
 					default: 1
 				}

@@ -25,7 +25,7 @@ module.exports = class ProfileCommand extends Command {
 			args: [
 				{
 					key: 'member',
-					prompt: 'What user profile would you like to see?\n',
+					prompt: 'what user profile would you like to see?\n',
 					type: 'member',
 					default: ''
 				}

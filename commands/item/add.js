@@ -21,12 +21,12 @@ module.exports = class ItemAddCommand extends Command {
 			args: [
 				{
 					key: 'name',
-					prompt: 'What should the new item be called?',
+					prompt: 'what should the new item be called?\n',
 					type: 'string'
 				},
 				{
 					key: 'price',
-					prompt: 'What should the new item cost?',
+					prompt: 'what should the new item cost?\n',
 					type: 'integer',
 					min: 1
 				}

@@ -45,7 +45,7 @@ module.exports = class SlotMachineCommand extends Command {
 			args: [
 				{
 					key: 'coins',
-					prompt: 'How many coins do you want to bet?',
+					prompt: 'how many coins do you want to bet?\n',
 					type: 'integer',
 					validate: async (coins, msg) => {
 						coins = parseInt(coins);
@@ -53,15 +53,17 @@ module.exports = class SlotMachineCommand extends Command {
 						const plural = userCoins > 1 || userCoins === 0;
 
 						if (userCoins < coins) {
-							return stripIndents`
-								You don't have enough coins to pay your bet!
+							return `
+								you don't have enough coins to pay your bet!
 								Your current account balance is ${userCoins} coin${plural ? 's' : ''}.
-								Please specify a valid amount of coins
-								`;
+								Please specify a valid amount of coins.
+							`;
 						}
 
 						if (![1, 3, 5].includes(coins)) {
-							return 'Sorry, you need to pay either 1, 3 or 5 coin(s). Anything else does not work.';
+							return `
+								you need to pay either 1, 3 or 5 coin(s).
+							`;
 						}
 
 						return true;

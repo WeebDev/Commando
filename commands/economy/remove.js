@@ -30,12 +30,12 @@ module.exports = class MoneyRemoveCommand extends Command {
 			args: [
 				{
 					key: 'member',
-					prompt: 'From which user would you like to remove donuts?',
+					prompt: 'from which user would you like to remove donuts?\n',
 					type: 'member'
 				},
 				{
 					key: 'donuts',
-					prompt: 'How many donuts do you want to remove from that user?',
+					prompt: 'how many donuts do you want to remove from that user?\n',
 					type: 'integer'
 				}
 			]
