@@ -29,7 +29,7 @@ module.exports = class TicTacToeCommand extends Command {
 					key: 'bet',
 					prompt: 'how many donuts do you want to bet?\n',
 					type: 'integer',
-					validate: async (msg, bet) => {
+					validate: async (bet, msg) => {
 						bet = parseInt(bet);
 						const balance = await Currency.getBalance(msg.author.id);
 
