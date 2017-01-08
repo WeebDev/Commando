@@ -128,9 +128,9 @@ module.exports = class BlackjackCommand extends Command {
 				}
 			];
 			let currentHand = hands[0];
-			const nextHand = () => { currentHand = hands[hands.indexOf(currentHand) + 1]; };
 			let totalBet = bet;
-			while (Blackjack.handValue(currentHand.cards) < 21) {
+			while (currentHand && Blackjack.handValue(currentHand.cards) < 21) {
+				const nextHand = () => { currentHand = hands[hands.indexOf(currentHand) + 1]; };
 				if (currentHand.double) {
 					blackjack.hit(currentHand.cards);
 					currentHand.cards.doubled = true;
