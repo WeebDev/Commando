@@ -78,17 +78,17 @@ module.exports = class BlackjackCommand extends Command {
 					const playerValue = Blackjack.handValue(hand);
 					const result = this.gameResult(playerValue, dealerValue);
 
-					const lossOrGain = (result === 'loss' ? -1 : 1) * (hand.doubled ? 1 : 0.5) * bet;
+					const lossOrGain = (result === 'loss' || result === 'bust' ? -2 : result === 'push' ? 0 : 1) * (hand.doubled ? 1 : 0.5) * bet;
 					winnings += lossOrGain;
 
 					embed.fields.push({
-						name: `Hand ${i}`,
+						name: `Hand ${i + 1}`,
 						value: stripIndents`
 							${hand.join(' - ')}
 							Value: ${playerValue}
 							Result: ${
 								result.replace(/(^\w|\s\w)/g, ma => ma.toUpperCase())
-							}${result !== 'push' ? `, ${lossOrGain} 🍩s` : ''}
+							}${result !== 'push' ? `, ${lossOrGain} 🍩s` : ', 🍩s back'}
 						`,
 						inline: true
 					});
@@ -105,7 +105,7 @@ module.exports = class BlackjackCommand extends Command {
 					`
 				});
 				embed.color = winnings > 0 ? 0x009900 : winnings < 0 ? 0x990000 : undefined;
-				embed.description = `You ${winnings > 0 ? 'won' : 'lost'} ${winnings} 🍩s`;
+				embed.description = `You ${winnings > 0 ? 'won' : 'lost'} ${Math.abs(winnings)} 🍩s`;
 				if (winnings !== 0) Currency.addBalance(msg.author.id, winnings);
 				return msg.embed(embed);
 			});
