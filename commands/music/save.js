@@ -27,7 +27,7 @@ module.exports = class SaveQueueCommand extends Command {
 			color: 3447003,
 			author: {
 				name: `${msg.author.username}#${msg.author.discriminator} (${msg.author.id})`,
-				icon_url: msg.author.avatarURL ? msg.author.avatarURL : this.client.user.avatarURL // eslint-disable-line camelcase
+				icon_url: msg.author.displayAvatarURL // eslint-disable-line camelcase
 			},
 			description: stripIndents`
 				**Currently playing:**
