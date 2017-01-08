@@ -68,7 +68,7 @@ module.exports = class TicTacToeCommand extends Command {
 			return msg.reply(`you can't start 2 games of Tic-Tac-Toe on the same server at once.`);
 		}
 
-		if (await this.confirmed(user, bet, msg)) return msg.reply(`your challenge has not been accepted.`);
+		if (await !this.confirmed(user, bet, msg)) return msg.reply(`your challenge has not been accepted.`);
 
 		games.push(msg.guild.id);
 
@@ -144,10 +144,10 @@ module.exports = class TicTacToeCommand extends Command {
 	getField(field, players, turn) {
 		return stripIndents`
 			\`\`\`
-			${field[0]} | ${field[1]} | ${field[2]}    |
-			-----------   |   TicTacToe | ${players.x.displayName}(x) vs ${players.o.displayName}(o)
-			${field[3]} | ${field[4]} | ${field[5]}    |   Turn: ${turn} - ${players[turn].displayName}
-			-----------   |   Type the number of the space you want to occupy.
+			${field[0]} | ${field[1]} | ${field[2]}    |   TicTacToe | ${players.x.displayName}(x) vs ${players.o.displayName}(o)
+			----------   |   Turn: ${turn} - ${players[turn].displayName}
+			${field[3]} | ${field[4]} | ${field[5]}    |   Type the number of the space you want to occupy.
+			----------   |
 			${field[6]} | ${field[7]} | ${field[8]}    |   If you don't respond within 20 seconds you lose automatically.
 			\`\`\`
 			`;
