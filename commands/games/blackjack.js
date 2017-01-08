@@ -86,6 +86,7 @@ module.exports = class BlackjackCommand extends Command {
 						value: stripIndents`
 							${hand.join(' - ')}
 							Value: ${playerValue}
+
 							Result: ${
 								result.replace(/(^\w|\s\w)/g, ma => ma.toUpperCase())
 							}${result !== 'push' ? `, ${lossOrGain} 🍩s` : ', 🍩s back'}
