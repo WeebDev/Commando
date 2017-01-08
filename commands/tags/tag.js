@@ -22,7 +22,7 @@ module.exports = class TagCommand extends Command {
 				{
 					key: 'name',
 					label: 'tagname',
-					prompt: 'What tag would you like to see?\n',
+					prompt: 'what tag would you like to see?\n',
 					type: 'string'
 				}
 			]

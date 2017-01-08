@@ -23,15 +23,31 @@ module.exports = class FortuneCommand extends Command {
 			args: [
 				{
 					key: 'title',
-					prompt: 'What title would you like the strawpoll to have?\n',
+					prompt: 'what title would you like the strawpoll to have?\n',
 					type: 'string',
-					max: 200
+					validate: title => {
+						if (title.length > 200) {
+							return `
+								your title was ${title.length} characters long.
+								Please limit your title to 200 characters.
+							`;
+						}
+						return true;
+					}
 				},
 				{
-					key: 'options',
-					prompt: 'What options would you like the strawpoll to have?\n',
+					key: 'option',
+					prompt: 'what options would you like the strawpoll to have?\n',
 					type: 'string',
-					max: 160,
+					validate: option => {
+						if (option.length > 160) {
+							return `
+								your option was ${option.length} characters long.
+								Please limit your option to 160 characters.
+							`;
+						}
+						return true;
+					},
 					infinite: true
 				}
 			]
@@ -40,7 +56,7 @@ module.exports = class FortuneCommand extends Command {
 
 	async run(msg, args) {
 		const title = args.title;
-		const options = args.options;
+		const options = args.option;
 
 		if (options.length < 3) return msg.reply('please provide 3 or more options.');
 		if (options.length > 31) return msg.reply('please provide less than 31 options.');

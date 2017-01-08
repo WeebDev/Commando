@@ -23,12 +23,12 @@ module.exports = class BuyItemCommand extends Command {
 			args: [
 				{
 					key: 'item',
-					prompt: 'What do you want to buy?',
+					prompt: 'what do you want to buy?\n',
 					type: 'string'
 				},
 				{
 					key: 'amount',
-					prompt: 'How many do you want to buy?',
+					prompt: 'how many do you want to buy?\n',
 					type: 'integer',
 					default: 1,
 					min: 1

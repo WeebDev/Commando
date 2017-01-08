@@ -21,7 +21,7 @@ module.exports = class TagWhoCommand extends Command {
 				{
 					key: 'name',
 					label: 'tagname',
-					prompt: 'What tag would you like to have information on?\n',
+					prompt: 'what tag would you like to have information on?\n',
 					type: 'string'
 				}
 			]

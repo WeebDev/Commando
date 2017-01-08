@@ -26,7 +26,7 @@ module.exports = class WeatherCommand extends Command {
 			args: [
 				{
 					key: 'location',
-					prompt: 'What location would you like to have information on?\n',
+					prompt: 'what location would you like to have information on?\n',
 					type: 'string'
 				}
 			]

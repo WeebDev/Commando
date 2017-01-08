@@ -32,12 +32,12 @@ module.exports = class MoneyTradeCommand extends Command {
 			args: [
 				{
 					key: 'member',
-					prompt: 'What user would you like to give donuts?',
+					prompt: 'what user would you like to give donuts?\n',
 					type: 'member'
 				},
 				{
 					key: 'donuts',
-					prompt: 'How many donuts do you want to give that user?',
+					prompt: 'how many donuts do you want to give that user?\n',
 					type: 'integer'
 				}
 			]
@@ -50,7 +50,7 @@ module.exports = class MoneyTradeCommand extends Command {
 
 		if (user.id === msg.author.id) return msg.reply('you can\'t trade donuts with yourself, ya dingus.');
 		if (user.user.bot) return msg.reply('don\'t give your donuts to bots: they\'re bots, man.');
-		if (donuts <= 0) return msg.reply('man, get outta here!');
+		if (donuts <= 0) return msg.reply('you can\'t trade 0 or below 0 donuts.');
 
 		const userBalance = await Currency.getBalance(msg.author.id);
 
