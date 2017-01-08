@@ -6,14 +6,13 @@ const Currency = require('../../currency/Currency');
 const games = [];
 const combinations = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
 
-module.exports = class BlackjackCommand extends Command {
+module.exports = class TicTacToeCommand extends Command {
 	constructor(client) {
 		super(client, {
-			name: 'blackjack',
+			name: 'tictactoe',
 			group: 'games',
-			memberName: 'blackjack',
+			memberName: 'tictactoe',
 			description: 'Challenge someone to a game of tic-tac-toe for donuts!',
-			details: 'Challenge someone to a game of tic-tac-toe for donuts.',
 			guildOnly: true,
 			throttling: {
 				usages: 1,
@@ -23,14 +22,13 @@ module.exports = class BlackjackCommand extends Command {
 			args: [
 				{
 					key: 'member',
-					prompt: 'Which user would you like to challenge?',
+					prompt: 'which user would you like to challenge?\n',
 					type: 'member'
 				},
 				{
 					key: 'bet',
-					prompt: 'How many donuts do you want to bet?',
+					prompt: 'how many donuts do you want to bet?\n',
 					type: 'integer',
-					max: 1000,
 					validate: async (msg, bet) => {
 						bet = parseInt(bet);
 						const balance = await Currency.getBalance(msg.author.id);
@@ -67,58 +65,58 @@ module.exports = class BlackjackCommand extends Command {
 		}
 
 		if (games.indexOf(msg.guild.id) > -1) {
-			return msg.reply(`you can't start 2 games of Tic-Tac-Toe one the same server at once.`);
+			return msg.reply(`you can't start 2 games of Tic-Tac-Toe on the same server at once.`);
 		}
 
 		games.push(msg.guild.id);
+
+		Currency.removeBalance(msg.member.id, bet);
+		Currency.removeBalance(user.id, bet);
 
 		const players = {};
 		[players.x, players.o] = Math.random() > 0.5 ? [msg.member, user] : [user, msg.member];
 
 		const field = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-		let turn = 'x';
 
-		return msg.say(this.getField(field, players, turn))
+		return msg.say(this.getField(field, players, 'x'))
 			.then(async message => {
-				while (!field.every(space => typeof space === 'string')) {
-					await message.edit(this.getField(field, players, turn));
-					const responses = await msg.channel.awaitMessages(msg2 => {
-						return msg2.author.id === players[turn].id && [1, 2, 3, 4, 5, 6, 7, 8, 9].includes(parseInt(msg2.content));
-					}, {
-						maxMatches: 1,
-						time: 20e3
-					});
+				const winSym = await this.getWinner(field, players, message);
 
-					if (responses.size === 0) {
-						const loser = players[turn];
-						const winner = players[turn === 'x' ? 'o' : 'x'];
+				if (!winSym) return msg.say(`Game over! It's a tie. Both participants keep their 🍩s.`);
 
-						Currency.removeBalance(loser.id, bet);
-						Currency.addBalance(winner.id, bet);
+				const winner = players[winSym];
 
-						return msg.say(`${loser.displayName} failed to respond in time. ${winner.displayName} won their ${bet} 🍩s!;`);
-					}
-
-					if (field.includes(parseInt(responses.first.content))) {
-						field[field.indexOf(parseInt(responses.first.content))] = turn;
-						turn = turn === 'x' ? 'o' : 'x';
-
-						if (this.gameWon(field)) {
-							const loser = players[turn === 'x' ? 'o' : 'x'];
-							const winner = players[turn];
-
-							Currency.removeBalance(loser.id, bet);
-							Currency.addBalance(winner.id, bet);
-
-							return msg.say(`Game over! ${winner.displayName} won ${bet} 🍩s from ${loser.displayName}.`);
-						}
-					}
-				}
+				Currency.addBalance(winner.id, bet * 2);
 
 				games.splice(games.indexOf(msg.guild.id), 1);
 
-				return msg.say(`Game over! It's a tie. Both participants keep their 🍩s.`);
+				return msg.say(`Game Over! ${winner.displayName} wins ${bet} 🍩s!;`);
 			});
+	}
+
+	getWinnerSymbol(field, players, msg) {
+		return new Promise(async resolve => {  // eslint-disable-line consistent-return
+			let turn = 'x';
+			while (!field.every(space => typeof space === 'string')) {
+				await msg.edit(this.getField(field, players, turn));
+				const responses = await msg.channel.awaitMessages(msg2 => {
+					return msg2.author.id === players[turn].id && [1, 2, 3, 4, 5, 6, 7, 8, 9].includes(parseInt(msg2.content));
+				}, {
+					maxMatches: 1,
+					time: 20e3
+				});
+
+				if (responses.size === 0) return resolve(turn);
+
+				if (field.includes(parseInt(responses.first.content))) {
+					field[field.indexOf(parseInt(responses.first.content))] = turn;
+					turn = turn === 'x' ? 'o' : 'x';
+
+					if (this.gameWon(field)) return resolve(turn);
+					if (field.every(space => typeof space === 'string')) return resolve(null);
+				}
+			}
+		});
 	}
 
 	getField(field, players, turn) {
@@ -128,7 +126,7 @@ module.exports = class BlackjackCommand extends Command {
 			-----------   |   TicTacToe | ${players.x.displayName}(x) vs ${players.o.displayName}(o)
 			${field[3]} | ${field[4]} | ${field[5]}    |   Turn: ${turn} - ${players[turn].displayName}
 			-----------   |   Type the number of the space you want to occupy.
-			${field[6]} | ${field[7]} | ${field[8]}    |
+			${field[6]} | ${field[7]} | ${field[8]}    |   If you don't respond within 20 seconds you lose automatically.
 			\`\`\`
 			`;
 	}
