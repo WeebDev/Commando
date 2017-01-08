@@ -104,7 +104,7 @@ module.exports = class BlackjackCommand extends Command {
 						Value: ${dealerValue}
 					`
 				});
-				embed.color = winnings > 0 ? '#009900' : winnings < 0 ? '#990000' : undefined;
+				embed.color = winnings > 0 ? 0x009900 : winnings < 0 ? 0x990000 : undefined;
 				embed.description = `You ${winnings > 0 ? 'won' : 'lost'} ${winnings} 🍩s`;
 				if (winnings !== 0) Currency.addBalance(msg.author.id, winnings);
 				return msg.embed(embed);
