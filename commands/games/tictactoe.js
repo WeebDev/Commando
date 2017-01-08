@@ -68,7 +68,7 @@ module.exports = class TicTacToeCommand extends Command {
 			return msg.reply(`you can't start 2 games of Tic-Tac-Toe on the same server at once.`);
 		}
 
-		if (await !this.confirmed(user, bet, msg)) return msg.reply(`your challenge has not been accepted.`);
+		if (await this.confirmed(user, bet, msg)) return msg.reply(`your challenge has not been accepted.`);
 
 		games.push(msg.guild.id);
 
@@ -109,9 +109,9 @@ module.exports = class TicTacToeCommand extends Command {
 				time: 30e3
 			});
 
-			if (responses.size === 0) return resolve(false);
-			if (responses.first().content.toLowerCase() === 'reject') return resolve(false);
-			return resolve(true);
+			if (responses.size === 0) return resolve(true);
+			if (responses.first().content.toLowerCase() === 'reject') return resolve(true);
+			return resolve(false);
 		});
 	}
 
