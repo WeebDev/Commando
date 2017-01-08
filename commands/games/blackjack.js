@@ -124,7 +124,7 @@ module.exports = class BlackjackCommand extends Command {
 			const hands = [
 				{
 					cards: playerHand,
-					doubled: false
+					double: false
 				}
 			];
 			let currentHand = hands[0];
@@ -189,7 +189,7 @@ module.exports = class BlackjackCommand extends Command {
 				if (responses.size === 0) break;
 
 				const action = responses.first().content.toLowerCase();
-				if (action === 'stand' || Blackjack.handValue(currentHand) >= 21) {
+				if (action === 'stand' || Blackjack.handValue(currentHand.cards) >= 21) {
 					if (currentHand === hands[hands.length - 1]) break;
 					nextHand();
 				}
@@ -199,7 +199,7 @@ module.exports = class BlackjackCommand extends Command {
 					totalBet += bet;
 					hands.push({
 						cards: [currentHand.cards.pop()],
-						doubled: false
+						double: false
 					});
 					blackjack.hit(currentHand.cards);
 				}
