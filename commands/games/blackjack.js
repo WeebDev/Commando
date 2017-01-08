@@ -133,6 +133,7 @@ module.exports = class BlackjackCommand extends Command {
 			let totalBet = bet;
 			while (currentHand) {
 				const nextHand = () => { currentHand = hands[hands.indexOf(currentHand) + 1]; };
+				if (currentHand.cards.length === 1) blackjack.hit(currentHand.cards);
 				if (Blackjack.handValue(currentHand.cards) === 'Blackjack') {
 					nextHand();
 					continue;
@@ -141,7 +142,6 @@ module.exports = class BlackjackCommand extends Command {
 					nextHand();
 					continue;
 				}
-				if (currentHand.cards.length === 1) blackjack.hit(currentHand.cards);
 				if (currentHand.double) {
 					blackjack.hit(currentHand.cards);
 					currentHand.cards.doubled = true;
