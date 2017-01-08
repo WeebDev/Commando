@@ -51,6 +51,9 @@ client.on('error', winston.error)
 		`);
 	})
 	.on('message', async (message) => {
+		const channeLocks = client.provider.get(message.guild.id, 'locks', []);
+
+		if (channeLocks.includes(message.channel.id)) return;
 		if (message.channel.type === 'dm') return;
 		if (message.author.bot) return;
 
