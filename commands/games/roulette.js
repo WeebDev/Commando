@@ -30,6 +30,7 @@ module.exports = class RouletteCommand extends Command {
 					prompt: 'How many donuts do you want to bet?',
 					type: 'integer',
 					validate: bet => {
+						bet = parseInt(bet);
 						if (![100, 200, 300, 400, 500, 1000, 2000, 5000].includes(bet)) {
 							return 'Please choose one of 100, 200, 300, 400, 500, 1000, 2000, 5000 for your bet.';
 						}

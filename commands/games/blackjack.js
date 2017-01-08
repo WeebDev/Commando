@@ -25,6 +25,7 @@ module.exports = class BlackjackCommand extends Command {
 					type: 'integer',
 					max: 1000,
 					validate: bet => {
+						bet = parseInt(bet);
 						if (![100, 200, 300, 400, 500, 1000].includes(bet)) {
 							return 'Please choose on of 100, 200, 300, 400, 500, 1000 for your bet.';
 						}

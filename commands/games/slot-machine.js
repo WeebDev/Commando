@@ -48,6 +48,7 @@ module.exports = class SlotMachineCommand extends Command {
 					prompt: 'How many coins do you want to bet?',
 					type: 'integer',
 					validate: coins => {
+						coins = parseInt(coins);
 						if (![1, 3, 5].includes(coins)) {
 							return 'Sorry, you need to pay either 1, 3 or 5 coin(s). Anything else does not work.';
 						}
