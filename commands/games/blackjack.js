@@ -28,14 +28,14 @@ module.exports = class BlackjackCommand extends Command {
 						const balance = await Currency.getBalance(msg.author.id);
 
 						if (balance < bet) {
-							return `
+							return stripIndents`
 								you don't have enough donuts. Your current account balance is ${balance} 🍩s.
 								Please specify a valid amount of donuts.
 							`;
 						}
 
 						if (![100, 200, 300, 400, 500, 1000].includes(bet)) {
-							return `
+							return stripIndents`
 								please choose \`100, 200, 300, 400, 500, 1000\` for your bet.
 							`;
 						}
@@ -58,172 +58,109 @@ module.exports = class BlackjackCommand extends Command {
 
 		return msg.say(`New game of blackjack started with ${msg.member.displayName} with a bet of ${bet} 🍩s!`)
 			.then(async () => {
-				let playerHand = blackjack.getHand();
+				const balance = await Currency.getBalance(msg.author.id);
+				const playerHand = blackjack.getHand();
 				let dealerHand = blackjack.getHand();
-
+				let playerHands;
 				if (Blackjack.handValue(playerHand) !== 'Blackjack') {
-					playerHand = await this.getFinalHand(msg, playerHand, dealerHand, blackjack);
+					playerHands = await this.getFinalHand(msg, playerHand, dealerHand, balance, bet, blackjack);
+				} else {
+					playerHands = [playerHand];
 				}
-				const playerValue = Blackjack.handValue(playerHand);
 
-				while (Blackjack.handValue(dealerHand) < 17) dealerHand = blackjack.hit(dealerHand);
-				const dealerValue = Blackjack.handValue(dealerHand);
-
+				while (Blackjack.handValue(dealerHand) < 17) blackjack.hit(dealerHand);
 				blackjack.endGame();
 
-				if (Blackjack.handValue(playerHand) > 21) {
-					Currency.removeBalance(msg.author.id, bet);
+				const dealerValue = Blackjack.handValue(dealerHand);
+				let winnings = 0;
+				const embed = { title: `Blackjack | ${msg.member.displayName}` };
+				playerHands.forEach((hand, i) => {
+					const playerValue = Blackjack.handValue(hand);
+					const result = this.gameResult(playerValue, dealerValue);
 
-					return msg.embed({
-						title: `Blackjack | ${msg.member.displayName}`,
-						description: 'You busted and lost your 🍩s. Better luck next time.',
-						fields: [
-							{
-								name: '**Your hand**',
-								value: stripIndents`
-									${playerHand.join(' - ')}
-									Value: ${Blackjack.handValue(playerHand)}
-								`,
-								inline: true
-							},
-							{
-								name: '**Dealer hand**',
-								value: stripIndents`
-									${dealerHand[0]} - XX
-									Value: ${Blackjack.handValue([dealerHand[0]])}
-								`,
-								inline: true
-							}
-						]
+					const lossOrGain = (result === 'loss' ? -1 : 1) * (hand.doubled ? 1 : 0.5) * bet;
+					winnings += lossOrGain;
+
+					embed.fields.push({
+						name: `Hand ${i}`,
+						value: stripIndents`
+							${hand.join(' - ')}
+							Value: ${playerValue}
+							Result: ${
+								result.replace(/(^\w|\s\w)/g, ma => ma.toUpperCase())
+							}${result !== 'push' ? `, ${lossOrGain} 🍩s` : ''}
+						`,
+						inline: true
 					});
-				}
-
-				if (Blackjack.handValue(dealerHand) > 21) {
-					Currency.addBalance(msg.author.id, bet / 2);
-
-					return msg.embed({
-						title: `Blackjack | ${msg.member.displayName}`,
-						description: `The dealer busted. You won ${bet + (bet / 2)} 🍩s`,
-						fields: [
-							{
-								name: '**Your hand**',
-								value: stripIndents`
-									${playerHand.join(' - ')}
-									Value: ${Blackjack.handValue(playerHand)}
-								`,
-								inline: true
-							},
-							{
-								name: '**Dealer hand**',
-								value: stripIndents`
-									${dealerHand.join(' - ')}
-									Value: ${Blackjack.handValue(dealerHand)}
-								`,
-								inline: true
-							}
-						]
-					});
-				}
-
-				const gameResult = this.gameResult(playerValue, dealerValue);
-
-				if (gameResult === 'loss') {
-					Currency.removeBalance(msg.author.id, bet);
-
-					return msg.embed({
-						title: `Blackjack | ${msg.member.displayName}`,
-						description: `The dealer has a greater hand value. You lost your 🍩s`,
-						fields: [
-							{
-								name: '**Your hand**',
-								value: stripIndents`
-									${playerHand.join(' - ')}
-									Value: ${playerValue}
-								`,
-								inline: true
-							},
-							{
-								name: '**Dealer hand**',
-								value: stripIndents`
-									${dealerHand.join(' - ')}
-									Value: ${dealerValue}
-								`,
-								inline: true
-							}
-						]
-					});
-				}
-
-				if (gameResult === 'push') {
-					return msg.embed({
-						title: `Blackjack | ${msg.member.displayName}`,
-						description: `Equal hand values. You got back the 🍩s you bet.`,
-						fields: [
-							{
-								name: '**Your hand**',
-								value: stripIndents`
-									${playerHand.join(' - ')}
-									Value: ${playerValue}
-								`,
-								inline: true
-							},
-							{
-								name: '**Dealer hand**',
-								value: stripIndents`
-									${dealerHand.join(' - ')}
-									Value: ${dealerValue}
-								`,
-								inline: true
-							}
-						]
-					});
-				}
-
-				Currency.addBalance(msg.author.id, bet / 2);
-
-				return msg.embed({
-					title: `Blackjack | ${msg.member.displayName}`,
-					description: `Congratulations! You have a greater hand value. You won ${bet + (bet / 2)} 🍩s`,
-					fields: [
-						{
-							name: '**Your hand**',
-							value: stripIndents`
-								${playerHand.join(' - ')}
-								Value: ${playerValue}
-							`,
-							inline: true
-						},
-						{
-							name: '**Dealer hand**',
-							value: stripIndents`
-								${dealerHand.join(' - ')}
-								Value: ${dealerValue}
-							`,
-							inline: true
-						}
-					]
 				});
+				embed.fields.push({
+					name: '\u200B',
+					value: '\u200B'
+				});
+				embed.fields.push({
+					name: '**Dealer hand**',
+					value: stripIndents`
+						${dealerHand.join(' - ')}
+						Value: ${dealerValue}
+					`
+				});
+				embed.color = winnings > 0 ? '#009900' : winnings < 0 ? '#990000' : undefined;
+				embed.description = `You ${winnings > 0 ? 'won' : 'lost'} ${winnings} 🍩s`;
+				if (winnings !== 0) Currency.addBalance(msg.author.id, winnings);
+				return msg.embed(embed);
 			});
 	}
 
 	gameResult(playerValue, dealerValue) {
+		if (playerValue > 21) return 'bust';
+		if (dealerValue > 21) return 'dealer bust';
 		if (playerValue === dealerValue) return 'push';
 		if (playerValue === 'Blackjack' || playerValue > dealerValue) return 'win';
 		return 'loss';
 	}
 
-	getFinalHand(msg, playerHand, dealerHand, blackjack) {
-		return new Promise(async resolve => { // eslint-disable-line consistent-return
-			while (Blackjack.handValue(playerHand) < 21) {
+	getFinalHand(msg, playerHand, dealerHand, balance, bet, blackjack) {
+		return new Promise(async resolve => {
+			const hands = [
+				{
+					cards: playerHand,
+					split: false,
+					doubled: false
+				}
+			];
+			let currentHand = hands[0];
+			const nextHand = () => { currentHand = hands[hands.indexOf(currentHand) + 1]; };
+			let totalBet = bet;
+			while (Blackjack.handValue(currentHand.cards) < 21) {
+				if (currentHand.double) {
+					blackjack.hit(currentHand.cards);
+					currentHand.cards.doubled = true;
+					nextHand();
+					continue;
+				}
+				if (Blackjack.handValue(currentHand.cards) === 'Blackjack') {
+					nextHand();
+					continue;
+				}
+				const canDoubleDown = balance >= totalBet + bet && currentHand.cards.length === 2;
+				const canSplit = balance >= totalBet + bet
+					&& Blackjack.handValue([currentHand.cards[0]]) === Blackjack.handValue([currentHand.cards[1]])
+					&& currentHand.cards.length === 2;
 				await msg.embed({
 					title: `Blackjack | ${msg.member.displayName}`,
-					description: 'Type `hit` to draw another card or `stand` to pass.',
+					description: !canDoubleDown && !canSplit
+						?	'Type `hit` to draw another card or `stand` to pass.'
+						:	`Type \`hit\` to draw another card, ${
+							canDoubleDown ? '`double down` to double down, ' : ''
+						}${
+							canSplit ? '`split` to split, ' : ''
+						}or \`stand\` to pass.`,
 					fields: [
 						{
 							name: '**Your hand**',
 							value: stripIndents`
-								${playerHand.join(' - ')}
-								Value: ${Blackjack.handValue(playerHand)}
+								${currentHand.cards.join(' - ')}
+								Value: ${Blackjack.handValue(currentHand.cards)}
 							`,
 							inline: true
 						},
@@ -239,17 +176,41 @@ module.exports = class BlackjackCommand extends Command {
 				});
 
 				const responses = await msg.channel.awaitMessages(msg2 => {
-					return msg2.author.id === msg.author.id && (msg2.content === 'hit' || msg2.content === 'stand');
+					return msg2.author.id === msg.author.id && (
+						msg2.content === 'hit'
+						|| msg2.content === 'stand'
+						|| msg2.content === 'split'
+						|| msg2.content === 'double down'
+					);
 				}, {
 					maxMatches: 1,
 					time: 20e3
 				});
 
-				if (responses.size === 0) return resolve(playerHand);
-				if (responses.first().content.toLowerCase() === 'stand') return resolve(playerHand);
-				if (responses.first().content.toLowerCase() === 'hit') playerHand = blackjack.hit(playerHand);
-				if (Blackjack.handValue(playerHand) >= 21) return resolve(playerHand);
+				if (responses.size === 0) break;
+
+				const action = responses.first().content.toLowerCase();
+				if (action === 'stand' || Blackjack.handValue(currentHand) >= 21) {
+					if (currentHand === hands[hands.length - 1]) break;
+					nextHand();
+				}
+
+				if (action === 'hit') blackjack.hit(currentHand.cards);
+				if (action === 'split' && canSplit) {
+					totalBet += bet;
+					hands.push({
+						cards: [currentHand.cards.pop()],
+						split: false,
+						doubled: false
+					});
+					currentHand.split = true;
+					blackjack.hit(currentHand.cards);
+				}
+				if (action === 'double down' && canDoubleDown) {
+					currentHand.double = true;
+				}
 			}
+			return resolve(hands.map(hand => hand.cards));
 		});
 	}
 };

@@ -3,7 +3,7 @@ const games = new Map();
 const ranks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
 const suits = ['♣', '♦', '❤', '♠'];
 const deck = suits
-	.map(suit => ranks
+	.map(suit => ranks.concat(ranks).concat(ranks).concat(ranks)
 		.map(rank => rank + suit))
 			.reduce((array, arr) => array.concat(arr));
 
@@ -54,7 +54,7 @@ class Blackjack {
 }
 
 function cardValue(card) {
-	const index = ranks.indexOf(card.substring(0, card.length - 1));
+	const index = ranks.indexOf(card.substring(0, -1));
 
 	if (index === 0) return 11;
 
