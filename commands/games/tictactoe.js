@@ -80,7 +80,7 @@ module.exports = class TicTacToeCommand extends Command {
 
 		return msg.say(this.getField(field, players, 'x'))
 			.then(async message => {
-				const winSym = await this.getWinner(field, players, message);
+				const winSym = await this.getWinnerSymbol(field, players, message);
 
 				if (!winSym) return msg.say(`Game over! It's a tie. Both participants keep their 🍩s.`);
 
