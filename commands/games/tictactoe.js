@@ -133,9 +133,7 @@ module.exports = class TicTacToeCommand extends Command {
 
 	gameWon(field) {
 		for (let combo in combinations) {
-			if (field[combo[0]] === field[combo[1]] && field[combo[1]] === field[combo[2]]) {
-				return true;
-			}
+			if (field[combo[0]] === field[combo[1]] && field[combo[1]] === field[combo[2]]) return true;
 		}
 
 		return false;
