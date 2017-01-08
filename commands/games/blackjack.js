@@ -50,11 +50,13 @@ module.exports = class BlackjackCommand extends Command {
 	async run(msg, args) {
 		const bet = args.bet;
 
-		if (Blackjack.gameExists(msg.author.id)) {
+		if (Blackjack.gameOngoing(msg.author.id)) {
 			return msg.reply(`you can't start 2 games of blackjack at the same time.`);
 		}
 
-		const blackjack = new Blackjack(msg.author.id);
+		const blackjack = Blackjack.gameExists(msg.author.id)
+			? Blackjack.startGame(msg.author.id)
+			: new Blackjack(msg.author.id);
 
 		return msg.say(`New game of blackjack started with ${msg.member.displayName} with a bet of ${bet} 🍩s!`)
 			.then(async () => {
@@ -64,11 +66,10 @@ module.exports = class BlackjackCommand extends Command {
 				let playerHands;
 				if (Blackjack.handValue(playerHand) !== 'Blackjack') {
 					playerHands = await this.getFinalHand(msg, playerHand, dealerHand, balance, bet, blackjack);
+					while (Blackjack.handValue(dealerHand) < 17) blackjack.hit(dealerHand);
 				} else {
 					playerHands = [playerHand];
 				}
-
-				while (Blackjack.handValue(dealerHand) < 17) blackjack.hit(dealerHand);
 				blackjack.endGame();
 
 				const dealerValue = Blackjack.handValue(dealerHand);

@@ -11,6 +11,7 @@ class Blackjack {
 	constructor(playerID) {
 		this.playerID = playerID;
 		this.deck = shuffle(deck);
+		this.ongoing = true;
 
 		games.set(this.playerID, this);
 	}
@@ -20,13 +21,26 @@ class Blackjack {
 	}
 
 	hit(hand) {
+		if (this.deck.length === 0) this.deck = shuffle(deck);
 		hand.push(this.deck.pop());
 
 		return hand;
 	}
 
 	endGame() {
-		games.delete(this.playerID);
+		this.ongoing = false;
+		this.killTimeout = setTimeout(() => games.delete(this.playerID), 300000);
+	}
+
+	static startGame(playerID) {
+		const game = games.get(playerID);
+		game.ongoing = true;
+		clearTimeout(game.killTimeout);
+		return game;
+	}
+
+	static gameOngoing(playerID) {
+		return this.gameExists(playerID) && games.get(playerID).ongoing;
 	}
 
 	static gameExists(playerID) {
