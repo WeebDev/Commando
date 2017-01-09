@@ -49,6 +49,6 @@ module.exports = class DailyCommand extends Command {
 
 		Daily.receive(msg.author.id);
 
-		return msg.reply(`You have successfully received your daily ${Daily.donationPayout} 🍩s.`);
+		return msg.reply(`You have successfully received your daily ${Daily.normalPayout} 🍩s.`);
 	}
 };
