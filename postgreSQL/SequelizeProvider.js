@@ -133,7 +133,7 @@ class SequelizeProvider extends SettingProvider {
 		}
 
 		settings[key] = val;
-		await this.model.upsert({ guild: guild !== 'global' ? guild : 0, settings: JSON.stringify(settings) }, { where: { guild: guild !== 'global' ? guild : 0 } });
+		await this.model.upsert({ guild: guild !== 'global' ? guild : '0', settings: JSON.stringify(settings) }, { where: { guild: guild !== 'global' ? guild : '0' } });
 		if (guild === 'global') this.updateOtherShards(key, val);
 		return val;
 	}
@@ -145,7 +145,7 @@ class SequelizeProvider extends SettingProvider {
 
 		const val = settings[key];
 		settings[key] = undefined;
-		await this.model.upsert({ guild: guild !== 'global' ? guild : 0, settings: JSON.stringify(settings) }, { where: { guild: guild !== 'global' ? guild : 0 } });
+		await this.model.upsert({ guild: guild !== 'global' ? guild : '0', settings: JSON.stringify(settings) }, { where: { guild: guild !== 'global' ? guild : '0' } });
 		if (guild === 'global') this.updateOtherShards(key, undefined);
 		return val;
 	}
@@ -154,7 +154,7 @@ class SequelizeProvider extends SettingProvider {
 		guild = this.constructor.getGuildID(guild);
 		if (!this.settings.has(guild)) return;
 		this.settings.delete(guild);
-		await this.model.destroy({ where: { guild: guild !== 'global' ? guild : 0 } });
+		await this.model.destroy({ where: { guild: guild !== 'global' ? guild : '0' } });
 	}
 
 	/**

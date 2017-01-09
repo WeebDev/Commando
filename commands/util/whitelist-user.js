@@ -8,11 +8,15 @@ module.exports = class WhitelistUserCommand extends Command {
 			group: 'util',
 			memberName: 'whitelist-user',
 			description: 'Remove a user from the blacklist',
+			throttling: {
+				usages: 2,
+				duration: 3
+			},
 
 			args: [
 				{
 					key: 'user',
-					prompt: 'What user should get removed from the blacklist?',
+					prompt: 'what user should get removed from the blacklist?\n',
 					type: 'user'
 				}
 			]
@@ -27,7 +31,6 @@ module.exports = class WhitelistUserCommand extends Command {
 		const user = args.user;
 
 		const blacklist = this.client.provider.get('global', 'userBlacklist', []);
-
 		if (!blacklist.includes(user.id)) return msg.reply('that user is not blacklisted.');
 
 		const index = blacklist.indexOf(user.id);
@@ -35,8 +38,7 @@ module.exports = class WhitelistUserCommand extends Command {
 
 		if (blacklist.length === 0) {
 			this.client.provider.remove('global', 'userBlacklist');
-		}
-		else {
+		} else {
 			this.client.provider.set('global', 'userBlacklist', blacklist);
 		}
 
