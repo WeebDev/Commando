@@ -88,7 +88,7 @@ module.exports = class BlackjackCommand extends Command {
 					const playerValue = Blackjack.handValue(hand);
 					const result = this.gameResult(playerValue, dealerValue);
 
-					if (!['bust', 'loss'].includes(result)) hideHoleCard = false;
+					if (result !== 'bust') hideHoleCard = false;
 
 					const lossOrGain = (result === 'loss' || result === 'bust'
 						? -2 : result === 'push'
