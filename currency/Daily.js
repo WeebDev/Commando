@@ -6,10 +6,6 @@ const redis = new Redis();
 const dayInMS = 24 * 60 * 60 * 1000;
 
 module.exports = class Daily {
-	static get dailyDonuts() {
-		return 210;
-	}
-
 	static async received(userID) {
 		const lastDaily = await redis.db.getAsync(`daily${userID}`);
 
@@ -24,8 +20,10 @@ module.exports = class Daily {
 		return dayInMS - (Date.now() - lastDaily);
 	}
 
-	static receive(userID) {
-		Currency.addBalance(userID, Daily.dailyDonuts);
+	static receive(userID, donuts, donationID) {
+		if (donationID) Currency.addBalance(donationID, donuts);
+		else Currency.addBalance(userID, donuts);
+
 		redis.db.setAsync(`daily${userID}`, Date.now());
 		redis.db.expire(`daily${userID}`, dayInMS / 1000);
 	}
