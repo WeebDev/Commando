@@ -51,7 +51,7 @@ module.exports = class RouletteCommand extends Command {
 				},
 				{
 					key: 'space',
-					prompt: 'On what space do you want to bet?',
+					prompt: 'on what space do you want to bet?',
 					type: 'string',
 					validate: space => {
 						if (!Roulette.hasSpace(space)) {

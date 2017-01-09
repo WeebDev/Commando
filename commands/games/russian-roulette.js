@@ -12,7 +12,6 @@ module.exports = class RussianRouletteCommand extends Command {
 			group: 'games',
 			memberName: 'russian-roulette',
 			description: 'Play a game of russian roulette for donuts!',
-			details: 'Play a game of russian roulette for donuts.',
 			guildOnly: true,
 			throttling: {
 				usages: 1,
