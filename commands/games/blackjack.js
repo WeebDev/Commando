@@ -164,7 +164,7 @@ module.exports = class BlackjackCommand extends Command {
 					continue;
 				}
 
-				if (Blackjack.handValue(currentHand.cards) > 21) {
+				if (Blackjack.handValue(currentHand.cards) >= 21) {
 					nextHand();
 
 					continue;
