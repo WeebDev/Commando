@@ -1,4 +1,5 @@
 const { Command } = require('discord.js-commando');
+const Currency = require('../../currency/Currency.js');
 
 module.exports = class UnlockCommand extends Command {
 	constructor(client) {
@@ -6,7 +7,7 @@ module.exports = class UnlockCommand extends Command {
 			name: 'unlock',
 			group: 'economy',
 			memberName: 'unlock',
-			description: 'Enable donut and xp gaining in a channel.',
+			description: `Enable xp and ${Currency.singular} earning in a channel.`,
 			guildOnly: true,
 			throttling: {
 				usages: 2,
@@ -44,6 +45,6 @@ module.exports = class UnlockCommand extends Command {
 
 		this.client.provider.set(msg.guild.id, 'locks', channelLocks);
 
-		return msg.reply(`the channel lock has been lifted. You can now earn donuts and xp again in ${channel}.`);
+		return msg.reply(`the channel lock has been lifted. You can now earn xp and ${Currency.plural} again in ${channel}.`);
 	}
 };

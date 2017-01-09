@@ -11,8 +11,8 @@ module.exports = class RussianRouletteCommand extends Command {
 			aliases: ['rus-roulette'],
 			group: 'games',
 			memberName: 'russian-roulette',
-			description: 'Play a game of russian roulette for donuts!',
-			details: 'Play a game of russian roulette for donuts.',
+			description: `Play a game of russian roulette for ${Currency.plural}!`,
+			details: `Play a game of russian roulette for ${Currency.plural}.`,
 			guildOnly: true,
 			throttling: {
 				usages: 1,
@@ -28,8 +28,8 @@ module.exports = class RussianRouletteCommand extends Command {
 
 		if (balance < donuts) {
 			return msg.reply(stripIndents`
-				you don't have enough donuts.
-				You need ${donuts} 🍩s to join, but your current account balance is ${balance} 🍩s.
+				you don't have enough ${Currency.plural}.
+				You need ${Currency.convert(donuts)} to join, but your current account balance is ${Currency.convert(balance)}.
 			`);
 		}
 
@@ -77,7 +77,7 @@ module.exports = class RussianRouletteCommand extends Command {
 
 			survivors = players.filter(player => player !== deadPlayer);
 
-			Currency.removeBalance(deadPlayer.user.id, 100);
+			Currency.removeBalance(deadPlayer.user.id, donuts);
 			survivors.forEach(survivor => Currency.addBalance(survivor.user.id, donuts / survivors.length));
 
 			return msg.embed({
@@ -86,7 +86,7 @@ module.exports = class RussianRouletteCommand extends Command {
 					${survivors.map(survivor => survivor.user.username).join('\n')}
 
 					__**Reward**__
-					The survivors receive ${donuts / survivors.length} 🍩s from ${deadPlayer.user.username}.
+					The survivors receive ${Currency.convert(donuts / survivors.length)} each from ${deadPlayer.user.username}.
 				`
 			});
 		});

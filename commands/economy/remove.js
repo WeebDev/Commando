@@ -19,8 +19,8 @@ module.exports = class MoneyRemoveCommand extends Command {
 			],
 			group: 'economy',
 			memberName: 'remove',
-			description: 'Remove money from a certain user.',
-			details: 'Remove amount of money from a certain user.',
+			description: `Remove ${Currency.plural} from a certain user.`,
+			details: `Remove amount of ${Currency.plural} from a certain user.`,
 			guildOnly: true,
 			throttling: {
 				usages: 2,
@@ -30,12 +30,12 @@ module.exports = class MoneyRemoveCommand extends Command {
 			args: [
 				{
 					key: 'member',
-					prompt: 'from which user would you like to remove donuts?\n',
+					prompt: `from which user would you like to remove ${Currency.plural}?\n`,
 					type: 'member'
 				},
 				{
 					key: 'donuts',
-					prompt: 'how many donuts do you want to remove from that user?\n',
+					prompt: `how many ${Currency.plural} do you want to remove from that user?\n`,
 					type: 'integer'
 				}
 			]
@@ -52,6 +52,6 @@ module.exports = class MoneyRemoveCommand extends Command {
 
 		Currency.removeBalance(user.id, donuts);
 
-		return msg.reply(`successfully removed ${donuts} 🍩s from ${user.displayName}'s balance.`);
+		return msg.reply(`successfully removed ${Currency.convert(donuts)} from ${user.displayName}'s balance.`);
 	}
 };

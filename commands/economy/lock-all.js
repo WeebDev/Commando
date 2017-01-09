@@ -1,4 +1,5 @@
 const { Command } = require('discord.js-commando');
+const Currency = require('../../currency/Currency.js');
 
 module.exports = class LockAllCommand extends Command {
 	constructor(client) {
@@ -6,7 +7,7 @@ module.exports = class LockAllCommand extends Command {
 			name: 'lock-all',
 			group: 'economy',
 			memberName: 'lock-all',
-			description: 'Disable donut and xp earning on all channels in the server.',
+			description: `Disable xp and ${Currency.singular} earning on all channels in the server.`,
 			guildOnly: true,
 			throttling: {
 				usages: 2,
@@ -31,6 +32,6 @@ module.exports = class LockAllCommand extends Command {
 
 		this.client.provider.set(msg.guild.id, 'locks', channelLocks);
 
-		return msg.reply('all channels on this server have been locked. You can now no longer earn xp or donuts anywhere.');
+		return msg.reply(`all channels on this server have been locked. You can no longer earn xp or ${Currency.plural} anywhere.`);
 	}
 };

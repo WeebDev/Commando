@@ -118,7 +118,7 @@ module.exports = class SlotMachineCommand extends Command {
 				${this.showRoll(roll)}
 
 				**Congratulations!**
-				You won ${coins * winnings} 🍩s!
+				You won ${Currency.convert(coins * winnings)}!
 			`
 		});
 	}
