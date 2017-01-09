@@ -67,7 +67,11 @@ module.exports = class BlackjackCommand extends Command {
 
 				if (Blackjack.handValue(playerHand) !== 'Blackjack') {
 					playerHands = await this.getFinalHand(msg, playerHand, dealerHand, balance, bet, blackjack);
-					while (Blackjack.handValue(dealerHand) < 17) blackjack.hit(dealerHand);
+					const result = this.gameResult(Blackjack.handValue(playerHands[0]), 0);
+					const noHit = playerHands.length === 1 && result !== 'bust';
+					while (Blackjack.handValue(dealerHand) < 17 && !noHit) { // eslint-disable-line no-unmodified-loop-condition
+						blackjack.hit(dealerHand);
+					}
 				} else {
 					playerHands = [playerHand];
 				}
@@ -76,12 +80,15 @@ module.exports = class BlackjackCommand extends Command {
 
 				const dealerValue = Blackjack.handValue(dealerHand);
 				let winnings = 0;
-
+				let hideHoleCard = true;
 				const embed = { title: `Blackjack | ${msg.member.displayName}`, fields: [] };
 
 				playerHands.forEach((hand, i) => {
 					const playerValue = Blackjack.handValue(hand);
 					const result = this.gameResult(playerValue, dealerValue);
+
+					if (!['bust', 'loss'].includes(result)) hideHoleCard = false;
+
 					const lossOrGain = (result === 'loss' || result === 'bust'
 						? -2 : result === 'push'
 							? 0 : 1) * (hand.doubled
@@ -111,7 +118,7 @@ module.exports = class BlackjackCommand extends Command {
 				embed.fields.push({
 					name: '**Dealer hand**',
 					value: stripIndents`
-						${dealerHand.join(' - ')}
+						${hideHoleCard ? `${dealerHand[0]} - XX` : dealerHand.join(' - ')}
 						Value: ${dealerValue}
 					`
 				});
