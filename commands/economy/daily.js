@@ -49,7 +49,7 @@ module.exports = class DailyCommand extends Command {
 		if (user) {
 			Daily.receive(msg.author.id, dailies.donation, user.id);
 
-			return msg.reply(`${user} has successfully received your daily ${dailies.normal} 🍩s.`);
+			return msg.reply(`${user} has successfully received your daily ${dailies.donation} 🍩s.`);
 		}
 
 		Daily.receive(msg.author.id, dailies.normal);
