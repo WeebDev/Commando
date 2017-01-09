@@ -120,7 +120,7 @@ module.exports = class BlackjackCommand extends Command {
 				name: '**Dealer hand**',
 				value: stripIndents`
 					${hideHoleCard ? `${dealerHand[0]} - XX` : dealerHand.join(' - ')}
-					Value: ${dealerValue}
+					Value: ${hideHoleCard ? Blackjack.handValue([dealerHand[0]]) : dealerValue}
 				`
 			});
 
