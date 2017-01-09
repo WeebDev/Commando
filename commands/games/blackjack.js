@@ -92,9 +92,9 @@ module.exports = class BlackjackCommand extends Command {
 					const lossOrGain = (result === 'loss' || result === 'bust'
 						? -2 : result === 'push'
 							? 0 : 1) * (hand.doubled
-								? 1 : 0.5) * bet;
+								? 2 : 1) * bet;
 
-					winnings += lossOrGain;
+					winnings += Math.floor(lossOrGain * (playerValue === 'Blackjack' ? 1.5 : 1));
 
 					embed.fields.push({
 						name: `Hand ${i + 1}`,
