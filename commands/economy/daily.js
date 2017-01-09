@@ -4,7 +4,6 @@ const stripIndents = require('common-tags').stripIndents;
 
 const Daily = require('../../currency/Daily');
 
-
 const dailies = {
 	normal: 210,
 	donation: 300
