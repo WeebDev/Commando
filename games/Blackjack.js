@@ -36,6 +36,7 @@ class Blackjack {
 		const game = games.get(playerID);
 		game.ongoing = true;
 		clearTimeout(game.killTimeout);
+
 		return game;
 	}
 
