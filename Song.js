@@ -22,17 +22,17 @@ module.exports = class Song {
 	}
 
 	get thumbnail() {
-		let thumbnail = `https://img.youtube.com/vi/${this.id}/mqdefault.jpg`;
+		const thumbnail = `https://img.youtube.com/vi/${this.id}/mqdefault.jpg`;
 		return thumbnail;
 	}
 
 	get username() {
-		let name = `${this.member.user.username}#${this.member.user.discriminator} (${this.member.user.id})`;
+		const name = `${this.member.user.username}#${this.member.user.discriminator} (${this.member.user.id})`;
 		return escapeMarkdown(name);
 	}
 
 	get avatar() {
-		let avatar = `${this.member.user.displayAvatarURL}`;
+		const avatar = `${this.member.user.displayAvatarURL}`;
 		return avatar;
 	}
 

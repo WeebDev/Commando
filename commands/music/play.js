@@ -8,7 +8,7 @@ const ytdl = require('ytdl-core');
 
 const config = require('../../settings');
 const Song = require('../../Song');
-
+const version = require('../../package').version;
 
 module.exports = class PlaySongCommand extends Command {
 	constructor(client) {
@@ -40,16 +40,13 @@ module.exports = class PlaySongCommand extends Command {
 		const url = args.url.replace(/<(.+)>/g, '$1');
 		const queue = this.queue.get(msg.guild.id);
 
-		// Get the voice channel the user is in
 		let voiceChannel;
 		if (!queue) {
-			// Make sure the user is in a voice channel
 			voiceChannel = msg.member.voiceChannel;
 			if (!voiceChannel) {
 				return msg.reply('you aren\'t in a voice channel, ya dingus.');
 			}
 
-			// Ensure the bot has permission to join and speak
 			const permissions = voiceChannel.permissionsFor(msg.client.user);
 			if (!permissions.hasPermission('CONNECT')) {
 				return msg.reply('I don\'t have permission to join your voice channel. No parties allowed there.');
@@ -65,7 +62,7 @@ module.exports = class PlaySongCommand extends Command {
 		if (url.match(/^https?:\/\/(soundcloud.com|snd.sc)\/(.*)$/)) {
 			return request({
 				uri: `http://api.soundcloud.com/resolve.json?url=${url}&client_id=${config.soundcloudID}`,
-				headers: { 'User-Agent': `Commando (https://github.com/iCrawl/Commando/)` },
+				headers: { 'User-Agent': `Commando v${version} (https://github.com/WeebDev/Commando/)` },
 				json: true
 			}).then(video => {
 				this.handleVideo(video, queue, voiceChannel, msg, statusMsg);
@@ -77,9 +74,7 @@ module.exports = class PlaySongCommand extends Command {
 			return this.youtube.getVideo(url).then(video => {
 				this.handleVideo(video, queue, voiceChannel, msg, statusMsg);
 			}).catch(() => {
-				// Search for a video
 				this.youtube.searchVideos(url, 1).then(videos => {
-					// Get the video's details
 					this.youtube.getVideoByID(videos[0].id).then(video2 => {
 						this.handleVideo(video2, queue, voiceChannel, msg, statusMsg);
 					}).catch((error) => {
@@ -95,7 +90,6 @@ module.exports = class PlaySongCommand extends Command {
 
 	handleVideo(video, queue, voiceChannel, msg, statusMsg) {
 		if (!queue) {
-			// Create the guild's queue
 			queue = {
 				textChannel: msg.channel,
 				voiceChannel: voiceChannel,
@@ -105,7 +99,6 @@ module.exports = class PlaySongCommand extends Command {
 			};
 			this.queue.set(msg.guild.id, queue);
 
-			// Try to add the song to the queue
 			let result = this.addSong(msg, video);
 			let resultMessage = {
 				color: 3447003,
@@ -122,7 +115,6 @@ module.exports = class PlaySongCommand extends Command {
 				return;
 			}
 
-			// Join the voice channel and start playing
 			statusMsg.edit(`${msg.author}, joining your voice channel...`);
 			queue.voiceChannel.join().then(connection => {
 				queue.connection = connection;
@@ -134,7 +126,6 @@ module.exports = class PlaySongCommand extends Command {
 				statusMsg.edit(`${msg.author}, unable to join your voice channel.`);
 			});
 		} else {
-			// Just add the song
 			let result = this.addSong(msg, video);
 			let resultMessage = {
 				color: 3447003,
@@ -152,7 +143,6 @@ module.exports = class PlaySongCommand extends Command {
 	addSong(msg, video) {
 		const queue = this.queue.get(msg.guild.id);
 
-		// Verify some stuff
 		if (msg.author.id !== this.client.options.owner) {
 			const maxLength = config.maxLength;
 			if (maxLength > 0 && video.durationSeconds > maxLength * 60) {
@@ -171,7 +161,6 @@ module.exports = class PlaySongCommand extends Command {
 			}
 		}
 
-		// Add the song to the queue
 		winston.info('Adding song to queue.', { song: video.id, guild: msg.guild.id });
 		const song = new Song(video, msg.member);
 		queue.songs.push(song);
@@ -182,14 +171,12 @@ module.exports = class PlaySongCommand extends Command {
 	play(guild, song) {
 		const queue = this.queue.get(guild.id);
 
-		// Kill the voteskip if active
 		const vote = this.votes.get(guild.id);
 		if (vote) {
 			clearTimeout(vote);
 			this.votes.delete(guild.id);
 		}
 
-		// See if we've finished the queue
 		if (!song) {
 			queue.textChannel.sendMessage('We\'ve run out of songs! Better queue up some more tunes.');
 			queue.voiceChannel.leave();
@@ -197,7 +184,6 @@ module.exports = class PlaySongCommand extends Command {
 			return;
 		}
 
-		// Play the song
 		const playingMessage = {
 			color: 3447003,
 			author: {
@@ -212,7 +198,7 @@ module.exports = class PlaySongCommand extends Command {
 		let stream;
 		let streamErrored = false;
 		if (song.url.match(/^https?:\/\/(api.soundcloud.com)\/(.*)$/)) {
-			stream = request({ uri: song.url, headers: { 'User-Agent': `Commando (https://github.com/iCrawl/Commando/)` }, followAllRedirects: true });
+			stream = request({ uri: song.url, headers: { 'User-Agent': `Commando v${version} (https://github.com/WeebDev/Commando/)` }, followAllRedirects: true });
 		} else {
 			stream = ytdl(song.url, { audioonly: true })
 				.on('error', err => {
