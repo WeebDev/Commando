@@ -50,13 +50,11 @@ module.exports = class BlackjackCommand extends Command {
 	async run(msg, args) {
 		const bet = args.bet;
 
-		if (Blackjack.gameOngoing(msg.author.id)) {
+		if (Blackjack.gameExists(msg.author.id)) {
 			return msg.reply(`you can't start 2 games of blackjack at the same time.`);
 		}
 
-		const blackjack = Blackjack.gameExists(msg.author.id)
-			? Blackjack.startGame(msg.author.id)
-			: new Blackjack(msg.author.id);
+		const blackjack = new Blackjack(msg);
 
 		return msg.say(`New game of blackjack started with ${msg.member.displayName} with a bet of ${bet} 🍩s!`)
 			.then(async () => {
@@ -90,7 +88,7 @@ module.exports = class BlackjackCommand extends Command {
 
 					if (result !== 'bust') hideHoleCard = false;
 
-					const lossOrGain = (result === 'loss' || result === 'bust'
+					const lossOrGain = (['loss', 'bust'].includes(result)
 						? -1 : result === 'push'
 							? 0 : 1) * (hand.doubled
 								? 2 : 1) * bet;
@@ -98,7 +96,7 @@ module.exports = class BlackjackCommand extends Command {
 					winnings += Math.floor(lossOrGain * (playerValue === 'Blackjack' ? 1.5 : 1));
 
 					embed.fields.push({
-						name: `Hand ${i + 1}`,
+						name: playerHands.length === 1 ? '**Your hand**' : `**Hand ${i + 1}**`,
 						value: stripIndents`
 							${hand.join(' - ')}
 							Value: ${playerValue}
@@ -146,42 +144,38 @@ module.exports = class BlackjackCommand extends Command {
 
 	getFinalHand(msg, playerHand, dealerHand, balance, bet, blackjack) {
 		return new Promise(async resolve => {
-			const hands = [{
-				cards: playerHand,
-				double: false
-			}];
+			const hands = [playerHand];
 			let currentHand = hands[0];
 			let totalBet = bet;
 
-			while (currentHand) {
-				const nextHand = () => { currentHand = hands[hands.indexOf(currentHand) + 1]; };
+			const nextHand = () => { currentHand = hands[hands.indexOf(currentHand) + 1]; };
 
-				if (currentHand.cards.length === 1) blackjack.hit(currentHand.cards);
+			while (currentHand) { // eslint-disable-line no-unmodified-loop-condition
+				if (currentHand.length === 1) blackjack.hit(currentHand);
 
-				if (Blackjack.handValue(currentHand.cards) === 'Blackjack') {
+				if (Blackjack.handValue(currentHand) === 'Blackjack') {
 					nextHand();
 
 					continue;
 				}
 
-				if (Blackjack.handValue(currentHand.cards) >= 21) {
+				if (Blackjack.handValue(currentHand) >= 21) {
 					nextHand();
 
 					continue;
 				}
 
-				if (currentHand.double) {
-					blackjack.hit(currentHand.cards);
-					currentHand.cards.doubled = true;
+				if (currentHand.doubled) {
+					blackjack.hit(currentHand);
 					nextHand();
 
 					continue;
 				}
 
-				const canDoubleDown = balance >= totalBet + bet && currentHand.cards.length === 2;
+				const canDoubleDown = balance >= totalBet + bet && currentHand.length === 2;
 				const canSplit = balance >= totalBet + bet
-					&& Blackjack.handValue([currentHand.cards[0]]) === Blackjack.handValue([currentHand.cards[1]])
-					&& currentHand.cards.length === 2;
+					&& Blackjack.handValue([currentHand[0]]) === Blackjack.handValue([currentHand[1]])
+					&& currentHand.length === 2;
 
 				await msg.embed({
 					title: `Blackjack | ${msg.member.displayName}`,
@@ -196,8 +190,8 @@ module.exports = class BlackjackCommand extends Command {
 						{
 							name: hands.length === 1 ? '**Your hand**' : `**Hand ${hands.indexOf(currentHand) + 1}**`,
 							value: stripIndents`
-								${currentHand.cards.join(' - ')}
-								Value: ${Blackjack.handValue(currentHand.cards)}
+								${currentHand.join(' - ')}
+								Value: ${Blackjack.handValue(currentHand)}
 							`,
 							inline: true
 						},
@@ -228,29 +222,26 @@ module.exports = class BlackjackCommand extends Command {
 
 				const action = responses.first().content.toLowerCase();
 
-				if (action === 'stand' || Blackjack.handValue(currentHand.cards) >= 21) {
+				if (action === 'stand' || Blackjack.handValue(currentHand) >= 21) {
 					if (currentHand === hands[hands.length - 1]) break;
 					nextHand();
 				}
 
-				if (action === 'hit') blackjack.hit(currentHand.cards);
+				if (action === 'hit') blackjack.hit(currentHand);
 
 				if (action === 'split' && canSplit) {
 					totalBet += bet;
-					hands.push({
-						cards: [currentHand.cards.pop()],
-						double: false
-					});
-					blackjack.hit(currentHand.cards);
+					hands.push([currentHand.pop()]);
+					blackjack.hit(currentHand);
 				}
 
 				if (action === 'double down' && canDoubleDown) {
 					totalBet += bet;
-					currentHand.double = true;
+					currentHand.doubled = true;
 				}
 			}
 
-			return resolve(hands.map(hand => hand.cards));
+			return resolve(hands);
 		});
 	}
 };
