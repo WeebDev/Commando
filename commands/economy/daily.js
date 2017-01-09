@@ -4,11 +4,6 @@ const stripIndents = require('common-tags').stripIndents;
 
 const Daily = require('../../currency/Daily');
 
-const dailies = {
-	normal: 210,
-	donation: 300
-};
-
 module.exports = class DailyCommand extends Command {
 	constructor(client) {
 		super(client, {
@@ -42,18 +37,18 @@ module.exports = class DailyCommand extends Command {
 			const nextDaily = await Daily.nextDaily(msg.author.id);
 			return msg.reply(stripIndents`
 				you have already received/given your daily donuts.
-				You can receive your next daily in ${moment.duration(nextDaily).format('hh [hours] mm [minutes]')}
+				You can receive/give your next daily in ${moment.duration(nextDaily).format('hh [hours] mm [minutes]')}
 			`);
 		}
 
 		if (user) {
-			Daily.receive(msg.author.id, dailies.donation, user.id);
+			Daily.receive(msg.author.id, user.id);
 
-			return msg.reply(`${user} has successfully received your daily ${dailies.donation} 🍩s.`);
+			return msg.reply(`${user} has successfully received your daily ${Daily.donationPayout} 🍩s.`);
 		}
 
-		Daily.receive(msg.author.id, dailies.normal);
+		Daily.receive(msg.author.id);
 
-		return msg.reply(`You have successfully received your daily ${dailies.normal} 🍩s.`);
+		return msg.reply(`You have successfully received your daily ${Daily.donationPayout} 🍩s.`);
 	}
 };
