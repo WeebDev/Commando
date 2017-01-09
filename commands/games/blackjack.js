@@ -68,7 +68,7 @@ module.exports = class BlackjackCommand extends Command {
 				if (Blackjack.handValue(playerHand) !== 'Blackjack') {
 					playerHands = await this.getFinalHand(msg, playerHand, dealerHand, balance, bet, blackjack);
 					const result = this.gameResult(Blackjack.handValue(playerHands[0]), 0);
-					const noHit = playerHands.length === 1 && result !== 'bust';
+					const noHit = playerHands.length === 1 && result === 'bust';
 
 					while (Blackjack.handValue(dealerHand) < 17 && !noHit) { // eslint-disable-line no-unmodified-loop-condition
 						blackjack.hit(dealerHand);
