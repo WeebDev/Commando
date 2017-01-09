@@ -50,6 +50,13 @@ class Currency {
 		redis.db.setAsync('moneyleaderboardreset', Date.now());
 		redis.db.expire('moneyleaderboardreset', 30 * 60 * 1000);
 	}
+
+	static convert(amount) {
+		return `${amount} ${Math.abs(amount) === 1 ? Currency.singular : Currency.plural}`;
+	}
+
+	static get singular() { return '🍩'; }
+	static get plural() { return '🍩s'; }
 }
 
 module.exports = Currency;
