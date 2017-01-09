@@ -58,7 +58,7 @@ module.exports = class FortuneCommand extends Command {
 		const title = args.title;
 		const options = args.option;
 
-		if (options.length < 3) return msg.reply('please provide 3 or more options.');
+		if (options.length < 2) return msg.reply('please provide 2 or more options.');
 		if (options.length > 31) return msg.reply('please provide less than 31 options.');
 
 		const response = await request({

@@ -49,7 +49,7 @@ module.exports = class StoreInfoCommand extends Command {
 					inline: true
 				}
 			],
-			footer: { text: paginated.maxPage > 1 ? 'Use \'store <page>\' to view a specific page.' : '' }
+			footer: { text: paginated.maxPage > 1 ? `Use ${msg.usage()} to view a specific page.` : '' }
 		});
 	}
 };

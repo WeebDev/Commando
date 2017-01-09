@@ -49,13 +49,10 @@ module.exports = class CleanCommand extends Command {
 	}
 
 	async run(msg, args) { // eslint-disable-line consistent-return
-		if (!args.limit) {
-			return msg.say(`${msg.author}, atleast provide me with a number!`);
-		}
-
 		const limit = args.limit;
-		const filter = args.filter;
+		const filter = args.filter.toLowerCase();
 		let messageFilter;
+
 		if (filter) {
 			if (filter === 'invite') {
 				messageFilter = message => message.content.search(/(discord\.gg\/.+|discordapp\.com\/invite\/.+)/i)

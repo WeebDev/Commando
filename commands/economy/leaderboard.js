@@ -66,7 +66,7 @@ module.exports = class MoneyLeaderboardCommand extends Command {
 
 				${moment.duration(reset).format('hh [hours] mm [minutes]')} until the next update.
 			`,
-			footer: { text: paginated.maxPage > 1 ? 'Use \'leaderboard <page>\' to view a specific page.' : '' }
+			footer: { text: paginated.maxPage > 1 ? `Use ${msg.usage()} to view a specific page.` : '' }
 		});
 	}
 

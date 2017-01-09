@@ -34,7 +34,8 @@ module.exports = class StoreInfoCommand extends Command {
 		if (!storeItem) {
 			return msg.reply(stripIndents`
 				sorry, but that item doesn't exist.
-				You can use \`${this.client.commandPrefix}store\` to get a list of the available items.
+
+				You can use ${msg.usage()} to get a list of the available items.
 			`);
 		}
 

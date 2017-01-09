@@ -91,7 +91,7 @@ module.exports = class RouletteCommand extends Command {
 		return msg.say(stripIndents`
 			A new game of roulette has been initiated!
 
-			Use \`roulette <donuts> <space>\` in the next 15 seconds to place your bet.
+			Use ${msg.usage()} in the next 15 seconds to place your bet.
 		`)
 			.then(async () => {
 				setTimeout(() => msg.say('5 more seconds for new people to bet.'), 10000);
