@@ -89,12 +89,13 @@ module.exports = class BlackjackCommand extends Command {
 
 				if (result !== 'bust') hideHoleCard = false;
 
-				const lossOrGain = (['loss', 'bust'].includes(result)
+				const lossOrGain = Math.floor((['loss', 'bust'].includes(result)
 					? -1 : result === 'push'
 						? 0 : 1) * (hand.doubled
-							? 2 : 1) * bet;
+							? 2 : 1) * (playerValue === 'Blackjack'
+								? 1.5 : 1) * bet);
 
-				winnings += Math.floor(lossOrGain * (playerValue === 'Blackjack' ? 1.5 : 1));
+				winnings += lossOrGain;
 
 				embed.fields.push({
 					name: playerHands.length === 1 ? '**Your hand**' : `**Hand ${i + 1}**`,
