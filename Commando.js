@@ -43,6 +43,14 @@ redis.start();
 
 client.setProvider(new SequelizeProvider(database.db));
 
+client.dispatcher.addInhibitor(msg => {
+	const blacklist = client.provider.get('global', 'userBlacklist', []);
+
+	if (!blacklist.includes(msg.author.id)) return false;
+
+	return `User ${msg.author.username}#${msg.author.discriminator} (${msg.author.id}) has been blacklisted.`;
+});
+
 client.on('error', winston.error)
 	.on('warn', winston.warn)
 	.on('ready', () => {
@@ -61,10 +69,10 @@ client.on('error', winston.error)
 		`);
 	})
 	.on('message', async (message) => {
-		const channeLocks = client.provider.get(message.guild.id, 'locks', []);
-
-		if (channeLocks.includes(message.channel.id)) return;
 		if (message.channel.type === 'dm') return;
+
+		const channeLocks = client.provider.get(message.guild.id, 'locks', []);
+		if (channeLocks.includes(message.channel.id)) return;
 		if (message.author.bot) return;
 
 		if (!earnedRecently.includes(message.author.id)) {
@@ -207,7 +215,7 @@ client.on('error', winston.error)
 	.on('commandBlocked', (msg, reason) => {
 		winston.info(oneLine`
 			Command ${msg.command ? `${msg.command.groupID}:${msg.command.memberName}` : ''}
-			blocked; ${reason}
+			blocked; User ${msg.author.username}#${msg.author.discriminator} (${msg.author.id}): ${reason}
 		`);
 	})
 	.on('commandPrefixChange', (guild, prefix) => {

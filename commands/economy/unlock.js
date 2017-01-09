@@ -16,7 +16,7 @@ module.exports = class UnlockCommand extends Command {
 			args: [
 				{
 					key: 'channel',
-					prompt: 'What channel do you want to unlock?',
+					prompt: 'what channel do you want to unlock?\n',
 					type: 'channel',
 					default: ''
 				}
@@ -29,11 +29,11 @@ module.exports = class UnlockCommand extends Command {
 	}
 
 	async run(msg, args) {
-		let channel = args.channel || msg.channel;
+		const channel = args.channel || msg.channel;
 
 		if (channel.type !== 'text') return msg.reply('you can only unlock text channels.');
 
-		let channelLocks = this.client.provider.get(msg.guild.id, 'locks', []);
+		const channelLocks = this.client.provider.get(msg.guild.id, 'locks', []);
 
 		if (!channelLocks.includes(channel.id)) {
 			return msg.reply('this channel is not locked.');
