@@ -245,6 +245,7 @@ module.exports = class BlackjackCommand extends Command {
 				}
 
 				if (action === 'double down' && canDoubleDown) {
+					totalBet += bet;
 					currentHand.double = true;
 				}
 			}
