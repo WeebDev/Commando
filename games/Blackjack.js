@@ -3,7 +3,7 @@ const games = new Map();
 const ranks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
 const suits = ['♣', '♦', '❤', '♠'];
 const deck = suits
-	.map(suit => ranks
+	.map(suit => ranks.concat(ranks).concat(ranks).concat(ranks)
 		.map(rank => rank + suit))
 			.reduce((array, arr) => array.concat(arr));
 
@@ -11,6 +11,7 @@ class Blackjack {
 	constructor(playerID) {
 		this.playerID = playerID;
 		this.deck = shuffle(deck);
+		this.ongoing = true;
 
 		games.set(this.playerID, this);
 	}
@@ -20,20 +21,33 @@ class Blackjack {
 	}
 
 	hit(hand) {
+		if (this.deck.length === 0) this.deck = shuffle(deck);
 		hand.push(this.deck.pop());
 
 		return hand;
 	}
 
 	endGame() {
-		games.delete(this.playerID);
+		this.ongoing = false;
+		this.killTimeout = setTimeout(() => games.delete(this.playerID), 300000);
+	}
+
+	static startGame(playerID) {
+		const game = games.get(playerID);
+		game.ongoing = true;
+		clearTimeout(game.killTimeout);
+		return game;
+	}
+
+	static gameOngoing(playerID) {
+		return this.gameExists(playerID) && games.get(playerID).ongoing;
 	}
 
 	static gameExists(playerID) {
 		return games.has(playerID);
 	}
 
-	static 	handValue(hand) {
+	static handValue(hand) {
 		let value = 0;
 		let aces = 0;
 
@@ -54,7 +68,7 @@ class Blackjack {
 }
 
 function cardValue(card) {
-	const index = ranks.indexOf(card.substring(0, card.length - 1));
+	const index = ranks.indexOf(card.slice(0, -1));
 
 	if (index === 0) return 11;
 
