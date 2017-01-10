@@ -31,7 +31,7 @@ module.exports = class DailyCommand extends Command {
 
 	async run(msg, args) {
 		const received = await Daily.received(msg.author.id);
-		const user = args.member;
+		const user = args.member || msg.member;
 
 		if (user.id === msg.author.id) {
 			return msg.reply(stripIndents`
