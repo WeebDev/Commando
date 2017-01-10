@@ -1,5 +1,6 @@
 const { Command } = require('discord.js-commando');
 const Currency = require('../../currency/Currency.js');
+const stripIndents = require('common-tags').stripIndents;
 
 module.exports = class LockCommand extends Command {
 	constructor(client) {
@@ -39,6 +40,8 @@ module.exports = class LockCommand extends Command {
 		channelLocks.push(channel.id);
 		this.client.provider.set(msg.guild.id, 'locks', channelLocks);
 
-		return msg.reply(`this channel has been locked. You can no longer earn xp or ${Currency.plural} in ${channel}.`);
+		return msg.reply(stripIndents`
+			this channel has been locked. You can no longer earn xp or ${Currency.plural} in ${channel}.
+		`);
 	}
 };

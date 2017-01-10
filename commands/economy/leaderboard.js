@@ -57,7 +57,7 @@ module.exports = class MoneyLeaderboardCommand extends Command {
 		return msg.embed({
 			color: 3447003,
 			description: stripIndents`
-				__**${Currency.singular.replace('.', first => first.toUpperCase())} leaderboard, page ${paginated.page}**__
+				__**${Currency.singular.replace('.', lc => lc.toUpperCase())} leaderboard, page ${paginated.page}**__
 
 				${paginated.items.map(user => oneLine`
 					**${++ranking} -**
@@ -77,7 +77,7 @@ module.exports = class MoneyLeaderboardCommand extends Command {
 				return reply;
 			} else {
 				const money = await UserProfile.findAll({ where: { userID: { $ne: 'SLOTMACHINE' } }, order: 'money DESC' });
-				if (!money) return `No ${Currency.plural}, biatch`;
+				if (!money) return; // eslint-disable-line consistent-return
 
 				redis.db.setAsync('moneyleaderboard', JSON.stringify(money));
 				redis.db.expire('moneyleaderboard', 3600);

@@ -29,7 +29,8 @@ module.exports = class RussianRouletteCommand extends Command {
 		if (balance < donuts) {
 			return msg.reply(stripIndents`
 				you don't have enough ${Currency.plural}.
-				You need ${Currency.convert(donuts)} to join, but your current account balance is ${Currency.convert(balance)}.
+				Your current account balance is ${Currency.convert(balance)}.
+				You need ${Currency.convert(donuts)} to join.
 			`);
 		}
 
@@ -86,7 +87,7 @@ module.exports = class RussianRouletteCommand extends Command {
 					${survivors.map(survivor => survivor.user.username).join('\n')}
 
 					__**Reward**__
-					The survivors receive ${Currency.convert(donuts / survivors.length)} each from ${deadPlayer.user.username}.
+					The survivors receive ${Currency.convert(donuts / survivors.length)} each.
 				`
 			});
 		});

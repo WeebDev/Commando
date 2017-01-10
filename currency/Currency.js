@@ -53,13 +53,25 @@ class Currency {
 
 	static convert(amount, text = false) {
 		if (!text) return `${amount} ${Math.abs(amount) === 1 ? Currency.singular : Currency.plural}`;
-		else return `${amount} ${Math.abs(amount) === 1 ? Currency.textSingular : Currency.textPlural}`;
+
+		return `${amount} ${Math.abs(amount) === 1 ? Currency.textSingular : Currency.textPlural}`;
 	}
 
-	static get singular() { return '🍩'; }
-	static get plural() { return '🍩s'; }
-	static get textSingular() { return 'donut'; }
-	static get textPlural() { return 'donuts'; }
+	static get singular() {
+		return '🍩';
+	}
+
+	static get plural() {
+		return '🍩s';
+	}
+
+	static get textSingular() {
+		return 'donut';
+	}
+
+	static get textPlural() {
+		return 'donuts';
+	}
 }
 
 module.exports = Currency;

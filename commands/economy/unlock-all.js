@@ -1,5 +1,6 @@
 const { Command } = require('discord.js-commando');
 const Currency = require('../../currency/Currency.js');
+const stripIndents = require('common-tags').stripIndents;
 
 module.exports = class UnlockAllCommand extends Command {
 	constructor(client) {
@@ -23,6 +24,8 @@ module.exports = class UnlockAllCommand extends Command {
 	async run(msg) {
 		this.client.provider.set(msg.guild.id, 'locks', []);
 
-		return msg.reply(`the lock on all channels has been lifted. You can now earn xp and ${Currency.plural} on the entire server.`);
+		return msg.reply(stripIndents`
+			the lock on all channels has been lifted. You can now earn xp and ${Currency.plural} on the entire server.
+		`);
 	}
 };

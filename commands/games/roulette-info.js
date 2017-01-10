@@ -23,7 +23,8 @@ module.exports = class RouletteInfo extends Command {
 			description: stripIndents`
 				To start a game or place a bet use \`roulette <${Currency.plural}> <space>\`
 
-				\`<${Currency.plural}>\` for the amount ${Currency.plural} to bet. Can only be 100, 200, 300, 400, 500, 1000, 2000 or 5000.
+				\`<${Currency.plural}>\` for the amount ${Currency.plural} to bet.
+				Can only be 100, 200, 300, 400, 500, 1000, 2000 or 5000.
 
 				\`<space>\` is the space you want to bet on. Those should be written exactly as in the image below.
 

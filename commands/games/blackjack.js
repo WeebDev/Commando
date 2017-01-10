@@ -29,7 +29,8 @@ module.exports = class BlackjackCommand extends Command {
 
 						if (balance < bet) {
 							return `
-								you don't have enough donuts. Your current account balance is ${Currency.convert(balance)}.
+								you don't have enough ${Currency.plural}.
+								Your current account balance is ${Currency.convert(balance)}.
 								Please specify a valid amount of ${Currency.plural}.
 							`;
 						}

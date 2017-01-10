@@ -114,7 +114,8 @@ module.exports = class RouletteCommand extends Command {
 
 						${winners.length !== 0
 							? `__**Winners:**__
-							${winners.map(winner => `${winner.user.username} won ${Currency.convert(winner.winnings)}`).join('\n')}`
+							${winners.map(winner => `${winner.user.username} won ${Currency.convert(winner.winnings)}`)
+								.join('\n')}`
 							: '__**No winner.**__'}
 					`
 				});
