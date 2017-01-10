@@ -33,6 +33,13 @@ module.exports = class DailyCommand extends Command {
 		const received = await Daily.received(msg.author.id);
 		const user = args.member;
 
+		if (user.id === msg.author.id) {
+			return msg.reply(stripIndents`
+				you can't donate the daily to yourself.
+				You have been given the normal ${Daily.dailyPayout} 🍩s.
+			`);
+		}
+
 		if (received) {
 			const nextDaily = await Daily.nextDaily(msg.author.id);
 			return msg.reply(stripIndents`
@@ -41,20 +48,13 @@ module.exports = class DailyCommand extends Command {
 			`);
 		}
 
-		if (user && user.id !== msg.author.id) {
+		if (user.id !== msg.author.id) {
 			Daily.receive(msg.author.id, user.id);
 
 			return msg.reply(`${user} has successfully received your daily ${Daily.dailyDonationPayout} 🍩s.`);
 		}
 
 		Daily.receive(msg.author.id);
-
-		if (user && user.id === msg.author.id) {
-			return msg.reply(stripIndents`
-					you can't donate the daily to yourself.
-					You have been given the normal ${Daily.dailyPayout} 🍩s.
-					`);
-		}
 
 		return msg.reply(`You have successfully received your daily ${Daily.dailyPayout} 🍩s.`);
 	}
