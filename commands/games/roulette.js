@@ -16,8 +16,8 @@ module.exports = class RouletteCommand extends Command {
 			aliases: ['roulette'],
 			group: 'games',
 			memberName: 'roulette',
-			description: 'Play a game of roulette for donuts!',
-			details: 'Play a game of roulette for donuts.',
+			description: `Play a game of roulette for ${Currency.plural}!`,
+			details: `Play a game of roulette for ${Currency.plural}.`,
 			guildOnly: true,
 			throttling: {
 				usages: 1,
@@ -27,7 +27,7 @@ module.exports = class RouletteCommand extends Command {
 			args: [
 				{
 					key: 'bet',
-					prompt: 'how many donuts do you want to bet?\n',
+					prompt: `how many ${Currency.plural} do you want to bet?\n`,
 					type: 'integer',
 					validate: async (bet, msg) => {
 						bet = parseInt(bet);
@@ -35,8 +35,10 @@ module.exports = class RouletteCommand extends Command {
 
 						if (balance < bet) {
 							return `
-								you don't have enough donuts to bet. Your current account balance is ${balance} 🍩s.
-								Please specify a valid amount of donuts.
+								you don't have enough ${Currency.plural} to bet. Your current account balance is ${
+									Currency.convert(balance)
+								}.
+								Please specify a valid amount of ${Currency.plural}.
 							`;
 						}
 
@@ -112,7 +114,8 @@ module.exports = class RouletteCommand extends Command {
 
 						${winners.length !== 0
 							? `__**Winners:**__
-							${winners.map(winner => `${winner.user.username} won ${winner.winnings} 🍩s`).join('\n')}`
+							${winners.map(winner => `${winner.user.username} won ${Currency.convert(winner.winnings)}`)
+								.join('\n')}`
 							: '__**No winner.**__'}
 					`
 				});

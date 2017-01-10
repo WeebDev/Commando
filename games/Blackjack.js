@@ -1,47 +1,41 @@
+const decks = new Map();
 const games = new Map();
 
 const ranks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
 const suits = ['♣', '♦', '❤', '♠'];
-const deck = suits
+const DECK_TEMPLATE = suits
 	.map(suit => ranks.concat(ranks).concat(ranks).concat(ranks)
 		.map(rank => rank + suit))
 			.reduce((array, arr) => array.concat(arr));
 
 class Blackjack {
-	constructor(playerID) {
-		this.playerID = playerID;
-		this.deck = shuffle(deck);
-		this.ongoing = true;
+	constructor(msg) {
+		this.guildID = msg.guild.id;
+		this.playerID = msg.author.id;
 
 		games.set(this.playerID, this);
 	}
 
 	getHand() {
-		return [this.deck.pop(), this.deck.pop()];
+		return this.hit(this.hit([]));
 	}
 
 	hit(hand) {
-		if (this.deck.length === 0) this.deck = shuffle(deck);
+		if (!this.deck || this.deck.length === 0) {
+			if (decks.has(this.guildID) && decks.get(this.guildID).length !== 0) {
+				this.deck = decks.get(this.guildID);
+			} else {
+				this.deck = shuffle(DECK_TEMPLATE);
+				decks.set(this.guildID, this.deck);
+			}
+		}
 		hand.push(this.deck.pop());
 
 		return hand;
 	}
 
 	endGame() {
-		this.ongoing = false;
-		this.killTimeout = setTimeout(() => games.delete(this.playerID), 300000);
-	}
-
-	static startGame(playerID) {
-		const game = games.get(playerID);
-		game.ongoing = true;
-		clearTimeout(game.killTimeout);
-
-		return game;
-	}
-
-	static gameOngoing(playerID) {
-		return this.gameExists(playerID) && games.get(playerID).ongoing;
+		return games.delete(this.playerID);
 	}
 
 	static gameExists(playerID) {

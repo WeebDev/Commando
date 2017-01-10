@@ -1,5 +1,6 @@
 const { Command } = require('discord.js-commando');
 const stripIndents = require('common-tags').stripIndents;
+const Currency = require('../../currency/Currency.js');
 
 module.exports = class RouletteInfo extends Command {
 	constructor(client) {
@@ -20,9 +21,10 @@ module.exports = class RouletteInfo extends Command {
 	async run(msg) {
 		return msg.embed({
 			description: stripIndents`
-				To start a game or place a bet use \`roulette <donuts> <space>\`
+				To start a game or place a bet use \`roulette <${Currency.plural}> <space>\`
 
-				\`<donuts>\` for the amount donuts to bet. Can only be 100, 200, 300, 400, 500, 1000, 2000 or 5000.
+				\`<${Currency.plural}>\` for the amount ${Currency.plural} to bet.
+				Can only be 100, 200, 300, 400, 500, 1000, 2000 or 5000.
 
 				\`<space>\` is the space you want to bet on. Those should be written exactly as in the image below.
 

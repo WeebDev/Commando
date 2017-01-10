@@ -1,4 +1,5 @@
 const { Command, util } = require('discord.js-commando');
+const Currency = require('../../currency/Currency.js');
 const moment = require('moment');
 const oneLine = require('common-tags').oneLine;
 const stripIndents = require('common-tags').stripIndents;
@@ -22,8 +23,8 @@ module.exports = class MoneyLeaderboardCommand extends Command {
 			],
 			group: 'economy',
 			memberName: 'leaderboard',
-			description: 'Displays the money members have earned.',
-			details: 'Display the amount of money members have earned in a leaderboard.',
+			description: `Displays the ${Currency.plural} members have earned.`,
+			details: `Display the amount of ${Currency.plural} members have earned in a leaderboard.`,
 			guildOnly: true,
 			throttling: {
 				usages: 2,
@@ -56,13 +57,13 @@ module.exports = class MoneyLeaderboardCommand extends Command {
 		return msg.embed({
 			color: 3447003,
 			description: stripIndents`
-				__**Donut leaderboard, page ${paginated.page}**__
+				__**${Currency.singular.replace('.', lc => lc.toUpperCase())} leaderboard, page ${paginated.page}**__
 
 				${paginated.items.map(user => oneLine`
 					**${++ranking} -**
 					${`${this.client.users.get(user.userID).username}
 					#${this.client.users.get(user.userID).discriminator}`}
-					(**${user.money}** 🍩)`).join('\n')}
+					(**${Currency.convert(user.money)}**)`).join('\n')}
 
 				${moment.duration(reset).format('hh [hours] mm [minutes]')} until the next update.
 			`,
@@ -76,7 +77,7 @@ module.exports = class MoneyLeaderboardCommand extends Command {
 				return reply;
 			} else {
 				const money = await UserProfile.findAll({ where: { userID: { $ne: 'SLOTMACHINE' } }, order: 'money DESC' });
-				if (!money) return `No money, biatch`;
+				if (!money) return; // eslint-disable-line consistent-return
 
 				redis.db.setAsync('moneyleaderboard', JSON.stringify(money));
 				redis.db.expire('moneyleaderboard', 3600);

@@ -50,6 +50,28 @@ class Currency {
 		redis.db.setAsync('moneyleaderboardreset', Date.now());
 		redis.db.expire('moneyleaderboardreset', 30 * 60 * 1000);
 	}
+
+	static convert(amount, text = false) {
+		if (!text) return `${amount} ${Math.abs(amount) === 1 ? Currency.singular : Currency.plural}`;
+
+		return `${amount} ${Math.abs(amount) === 1 ? Currency.textSingular : Currency.textPlural}`;
+	}
+
+	static get singular() {
+		return '🍩';
+	}
+
+	static get plural() {
+		return '🍩s';
+	}
+
+	static get textSingular() {
+		return 'donut';
+	}
+
+	static get textPlural() {
+		return 'donuts';
+	}
 }
 
 module.exports = Currency;

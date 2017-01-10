@@ -21,8 +21,8 @@ module.exports = class MoneyTradeCommand extends Command {
 			],
 			group: 'economy',
 			memberName: 'trade',
-			description: 'Trades the money you have earned.',
-			details: 'Trades the amount of money you have earned.',
+			description: `Trades the ${Currency.plural} you have earned.`,
+			details: `Trades the amount of ${Currency.plural} you have earned.`,
 			guildOnly: true,
 			throttling: {
 				usages: 2,
@@ -32,12 +32,12 @@ module.exports = class MoneyTradeCommand extends Command {
 			args: [
 				{
 					key: 'member',
-					prompt: 'what user would you like to give donuts?\n',
+					prompt: `what user would you like to give ${Currency.plural}?\n`,
 					type: 'member'
 				},
 				{
 					key: 'donuts',
-					prompt: 'how many donuts do you want to give that user?\n',
+					prompt: `how many ${Currency.plural} do you want to give that user?\n`,
 					type: 'integer'
 				}
 			]
@@ -48,22 +48,22 @@ module.exports = class MoneyTradeCommand extends Command {
 		const user = args.member;
 		const donuts = args.donuts;
 
-		if (user.id === msg.author.id) return msg.reply('you can\'t trade donuts with yourself, ya dingus.');
-		if (user.user.bot) return msg.reply('don\'t give your donuts to bots: they\'re bots, man.');
-		if (donuts <= 0) return msg.reply('you can\'t trade 0 or below 0 donuts.');
+		if (user.id === msg.author.id) return msg.reply(`you can't trade ${Currency.plural} with yourself, ya dingus.`);
+		if (user.user.bot) return msg.reply(`don't give your ${Currency.plural} to bots: they're bots, man.`);
+		if (donuts <= 0) return msg.reply(`you can't trade 0 or below 0 ${Currency.plural}.`);
 
 		const userBalance = await Currency.getBalance(msg.author.id);
 
 		if (userBalance < donuts) {
 			return msg.reply(stripIndents`
-				you don't have that many donuts to trade!
-				Your current account balance is ${userBalance} 🍩s.
+				you don't have that many ${Currency.plural} to trade!
+				Your current account balance is ${Currency.convert(userBalance)}.
 			`);
 		}
 
 		Currency.removeBalance(msg.author.id, donuts);
 		Currency.addBalance(user.id, donuts);
 
-		return msg.reply(`${user.displayName} successfully received your ${donuts} 🍩s!`);
+		return msg.reply(`${user.displayName} successfully received your ${Currency.convert(donuts)}!`);
 	}
 };

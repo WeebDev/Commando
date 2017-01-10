@@ -10,8 +10,8 @@ module.exports = class BlackjackCommand extends Command {
 			name: 'blackjack',
 			group: 'games',
 			memberName: 'blackjack',
-			description: 'Play a game of blackjack for donuts!',
-			details: 'Play a game of blackjack for donuts.',
+			description: `Play a game of blackjack for ${Currency.plural}!`,
+			details: `Play a game of blackjack for ${Currency.plural}.`,
 			guildOnly: true,
 			throttling: {
 				usages: 1,
@@ -21,7 +21,7 @@ module.exports = class BlackjackCommand extends Command {
 			args: [
 				{
 					key: 'bet',
-					prompt: 'how many donuts do you want to bet?\n',
+					prompt: `how many ${Currency.plural} do you want to bet?\n`,
 					type: 'integer',
 					validate: async (bet, msg) => {
 						bet = parseInt(bet);
@@ -29,8 +29,9 @@ module.exports = class BlackjackCommand extends Command {
 
 						if (balance < bet) {
 							return `
-								you don't have enough donuts. Your current account balance is ${balance} 🍩s.
-								Please specify a valid amount of donuts.
+								you don't have enough ${Currency.plural}.
+								Your current account balance is ${Currency.convert(balance)}.
+								Please specify a valid amount of ${Currency.plural}.
 							`;
 						}
 
@@ -50,89 +51,89 @@ module.exports = class BlackjackCommand extends Command {
 	async run(msg, args) {
 		const bet = args.bet;
 
-		if (Blackjack.gameOngoing(msg.author.id)) {
+		if (Blackjack.gameExists(msg.author.id)) {
 			return msg.reply(`you can't start 2 games of blackjack at the same time.`);
 		}
 
-		const blackjack = Blackjack.gameExists(msg.author.id)
-			? Blackjack.startGame(msg.author.id)
-			: new Blackjack(msg.author.id);
+		const blackjack = new Blackjack(msg);
 
-		return msg.say(`New game of blackjack started with ${msg.member.displayName} with a bet of ${bet} 🍩s!`)
-			.then(async () => {
-				const balance = await Currency.getBalance(msg.author.id);
-				const playerHand = blackjack.getHand();
-				let dealerHand = blackjack.getHand();
-				let playerHands;
+		return msg.say(
+			`New game of blackjack started with ${msg.member.displayName} with a bet of ${Currency.convert(bet)}!`
+		).then(async () => {
+			const balance = await Currency.getBalance(msg.author.id);
+			const playerHand = blackjack.getHand();
+			let dealerHand = blackjack.getHand();
+			let playerHands;
 
-				if (Blackjack.handValue(playerHand) !== 'Blackjack') {
-					playerHands = await this.getFinalHand(msg, playerHand, dealerHand, balance, bet, blackjack);
-					const result = this.gameResult(Blackjack.handValue(playerHands[0]), 0);
-					const noHit = playerHands.length === 1 && result === 'bust';
+			if (Blackjack.handValue(playerHand) !== 'Blackjack') {
+				playerHands = await this.getFinalHand(msg, playerHand, dealerHand, balance, bet, blackjack);
+				const result = this.gameResult(Blackjack.handValue(playerHands[0]), 0);
+				const noHit = playerHands.length === 1 && result === 'bust';
 
-					while (Blackjack.handValue(dealerHand) < 17 && !noHit) { // eslint-disable-line no-unmodified-loop-condition
-						blackjack.hit(dealerHand);
-					}
-				} else {
-					playerHands = [playerHand];
+				while (Blackjack.handValue(dealerHand) < 17 && !noHit) { // eslint-disable-line no-unmodified-loop-condition
+					blackjack.hit(dealerHand);
 				}
+			} else {
+				playerHands = [playerHand];
+			}
 
-				blackjack.endGame();
+			blackjack.endGame();
 
-				const dealerValue = Blackjack.handValue(dealerHand);
-				let winnings = 0;
-				let hideHoleCard = true;
-				const embed = { title: `Blackjack | ${msg.member.displayName}`, fields: [] };
+			const dealerValue = Blackjack.handValue(dealerHand);
+			let winnings = 0;
+			let hideHoleCard = true;
+			const embed = { title: `Blackjack | ${msg.member.displayName}`, fields: [] };
 
-				playerHands.forEach((hand, i) => {
-					const playerValue = Blackjack.handValue(hand);
-					const result = this.gameResult(playerValue, dealerValue);
+			playerHands.forEach((hand, i) => {
+				const playerValue = Blackjack.handValue(hand);
+				const result = this.gameResult(playerValue, dealerValue);
 
-					if (result !== 'bust') hideHoleCard = false;
+				if (result !== 'bust') hideHoleCard = false;
 
-					const lossOrGain = (result === 'loss' || result === 'bust'
-						? -1 : result === 'push'
-							? 0 : 1) * (hand.doubled
-								? 2 : 1) * bet;
+				const lossOrGain = Math.floor((['loss', 'bust'].includes(result)
+					? -1 : result === 'push'
+						? 0 : 1) * (hand.doubled
+							? 2 : 1) * (playerValue === 'Blackjack'
+								? 1.5 : 1) * bet);
 
-					winnings += Math.floor(lossOrGain * (playerValue === 'Blackjack' ? 1.5 : 1));
-
-					embed.fields.push({
-						name: `Hand ${i + 1}`,
-						value: stripIndents`
-							${hand.join(' - ')}
-							Value: ${playerValue}
-
-							Result: ${
-								result.replace(/(^\w|\s\w)/g, ma => ma.toUpperCase())
-							}${result !== 'push' ? `, ${lossOrGain} 🍩s` : ', 🍩s back'}
-						`,
-						inline: true
-					});
-				});
+				winnings += lossOrGain;
 
 				embed.fields.push({
-					name: '\u200B',
-					value: '\u200B'
-				});
-
-				embed.fields.push({
-					name: '**Dealer hand**',
+					name: playerHands.length === 1 ? '**Your hand**' : `**Hand ${i + 1}**`,
 					value: stripIndents`
-						${hideHoleCard ? `${dealerHand[0]} - XX` : dealerHand.join(' - ')}
-						Value: ${dealerValue}
-					`
+						${hand.join(' - ')}
+						Value: ${playerValue}
+
+						Result: ${
+							result.replace(/(^\w|\s\w)/g, ma => ma.toUpperCase())
+						}${result !== 'push' ? `, ${Currency.convert(lossOrGain)}` : `, ${Currency.plural} back`}
+					`,
+					inline: true
 				});
-
-				embed.color = winnings > 0 ? 0x009900 : winnings < 0 ? 0x990000 : undefined;
-				embed.description = `You ${winnings === 0
-					? 'broke even' : `${winnings > 0
-						? 'won' : 'lost'} ${Math.abs(winnings)} 🍩s`}`;
-
-				if (winnings !== 0) Currency.addBalance(msg.author.id, winnings);
-
-				return msg.embed(embed);
 			});
+
+			embed.fields.push({
+				name: '\u200B',
+				value: '\u200B'
+			});
+
+			embed.fields.push({
+				name: '**Dealer hand**',
+				value: stripIndents`
+					${hideHoleCard ? `${dealerHand[0]} - XX` : dealerHand.join(' - ')}
+					Value: ${hideHoleCard ? Blackjack.handValue([dealerHand[0]]) : dealerValue}
+				`
+			});
+
+			embed.color = winnings > 0 ? 0x009900 : winnings < 0 ? 0x990000 : undefined;
+			embed.description = `You ${winnings === 0
+				? 'broke even' : `${winnings > 0
+					? 'won' : 'lost'} ${Currency.convert(Math.abs(winnings))}`}`;
+
+			if (winnings !== 0) Currency.addBalance(msg.author.id, winnings);
+
+			return msg.embed(embed);
+		});
 	}
 
 	gameResult(playerValue, dealerValue) {
@@ -146,42 +147,38 @@ module.exports = class BlackjackCommand extends Command {
 
 	getFinalHand(msg, playerHand, dealerHand, balance, bet, blackjack) {
 		return new Promise(async resolve => {
-			const hands = [{
-				cards: playerHand,
-				double: false
-			}];
+			const hands = [playerHand];
 			let currentHand = hands[0];
 			let totalBet = bet;
 
-			while (currentHand) {
-				const nextHand = () => { currentHand = hands[hands.indexOf(currentHand) + 1]; };
+			const nextHand = () => { currentHand = hands[hands.indexOf(currentHand) + 1]; };
 
-				if (currentHand.cards.length === 1) blackjack.hit(currentHand.cards);
+			while (currentHand) { // eslint-disable-line no-unmodified-loop-condition
+				if (currentHand.length === 1) blackjack.hit(currentHand);
 
-				if (Blackjack.handValue(currentHand.cards) === 'Blackjack') {
+				if (Blackjack.handValue(currentHand) === 'Blackjack') {
 					nextHand();
 
 					continue;
 				}
 
-				if (Blackjack.handValue(currentHand.cards) >= 21) {
+				if (Blackjack.handValue(currentHand) >= 21) {
 					nextHand();
 
 					continue;
 				}
 
-				if (currentHand.double) {
-					blackjack.hit(currentHand.cards);
-					currentHand.cards.doubled = true;
+				if (currentHand.doubled) {
+					blackjack.hit(currentHand);
 					nextHand();
 
 					continue;
 				}
 
-				const canDoubleDown = balance >= totalBet + bet && currentHand.cards.length === 2;
+				const canDoubleDown = balance >= totalBet + bet && currentHand.length === 2;
 				const canSplit = balance >= totalBet + bet
-					&& Blackjack.handValue([currentHand.cards[0]]) === Blackjack.handValue([currentHand.cards[1]])
-					&& currentHand.cards.length === 2;
+					&& Blackjack.handValue([currentHand[0]]) === Blackjack.handValue([currentHand[1]])
+					&& currentHand.length === 2;
 
 				await msg.embed({
 					title: `Blackjack | ${msg.member.displayName}`,
@@ -196,8 +193,8 @@ module.exports = class BlackjackCommand extends Command {
 						{
 							name: hands.length === 1 ? '**Your hand**' : `**Hand ${hands.indexOf(currentHand) + 1}**`,
 							value: stripIndents`
-								${currentHand.cards.join(' - ')}
-								Value: ${Blackjack.handValue(currentHand.cards)}
+								${currentHand.join(' - ')}
+								Value: ${Blackjack.handValue(currentHand)}
 							`,
 							inline: true
 						},
@@ -228,29 +225,26 @@ module.exports = class BlackjackCommand extends Command {
 
 				const action = responses.first().content.toLowerCase();
 
-				if (action === 'stand' || Blackjack.handValue(currentHand.cards) >= 21) {
+				if (action === 'stand' || Blackjack.handValue(currentHand) >= 21) {
 					if (currentHand === hands[hands.length - 1]) break;
 					nextHand();
 				}
 
-				if (action === 'hit') blackjack.hit(currentHand.cards);
+				if (action === 'hit') blackjack.hit(currentHand);
 
 				if (action === 'split' && canSplit) {
 					totalBet += bet;
-					hands.push({
-						cards: [currentHand.cards.pop()],
-						double: false
-					});
-					blackjack.hit(currentHand.cards);
+					hands.push([currentHand.pop()]);
+					blackjack.hit(currentHand);
 				}
 
 				if (action === 'double down' && canDoubleDown) {
 					totalBet += bet;
-					currentHand.double = true;
+					currentHand.doubled = true;
 				}
 			}
 
-			return resolve(hands.map(hand => hand.cards));
+			return resolve(hands);
 		});
 	}
 };

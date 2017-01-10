@@ -9,8 +9,8 @@ module.exports = class MoneyInfoCommand extends Command {
 			aliases: ['donut', 'donuts', 'doughnut', 'doughnuts'],
 			group: 'economy',
 			memberName: 'money',
-			description: 'Displays the money you have earned.',
-			details: 'Display the amount of money you have earned.',
+			description: `Displays the ${Currency.plural} you have earned.`,
+			details: `Displays the ${Currency.plural} you have earned.`,
 			guildOnly: true,
 			throttling: {
 				usages: 2,
@@ -34,13 +34,13 @@ module.exports = class MoneyInfoCommand extends Command {
 		const balance = await Currency.getBalance(user.id);
 
 		if (args.member) {
-			if (!balance) return msg.reply(`${user.displayName} hasn't earned any 🍩s yet.`);
+			if (!balance) return msg.reply(`${user.displayName} hasn't earned any ${Currency.plural} yet.`);
 
-			return msg.reply(`${user.displayName} has earned ${balance} 🍩s so far. Good on them!`);
+			return msg.reply(`${user.displayName} has earned ${Currency.convert(balance)} so far. Good on them!`);
 		} else {
-			if (!balance) return msg.reply('you haven\'t earned any 🍩s yet.');
+			if (!balance) return msg.reply(`you haven't earned any ${Currency.plural} yet.`);
 
-			return msg.reply(`you have earned ${balance} 🍩s so far. Good on you!`);
+			return msg.reply(`you have earned ${Currency.convert(balance)} so far. Good on you!`);
 		}
 	}
 };
