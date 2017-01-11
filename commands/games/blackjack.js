@@ -197,7 +197,7 @@ module.exports = class BlackjackCommand extends Command {
 								: `**Hand ${hands.indexOf(currentHand) + 1}**`,
 							value: stripIndents`
 								${currentHand.join(' - ')}
-								Value: ${Blackjack.soft(currentHand)
+								Value: ${Blackjack.isSoft(currentHand)
 									? 'Soft '
 									: ''}${Blackjack.handValue(currentHand)}
 							`,
