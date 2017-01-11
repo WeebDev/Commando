@@ -8,7 +8,7 @@ module.exports = class LockCommand extends Command {
 			name: 'lock',
 			group: 'economy',
 			memberName: 'lock',
-			description: `Disable xp and ${Currency.singular} earning in a channel.`,
+			description: `Disable xp and ${Currency.textSingular} earning in a channel.`,
 			guildOnly: true,
 			throttling: {
 				usages: 2,
@@ -41,7 +41,7 @@ module.exports = class LockCommand extends Command {
 		this.client.provider.set(msg.guild.id, 'locks', channelLocks);
 
 		return msg.reply(stripIndents`
-			this channel has been locked. You can no longer earn xp or ${Currency.plural} in ${channel}.
+			this channel has been locked. You can no longer earn xp or ${Currency.textPlural} in ${channel}.
 		`);
 	}
 };

@@ -8,7 +8,7 @@ module.exports = class UnlockCommand extends Command {
 			name: 'unlock',
 			group: 'economy',
 			memberName: 'unlock',
-			description: `Enable xp and ${Currency.singular} earning in a channel.`,
+			description: `Enable xp and ${Currency.textSingular} earning in a channel.`,
 			guildOnly: true,
 			throttling: {
 				usages: 2,
@@ -47,7 +47,7 @@ module.exports = class UnlockCommand extends Command {
 		this.client.provider.set(msg.guild.id, 'locks', channelLocks);
 
 		return msg.reply(stripIndents`
-			the channel lock has been lifted. You can now earn xp and ${Currency.plural} again in ${channel}.
+			the channel lock has been lifted. You can now earn xp and ${Currency.textPlural} in ${channel} again.
 		`);
 	}
 };

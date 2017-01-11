@@ -19,8 +19,8 @@ module.exports = class MoneyAddCommand extends Command {
 			],
 			group: 'economy',
 			memberName: 'add',
-			description: `Add ${Currency.plural} to a certain user.`,
-			details: `Add amount of ${Currency.plural} to a certain user.`,
+			description: `Add ${Currency.textPlural} to a certain user.`,
+			details: `Add amount of ${Currency.textPlural} to a certain user.`,
 			guildOnly: true,
 			throttling: {
 				usages: 2,
@@ -30,12 +30,12 @@ module.exports = class MoneyAddCommand extends Command {
 			args: [
 				{
 					key: 'member',
-					prompt: `what user would you like to give ${Currency.plural}?\n`,
+					prompt: `what user would you like to give ${Currency.textPlural}?\n`,
 					type: 'member'
 				},
 				{
 					key: 'donuts',
-					prompt: `how many ${Currency.plural} do you want to give that user?\n`,
+					prompt: `how many ${Currency.textPlural} do you want to give that user?\n`,
 					type: 'integer'
 				}
 			]

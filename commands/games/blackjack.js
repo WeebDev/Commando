@@ -10,8 +10,8 @@ module.exports = class BlackjackCommand extends Command {
 			name: 'blackjack',
 			group: 'games',
 			memberName: 'blackjack',
-			description: `Play a game of blackjack for ${Currency.plural}!`,
-			details: `Play a game of blackjack for ${Currency.plural}.`,
+			description: `Play a game of blackjack for ${Currency.textPlural}!`,
+			details: `Play a game of blackjack for ${Currency.textPlural}.`,
 			guildOnly: true,
 			throttling: {
 				usages: 1,
@@ -21,7 +21,7 @@ module.exports = class BlackjackCommand extends Command {
 			args: [
 				{
 					key: 'bet',
-					prompt: `how many ${Currency.plural} do you want to bet?\n`,
+					prompt: `how many ${Currency.textPlural} do you want to bet?\n`,
 					type: 'integer',
 					validate: async (bet, msg) => {
 						bet = parseInt(bet);
@@ -29,9 +29,9 @@ module.exports = class BlackjackCommand extends Command {
 
 						if (balance < bet) {
 							return `
-								you don't have enough ${Currency.plural}.
+								you don't have enough ${Currency.textPlural}.
 								Your current account balance is ${Currency.convert(balance)}.
-								Please specify a valid amount of ${Currency.plural}.
+								Please specify a valid amount of ${Currency.textPlural}.
 							`;
 						}
 
@@ -108,7 +108,7 @@ module.exports = class BlackjackCommand extends Command {
 
 						Result: ${
 							result.replace(/(^\w|\s\w)/g, ma => ma.toUpperCase())
-						}${result !== 'push' ? `, ${Currency.convert(lossOrGain)}` : `, ${Currency.plural} back`}
+						}${result !== 'push' ? `, ${Currency.convert(lossOrGain)}` : `, ${Currency.textPlural} back`}
 					`,
 					inline: true
 				});
