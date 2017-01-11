@@ -57,7 +57,7 @@ module.exports = class MoneyLeaderboardCommand extends Command {
 		return msg.embed({
 			color: 3447003,
 			description: stripIndents`
-				__**${Currency.textSingular.replace('.', lc => lc.toUpperCase())} leaderboard, page ${paginated.page}**__
+				__**${Currency.textSingular.replace(/./, lc => lc.toUpperCase())} leaderboard, page ${paginated.page}**__
 
 				${paginated.items.map(user => oneLine`
 					**${++ranking} -**
