@@ -42,6 +42,23 @@ class Blackjack {
 		return games.has(playerID);
 	}
 
+	static isSoft(hand) {
+		let value = 0;
+		let aces = 0;
+
+		hand.forEach(card => {
+			value += cardValue(card);
+			if (cardValue(card) === 11) aces++;
+		});
+
+		while (value > 21 && aces > 0) {
+			value -= 10;
+			aces--;
+		}
+
+		return aces !== 0;
+	}
+
 	static handValue(hand) {
 		let value = 0;
 		let aces = 0;
