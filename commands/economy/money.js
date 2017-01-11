@@ -9,8 +9,8 @@ module.exports = class MoneyInfoCommand extends Command {
 			aliases: ['donut', 'donuts', 'doughnut', 'doughnuts'],
 			group: 'economy',
 			memberName: 'money',
-			description: `Displays the ${Currency.plural} you have earned.`,
-			details: `Displays the ${Currency.plural} you have earned.`,
+			description: `Displays the ${Currency.textPlural} you have earned.`,
+			details: `Displays the ${Currency.textPlural} you have earned.`,
 			guildOnly: true,
 			throttling: {
 				usages: 2,
@@ -20,7 +20,7 @@ module.exports = class MoneyInfoCommand extends Command {
 			args: [
 				{
 					key: 'member',
-					prompt: 'which user\'s earnings would you like to view?\n',
+					prompt: `which user's ${Currency.textPlural} would you like to view?\n`,
 					type: 'member',
 					default: ''
 				}
@@ -34,11 +34,11 @@ module.exports = class MoneyInfoCommand extends Command {
 		const balance = await Currency.getBalance(user.id);
 
 		if (args.member) {
-			if (!balance) return msg.reply(`${user.displayName} hasn't earned any ${Currency.plural} yet.`);
+			if (!balance) return msg.reply(`${user.displayName} hasn't earned any ${Currency.textPlural} yet.`);
 
 			return msg.reply(`${user.displayName} has earned ${Currency.convert(balance)} so far. Good on them!`);
 		} else {
-			if (!balance) return msg.reply(`you haven't earned any ${Currency.plural} yet.`);
+			if (!balance) return msg.reply(`you haven't earned any ${Currency.textPlural} yet.`);
 
 			return msg.reply(`you have earned ${Currency.convert(balance)} so far. Good on you!`);
 		}

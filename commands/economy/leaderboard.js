@@ -23,8 +23,8 @@ module.exports = class MoneyLeaderboardCommand extends Command {
 			],
 			group: 'economy',
 			memberName: 'leaderboard',
-			description: `Displays the ${Currency.plural} members have earned.`,
-			details: `Display the amount of ${Currency.plural} members have earned in a leaderboard.`,
+			description: `Displays the ${Currency.textPlural} members have earned.`,
+			details: `Display the amount of ${Currency.textPlural} members have earned in a leaderboard.`,
 			guildOnly: true,
 			throttling: {
 				usages: 2,
@@ -57,7 +57,7 @@ module.exports = class MoneyLeaderboardCommand extends Command {
 		return msg.embed({
 			color: 3447003,
 			description: stripIndents`
-				__**${Currency.singular.replace('.', lc => lc.toUpperCase())} leaderboard, page ${paginated.page}**__
+				__**${Currency.textSingular.replace('.', lc => lc.toUpperCase())} leaderboard, page ${paginated.page}**__
 
 				${paginated.items.map(user => oneLine`
 					**${++ranking} -**

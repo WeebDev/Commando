@@ -16,8 +16,8 @@ module.exports = class RouletteCommand extends Command {
 			aliases: ['roulette'],
 			group: 'games',
 			memberName: 'roulette',
-			description: `Play a game of roulette for ${Currency.plural}!`,
-			details: `Play a game of roulette for ${Currency.plural}.`,
+			description: `Play a game of roulette for ${Currency.textPlural}!`,
+			details: `Play a game of roulette for ${Currency.textPlural}.`,
 			guildOnly: true,
 			throttling: {
 				usages: 1,
@@ -27,7 +27,7 @@ module.exports = class RouletteCommand extends Command {
 			args: [
 				{
 					key: 'bet',
-					prompt: `how many ${Currency.plural} do you want to bet?\n`,
+					prompt: `how many ${Currency.textPlural} do you want to bet?\n`,
 					type: 'integer',
 					validate: async (bet, msg) => {
 						bet = parseInt(bet);
@@ -35,10 +35,9 @@ module.exports = class RouletteCommand extends Command {
 
 						if (balance < bet) {
 							return `
-								you don't have enough ${Currency.plural} to bet. Your current account balance is ${
-									Currency.convert(balance)
-								}.
-								Please specify a valid amount of ${Currency.plural}.
+								you don't have enough ${Currency.textPlural} to bet.
+                Your current account balance is ${Currency.convert(balance)}.
+								Please specify a valid amount of ${Currency.textPlural}.
 							`;
 						}
 
@@ -83,7 +82,7 @@ module.exports = class RouletteCommand extends Command {
 			roulette.join(msg.author, bet, space);
 			Currency.removeBalance(msg.author.id, bet);
 
-			return msg.reply(`you have successfully placed your bet of ${bet} on ${space}.`);
+			return msg.reply(`you have successfully placed your bet of ${Currency.convert(bet)} on ${space}.`);
 		}
 
 		roulette = new Roulette(msg.guild.id);

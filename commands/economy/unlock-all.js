@@ -8,7 +8,7 @@ module.exports = class UnlockAllCommand extends Command {
 			name: 'unlock-all',
 			group: 'economy',
 			memberName: 'unlock-all',
-			description: `Enable xp and ${Currency.singular} earning on all channels in the server.`,
+			description: `Enable xp and ${Currency.textSingular} earning on all channels in the server.`,
 			guildOnly: true,
 			throttling: {
 				usages: 2,
@@ -25,7 +25,7 @@ module.exports = class UnlockAllCommand extends Command {
 		this.client.provider.set(msg.guild.id, 'locks', []);
 
 		return msg.reply(stripIndents`
-			the lock on all channels has been lifted. You can now earn xp and ${Currency.plural} on the entire server.
+			the lock on all channels has been lifted. You can now earn xp and ${Currency.textPlural} on the entire server again.
 		`);
 	}
 };

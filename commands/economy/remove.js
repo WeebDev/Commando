@@ -19,8 +19,8 @@ module.exports = class MoneyRemoveCommand extends Command {
 			],
 			group: 'economy',
 			memberName: 'remove',
-			description: `Remove ${Currency.plural} from a certain user.`,
-			details: `Remove amount of ${Currency.plural} from a certain user.`,
+			description: `Remove ${Currency.textPlural} from a certain user.`,
+			details: `Remove amount of ${Currency.textPlural} from a certain user.`,
 			guildOnly: true,
 			throttling: {
 				usages: 2,
@@ -30,12 +30,12 @@ module.exports = class MoneyRemoveCommand extends Command {
 			args: [
 				{
 					key: 'member',
-					prompt: `from which user would you like to remove ${Currency.plural}?\n`,
+					prompt: `what user would you like to remove ${Currency.textPlural} from?\n`,
 					type: 'member'
 				},
 				{
 					key: 'donuts',
-					prompt: `how many ${Currency.plural} do you want to remove from that user?\n`,
+					prompt: `how many ${Currency.textPlural} do you want to remove from that user?\n`,
 					type: 'integer'
 				}
 			]

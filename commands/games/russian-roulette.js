@@ -11,8 +11,8 @@ module.exports = class RussianRouletteCommand extends Command {
 			aliases: ['rus-roulette'],
 			group: 'games',
 			memberName: 'russian-roulette',
-			description: `Play a game of russian roulette for ${Currency.plural}!`,
-			details: `Play a game of russian roulette for ${Currency.plural}.`,
+			description: `Play a game of russian roulette for ${Currency.textPlural}!`,
+			details: `Play a game of russian roulette for ${Currency.textPlural}.`,
 			guildOnly: true,
 			throttling: {
 				usages: 1,
@@ -28,7 +28,7 @@ module.exports = class RussianRouletteCommand extends Command {
 
 		if (balance < donuts) {
 			return msg.reply(stripIndents`
-				you don't have enough ${Currency.plural}.
+				you don't have enough ${Currency.textPlural}.
 				Your current account balance is ${Currency.convert(balance)}.
 				You need ${Currency.convert(donuts)} to join.
 			`);
