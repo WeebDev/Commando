@@ -70,7 +70,9 @@ module.exports = class BlackjackCommand extends Command {
 				const result = this.gameResult(Blackjack.handValue(playerHands[0]), 0);
 				const noHit = playerHands.length === 1 && result === 'bust';
 
-				while (Blackjack.handValue(dealerHand) < 17 && !noHit) { // eslint-disable-line no-unmodified-loop-condition
+				while ((Blackjack.isSoft(dealerHand)
+					|| Blackjack.handValue(dealerHand) < 17)
+					&& !noHit) { // eslint-disable-line no-unmodified-loop-condition
 					blackjack.hit(dealerHand);
 				}
 			} else {
@@ -97,12 +99,12 @@ module.exports = class BlackjackCommand extends Command {
 								? 1.5 : 1) * bet);
 
 				winnings += lossOrGain;
-
+				const soft = Blackjack.isSoft(hand);
 				embed.fields.push({
 					name: playerHands.length === 1 ? '**Your hand**' : `**Hand ${i + 1}**`,
 					value: stripIndents`
 						${hand.join(' - ')}
-						Value: ${playerValue}
+						Value: ${soft ? 'Soft ' : ''}${playerValue}
 
 						Result: ${
 							result.replace(/(^\w|\s\w)/g, ma => ma.toUpperCase())
@@ -183,18 +185,21 @@ module.exports = class BlackjackCommand extends Command {
 				await msg.embed({
 					title: `Blackjack | ${msg.member.displayName}`,
 					description: !canDoubleDown && !canSplit
-						?	'Type `hit` to draw another card or `stand` to pass.'
-						:	`Type \`hit\` to draw another card, ${
-							canDoubleDown ? '`double down` to double down, ' : ''
-						}${
-							canSplit ? '`split` to split, ' : ''
-						}or \`stand\` to pass.`,
+						? 'Type `hit` to draw another card or `stand` to pass.'
+						: `Type \`hit\` to draw another card, ${canDoubleDown
+							? '`double down` to double down, '
+							: ''}${canSplit
+								? '`split` to split, ' : ''}or \`stand\` to pass.`,
 					fields: [
 						{
-							name: hands.length === 1 ? '**Your hand**' : `**Hand ${hands.indexOf(currentHand) + 1}**`,
+							name: hands.length === 1
+								? '**Your hand**'
+								: `**Hand ${hands.indexOf(currentHand) + 1}**`,
 							value: stripIndents`
 								${currentHand.join(' - ')}
-								Value: ${Blackjack.handValue(currentHand)}
+								Value: ${Blackjack.soft(currentHand)
+									? 'Soft '
+									: ''}${Blackjack.handValue(currentHand)}
 							`,
 							inline: true
 						},
@@ -202,7 +207,9 @@ module.exports = class BlackjackCommand extends Command {
 							name: '**Dealer hand**',
 							value: stripIndents`
 								${dealerHand[0]} - XX
-						 		Value: ${Blackjack.handValue([dealerHand[0]])}
+						 		Value: ${Blackjack.isSoft([dealerHand[0]])
+									? 'Soft '
+									: ''}${Blackjack.handValue([dealerHand[0]])}
 							`,
 							inline: true
 						}
