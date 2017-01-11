@@ -56,6 +56,8 @@ class Blackjack {
 			aces--;
 		}
 
+		if (value === 21 && hand.length === 2) return false;
+
 		return aces !== 0;
 	}
 
