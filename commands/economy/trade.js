@@ -38,7 +38,15 @@ module.exports = class MoneyTradeCommand extends Command {
 				{
 					key: 'donuts',
 					prompt: `how many ${Currency.textPlural} do you want to give that user?\n`,
-					type: 'integer'
+					validate: donuts => {
+						return /^(?:\d+|-all)$/g.test(donuts);
+					},
+					parse: async (donuts, msg) => {
+						const balance = await Currency.getBalance(msg.author.id);
+
+						if (donuts === '-all') return balance;
+						return parseInt(donuts);
+					}
 				}
 			]
 		});
