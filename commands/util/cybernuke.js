@@ -1,5 +1,4 @@
 const { Command } = require('discord.js-commando');
-const { Collection } = require('discord.js');
 const { stripIndents } = require('common-tags');
 const winston = require('winston');
 
@@ -76,8 +75,8 @@ module.exports = class LaunchCybernukeCommand extends Command {
 			}
 		}
 
-		const fatalities = new Collection();
-		const survivors = new Collection();
+		const fatalities = [];
+		const survivors = [];
 		let processed = 0;
 
 		for(const member of members) {
@@ -89,11 +88,11 @@ module.exports = class LaunchCybernukeCommand extends Command {
 
 			member.ban()
 				.then(() => {
-					fatalities.set(member.id, member);
+					fatalities.push(member);
 				})
 				.catch(err => {
 					winston.error(err);
-					survivors.set(member.id, {
+					survivors.push({
 						member: member.id,
 						error: err
 					});
@@ -110,16 +109,16 @@ module.exports = class LaunchCybernukeCommand extends Command {
 		await statusMsg2.edit('Cybernuke impact confirmed. Casualty report incoming...');
 		await response.reply(stripIndents`
 			__**Fatalities**__
-			${fatalities.size > 0 ? stripIndents`
-				${fatalities.size} confirmed KIA.
+			${fatalities.length > 0 ? stripIndents`
+				${fatalities.length} confirmed KIA.
 
 				${fatalities.map(fat => `**-** ${fat.displayName} (fat.id)`).join('\n')}
 			` : 'None'}
 
 
-			${survivors.size > 0 ? stripIndents`
+			${survivors.length > 0 ? stripIndents`
 				__**Survivors**__
-				${survivors.size} left standing.
+				${survivors.length} left standing.
 
 				${survivors.map(srv => `**-** ${srv.member.displayName} (srv.member.id): \`${srv.error}\``).join('\n')}
 			` : ''}
