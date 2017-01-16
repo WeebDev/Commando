@@ -38,6 +38,10 @@ class Blackjack {
 		return games.delete(this.playerID);
 	}
 
+	get cardsRemaining() {
+		return decks.has(this.guildID) ? decks.get(this.guildID).length : this.decks.length;
+	}
+
 	static gameExists(playerID) {
 		return games.has(playerID);
 	}

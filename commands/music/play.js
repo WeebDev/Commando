@@ -88,7 +88,9 @@ module.exports = class PlaySongCommand extends Command {
 		}
 	}
 
-	handleVideo(video, queue, voiceChannel, msg, statusMsg) {
+	handleVideo(video, queue, voiceChannel, msg, statusMsg) { // eslint-disable-line consistent-return
+		if (video.durationSeconds === 0) return statusMsg.edit(`${msg.author}, can't play live streams.`);
+
 		if (!queue) {
 			queue = {
 				textChannel: msg.channel,
@@ -111,8 +113,7 @@ module.exports = class PlaySongCommand extends Command {
 
 			if (!result.startsWith('👍')) {
 				this.queue.delete(msg.guild.id);
-				statusMsg.edit('', { embed: resultMessage });
-				return;
+				return statusMsg.edit('', { embed: resultMessage });
 			}
 
 			statusMsg.edit(`${msg.author}, joining your voice channel...`);

@@ -84,7 +84,11 @@ module.exports = class BlackjackCommand extends Command {
 			const dealerValue = Blackjack.handValue(dealerHand);
 			let winnings = 0;
 			let hideHoleCard = true;
-			const embed = { title: `Blackjack | ${msg.member.displayName}`, fields: [] };
+			const embed = {
+				title: `Blackjack | ${msg.member.displayName}`,
+				fields: [],
+				footer: blackjack.cardsRemaining() ? `Cards remaining: ${blackjack.cardsRemaining()}` : `Shuffling`
+			};
 
 			playerHands.forEach((hand, i) => {
 				const playerValue = Blackjack.handValue(hand);
@@ -213,7 +217,8 @@ module.exports = class BlackjackCommand extends Command {
 							`,
 							inline: true
 						}
-					]
+					],
+					footer: blackjack.cardsRemaining() ? `Cards remaining: ${blackjack.cardsRemaining()}` : `Shuffling`
 				});
 
 				const responses = await msg.channel.awaitMessages(msg2 => {
