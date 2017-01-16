@@ -82,12 +82,12 @@ module.exports = class CleanCommand extends Command {
 			const messagesToDelete = await msg.channel.fetchMessages({ limit: limit });
 
 			msg.channel.bulkDelete(messagesToDelete.array().reverse());
+		} else {
+			const messages = await msg.channel.fetchMessages({ limit: limit });
+			const messagesToDelete = messages.filter(messageFilter);
+
+			msg.channel.bulkDelete(messagesToDelete.array().reverse());
 		}
-
-		const messages = await msg.channel.fetchMessages({ limit: limit });
-		const messagesToDelete = messages.filter(messageFilter);
-
-		msg.channel.bulkDelete(messagesToDelete.array().reverse());
 	}
 };
 
