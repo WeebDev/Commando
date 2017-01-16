@@ -47,7 +47,7 @@ module.exports = class BuyItemCommand extends Command {
 			return msg.reply(stripIndents`
 				that item does not exist.
 
-				You can use ${msg.usage()} to get a list of the available items.
+				You can use ${this.client.registry.commands.get('store').usage()} to get a list of the available items.
 			`);
 		}
 
