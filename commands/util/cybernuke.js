@@ -16,7 +16,7 @@ module.exports = class LaunchCybernukeCommand extends Command {
 				{
 					key: 'join',
 					label: 'member age',
-					prompt: 'How old (in minutes) should a member be for the cybernuke to ignore (server join date)?',
+					prompt: 'How old (in minutes) should a member be for the cybernuke to ignore them (server join date)?',
 					type: 'float',
 					min: 0.1,
 					max: 120
@@ -24,7 +24,7 @@ module.exports = class LaunchCybernukeCommand extends Command {
 				{
 					key: 'age',
 					label: 'account age',
-					prompt: 'How old (in minutes) should a member\'s account be for the cybernuke to ignore it (account age)?',
+					prompt: 'How old (in minutes) should a member\'s account be for the cybernuke to ignore them (account age)?',
 					type: 'float',
 					min: 0.1
 				}
