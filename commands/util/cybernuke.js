@@ -80,35 +80,36 @@ module.exports = class LaunchCybernukeCommand extends Command {
 
 		const fatalities = [];
 		const survivors = [];
-		let processed = 0;
+		let promises = [];
 
 		for(const member of members.values()) {
-			await member.sendMessage(stripIndents`
-				Sorry, but you've been automatically targetted by the cybernuke in the "${msg.guild.name}" server.
-				This means that you have been banned, likely in the case of a server raid.
-				Please contact them if you believe this ban to be in error.
-			`).catch(winston.error);
-
-			member.ban()
-				.then(() => {
-					fatalities.push(member);
-				})
-				.catch(err => {
-					winston.error(err);
-					survivors.push({
-						member: member.id,
-						error: err
-					});
-				})
-				.then(() => {
-					if(members.size <= 5) return;
-					processed++;
-					if(processed % 5 === 0) {
-						statusMsg2.edit(`Launching cybernuke (${Math.round(processed / members.size * 100)}%)...`);
-					}
-				});
+			promises.push(
+				member.sendMessage(stripIndents`
+					Sorry, but you've been automatically targetted by the cybernuke in the "${msg.guild.name}" server.
+					This means that you have been banned, likely in the case of a server raid.
+					Please contact them if you believe this ban to be in error.
+				`).catch(winston.error)
+					.then(() => member.ban())
+					.then(() => {
+						fatalities.push(member);
+					})
+					.catch(err => {
+						winston.error(err);
+						survivors.push({
+							member: member.id,
+							error: err
+						});
+					})
+					.then(() => {
+						if(members.size <= 5) return;
+						if(promises.length % 5 === 0) {
+							statusMsg2.edit(`Launching cybernuke (${Math.round(promises.length / members.size * 100)}%)...`);
+						}
+					})
+			);
 		}
 
+		await Promise.all(promises);
 		await statusMsg2.edit('Cybernuke impact confirmed. Casualty report incoming...');
 		await response.reply(stripIndents`
 			__**Fatalities**__
