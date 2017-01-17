@@ -116,7 +116,7 @@ module.exports = class LaunchCybernukeCommand extends Command {
 			${fatalities.length > 0 ? stripIndents`
 				${fatalities.length} confirmed KIA.
 
-				${fatalities.map(fat => `**-** ${fat.displayName} (fat.id)`).join('\n')}
+				${fatalities.map(fat => `**-** ${fat.displayName} (${fat.id})`).join('\n')}
 			` : 'None'}
 
 
@@ -124,7 +124,7 @@ module.exports = class LaunchCybernukeCommand extends Command {
 				__**Survivors**__
 				${survivors.length} left standing.
 
-				${survivors.map(srv => `**-** ${srv.member.displayName} (srv.member.id): \`${srv.error}\``).join('\n')}
+				${survivors.map(srv => `**-** ${srv.member.displayName} (${srv.member.id}): \`${srv.error}\``).join('\n')}
 			` : ''}
 		`, { split: true });
 
