@@ -54,7 +54,7 @@ module.exports = class LaunchCybernukeCommand extends Command {
 		while(!statusMsg2) {
 			const responses = await msg.channel.awaitMessages(msg2 => msg2.author.id === msg.author.id, {
 				maxMatches: 1,
-				time: 10
+				time: 10000
 			});
 
 			if(!responses || responses.size !== 1) {
