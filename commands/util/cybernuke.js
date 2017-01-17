@@ -71,7 +71,10 @@ module.exports = class LaunchCybernukeCommand extends Command {
 
 				statusMsg2 = await response.reply('Launching cybernuke...');
 			} else {
-				await response.reply('Unknown response. Please confirm the cybernuke launch with a simple "yes" or "no".');
+				await response.reply(stripIndents`
+					Unknown response. Please confirm the cybernuke launch with a simple "yes" or "no".
+					Awaiting your input, commander...
+				`);
 			}
 		}
 
