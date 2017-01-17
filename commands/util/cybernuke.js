@@ -80,7 +80,7 @@ module.exports = class LaunchCybernukeCommand extends Command {
 
 		const fatalities = [];
 		const survivors = [];
-		let promises = [];
+		const promises = [];
 
 		for(const member of members.values()) {
 			promises.push(
