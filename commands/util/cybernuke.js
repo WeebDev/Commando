@@ -82,7 +82,7 @@ module.exports = class LaunchCybernukeCommand extends Command {
 		const survivors = [];
 		let processed = 0;
 
-		for(const member of members) {
+		for(const member of members.values()) {
 			await member.sendMessage(stripIndents`
 				Sorry, but you've been automatically targetted by the cybernuke in the "${msg.guild.name}" server.
 				This means that you have been banned, likely in the case of a server raid.
