@@ -87,7 +87,7 @@ module.exports = class BlackjackCommand extends Command {
 			const embed = {
 				title: `Blackjack | ${msg.member.displayName}`,
 				fields: [],
-				footer: blackjack.cardsRemaining() ? `Cards remaining: ${blackjack.cardsRemaining()}` : `Shuffling`
+				footer: { text: blackjack.cardsRemaining() ? `Cards remaining: ${blackjack.cardsRemaining()}` : `Shuffling` }
 			};
 
 			playerHands.forEach((hand, i) => {
@@ -218,7 +218,7 @@ module.exports = class BlackjackCommand extends Command {
 							inline: true
 						}
 					],
-					footer: blackjack.cardsRemaining() ? `Cards remaining: ${blackjack.cardsRemaining()}` : `Shuffling`
+					footer: { text: blackjack.cardsRemaining() ? `Cards remaining: ${blackjack.cardsRemaining()}` : `Shuffling` }
 				});
 
 				const responses = await msg.channel.awaitMessages(msg2 => {
