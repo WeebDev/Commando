@@ -1,0 +1,66 @@
+const { Command } = require('discord.js-commando');
+const stripIndents = require('common-tags').stripIndents;
+
+const Currency = require('../../currency/Currency.js');
+const Bank = require('../../currency/Bank.js');
+
+module.exports = class WidthdrawCommand extends Command {
+	constructor(client) {
+		super(client, {
+			name: 'from',
+			group: 'economy',
+			memberName: 'from',
+			description: `Withdraw ${Currency.textPlural} from the bank.`,
+			details: `Withdraw ${Currency.textPlural} from the bank.`,
+			guildOnly: true,
+			throttling: {
+				usages: 2,
+				duration: 3
+			},
+
+			args: [
+				{
+					key: 'donuts',
+					prompt: `how many ${Currency.textPlural} do you want to withdraw?\n`,
+					validate: donuts => {
+						return /^(?:\d+|-all)$/g.test(donuts);
+					},
+					parse: async (donuts, msg) => {
+						const balance = await Currency.getBalance(msg.author.id);
+
+						if (donuts === '-all') return parseInt(balance);
+						return parseInt(donuts);
+					}
+				}
+			]
+		});
+	}
+
+	async run(msg, args) {
+		const donuts = args.donuts;
+
+		if (donuts <= 0) return msg.reply(`you can't widthdraw 0 or less ${Currency.convert(0)}.`);
+
+		const userBalance = await Bank.getBalance(msg.author.id);
+
+		if (userBalance < donuts) {
+			return msg.reply(stripIndents`
+				you do not have that many ${Currency.textPlural} in your balance!
+				Your current balance is ${Currency.convert(userBalance)}.
+			`);
+		}
+
+		const bankBalance = await Currency.getBalance('bank');
+
+		if (bankBalance < donuts) {
+			return msg.reply(stripIndents`
+				Sorry, but the bank doesn't have enough ${Currency.textPlural} for you to withdraw!
+				Please try again later.
+			`);
+		}
+
+		Bank.withdraw(msg.author.id, donuts);
+
+		return msg.reply(`Successfully withdrew ${Currency.convert(donuts)} from the bank!`);
+	}
+};
