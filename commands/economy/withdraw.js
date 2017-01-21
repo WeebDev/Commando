@@ -1,8 +1,8 @@
 const { Command } = require('discord.js-commando');
 const stripIndents = require('common-tags').stripIndents;
 
-const Currency = require('../../currency/Currency.js');
-const Bank = require('../../currency/Bank.js');
+const Currency = require('../../currency/Currency');
+const Bank = require('../../currency/Bank');
 
 module.exports = class WidthdrawCommand extends Command {
 	constructor(client) {
