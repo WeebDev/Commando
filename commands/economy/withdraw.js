@@ -7,9 +7,9 @@ const Bank = require('../../currency/Bank.js');
 module.exports = class WidthdrawCommand extends Command {
 	constructor(client) {
 		super(client, {
-			name: 'from',
+			name: 'withdraw',
 			group: 'economy',
-			memberName: 'from',
+			memberName: 'withdraw',
 			description: `Withdraw ${Currency.textPlural} from the bank.`,
 			details: `Withdraw ${Currency.textPlural} from the bank.`,
 			guildOnly: true,
