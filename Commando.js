@@ -89,7 +89,7 @@ client.on('error', winston.error)
 				const newLevel = await Experience.getLevel(message.author.id);
 
 				if (newLevel > oldLevel) {
-					Currency.addBalance(message.author.id, 100 * newLevel);
+					Currency._changeBalance(message.author.id, 100 * newLevel);
 				}
 			}).catch(winston.error);
 
