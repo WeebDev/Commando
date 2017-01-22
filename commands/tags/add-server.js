@@ -82,7 +82,6 @@ module.exports = class ServerTagAddCommand extends Command {
 				redis.db.setAsync(`tag${name}${msg.guild.id}`, cleanContent);
 
 				return msg.say(`A server tag with the name **${name}** has been added, ${msg.author}`);
-			})
-			.catch(error => { winston.error(error); });
+			});
 	}
 };
