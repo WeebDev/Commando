@@ -9,7 +9,6 @@ const UPDATE_DURATION = 30 * 60 * 1000;
 
 redis.db.getAsync('bankupdate').then(update => {
 	setTimeout(() => Bank.applyInterest(), Math.max(0, (new Date(update) + UPDATE_DURATION) - Date.now()));
-	console.log(`Set timeout for applyInterest: ${Math.max(0, (new Date(update) + UPDATE_DURATION) - Date.now())}`);
 });
 
 class Bank {
