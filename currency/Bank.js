@@ -46,12 +46,14 @@ class Bank {
 		const bankBalanceDelta = bankBalance - previousBankBalance;
 
 		redis.db.hgetallAsync('ledger').then(balances => {
+			if (!balances) return;
+
 			for (const [user, balance] in balances.entries()) {
 				redis.db.hsetAsync('ledger', user, Math.round(balance * (interestRate + 1)));
 			}
 		});
 
-		const newInterestRate = Math.max(0, interestRate + (bankBalanceDelta * -INTEREST_MATURE_RATE));
+		const newInterestRate = Math.max(0.001, interestRate + (bankBalanceDelta * -INTEREST_MATURE_RATE));
 		redis.db.setAsync('interestrate', newInterestRate);
 		redis.db.setAsync('lastbankbalance', bankBalance);
 
@@ -64,7 +66,7 @@ class Bank {
 	static async getInterestRate() {
 		const interestRate = await redis.db.getAsync('interestrate') || 0.01;
 
-		return parseInt(interestRate);
+		return parseFloat(interestRate);
 	}
 
 	static async nextUpdate() {
