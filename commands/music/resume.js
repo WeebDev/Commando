@@ -16,6 +16,10 @@ module.exports = class ResumeSongCommand extends Command {
 		});
 	}
 
+	hasPermission(msg) {
+		return msg.member.hasPermission('MANAGE_MESSAGES');
+	}
+
 	async run(msg) {
 		const queue = this.queue.get(msg.guild.id);
 		if (!queue) return msg.reply(`there isn't any music playing to resume, oh brilliant one.`);
