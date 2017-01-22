@@ -28,7 +28,7 @@ module.exports = class BankInfoCommand extends Command {
 
 		return msg.reply(stripIndents`
 			the bank currently has ${Currency.convert(balance)}.
-			The current interest rate is ${Math.round(interestRate * 100).toFixed(2)}%.
+			The current interest rate is ${Math.round(interestRate * 100).toFixed(3)}%.
 			Interest will be applied in ${moment.duration(nextUpdate).format('hh [hours] mm [minutes]')}.
 		`);
 	}
