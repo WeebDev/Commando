@@ -29,6 +29,10 @@ let UserProfile = database.db.define('userProfiles', {
 	personalMessage: {
 		type: Sequelize.STRING,
 		defaultValue: ''
+	},
+	background: {
+		type: Sequelize.STRING,
+		defaultValue: ''
 	}
 });
 
