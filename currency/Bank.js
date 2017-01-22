@@ -51,7 +51,7 @@ class Bank {
 	static async getInterestRate() {
 		const interestRate = await redis.db.getAsync('interestrate') || 0.01;
 
-		return interestRate;
+		return parseInt(interestRate);
 	}
 }
 
