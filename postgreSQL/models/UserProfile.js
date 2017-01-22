@@ -14,6 +14,14 @@ let UserProfile = database.db.define('userProfiles', {
 		type: Sequelize.BIGINT(), // eslint-disable-line new-cap
 		defaultValue: 0
 	},
+	balance: {
+		type: Sequelize.BIGINT(), // eslint-disable-line new-cap
+		defaultValue: 0
+	},
+	networth: {
+		type: Sequelize.BIGINT(), // eslint-disable-line new-cap
+		defaultValue: 0
+	},
 	experience: {
 		type: Sequelize.BIGINT(), // eslint-disable-line new-cap
 		defaultValue: 0
