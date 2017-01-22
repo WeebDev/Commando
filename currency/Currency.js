@@ -43,8 +43,8 @@ class Currency {
 		const ids = Object.keys(balances || {});
 
 		for (const id of ids) {
-			const money = balances[id];
-			const balance = bankBalances[id] || 0;
+			const money = parseInt(balances[id] || 0);
+			const balance = parseInt(bankBalances[id] || 0);
 			const networth = money + balance;
 
 			const user = await UserProfile.findOne({ where: { userID: id } });
