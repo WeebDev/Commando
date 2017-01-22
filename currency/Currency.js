@@ -27,11 +27,12 @@ class Currency {
 	}
 
 	static removeBalance(user, amount) {
-		Currency.addBalance(user, -amount);
+		Currency.changeBalance(user, -amount);
 	}
 
 	static async getBalance(user) {
 		const money = await redis.db.hgetAsync('money', user) || 0;
+
 		return money;
 	}
 
