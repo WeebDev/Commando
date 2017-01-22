@@ -63,7 +63,7 @@ module.exports = class MoneyLeaderboardCommand extends Command {
 					**${++ranking} -**
 					${`${this.client.users.get(user.userID).username}
 					#${this.client.users.get(user.userID).discriminator}`}
-					(**${Currency.convert(user.money)}**)`).join('\n')}
+					(**${Currency.convert(user.networth)}**)`).join('\n')}
 
 				${moment.duration(reset).format('hh [hours] mm [minutes]')} until the next update.
 			`,
@@ -76,7 +76,7 @@ module.exports = class MoneyLeaderboardCommand extends Command {
 			if (reply) {
 				return reply;
 			} else {
-				const money = await UserProfile.findAll({ where: { userID: { $ne: 'bank' } }, order: 'money DESC' });
+				const money = await UserProfile.findAll({ where: { userID: { $ne: 'bank' } }, order: 'networth DESC' });
 				if (!money) return; // eslint-disable-line consistent-return
 
 				redis.db.setAsync('moneyleaderboard', JSON.stringify(money));

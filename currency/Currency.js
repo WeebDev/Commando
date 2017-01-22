@@ -36,23 +36,33 @@ class Currency {
 		return parseInt(money);
 	}
 
-	static leaderboard() {
-		redis.db.hgetallAsync('money').then(balances => {
-			const ids = Object.keys(balances || {});
+	static async leaderboard() {
+		const balances = await redis.db.hgetallAsync('money');
+		const bankBalances = await redis.db.hgetallAsync('ledger');
 
-			for (const id of ids) {
-				UserProfile.findOne({ where: { userID: id } }).then(user => {
-					if (!user) {
-						UserProfile.create({
-							userID: id,
-							money: balances[id]
-						});
-					} else {
-						user.update({ money: balances[id] });
-					}
+		const ids = Object.keys(balances || {});
+
+		for (const id of ids) {
+			const money = balances[id];
+			const balance = bankBalances[id] || 0;
+			const networth = money + balance;
+
+			const user = await UserProfile.findOne({ where: { userID: id } });
+			if (!user) {
+				UserProfile.create({
+					userID: id,
+					money,
+					balance,
+					networth
+				});
+			} else {
+				user.update({
+					money,
+					balance,
+					networth
 				});
 			}
-		});
+		}
 
 		redis.db.setAsync('moneyleaderboardreset', Date.now());
 		redis.db.expire('moneyleaderboardreset', 30 * 60 * 1000);
