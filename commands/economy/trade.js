@@ -58,14 +58,14 @@ module.exports = class MoneyTradeCommand extends Command {
 
 		if (user.id === msg.author.id) return msg.reply(`you can't trade ${Currency.textPlural} with yourself, ya dingus.`);
 		if (user.user.bot) return msg.reply(`don't give your ${Currency.textPlural} to bots: they're bots, man.`);
-		if (donuts <= 0) return msg.reply(`you can't trade 0 or below ${Currency.convert(0)}.`);
+		if (donuts <= 0) return msg.reply(`you can't trade 0 or less ${Currency.convert(0)}.`);
 
 		const userBalance = await Currency.getBalance(msg.author.id);
 
 		if (userBalance < donuts) {
 			return msg.reply(stripIndents`
 				you don't have that many ${Currency.textPlural} to trade!
-				Your current account balance is ${Currency.convert(userBalance)}.
+				You currently have ${Currency.convert(userBalance)} on hand.
 			`);
 		}
 
