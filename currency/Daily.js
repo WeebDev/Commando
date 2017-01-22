@@ -3,7 +3,7 @@ const Redis = require('../redis/Redis');
 
 const redis = new Redis();
 
-const dayInMS = 24 * 60 * 60 * 1000;
+const DAY_DURATION = 24 * 60 * 60 * 1000;
 
 module.exports = class Daily {
 	static get dailyPayout() {
@@ -19,13 +19,13 @@ module.exports = class Daily {
 
 		if (!lastDaily) return false;
 
-		return Date.now() - dayInMS < lastDaily;
+		return Date.now() - DAY_DURATION < lastDaily;
 	}
 
 	static async nextDaily(userID) {
 		const lastDaily = await redis.db.getAsync(`daily${userID}`);
 
-		return dayInMS - (Date.now() - lastDaily);
+		return DAY_DURATION - (Date.now() - lastDaily);
 	}
 
 	static receive(userID, donationID) {
@@ -36,6 +36,6 @@ module.exports = class Daily {
 		}
 
 		redis.db.setAsync(`daily${userID}`, Date.now());
-		redis.db.expire(`daily${userID}`, dayInMS / 1000);
+		redis.db.expire(`daily${userID}`, DAY_DURATION / 1000);
 	}
 };
