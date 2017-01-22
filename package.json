@@ -27,7 +27,7 @@
     "canvas": "automattic/node-canvas",
     "discord.js": "hydrabolt/discord.js#indev-prism",
     "discord.js-commando": "gawdl3y/discord.js-commando",
-    "erlpack": "hammerandchisel/erlpack#master",
+    "erlpack": "hammerandchisel/erlpack",
     "moment": "^2.17.1",
     "moment-duration-format": "^1.3.0",
     "nani": "^1.2.0",
