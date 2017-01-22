@@ -27,7 +27,7 @@
     "canvas": "automattic/node-canvas",
     "discord.js": "hydrabolt/discord.js#indev-prism",
     "discord.js-commando": "gawdl3y/discord.js-commando",
-    "erlpack": "hammerandchisel/erlpack#master",
+    "erlpack": "hammerandchisel/erlpack",
     "js-beautify": "^1.6.8",
     "jsdoc-parse": "1.2.7",
     "moment": "^2.17.1",
