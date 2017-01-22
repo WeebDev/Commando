@@ -36,9 +36,6 @@ class Bank {
 	}
 
 	static async applyInterest() {
-		const lastUpdate = await redis.db.getAsync('bankupdate');
-		if (lastUpdate) return;
-
 		const interestRate = await this.getInterestRate();
 
 		const bankBalance = await Currency.getBalance('bank');
