@@ -36,7 +36,7 @@ module.exports = class RouletteCommand extends Command {
 						if (balance < bet) {
 							return `
 								you don't have enough ${Currency.textPlural} to bet.
-                Your current account balance is ${Currency.convert(balance)}.
+								Your current account balance is ${Currency.convert(balance)}.
 								Please specify a valid amount of ${Currency.textPlural}.
 							`;
 						}

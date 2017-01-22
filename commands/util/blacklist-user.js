@@ -16,7 +16,7 @@ module.exports = class BlacklistUserCommand extends Command {
 			args: [
 				{
 					key: 'user',
-					prompt: 'what user should get blacklisted?\n',
+					prompt: 'whom do you want to blacklist?\n',
 					type: 'user'
 				}
 			]

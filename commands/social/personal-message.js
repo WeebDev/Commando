@@ -20,7 +20,7 @@ module.exports = class PersonalMessageCommand extends Command {
 			args: [
 				{
 					key: 'message',
-					prompt: 'what message would you like to set as your person message?\n',
+					prompt: 'what would you like to set as your personal message?\n',
 					type: 'string',
 					validate: value => {
 						if (value.length > 130) {

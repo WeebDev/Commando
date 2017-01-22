@@ -44,6 +44,7 @@ module.exports = class SlotMachineCommand extends Command {
 			args: [
 				{
 					key: 'coins',
+					label: 'amount of coints',
 					prompt: 'how many coins do you want to bet?\n',
 					type: 'integer',
 					validate: async (coins, msg) => {

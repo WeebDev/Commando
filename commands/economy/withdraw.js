@@ -21,6 +21,7 @@ module.exports = class WidthdrawCommand extends Command {
 			args: [
 				{
 					key: 'donuts',
+					label: 'amount of donuts to withdraw',
 					prompt: `how many ${Currency.textPlural} do you want to withdraw?\n`,
 					validate: donuts => {
 						return /^(?:\d+|-all)$/g.test(donuts);

@@ -28,6 +28,7 @@ module.exports = class BuyItemCommand extends Command {
 				},
 				{
 					key: 'amount',
+					label: 'amount to buy',
 					prompt: 'how many do you want to buy?\n',
 					type: 'integer',
 					default: 1,

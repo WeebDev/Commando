@@ -22,7 +22,7 @@ module.exports = class DailyCommand extends Command {
 			args: [
 				{
 					key: 'member',
-					prompt: 'to which user would you like to give your daily?\n',
+					prompt: 'whom do you want to give your daily?\n',
 					type: 'member',
 					default: ''
 				}

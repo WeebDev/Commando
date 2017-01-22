@@ -37,6 +37,7 @@ module.exports = class MoneyTradeCommand extends Command {
 				},
 				{
 					key: 'donuts',
+					label: 'amount of donuts to trade',
 					prompt: `how many ${Currency.textPlural} do you want to give that user?\n`,
 					validate: donuts => {
 						return /^(?:\d+|-all)$/g.test(donuts);
