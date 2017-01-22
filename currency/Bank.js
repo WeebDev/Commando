@@ -3,11 +3,13 @@ const Redis = require('../redis/Redis');
 
 const redis = new Redis();
 
-setInterval(() => Bank.applyInterest, 10 * 60 * 1000);
-
 // rate * convert to decimal
 const INTEREST_MATURE_RATE = 0.0001 * 0.01;
 const UPDATE_DURATION = 60 * 60 * 1000;
+
+redis.db.getAsync('bankupdate').then(update => {
+	setTimeout(() => Bank.applyInterest, Math.max(0, (new Date(update) + UPDATE_DURATION) - Date.now()));
+});
 
 class Bank {
 	static changeLedger(user, amount) {
@@ -19,7 +21,8 @@ class Bank {
 
 	static async getBalance(user) {
 		const balance = await redis.db.hgetAsync('ledger', user) || 0;
-		return balance;
+
+		return parseInt(balance);
 	}
 
 	static deposit(user, amount) {
@@ -53,6 +56,8 @@ class Bank {
 
 		redis.db.setAsync('bankupdate', new Date());
 		redis.db.expire('bankupdate', UPDATE_DURATION);
+
+		setTimeout(() => Bank.applyInterest, UPDATE_DURATION);
 	}
 
 	static async getInterestRate() {
