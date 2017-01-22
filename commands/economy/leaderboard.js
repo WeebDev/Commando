@@ -15,6 +15,8 @@ module.exports = class MoneyLeaderboardCommand extends Command {
 		super(client, {
 			name: 'leaderboard',
 			aliases: [
+				'baltop',
+				'balancetop',
 				'money-leaderboard',
 				'donut-leaderboard',
 				'donuts-leaderboard',

@@ -37,8 +37,8 @@ class Currency {
 	}
 
 	static async leaderboard() {
-		const balances = await redis.db.hgetallAsync('money');
-		const bankBalances = await redis.db.hgetallAsync('ledger');
+		const balances = await redis.db.hgetallAsync('money') || {};
+		const bankBalances = await redis.db.hgetallAsync('ledger') || {};
 
 		const ids = Object.keys(balances || {});
 
