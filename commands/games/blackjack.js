@@ -136,7 +136,7 @@ module.exports = class BlackjackCommand extends Command {
 				? 'broke even' : `${winnings > 0
 					? 'won' : 'lost'} ${Currency.convert(Math.abs(winnings))}`}`;
 
-			if (winnings !== 0) Currency.addBalance(msg.author.id, winnings);
+			if (winnings !== 0) Currency.changeBalance(msg.author.id, winnings);
 
 			return msg.embed(embed);
 		});

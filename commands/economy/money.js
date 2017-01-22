@@ -1,6 +1,7 @@
 const { Command } = require('discord.js-commando');
 
 const Currency = require('../../currency/Currency');
+const Bank = require('../../currency/Bank');
 
 module.exports = class MoneyInfoCommand extends Command {
 	constructor(client) {
@@ -31,16 +32,17 @@ module.exports = class MoneyInfoCommand extends Command {
 	async run(msg, args) {
 		const user = args.member || msg.author;
 
-		const balance = await Currency.getBalance(user.id);
+		const money = await Currency.getBalance(user.id);
+		const balance = await Bank.getBalance(user.id) || 0;
 
 		if (args.member) {
-			if (!balance) return msg.reply(`${user.displayName} hasn't earned any ${Currency.textPlural} yet.`);
+			if (!money) return msg.reply(`${user.displayName} hasn't earned any ${Currency.textPlural} yet.`);
 
-			return msg.reply(`${user.displayName} has earned ${Currency.convert(balance)} so far. Good on them!`);
+			return msg.reply(`${user.displayName} has ${Currency.convert(money)} on hand and ${Currency.convert(balance)} in the bank. Good on them!`);
 		} else {
-			if (!balance) return msg.reply(`you haven't earned any ${Currency.textPlural} yet.`);
+			if (!money) return msg.reply(`you haven't earned any ${Currency.textPlural} yet.`);
 
-			return msg.reply(`you have earned ${Currency.convert(balance)} so far. Good on you!`);
+			return msg.reply(`you have ${Currency.convert(money)} on hand and ${Currency.convert(balance)} in the bank. Good on you!`);
 		}
 	}
 };

@@ -81,7 +81,7 @@ module.exports = class SlotMachineCommand extends Command {
 		inventory.removeItems(new ItemGroup(item, coins));
 		inventory.save();
 
-		Currency.addBalance('SLOTMACHINE', coins * 100);
+		Currency.addBalance('bank', coins * 100);
 
 		const roll = this.generateRoll();
 		let winnings = 0;
@@ -107,7 +107,6 @@ module.exports = class SlotMachineCommand extends Command {
 		}
 
 		Currency.addBalance(msg.author.id, coins * winnings);
-		Currency.removeBalance('SLOTMACHINE', coins * winnings);
 
 		return msg.embed({
 			color: 0x5C913B,

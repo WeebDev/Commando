@@ -5,27 +5,33 @@ const redis = new Redis();
 
 setInterval(() => Currency.leaderboard(), 30 * 60 * 1000);
 
-redis.db.hgetAsync('money', 'SLOTMACHINE').then(balance => {
-	if (!balance) return redis.db.hsetAsync('money', 'SLOTMACHINE', 5000);
-
-	return; // eslint-disable-line consistent-return
+redis.db.hgetAsync('money', 'bank').then(balance => {
+	if (!balance) redis.db.hsetAsync('money', 'bank', 5000);
 });
 
 class Currency {
-	static addBalance(user, earned) {
+	static _changeBalance(user, amount) {
 		redis.db.hgetAsync('money', user).then(balance => {
 			balance = parseInt(balance) || 0;
-			redis.db.hsetAsync('money', user, earned + parseInt(balance));
+			redis.db.hsetAsync('money', user, amount + parseInt(balance));
 		});
 	}
 
-	static removeBalance(user, earned) {
-		Currency.addBalance(user, -earned);
+	static changeBalance(user, amount) {
+		Currency._changeBalance(user, amount);
+		Currency._changeBalance('bank', -amount);
+	}
+
+	static addBalance(user, amount) {
+		Currency.changeBalance(user, amount);
+	}
+
+	static removeBalance(user, amount) {
+		Currency.addBalance(user, -amount);
 	}
 
 	static async getBalance(user) {
 		const money = await redis.db.hgetAsync('money', user) || 0;
-
 		return money;
 	}
 

@@ -88,7 +88,6 @@ module.exports = class ExampleAddCommand extends Command {
 						Tag.update({ exampleID: ex.id }, { where: { name, guildID: msg.guild.id } });
 					});
 				return msg.say(`An example with the name **${name}** has been added, ${msg.author}`);
-			})
-			.catch(error => { winston.error(error); });
+			});
 	}
 };

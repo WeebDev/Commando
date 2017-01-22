@@ -100,9 +100,7 @@ module.exports = class RouletteCommand extends Command {
 
 				const winners = await roulette.awaitPlayers(16000).filter(player => player.winnings !== 0);
 
-				winners.forEach(winner => {
-					Currency.addBalance(winner.user.id, winner.winnings);
-				});
+				winners.forEach(winner => Currency.changeBalance(winner.user.id, winner.winnings));
 
 				return msg.embed({
 					color: colors[roulette.winSpaces[1]] || null,
