@@ -55,7 +55,7 @@ class Bank {
 		redis.db.setAsync('interestrate', newInterestRate);
 		redis.db.setAsync('lastbankbalance', bankBalance);
 
-		redis.db.setAsync('bankupdate', new Date());
+		redis.db.setAsync('bankupdate', Date.now());
 		redis.db.expire('bankupdate', UPDATE_DURATION);
 
 		setTimeout(() => Bank.applyInterest(), UPDATE_DURATION);
