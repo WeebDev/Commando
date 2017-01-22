@@ -40,8 +40,8 @@ module.exports = class ProfileCommand extends Command {
 
 		const profile = await UserProfile.findOne({ where: { userID: user.id } });
 		const personalMessage = profile ? profile.personalMessage : '';
-		const money = await Currency.getBalance(user.id) || 0;
-		const balance = await Bank.getBalance(user.id) || 0;
+		const money = await Currency.getBalance(user.id);
+		const balance = await Bank.getBalance(user.id);
 		const networth = money + balance;
 		const currentExp = await Experience.getCurrentExperience(user.id);
 		const level = await Experience.getLevel(user.id);

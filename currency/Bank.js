@@ -5,7 +5,7 @@ const redis = new Redis();
 
 // rate * convert to decimal
 const INTEREST_MATURE_RATE = 0.0001 * 0.01;
-const UPDATE_DURATION = 60 * 60 * 1000;
+const UPDATE_DURATION = 30 * 60 * 1000;
 
 redis.db.getAsync('bankupdate').then(update => {
 	setTimeout(() => Bank.applyInterest(), Math.max(0, (new Date(update) + UPDATE_DURATION) - Date.now()));

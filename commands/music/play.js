@@ -60,16 +60,18 @@ module.exports = class PlaySongCommand extends Command {
 
 		const statusMsg = await msg.reply('obtaining video details...');
 		if (url.match(/^https?:\/\/(soundcloud.com|snd.sc)\/(.*)$/)) {
-			return request({
-				uri: `http://api.soundcloud.com/resolve.json?url=${url}&client_id=${config.soundcloudID}`,
-				headers: { 'User-Agent': `Commando v${version} (https://github.com/WeebDev/Commando/)` },
-				json: true
-			}).then(video => {
+			try {
+				const video = await request({
+					uri: `http://api.soundcloud.com/resolve.json?url=${url}&client_id=${config.soundcloudID}`,
+					headers: { 'User-Agent': `Commando v${version} (https://github.com/WeebDev/Commando/)` },
+					json: true
+				});
+
 				this.handleVideo(video, queue, voiceChannel, msg, statusMsg);
-			}).catch((error) => {
+			} catch (error) {
 				winston.error(`${error.statusCode}: ${error.statusMessage}`);
 				statusMsg.edit(`${msg.author}, ❌ This track is not able to be streamed by SoundCloud.`);
-			});
+			}
 		} else {
 			return this.youtube.getVideo(url).then(video => {
 				this.handleVideo(video, queue, voiceChannel, msg, statusMsg);
@@ -88,8 +90,8 @@ module.exports = class PlaySongCommand extends Command {
 		}
 	}
 
-	handleVideo(video, queue, voiceChannel, msg, statusMsg) { // eslint-disable-line consistent-return
-		if (video.durationSeconds === 0) return statusMsg.edit(`${msg.author}, can't play live streams.`);
+	async handleVideo(video, queue, voiceChannel, msg, statusMsg) { // eslint-disable-line consistent-return
+		if (video.durationSeconds === 0) return statusMsg.edit(`${msg.author}, you can't play live streams.`);
 
 		if (!queue) {
 			queue = {
@@ -117,15 +119,17 @@ module.exports = class PlaySongCommand extends Command {
 			}
 
 			statusMsg.edit(`${msg.author}, joining your voice channel...`);
-			queue.voiceChannel.join().then(connection => {
+			try {
+				const connection = await queue.voiceChannel.join();
+
 				queue.connection = connection;
 				this.play(msg.guild, queue.songs[0]);
 				statusMsg.delete();
-			}).catch(err2 => {
-				winston.error('Error occurred when joining voice channel.', err2);
+			} catch (error) {
+				winston.error('Error occurred when joining voice channel.', error);
 				this.queue.delete(msg.guild.id);
 				statusMsg.edit(`${msg.author}, unable to join your voice channel.`);
-			});
+			}
 		} else {
 			let result = this.addSong(msg, video);
 			let resultMessage = {

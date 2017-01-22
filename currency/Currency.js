@@ -3,7 +3,9 @@ const UserProfile = require('../postgreSQL/models/UserProfile');
 
 const redis = new Redis();
 
-setInterval(() => Currency.leaderboard(), 30 * 60 * 1000);
+const UPDATE_DURATION = 30 * 60 * 1000;
+
+setInterval(() => Currency.leaderboard(), UPDATE_DURATION);
 
 redis.db.hgetAsync('money', 'bank').then(balance => {
 	if (!balance) redis.db.hsetAsync('money', 'bank', 5000);
@@ -65,7 +67,7 @@ class Currency {
 		}
 
 		redis.db.setAsync('moneyleaderboardreset', Date.now());
-		redis.db.expire('moneyleaderboardreset', 30 * 60 * 1000);
+		redis.db.expire('moneyleaderboardreset', UPDATE_DURATION);
 	}
 
 	static convert(amount, text = false) {
