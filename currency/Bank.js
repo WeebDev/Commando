@@ -9,6 +9,7 @@ const UPDATE_DURATION = 60 * 60 * 1000;
 
 redis.db.getAsync('bankupdate').then(update => {
 	setTimeout(() => Bank.applyInterest(), Math.max(0, (new Date(update) + UPDATE_DURATION) - Date.now()));
+	console.log(`Set timeout for applyInterest: ${Math.max(0, (new Date(update) + UPDATE_DURATION) - Date.now())}`);
 });
 
 class Bank {
@@ -36,9 +37,6 @@ class Bank {
 	}
 
 	static async applyInterest() {
-		const lastUpdate = await redis.db.getAsync('bankupdate');
-		if (lastUpdate) return;
-
 		const interestRate = await this.getInterestRate();
 
 		const bankBalance = await Currency.getBalance('bank');
