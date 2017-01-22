@@ -1,4 +1,5 @@
 const { Command } = require('discord.js-commando');
+const stripIndents = require('common-tags').stripIndents;
 
 const Currency = require('../../currency/Currency');
 const Bank = require('../../currency/Bank');
@@ -23,9 +24,9 @@ module.exports = class BankInfoCommand extends Command {
 		const balance = await Currency.getBalance('bank');
 		const interestRate = await Bank.getInterestRate();
 
-		return msg.reply(`
-      the bank currently has ${Currency.convert(balance)}.
-      The current interest rate is ${Math.round(interestRate * 100)}
-    `);
+		return msg.reply(stripIndents`
+			the bank currently has ${Currency.convert(balance)}.
+			The current interest rate is ${Math.round(interestRate * 100)}
+		`);
 	}
 };
