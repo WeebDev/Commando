@@ -157,26 +157,15 @@ module.exports = class ProfileCommand extends Command {
 			ctx.drawImage(cond, 24, 21, 110, 110);
 		};
 
-		base.src = await fs.readFileAsync(path.join(__dirname, `../../assets/profile/backgrounds/test.png`));
-		cond.src = await request({ uri: user.user.displayAvatarURL.replace(/(png|jpg|jpeg|gif|webp)\?size=1024/, 'png'), encoding: null });
+		base.src = await fs.readFileAsync(path.join(__dirname, `../../assets/profile/backgrounds/${profile.background}.png`));
+		cond.src = await request({
+			uri: user.user.displayAvatarURL.replace(/(png|jpg|jpeg|gif|webp)\?size=1024/, 'png'),
+			encoding: null
+		});
 		await generate();
 
 		return msg.channel.sendFile(await canvas.toBuffer(), `profile.png`);
 	}
-
-	/* getBase(icon) {
-		if (icon === 'clear-day' || icon === 'partly-cloudy-day') {
-			return path.join(__dirname, '../../assets/weather/base/sun.png');
-		} else if (icon === 'clear-night' || icon === 'partly-cloudy-night') {
-			return path.join(__dirname, '../../assets/weather/base/moon.png');
-		} else if (icon === 'rain') {
-			return path.join(__dirname, '../../assets/weather/base/rain.png');
-		} else if (icon === 'snow' || icon === 'sleet' || icon === 'fog' || icon === 'wind') {
-			return path.join(__dirname, '../../assets/weather/base/snow.png');
-		} else {
-			return path.join(__dirname, '../../assets/weather/base/cloud.png');
-		}
-	} */
 
 	wrapText(ctx, text, maxWidth) {
 		const words = text.split(' ');
