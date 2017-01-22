@@ -83,7 +83,7 @@ client.on('error', winston.error)
 				? Math.ceil(Math.random() * 7) + 1
 				: Math.ceil(Math.random() * 7) + 5;
 
-			Currency.addBalance(message.author.id, moneyEarned);
+			Currency._changeBalance(message.author.id, moneyEarned);
 
 			earnedRecently.push(message.author.id);
 			setTimeout(() => {
