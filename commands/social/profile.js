@@ -6,6 +6,7 @@ const path = require('path');
 const request = require('request-promise');
 
 const Currency = require('../../currency/Currency');
+const Bank = require('../../currency/Bank');
 const UserProfile = require('../../postgreSQL/models/UserProfile');
 
 module.exports = class ProfileCommand extends Command {
@@ -39,7 +40,9 @@ module.exports = class ProfileCommand extends Command {
 
 		const profile = await UserProfile.findOne({ where: { userID: user.id } });
 		const personalMessage = profile ? profile.personalMessage : '';
-		const balance = await Currency.getBalance(user.id);
+		const money = await Currency.getBalance(user.id) || 0;
+		const balance = await Bank.getBalance(user.id) || 0;
+		const networth = money + balance;
 		const currentExp = await Experience.getCurrentExperience(user.id);
 		const level = await Experience.getLevel(user.id);
 		const levelBounds = await Experience.getLevelBounds(level);
@@ -124,12 +127,12 @@ module.exports = class ProfileCommand extends Command {
 			// Currency
 			ctx.font = '14px Roboto';
 			ctx.fillStyle = '#E5E5E5';
-			ctx.fillText('Currency', 12, 287);
+			ctx.fillText('Net Worth', 12, 287);
 
 			// Currency Number
 			ctx.font = '14px Roboto';
 			ctx.fillStyle = '#E5E5E5';
-			ctx.fillText(balance, 86, 287);
+			ctx.fillText(networth, 86, 287);
 
 			// Info title
 			ctx.font = '12px Roboto';
