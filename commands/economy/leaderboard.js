@@ -76,7 +76,7 @@ module.exports = class MoneyLeaderboardCommand extends Command {
 			if (reply) {
 				return reply;
 			} else {
-				const money = await UserProfile.findAll({ where: { userID: { $ne: 'SLOTMACHINE' } }, order: 'money DESC' });
+				const money = await UserProfile.findAll({ where: { userID: { $ne: 'bank' } }, order: 'money DESC' });
 				if (!money) return; // eslint-disable-line consistent-return
 
 				redis.db.setAsync('moneyleaderboard', JSON.stringify(money));
