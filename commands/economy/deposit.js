@@ -21,6 +21,7 @@ module.exports = class DepositCommand extends Command {
 			args: [
 				{
 					key: 'donuts',
+					label: 'amount of donuts to deposit',
 					prompt: `how many ${Currency.textPlural} do you want to deposit?\n`,
 					validate: donuts => {
 						return /^(?:\d+|-all)$/g.test(donuts);

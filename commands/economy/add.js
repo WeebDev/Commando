@@ -35,6 +35,7 @@ module.exports = class MoneyAddCommand extends Command {
 				},
 				{
 					key: 'donuts',
+					label: 'amount of donuts to add',
 					prompt: `how many ${Currency.textPlural} do you want to give that user?\n`,
 					type: 'integer'
 				}

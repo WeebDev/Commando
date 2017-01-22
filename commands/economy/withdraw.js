@@ -21,12 +21,13 @@ module.exports = class WidthdrawCommand extends Command {
 			args: [
 				{
 					key: 'donuts',
+					label: 'amount of donuts to withdraw',
 					prompt: `how many ${Currency.textPlural} do you want to withdraw?\n`,
 					validate: donuts => {
 						return /^(?:\d+|-all)$/g.test(donuts);
 					},
 					parse: async (donuts, msg) => {
-						const balance = await Currency.getBalance(msg.author.id);
+						const balance = await Bank.getBalance(msg.author.id);
 
 						if (donuts === '-all') return parseInt(balance);
 						return parseInt(donuts);

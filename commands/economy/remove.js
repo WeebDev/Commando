@@ -35,6 +35,7 @@ module.exports = class MoneyRemoveCommand extends Command {
 				},
 				{
 					key: 'donuts',
+					label: 'amount of donuts to remove',
 					prompt: `how many ${Currency.textPlural} do you want to remove from that user?\n`,
 					type: 'integer'
 				}
