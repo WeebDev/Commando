@@ -8,7 +8,7 @@ const INTEREST_MATURE_RATE = 0.0001 * 0.01;
 const UPDATE_DURATION = 60 * 60 * 1000;
 
 redis.db.getAsync('bankupdate').then(update => {
-	setTimeout(() => Bank.applyInterest, Math.max(0, (new Date(update) + UPDATE_DURATION) - Date.now()));
+	setTimeout(() => Bank.applyInterest(), Math.max(0, (new Date(update) + UPDATE_DURATION) - Date.now()));
 });
 
 class Bank {
@@ -46,18 +46,19 @@ class Bank {
 		const bankBalanceDelta = bankBalance - previousBankBalance;
 
 		redis.db.hgetallAsync('ledger').then(balances => {
-			for (const [user, balance] of balances.entries()) {
+			for (const [user, balance] in balances.entries()) {
 				redis.db.hsetAsync('ledger', user, Math.round(balance * (interestRate + 1)));
 			}
 		});
 
 		const newInterestRate = Math.max(0, interestRate + (bankBalanceDelta * -INTEREST_MATURE_RATE));
 		redis.db.setAsync('interestrate', newInterestRate);
+		redis.db.setAsync('lastbankbalance', bankBalance);
 
-		redis.db.setAsync('bankupdate', new Date());
+		redis.db.setAsync('bankupdate', Date.now());
 		redis.db.expire('bankupdate', UPDATE_DURATION);
 
-		setTimeout(() => Bank.applyInterest, UPDATE_DURATION);
+		setTimeout(() => Bank.applyInterest(), UPDATE_DURATION);
 	}
 
 	static async getInterestRate() {
