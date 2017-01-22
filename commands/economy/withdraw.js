@@ -54,13 +54,13 @@ module.exports = class WidthdrawCommand extends Command {
 
 		if (bankBalance < donuts) {
 			return msg.reply(stripIndents`
-				Sorry, but the bank doesn't have enough ${Currency.textPlural} for you to withdraw!
+				sorry, but the bank doesn't have enough ${Currency.textPlural} for you to withdraw!
 				Please try again later.
 			`);
 		}
 
 		Bank.withdraw(msg.author.id, donuts);
 
-		return msg.reply(`Successfully withdrew ${Currency.convert(donuts)} from the bank!`);
+		return msg.reply(`successfully withdrew ${Currency.convert(donuts)} from the bank!`);
 	}
 };

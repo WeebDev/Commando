@@ -74,18 +74,15 @@ module.exports = class MoneyLeaderboardCommand extends Command {
 	}
 
 	async findCached() {
-		return redis.db.getAsync('moneyleaderboard').then(async reply => {
-			if (reply) {
-				return reply;
-			} else {
-				const money = await UserProfile.findAll({ where: { userID: { $ne: 'bank' } }, order: 'networth DESC' });
-				if (!money) return; // eslint-disable-line consistent-return
+		const cache = await redis.db.getAsync('moneyleaderboard');
+		if (cache) return cache;
 
-				redis.db.setAsync('moneyleaderboard', JSON.stringify(money));
-				redis.db.expire('moneyleaderboard', 3600);
+		const money = await UserProfile.findAll({ where: { userID: { $ne: 'bank' } }, order: 'networth DESC' });
+		if (!money) return; // eslint-disable-line consistent-return
 
-				return JSON.stringify(money);
-			}
-		});
+		redis.db.setAsync('moneyleaderboard', JSON.stringify(money));
+		redis.db.expire('moneyleaderboard', 3600);
+
+		return JSON.stringify(money);
 	}
 };
