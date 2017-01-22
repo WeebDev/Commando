@@ -51,20 +51,20 @@ module.exports = class LaunchCybernukeCommand extends Command {
 		let response;
 		let statusMsg2;
 
-		while(!statusMsg2) {
+		while (!statusMsg2) {
 			const responses = await msg.channel.awaitMessages(msg2 => msg2.author.id === msg.author.id, {
 				maxMatches: 1,
 				time: 10000
 			});
 
-			if(!responses || responses.size !== 1) {
+			if (!responses || responses.size !== 1) {
 				await msg.reply('Cybernuke cancelled.');
 				return null;
 			}
 			response = responses.first();
 
-			if(booleanType.validate(response.content)) {
-				if(!booleanType.parse(response.content)) {
+			if (booleanType.validate(response.content)) {
+				if (!booleanType.parse(response.content)) {
 					await response.reply('Cybernuke cancelled.');
 					return null;
 				}
@@ -82,7 +82,7 @@ module.exports = class LaunchCybernukeCommand extends Command {
 		const survivors = [];
 		const promises = [];
 
-		for(const member of members.values()) {
+		for (const member of members.values()) {
 			promises.push(
 				member.sendMessage(stripIndents`
 					Sorry, but you've been automatically targetted by the cybernuke in the "${msg.guild.name}" server.
@@ -101,8 +101,8 @@ module.exports = class LaunchCybernukeCommand extends Command {
 						});
 					})
 					.then(() => {
-						if(members.size <= 5) return;
-						if(promises.length % 5 === 0) {
+						if (members.size <= 5) return;
+						if (promises.length % 5 === 0) {
 							statusMsg2.edit(`Launching cybernuke (${Math.round(promises.length / members.size * 100)}%)...`);
 						}
 					})

@@ -47,18 +47,16 @@ module.exports = class SkipSongCommand extends Command {
 
 			vote.count++;
 			vote.users.push(msg.author.id);
-			if (vote.count >= threshold) {
-				return msg.reply(this.skip(msg.guild, queue));
-			}
+			if (vote.count >= threshold) return msg.reply(this.skip(msg.guild, queue));
 
 			const time = this.setTimeout(vote);
 			const remaining = threshold - vote.count;
 
 			return msg.say(oneLine`
-					${vote.count} vote${vote.count > 1 ? 's' : ''} received so far,
-					${remaining} more ${remaining > 1 ? 'are' : 'is'} needed to skip.
-					Five more seconds on the clock! The vote will end in ${time} seconds.
-				`);
+				${vote.count} vote${vote.count > 1 ? 's' : ''} received so far,
+				${remaining} more ${remaining > 1 ? 'are' : 'is'} needed to skip.
+				Five more seconds on the clock! The vote will end in ${time} seconds.
+			`);
 		} else {
 			const newVote = {
 				count: 1,
@@ -68,26 +66,25 @@ module.exports = class SkipSongCommand extends Command {
 				start: Date.now(),
 				timeout: null
 			};
+
 			const time = this.setTimeout(newVote);
 			this.votes.set(msg.guild.id, newVote);
 			const remaining = threshold - 1;
 
 			return msg.say(oneLine`
-					Starting a voteskip.
-					${remaining} more vote${remaining > 1 ? 's are' : ' is'} required for the song to be skipped.
-					The vote will end in ${time} seconds.
-				`);
+				Starting a voteskip.
+				${remaining} more vote${remaining > 1 ? 's are' : ' is'} required for the song to be skipped.
+				The vote will end in ${time} seconds.
+			`);
 		}
 	}
 
 	skip(guild, queue) {
-		// Kill the voteskip if active
 		if (this.votes.has(guild.id)) {
 			clearTimeout(this.votes.get(guild.id).timeout);
 			this.votes.delete(guild.id);
 		}
 
-		// Skip the song
 		const song = queue.songs[0];
 		song.dispatcher.end();
 

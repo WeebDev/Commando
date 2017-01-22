@@ -33,8 +33,8 @@ module.exports = class RemindMeCommand extends Command {
 		const remindTime = sherlock.parse(remind);
 		const time = remindTime.startDate.getTime() - Date.now();
 
-		const preRemind = await msg.say(
-			stripIndents`I will remind you '${remindTime.eventTitle}' ${moment().add(time, 'ms').fromNow()}.
+		const preRemind = await msg.say(stripIndents`
+			I will remind you '${remindTime.eventTitle}' ${moment().add(time, 'ms').fromNow()}.
 		`);
 		const remindMessage = await new Promise(resolve => {
 			setTimeout(() => resolve(msg.say(stripIndents`
