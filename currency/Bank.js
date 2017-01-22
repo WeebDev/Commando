@@ -40,7 +40,7 @@ class Bank {
 
 		redis.db.hgetallAsync('ledger').then(balances => {
 			for (const [user, balance] of balances.entries()) {
-				redis.db.hsetAsync('ledger', user, balance * (interestRate + 1));
+				redis.db.hsetAsync('ledger', user, Math.round(balance * (interestRate + 1)));
 			}
 		});
 
