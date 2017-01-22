@@ -36,11 +36,11 @@ module.exports = class MoneyInfoCommand extends Command {
 		const balance = await Bank.getBalance(user.id) || 0;
 
 		if (args.member) {
-			if (!money) return msg.reply(`${user.displayName} hasn't earned any ${Currency.textPlural} yet.`);
+			if (money === null) return msg.reply(`${user.displayName} hasn't earned any ${Currency.textPlural} yet.`);
 
 			return msg.reply(`${user.displayName} has ${Currency.convert(money)} on hand and ${Currency.convert(balance)} in the bank. Good on them!`);
 		} else {
-			if (!money) return msg.reply(`you haven't earned any ${Currency.textPlural} yet.`);
+			if (money === null) return msg.reply(`you haven't earned any ${Currency.textPlural} yet.`);
 
 			return msg.reply(`you have ${Currency.convert(money)} on hand and ${Currency.convert(balance)} in the bank. Good on you!`);
 		}
