@@ -33,7 +33,7 @@ class Currency {
 	static async getBalance(user) {
 		const money = await redis.db.hgetAsync('money', user) || 0;
 
-		return money;
+		return parseInt(money);
 	}
 
 	static leaderboard() {
