@@ -32,7 +32,7 @@ let UserProfile = database.db.define('userProfiles', {
 	},
 	background: {
 		type: Sequelize.STRING,
-		defaultValue: ''
+		defaultValue: 'default'
 	}
 });
 

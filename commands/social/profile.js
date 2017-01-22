@@ -157,7 +157,7 @@ module.exports = class ProfileCommand extends Command {
 			ctx.drawImage(cond, 24, 21, 110, 110);
 		};
 
-		base.src = await fs.readFileAsync(this.getBackground(user.id));
+		base.src = await fs.readFileAsync(path.join(__dirname, `../../assets/profile/backgrounds/${profile.background}.png`));
 		cond.src = await request({
 			uri: user.user.displayAvatarURL.replace(/(png|jpg|jpeg|gif|webp)\?size=1024/, 'png'),
 			encoding: null
@@ -165,13 +165,6 @@ module.exports = class ProfileCommand extends Command {
 		await generate();
 
 		return msg.channel.sendFile(await canvas.toBuffer(), `profile.png`);
-	}
-
-	async getBackground(userID) {
-		const profile = await UserProfile.findOne({ where: { userID } });
-		if (!profile.background) return path.join(__dirname, `../../assets/profile/backgrounds/default.png`);
-
-		return path.join(__dirname, `../../assets/profile/backgrounds/${profile.background}.png`);
 	}
 
 	wrapText(ctx, text, maxWidth) {
