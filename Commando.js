@@ -61,8 +61,8 @@ client.on('error', winston.error)
 	.on('message', async (message) => {
 		if (message.channel.type === 'dm') return;
 
-		const channeLocks = client.provider.get(message.guild.id, 'locks', []);
-		if (channeLocks.includes(message.channel.id)) return;
+		const channelLocks = client.provider.get(message.guild.id, 'locks', []);
+		if (channelLocks.includes(message.channel.id)) return;
 		if (message.author.bot) return;
 
 		if (!earnedRecently.includes(message.author.id)) {

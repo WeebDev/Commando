@@ -27,7 +27,7 @@ module.exports = class WidthdrawCommand extends Command {
 						return /^(?:\d+|-all)$/g.test(donuts);
 					},
 					parse: async (donuts, msg) => {
-						const balance = await Currency.getBalance(msg.author.id);
+						const balance = await Bank.getBalance(msg.author.id);
 
 						if (donuts === '-all') return parseInt(balance);
 						return parseInt(donuts);
