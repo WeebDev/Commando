@@ -127,7 +127,7 @@ module.exports = class WeatherCommand extends Command {
 			ctx.fillText(city.long_name ? city.long_name : 'Unknown', 35, 50);
 
 			// Prefecture Name
-			ctx.font = '26px Roboto';
+			ctx.font = '16px Roboto';
 			ctx.fillStyle = theme === 'light' ? 'rgba(255, 255, 255, 0.8)' : 'rgba(0, 0, 0, 0.8)';
 			ctx.fillText(state.long_name ? state.long_name : '', 35, 70);
 
