@@ -91,7 +91,7 @@ module.exports = class WeatherCommand extends Command {
 		const condition = res.currently.summary;
 		const icon = res.currently.icon;
 		const chanceofrain = Math.round((res.currently.precipProbability * 100) / 5) * 5;
-		const temperature = Math.round(res.currently.temperature * 10) / 10;
+		const temperature = Math.round(res.currently.temperature);
 		const humidity = Math.round(res.currently.humidity * 100);
 		/* const windBearing = res.currently.windBearing;*/
 
