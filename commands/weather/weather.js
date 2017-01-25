@@ -108,7 +108,7 @@ module.exports = class WeatherCommand extends Command {
 		let theme = 'light';
 		let fontColor = '#FFFFFF';
 
-		if (icon === 'snow') {
+		if (icon === 'snow' || icon === 'sleet' || icon === 'fog') {
 			theme = 'dark';
 			fontColor = '#444444';
 		}
