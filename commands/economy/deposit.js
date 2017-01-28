@@ -53,6 +53,6 @@ module.exports = class DepositCommand extends Command {
 
 		Bank.deposit(msg.author.id, donuts);
 
-		return msg.reply(`Successfully deposited ${Currency.convert(donuts)} to the bank!`);
+		return msg.reply(`successfully deposited ${Currency.convert(donuts)} to the bank!`);
 	}
 };
