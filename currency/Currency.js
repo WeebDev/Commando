@@ -71,9 +71,9 @@ class Currency {
 	}
 
 	static convert(amount, text = false) {
-		if (!text) return `${amount} ${Math.abs(amount) === 1 ? Currency.singular : Currency.plural}`;
+		if (!text) return `${amount.toLocaleString()} ${Math.abs(amount) === 1 ? Currency.singular : Currency.plural}`;
 
-		return `${amount} ${Math.abs(amount) === 1 ? Currency.textSingular : Currency.textPlural}`;
+		return `${amount.toLocaleString()} ${Math.abs(amount) === 1 ? Currency.textSingular : Currency.textPlural}`;
 	}
 
 	static get singular() {
