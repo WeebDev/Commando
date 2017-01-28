@@ -1,9 +1,8 @@
-// Credit goes to https://github.com/kurisubrooks/midori
+// Credit goes to that cutie ;//w//; https://github.com/kurisubrooks/midori
 
 const Canvas = require('canvas');
 const { Command } = require('discord.js-commando');
 const fs = global.Promise.promisifyAll(require('fs'));
-const moment = require('moment');
 const path = require('path');
 const request = require('request-promise');
 
@@ -37,7 +36,9 @@ module.exports = class WeatherCommand extends Command {
 		const location = args.location;
 		const Image = Canvas.Image;
 
-		Canvas.registerFont(path.join(__dirname, '../../assets/weather/fonts/Roboto.ttf'), { family: 'Roboto' });
+		Canvas.registerFont(path.join(__dirname, '../../assets/weather/fonts/Roboto-Regular.ttf'), { family: 'Roboto' });
+		Canvas.registerFont(path.join(__dirname, '../../assets/weather/fonts/RobotoCondensed-Regular.ttf'), { family: 'Roboto Condensed' });
+		Canvas.registerFont(path.join(__dirname, '../../assets/weather/fonts/RobotoMono-Light.ttf'), { family: 'Roboto Mono' });
 
 		if (!config.GoogleAPIKey) return msg.reply('my Commander has not set the Google API Key. Go yell at him.');
 		if (!config.WeatherAPIKey) return msg.reply('my Commander has not set the Weather API Key. Go yell at him.');
@@ -53,31 +54,70 @@ module.exports = class WeatherCommand extends Command {
 		if (response.status !== 'OK') return msg.reply(this.handleNotOK(msg, response.status));
 		if (response.results.length === 0) return msg.reply('your request returned no results.');
 
+		let city;
+		let state;
+
 		const geocodelocation = response.results[0].formatted_address;
-		const addressComponents = response.results[0].address_components;
 		const wAPIKey = config.WeatherAPIKey;
 		const params = `${response.results[0].geometry.location.lat},${response.results[0].geometry.location.lng}`;
+
+		const locality = response.results[0].address_components.find(loc => loc.types.includes('locality'));
+		const governing = response.results[0].address_components.find(gov => gov.types.includes('administrative_area_level_1'));
+		const country = response.results[0].address_components.find(cou => cou.types.includes('country'));
+		const continent = response.results[0].address_components.find(con => con.types.includes('continent'));
+
+		/*
+		if (locality && governing) {
+			city = locality;
+			state = governing;
+		} else if (!locality && governing && country) {
+			city = governing;
+			state = country;
+		} else if (locality && !governing && country) {
+			city = locality;
+			state = country;
+		} else if (!locality && !governing && country) {
+			city = country;
+			state = {};
+		} else {
+			city = {};
+			state = {};
+		}
+		*/
+		
+		city = locality || governing || country || continent || {};
+		state = locality && governing ? governing : locality ? country : {};
 
 		const res = await request({
 			uri: `https://api.darksky.net/forecast/${wAPIKey}/${params}?exclude=minutely,hourly,flags&units=auto`,
 			headers: { 'User-Agent': `Commando v${version} (https://github.com/WeebDev/Commando/)` },
 			json: true
 		});
-		const datetime = moment().utcOffset(res.timezone).format('D MMMM, h:mma');
+
 		const condition = res.currently.summary;
 		const icon = res.currently.icon;
 		const chanceofrain = Math.round((res.currently.precipProbability * 100) / 5) * 5;
-		const temperature = Math.round(res.currently.temperature * 10) / 10;
-		const temperatureMin = Math.round(res.daily.data[0].temperatureMin * 10) / 10;
-		const temperatureMax = Math.round(res.daily.data[0].temperatureMax * 10) / 10;
-		const feelslike = Math.round(res.currently.apparentTemperature * 10) / 10;
+		const temperature = Math.round(res.currently.temperature);
 		const humidity = Math.round(res.currently.humidity * 100);
-		const windspeed = res.currently.windSpeed;
+		/* const windBearing = res.currently.windBearing;*/
 
-		const canvas = new Canvas(400, 290);
+		const canvas = new Canvas(400, 180);
+		/* const pointerCanvas = new Canvas(16, 16);*/
 		const ctx = canvas.getContext('2d');
+		/* const pntr = pointerCanvas.getContext('2d');*/
 		const base = new Image();
 		const cond = new Image();
+		const humid = new Image();
+		const precip = new Image();
+		/* const pointer = new Image();*/
+
+		let theme = 'light';
+		let fontColor = '#FFFFFF';
+
+		if (icon === 'snow' || icon === 'sleet' || icon === 'fog') {
+			theme = 'dark';
+			fontColor = '#444444';
+		}
 
 		const generate = () => {
 			// Environment Variables
@@ -86,70 +126,55 @@ module.exports = class WeatherCommand extends Command {
 			ctx.patternQuality = 'billinear';
 			ctx.filter = 'bilinear';
 			ctx.antialias = 'subpixel';
-			ctx.shadowColor = 'rgba(0, 0, 0, 0.4)';
-			ctx.shadowOffsetY = 2;
-			ctx.shadowBlur = 2;
 
-			// Time
-			ctx.font = '12px Roboto';
-			ctx.fillStyle = '#000000';
-			ctx.shadowColor = 'rgba(255, 255, 255, 0.4)';
-			ctx.fillText(datetime, 20, 30);
+			// City Name
+			ctx.font = '20px Roboto';
+			ctx.fillStyle = fontColor;
+			ctx.fillText(city.long_name ? city.long_name : 'Unknown', 35, 50);
 
-			// Location
-			if (geocodelocation.length > 30) {
-				ctx.font = '16px Roboto';
-			} else {
-				ctx.font = '18px Roboto';
-			}
-			ctx.fillStyle = '#FFFFFF';
-			ctx.shadowColor = 'rgba(0, 0, 0, 0.4)';
-			ctx.fillText(geocodelocation.substr(0, 35), 20, 52);
+			// Prefecture Name
+			ctx.font = '16px Roboto';
+			ctx.fillStyle = theme === 'light' ? 'rgba(255, 255, 255, 0.8)' : 'rgba(0, 0, 0, 0.8)';
+			ctx.fillText(state.long_name ? state.long_name : '', 35, 72.5);
 
 			// Temperature
-			ctx.font = '88px Roboto';
-			ctx.fillText(`${temperature}°${this.getTempUnit(addressComponents)}`, 20, 130);
-
-			ctx.font = '16px Roboto';
-			ctx.fillText(`High ${temperatureMax}°${this.getTempUnit(addressComponents)}`, 20, 160);
-			ctx.fillText(`Low ${temperatureMin}°${this.getTempUnit(addressComponents)}`, 115, 160);
+			ctx.font = "48px 'Roboto Mono'";
+			ctx.fillStyle = fontColor;
+			ctx.fillText(`${temperature}°`, 35, 140);
 
 			// Condition
-			ctx.font = '14px Roboto';
-			ctx.textAlign = 'center';
-			ctx.fillText(condition, 342, 148);
+			ctx.font = '16px Roboto';
+			ctx.textAlign = 'right';
+			ctx.fillText(condition, 370, 142);
 
 			// Condition Image
-			ctx.shadowBlur = 5;
-			ctx.shadowColor = 'rgba(0, 0, 0, 0.2)';
-			ctx.drawImage(cond, 290, 22, 105, 105);
+			ctx.drawImage(cond, 325, 31);
 
-			// Details
-			ctx.font = '14px Roboto';
-			ctx.shadowColor = 'rgba(0, 0, 0, 0)';
-			ctx.textAlign = 'left';
-			ctx.fillStyle = '#000000';
-			ctx.fillText('Current details', 20, 186);
+			// Humidity Image
+			ctx.drawImage(humid, 358, 88);
+
+			// Precip Image
+			ctx.drawImage(precip, 358, 108);
+
+			/* // Pointer Image
+			pntr.drawImage(pointer, 35, 160);
+			pntr.patternQuality = 'billinear';
+			pntr.filter = 'billinear';
+			pntr.antialias = 'subpixel';
+			pntr.translate(7.5, 7.5);
+			pntr.rotate((windBearing || 0) * Math.PI / 180 / 10);*/
 
 			// Titles
-			ctx.font = '14px Roboto';
-			ctx.fillStyle = '#777777';
-			ctx.fillText('Feels like', 20, 206);
-			ctx.fillText('Humidity', 20, 226);
-			ctx.fillText('Wind Speed', 20, 246);
-			ctx.fillText('Chance of rain', 20, 266);
-
-			// Values
-			ctx.font = '14px Roboto';
-			ctx.fillStyle = '#000000';
-			ctx.fillText(`${feelslike}°${this.getTempUnit(addressComponents)}`, 170, 206);
-			ctx.fillText(`${humidity}%`, 170, 226);
-			ctx.fillText(`${windspeed.toFixed(2)} ${this.getWindspeedUnit(addressComponents)}`, 170, 246);
-			ctx.fillText(`${chanceofrain}%`, 170, 266);
+			ctx.font = "16px 'Roboto Condensed'";
+			ctx.fillText(`${humidity}%`, 353, 100);
+			ctx.fillText(`${chanceofrain}%`, 353, 121);
 		};
 
 		base.src = await fs.readFileAsync(this.getBase(icon));
-		cond.src = await fs.readFileAsync(path.join(__dirname, `../../assets/weather/icons/${icon}.png`));
+		cond.src = await fs.readFileAsync(path.join(__dirname, '..', '..', 'assets', 'weather', 'icons', theme, `${icon}.png`));
+		humid.src = await fs.readFileAsync(path.join(__dirname, '..', '..', 'assets', 'weather', 'icons', theme, 'humidity.png'));
+		precip.src = await fs.readFileAsync(path.join(__dirname, '..', '..', 'assets', 'weather', 'icons', theme, 'precip.png'));
+		/* pointer.src = await fs.readFileAsync(path.join(__dirname, '..', '..', 'assets', 'weather', 'icons', theme, 'pointer.png'));*/
 		generate();
 
 		return msg.channel.sendFile(canvas.toBuffer(), `${geocodelocation}.png`);
@@ -171,34 +196,21 @@ module.exports = class WeatherCommand extends Command {
 
 	getBase(icon) {
 		if (icon === 'clear-day' || icon === 'partly-cloudy-day') {
-			return path.join(__dirname, '../../assets/weather/base/sun.png');
+			return path.join(__dirname, '..', '..', 'assets', 'weather', 'base', 'day.png');
 		} else if (icon === 'clear-night' || icon === 'partly-cloudy-night') {
-			return path.join(__dirname, '../../assets/weather/base/moon.png');
+			return path.join(__dirname, '..', '..', 'assets', 'weather', 'base', 'night.png');
 		} else if (icon === 'rain') {
-			return path.join(__dirname, '../../assets/weather/base/rain.png');
-		} else if (icon === 'snow' || icon === 'sleet' || icon === 'fog' || icon === 'wind') {
-			return path.join(__dirname, '../../assets/weather/base/snow.png');
+			return path.join(__dirname, '..', '..', 'assets', 'weather', 'base', 'rain.png');
+		} else if (icon === 'thunderstorm') {
+			return path.join(__dirname, '..', '..', 'assets', 'weather', 'base', 'thunderstorm.png');
+		} else if (icon === 'snow' || icon === 'sleet' || icon === 'fog') {
+			return path.join(__dirname, '..', '..', 'assets', 'weather', 'base', 'snow.png');
+		} else if (icon === 'wind' || icon === 'tornado') {
+			return path.join(__dirname, '..', '..', 'assets', 'weather', 'base', 'windy.png');
+		} else if (icon === 'cloudy') {
+			return path.join(__dirname, '..', '..', 'assets', 'weather', 'base', 'cloudy.png');
 		} else {
-			return path.join(__dirname, '../../assets/weather/base/cloud.png');
+			return path.join(__dirname, '..', '..', 'assets', 'weather', 'base', 'cloudy.png');
 		}
-	}
-
-	getWindspeedUnit(units) {
-		const unit = units.find(un => un.types.includes('country'));
-
-		if (unit === undefined) return 'm/s';
-		if (unit.short_name === 'US' || unit.short_name === 'GB') return 'mph';
-		if (unit.short_name === 'CA') return 'kph';
-
-		return 'm/s';
-	}
-
-	getTempUnit(units) {
-		const unit = units.find(un => un.types.includes('country'));
-
-		if (unit === undefined) return 'C';
-		if (unit.short_name === 'US') return 'F';
-
-		return 'C';
 	}
 };
