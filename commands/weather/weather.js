@@ -36,9 +36,9 @@ module.exports = class WeatherCommand extends Command {
 		const location = args.location;
 		const Image = Canvas.Image;
 
-		Canvas.registerFont(path.join(__dirname, '../../assets/weather/fonts/Roboto-Regular.ttf'), { family: 'Roboto' });
-		Canvas.registerFont(path.join(__dirname, '../../assets/weather/fonts/RobotoCondensed-Regular.ttf'), { family: 'Roboto Condensed' });
-		Canvas.registerFont(path.join(__dirname, '../../assets/weather/fonts/RobotoMono-Light.ttf'), { family: 'Roboto Mono' });
+		Canvas.registerFont(path.join(__dirname, '../', '../', 'assets', 'weather', 'fonts', 'Roboto-Regular.ttf'), { family: 'Roboto' });
+		Canvas.registerFont(path.join(__dirname, '../', '../', 'assets', 'weather', 'fonts', 'RobotoCondensed-Regular.ttf'), { family: 'Roboto Condensed' });
+		Canvas.registerFont(path.join(__dirname, '../', '../', 'assets', 'weather', 'fonts', 'RobotoMono-Light.ttf'), { family: 'Roboto Mono' });
 
 		if (!config.GoogleAPIKey) return msg.reply('my Commander has not set the Google API Key. Go yell at him.');
 		if (!config.WeatherAPIKey) return msg.reply('my Commander has not set the Weather API Key. Go yell at him.');
