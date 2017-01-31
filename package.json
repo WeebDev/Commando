@@ -42,7 +42,7 @@
     "sequelize": "sequelize/sequelize",
     "simple-youtube-api": "^2.1.0",
     "winston": "^2.3.1",
-    "ytdl-core": "^0.7.21"
+    "ytdl-core": "github:hcgrandon/node-ytdl-core"
   },
   "devDependencies": {
     "eslint": "^3.14.0"
