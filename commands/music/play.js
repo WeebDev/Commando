@@ -205,7 +205,7 @@ module.exports = class PlaySongCommand extends Command {
 		if (song.url.match(/^https?:\/\/(api.soundcloud.com)\/(.*)$/)) {
 			stream = request({ uri: song.url, headers: { 'User-Agent': `Commando v${version} (https://github.com/WeebDev/Commando/)` }, followAllRedirects: true });
 		} else {
-			stream = ytdl(song.url)
+			stream = ytdl(song.url, { audioonly: true })
 				.on('error', err => {
 					streamErrored = true;
 					winston.error('Error occurred when streaming video:', err);
