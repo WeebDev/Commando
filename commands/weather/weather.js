@@ -64,7 +64,9 @@ module.exports = class WeatherCommand extends Command {
 		const locality = response.results[0].address_components.find(loc => loc.types.includes('locality'));
 		const governing = response.results[0].address_components.find(gov => gov.types.includes('administrative_area_level_1'));
 		const country = response.results[0].address_components.find(cou => cou.types.includes('country'));
+		const continent = response.results[0].address_components.find(con => con.types.includes('continent'));
 
+		/*
 		if (locality && governing) {
 			city = locality;
 			state = governing;
@@ -81,6 +83,10 @@ module.exports = class WeatherCommand extends Command {
 			city = {};
 			state = {};
 		}
+		*/
+		
+		city = locality || governing || country || continent || {};
+		state = locality && governing ? governing : locality ? country : {};
 
 		const res = await request({
 			uri: `https://api.darksky.net/forecast/${wAPIKey}/${params}?exclude=minutely,hourly,flags&units=auto`,
@@ -129,7 +135,7 @@ module.exports = class WeatherCommand extends Command {
 			// Prefecture Name
 			ctx.font = '16px Roboto';
 			ctx.fillStyle = theme === 'light' ? 'rgba(255, 255, 255, 0.8)' : 'rgba(0, 0, 0, 0.8)';
-			ctx.fillText(state.long_name ? state.long_name : '', 35, 70);
+			ctx.fillText(state.long_name ? state.long_name : '', 35, 72.5);
 
 			// Temperature
 			ctx.font = "48px 'Roboto Mono'";
@@ -145,10 +151,10 @@ module.exports = class WeatherCommand extends Command {
 			ctx.drawImage(cond, 325, 31);
 
 			// Humidity Image
-			ctx.drawImage(humid, 315, 88);
+			ctx.drawImage(humid, 358, 88);
 
 			// Precip Image
-			ctx.drawImage(precip, 315, 108);
+			ctx.drawImage(precip, 358, 108);
 
 			/* // Pointer Image
 			pntr.drawImage(pointer, 35, 160);
@@ -160,8 +166,8 @@ module.exports = class WeatherCommand extends Command {
 
 			// Titles
 			ctx.font = "16px 'Roboto Condensed'";
-			ctx.fillText(`${humidity}%`, 370, 100);
-			ctx.fillText(`${chanceofrain}%`, 370, 121);
+			ctx.fillText(`${humidity}%`, 353, 100);
+			ctx.fillText(`${chanceofrain}%`, 353, 121);
 		};
 
 		base.src = await fs.readFileAsync(this.getBase(icon));
