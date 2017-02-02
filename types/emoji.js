@@ -11,9 +11,7 @@ class EmojiArgumentType extends ArgumentType {
 			let emoji = msg.client.emojis.get(value.match(regex)[2]);
 			if(emoji) return true;
 		}
-		else if (value.match(/(\uD83C[\uDF00-\uDFFF]|\uD83D[\uDC00-\uDE4F])/)) {
-			return true
-		}
+		else if (value.match(/(\uD83C[\uDF00-\uDFFF]|\uD83D[\uDC00-\uDE4F])/)) return true;
 		return false;
 		}
 
