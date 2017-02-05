@@ -71,6 +71,7 @@ class Currency {
 	}
 
 	static convert(amount, text = false) {
+		if (isNaN(amount)) amount = parseInt(amount);
 		if (!text) return `${amount.toLocaleString()} ${Math.abs(amount) === 1 ? Currency.singular : Currency.plural}`;
 
 		return `${amount.toLocaleString()} ${Math.abs(amount) === 1 ? Currency.textSingular : Currency.textPlural}`;
