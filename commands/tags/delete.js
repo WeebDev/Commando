@@ -1,5 +1,4 @@
 const { Command } = require('discord.js-commando');
-const winston = require('winston');
 
 const config = require('../../settings');
 const Redis = require('../../redis/Redis');
@@ -72,7 +71,6 @@ module.exports = class TagDeleteCommand extends Command {
 					msg.guild.channels.get(config.exampleChannel).fetchMessage(tag.exampleID).then(del => del.delete());
 				}
 				return msg.say(`The tag **${name}** has been deleted, ${msg.author}`);
-			})
-			.catch(error => { winston.error(error); });
+			});
 	}
 };

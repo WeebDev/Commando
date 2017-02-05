@@ -1,7 +1,7 @@
 const { Command } = require('discord.js-commando');
 const moment = require('moment');
 const sherlock = require('Sherlock');
-const stripIndents = require('common-tags').stripIndents;
+const { stripIndents } = require('common-tags');
 
 module.exports = class RemindMeCommand extends Command {
 	constructor(client) {

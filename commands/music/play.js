@@ -1,6 +1,6 @@
 const { Command } = require('discord.js-commando');
-const escapeMarkdown = require('discord.js').escapeMarkdown;
-const oneLine = require('common-tags').oneLine;
+const { escapeMarkdown } = require('discord.js');
+const { oneLine } = require('common-tags');
 const request = require('request-promise');
 const winston = require('winston');
 const YouTube = require('simple-youtube-api');

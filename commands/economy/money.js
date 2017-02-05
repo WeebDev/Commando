@@ -1,5 +1,5 @@
 const { Command } = require('discord.js-commando');
-const oneLine = require('common-tags').oneLine;
+const { oneLine } = require('common-tags');
 
 const Currency = require('../../currency/Currency');
 const Bank = require('../../currency/Bank');

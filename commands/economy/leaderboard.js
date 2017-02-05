@@ -1,8 +1,7 @@
 const { Command, util } = require('discord.js-commando');
 const Currency = require('../../currency/Currency.js');
 const moment = require('moment');
-const oneLine = require('common-tags').oneLine;
-const stripIndents = require('common-tags').stripIndents;
+const { oneLine, stripIndents } = require('common-tags');
 
 const config = require('../../settings');
 const Redis = require('../../redis/Redis');
