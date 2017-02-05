@@ -4,8 +4,9 @@ const Redis = require('../redis/Redis');
 const redis = new Redis();
 
 // rate * convert to decimal
-const INTEREST_MATURE_RATE = 0.0001 * 0.01;
+const INTEREST_MATURE_RATE = 0.1;
 const UPDATE_DURATION = 30 * 60 * 1000;
+const MIN_INTEREST_RATE = 0.001;
 
 redis.db.getAsync('bankupdate').then(update => {
 	setTimeout(() => Bank.applyInterest(), Math.max(0, (new Date(update) + UPDATE_DURATION) - Date.now()));
@@ -40,7 +41,7 @@ class Bank {
 
 		const bankBalance = await Currency.getBalance('bank');
 		const previousBankBalance = await redis.db.getAsync('lastbankbalance') || bankBalance;
-		const bankBalanceDelta = bankBalance - previousBankBalance;
+		const bankBalanceDelta = (bankBalance - previousBankBalance) / previousBankBalance;
 
 		redis.db.hgetallAsync('ledger').then(balances => {
 			if (!balances) return;
@@ -50,7 +51,7 @@ class Bank {
 			}
 		});
 
-		const newInterestRate = Math.max(0.001, interestRate + (bankBalanceDelta * -INTEREST_MATURE_RATE));
+		const newInterestRate = Math.max(MIN_INTEREST_RATE, interestRate + (bankBalanceDelta * -INTEREST_MATURE_RATE));
 		redis.db.setAsync('interestrate', newInterestRate);
 		redis.db.setAsync('lastbankbalance', bankBalance);
 
