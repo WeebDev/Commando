@@ -9,7 +9,7 @@ class EmojiArgumentType extends ArgumentType {
 	}
 	validate(value, msg) {
 		if (value.match(regex)) {
-			let emoji = msg.client.emojis.get(value.match(regex)[2]);
+			const emoji = msg.client.emojis.get(value.match(regex)[2]);
 			if (emoji) return true;
 		}
 		else if (value.match(emojiRegex)) return true;
@@ -18,7 +18,7 @@ class EmojiArgumentType extends ArgumentType {
 
 	parse(value, msg) {
 		if (value.match(regex)) {
-			let emoji = msg.client.emojis.get(value.match(regex)[2]);
+			const emoji = msg.client.emojis.get(value.match(regex)[2]);
 			if (emoji) return emoji;
 		}
 		else if (value.match(emojiRegex)) return value.match(emojiRegex)[0];
