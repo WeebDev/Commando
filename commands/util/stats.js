@@ -3,7 +3,7 @@ const moment = require('moment');
 require('moment-duration-format');
 const { stripIndents } = require('common-tags');
 
-const version = require('../../package').version;
+const { version } = require('../../package');
 
 module.exports = class StatsCommand extends Command {
 	constructor(client) {

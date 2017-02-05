@@ -8,7 +8,7 @@ const ytdl = require('ytdl-core');
 
 const config = require('../../settings');
 const Song = require('../../Song');
-const version = require('../../package').version;
+const { version } = require('../../package');
 
 module.exports = class PlaySongCommand extends Command {
 	constructor(client) {
