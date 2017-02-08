@@ -1,5 +1,5 @@
-const escapeMarkdown = require('discord.js').escapeMarkdown;
-const oneLineTrim = require('common-tags').oneLineTrim;
+const { escapeMarkdown } = require('discord.js');
+const { oneLineTrim } = require('common-tags');
 
 const config = require('./settings');
 

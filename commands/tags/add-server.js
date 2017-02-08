@@ -1,5 +1,4 @@
 const { Command } = require('discord.js-commando');
-const winston = require('winston');
 
 const Redis = require('../../redis/Redis');
 const Tag = require('../../postgreSQL/models/Tag');

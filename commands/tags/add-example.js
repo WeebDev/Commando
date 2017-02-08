@@ -1,5 +1,4 @@
 const { Command } = require('discord.js-commando');
-const winston = require('winston');
 
 const config = require('../../settings');
 const Redis = require('../../redis/Redis');

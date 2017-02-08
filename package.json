@@ -47,7 +47,7 @@
     "ytdl-core": "github:hcgrandon/node-ytdl-core"
   },
   "devDependencies": {
-    "eslint": "^3.14.0"
+    "eslint": "^3.15.0"
   },
   "engines": {
     "node": ">=7.0.0"

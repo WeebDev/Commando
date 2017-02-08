@@ -1,6 +1,5 @@
 const { Command, util } = require('discord.js-commando');
-const oneLine = require('common-tags').oneLine;
-const stripIndents = require('common-tags').stripIndents;
+const { oneLine, stripIndents } = require('common-tags');
 
 const config = require('../../settings');
 const Song = require('../../Song');

@@ -1,5 +1,5 @@
 const { Command } = require('discord.js-commando');
-const oneLine = require('common-tags').oneLine;
+const { oneLine } = require('common-tags');
 
 const Currency = require('../../currency/Currency');
 const Bank = require('../../currency/Bank');
@@ -43,7 +43,7 @@ module.exports = class MoneyInfoCommand extends Command {
 			return msg.reply(oneLine`
 				${user.displayName} has ${Currency.convert(money)} on hand and
 				${Currency.convert(balance)} in the bank.
-				Their net worth is ${Currency.convert(networth)}
+				Their net worth is ${Currency.convert(networth)}.
 				Good on them!
 			`);
 		} else {
@@ -52,7 +52,7 @@ module.exports = class MoneyInfoCommand extends Command {
 			return msg.reply(oneLine`
 				you have ${Currency.convert(money)} on hand and
 				${Currency.convert(balance)} in the bank.
-				Your net worth is ${Currency.convert(networth)}
+				Your net worth is ${Currency.convert(networth)}.
 				Good on you!
 			`);
 		}

@@ -1,8 +1,8 @@
 const { Command } = require('discord.js-commando');
 const request = require('request-promise');
-const stripIndents = require('common-tags').stripIndents;
+const { stripIndents } = require('common-tags');
 
-const version = require('../../package').version;
+const { version } = require('../../package');
 
 module.exports = class FortuneCommand extends Command {
 	constructor(client) {

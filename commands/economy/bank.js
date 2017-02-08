@@ -1,5 +1,5 @@
 const { Command } = require('discord.js-commando');
-const stripIndents = require('common-tags').stripIndents;
+const { stripIndents } = require('common-tags');
 const moment = require('moment');
 
 const Currency = require('../../currency/Currency');

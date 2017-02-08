@@ -157,7 +157,7 @@ module.exports = class ProfileCommand extends Command {
 			ctx.drawImage(cond, 24, 21, 110, 110);
 		};
 
-		base.src = await fs.readFileAsync(path.join(__dirname, `../../assets/profile/backgrounds/${profile.background}.png`));
+		base.src = await fs.readFileAsync(path.join(__dirname, `../../assets/profile/backgrounds/${profile ? profile.background : 'default'}.png`));
 		cond.src = await request({
 			uri: user.user.displayAvatarURL.replace(/(png|jpg|jpeg|gif|webp)\?size=1024/, 'png'),
 			encoding: null
