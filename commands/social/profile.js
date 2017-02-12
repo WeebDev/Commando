@@ -50,8 +50,8 @@ module.exports = class ProfileCommand extends Command {
 
 		const fillValue = Math.min(Math.max(currentExp / (levelBounds.upperBound - levelBounds.lowerBound), 0), 1);
 
-		Canvas.registerFont(path.join(__dirname, '../../assets/profile/fonts/Roboto.ttf'), { family: 'Roboto' });
-		Canvas.registerFont(path.join(__dirname, '../../assets/profile/fonts/NotoEmoji-Regular.ttf'), { family: 'Roboto' });
+		Canvas.registerFont(path.join(__dirname, '..', '..', 'assets', 'profile', 'fonts', 'Roboto.ttf'), { family: 'Roboto' });
+		Canvas.registerFont(path.join(__dirname, '..', '..', 'assets', 'profile', 'fonts', 'NotoEmoji-Regular.ttf'), { family: 'Roboto' });
 
 		const canvas = new Canvas(300, 300);
 		const ctx = canvas.getContext('2d');
@@ -157,7 +157,7 @@ module.exports = class ProfileCommand extends Command {
 			ctx.drawImage(cond, 24, 21, 110, 110);
 		};
 
-		base.src = await fs.readFileAsync(path.join(__dirname, `../../assets/profile/backgrounds/${profile ? profile.background : 'default'}.png`));
+		base.src = await fs.readFileAsync(path.join(__dirname, '..', '..', 'assets', 'profile', 'backgrounds', `${profile ? profile.background : 'default'}.png`));
 		cond.src = await request({
 			uri: user.user.displayAvatarURL.replace(/(png|jpg|jpeg|gif|webp)\?size=1024/, 'png'),
 			encoding: null
