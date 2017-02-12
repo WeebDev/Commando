@@ -5,7 +5,7 @@ module.exports = class CleanCommand extends Command {
 	constructor(client) {
 		super(client, {
 			name: 'clean',
-			aliases: ['purge', 'prune'],
+			aliases: ['purge', 'prune', 'clear'],
 			group: 'util',
 			memberName: 'clean',
 			description: 'Deletes messages.',
