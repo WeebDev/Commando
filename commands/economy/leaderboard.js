@@ -76,7 +76,7 @@ module.exports = class MoneyLeaderboardCommand extends Command {
 		const cache = await redis.db.getAsync('moneyleaderboard');
 		if (cache) return cache;
 
-		const money = await UserProfile.findAll({ where: { userID: { $ne: 'bank' } }, order: 'networth DESC' });
+		const money = await UserProfile.findAll({ where: { userID: { $ne: 'bank' } }, order: ['networth', 'DESC'] });
 		if (!money) return; // eslint-disable-line consistent-return
 
 		redis.db.setAsync('moneyleaderboard', JSON.stringify(money));
