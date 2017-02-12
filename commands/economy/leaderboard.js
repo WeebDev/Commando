@@ -1,9 +1,10 @@
-const { Command, util } = require('discord.js-commando');
-const Currency = require('../../currency/Currency.js');
-const moment = require('moment');
 const { oneLine, stripIndents } = require('common-tags');
+const { Command, util } = require('discord.js-commando');
+const moment = require('moment');
+const Sequelize = require('sequelize');
 
 const config = require('../../settings');
+const Currency = require('../../currency/Currency.js');
 const Redis = require('../../redis/Redis');
 const UserProfile = require('../../postgreSQL/models/UserProfile');
 
@@ -76,7 +77,7 @@ module.exports = class MoneyLeaderboardCommand extends Command {
 		const cache = await redis.db.getAsync('moneyleaderboard');
 		if (cache) return cache;
 
-		const money = await UserProfile.findAll({ where: { userID: { $ne: 'bank' } }, order: ['networth', 'DESC'] });
+		const money = await UserProfile.findAll({ where: { userID: { $ne: 'bank' } }, order: Sequelize.literal('networth DESC') });
 		if (!money) return; // eslint-disable-line consistent-return
 
 		redis.db.setAsync('moneyleaderboard', JSON.stringify(money));
