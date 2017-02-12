@@ -13,6 +13,7 @@ module.exports = class CleanCommand extends Command {
 				__invites:__ Messages containing an invite
 				__user @user:__ Messages sent by @user
 				__bots:__ Messages sent by bots
+				__you:__ Messages sent by Commando
 				__uploads:__ Messages containing an attachment
 				__links:__ Messages containing a link`,
 			guildOnly: true,
