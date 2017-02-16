@@ -4,7 +4,7 @@ const commando = require('discord.js-commando');
 const Currency = require('./currency/Currency');
 const Experience = require('./currency/Experience');
 const fs = require('fs');
-const { oneLine } = require('common-tags');
+const { oneLine, stripIndents } = require('common-tags');
 const path = require('path');
 const Raven = require('raven');
 const winston = require('winston');
@@ -116,7 +116,12 @@ client.on('error', winston.error)
 			if (message.content.toLowerCase().match(regex)) {
 				message.member.sendMessage(oneLine`
 					Please refrain from using \`xD\` or any variation of the word on this chat. It's cancer.
-				`);
+				`).catch(() => {
+					message.channel.sendMessage(stripIndents`
+						Because you boi blocked me:
+						Please refrain from using \`xD\` or any variation of the word on this chat. It's cancer.
+					`);
+				});
 			}
 		}
 	})
@@ -125,7 +130,12 @@ client.on('error', winston.error)
 			if (newMsg.content.toLowerCase().match(regex)) {
 				newMsg.member.sendMessage(oneLine`
 						Please refrain from using \`xD\` or any variation of the word on this chat. It's cancer.
-					`);
+					`).catch(() => {
+						newMsg.channel.sendMessage(stripIndents`
+							Because you boi blocked me:
+							Please refrain from using \`xD\` or any variation of the word on this chat. It's cancer.
+						`);
+					});
 			}
 		}
 	})
