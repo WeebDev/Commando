@@ -22,6 +22,8 @@ const client = new commando.Client({
 	disableEveryone: true
 });
 
+const regex = /(\b(__)?(lol)?((x|ecks|ex|xd)+( +|)(d|de+|lol)+)+(__)?\b)|(ＸＤ)|(\bx( +|)🇩)|(🇽+( +|)🇩+)/ig;
+
 let earnedRecently = [];
 let gainedXPRecently = [];
 
@@ -98,6 +100,23 @@ client.on('error', winston.error)
 				const index = gainedXPRecently.indexOf(message.author.id);
 				gainedXPRecently.splice(index, 1);
 			}, 60 * 1000);
+		}
+
+		if (message.guild.id === '222078108977594368') {
+			if (message.content.toLowerCase().match(regex)) {
+				message.member.sendMessage(oneLine`
+					Please refrain from using \`xD\` or any variation of the word on this chat. It's cancer.
+				`);
+			}
+		}
+	})
+	.on('messageUpdate', (oldMsg, newMsg) => {
+		if (newMsg.guild.id === '222078108977594368') {
+			if (newMsg.content.toLowerCase().match(regex)) {
+				newMsg.member.sendMessage(oneLine`
+						Please refrain from using \`xD\` or any variation of the word on this chat. It's cancer.
+					`);
+			}
 		}
 	})
 	.on('commandError', (cmd, err) => {
