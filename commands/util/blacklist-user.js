@@ -24,7 +24,7 @@ module.exports = class BlacklistUserCommand extends Command {
 	}
 
 	hasPermission(msg) {
-		return this.client.options.owner === msg.author.id;
+		return this.client.isOwner(msg.author);
 	}
 
 	async run(msg, args) {

@@ -35,7 +35,7 @@ module.exports = class ItemAddCommand extends Command {
 	}
 
 	hasPermission(msg) {
-		return msg.author.id === this.client.options.owner;
+		return this.client.isOwner(msg.author);
 	}
 
 	async run(msg, args) {
