@@ -1,30 +1,28 @@
 # Commando
 
-## HOW 2 INSTALL ON UBUNTU
+## Installation guide for Ubuntu 16.04.2 LTS 
 
-#### MAKE SURE NODE VERSION > 7
+#### Make sure the node version is > 7.0.0
 
-```
+```bash
 node -v
 > 7.5.0
 ```
 
-#### INSTALL POSTGRES
+#### Install PostgresSQL
+If Postgres is not installed yet, follow these steps. If it is already installed, you should create a new db or use an existing one. 
 
 ```
 sudo apt-get update
 sudo apt-get install postgresql postgresql-contrib
-```
 
-#### ADD POSTGRES USER AND DATABASE
-
-```
+// create postgres user
 sudo -i -u postgres
 createuser -P --interactive <name>
 createdb commando
 ```
 
-#### ADD REDIS FOR CACHE
+#### Install Redis
 ```
 sudo apt-get install software-properties-common
 sudo add-apt-repository ppa:chris-lea/redis-server
@@ -32,34 +30,35 @@ sudo apt-get update
 sudo apt-get install redis-server
 ```
 
-#### INSTALL SOME MOTHERFUCKING PACKAGES
+#### Install required libraries
 ```
 sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev build-essential g++
 ```
 
-#### GET NPM PACKAGES
+#### Update node_modules
+sudo is optional on this step but you may run into node-gyp rebuild error.
 ```
 sudo npm i
 ```
 
-#### COMMENT OUT RAVEN
-#### CLONE SETTINGS
+
+#### Clone settings 
 ```
 cp settings.json.example settings.json
 ```
 
-#### EDIT SETTINGS WITH YOUR INFO
+After you clone the settings, edit them with your connection information. You'll also need to grab your bot token from the discord api page
+
 ```
-postgres://<username>:<password>@localhost/commando
+...
+"token": "<token>",
+"db":"postgres://<username>:<password>@localhost/commando"
+...
 ```
 
-#### START COMMANDO
+
+#### Launch Commando
+If there is a sequelize error, re-run the start command.
 ```
 node --harmony Commando.js
 ```
-
-#### JK YOU MIGHT HAVE TO RUN IT TWICE
-```
-node --harmony Commando.js
-```
-
