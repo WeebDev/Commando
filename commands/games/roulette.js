@@ -72,7 +72,7 @@ module.exports = class RouletteCommand extends Command {
 	}
 
 	async run(msg, args) {
-		const bet = parseInt(/-?(all|a)/ig.test(args.bet)?await Currency.getBalance(msg.author.id):args.bet);
+		const bet = parseInt(/-?(all|a)/ig.test(args.bet) ? await Currency.getBalance(msg.author.id) : args.bet);
 		const space = args.space.toLowerCase();
 
 		let roulette = Roulette.findGame(msg.guild.id);
