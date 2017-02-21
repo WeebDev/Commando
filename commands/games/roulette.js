@@ -28,8 +28,11 @@ module.exports = class RouletteCommand extends Command {
 				{
 					key: 'bet',
 					prompt: `how many ${Currency.textPlural} do you want to bet?\n`,
-					type: 'integer',
+					type: 'string',
 					validate: async (bet, msg) => {
+
+						if (/-?(all|a)/ig.test(bet)) return true;
+
 						bet = parseInt(bet);
 						const balance = await Currency.getBalance(msg.author.id);
 
@@ -43,7 +46,7 @@ module.exports = class RouletteCommand extends Command {
 
 						if (![100, 200, 300, 400, 500, 1000, 2000, 5000].includes(bet)) {
 							return `
-								please choose \`100, 200, 300, 400, 500, 1000, 2000, 5000\` for your bet.
+								please choose \`100, 200, 300, 400, 500, 1000, 2000, 5000, or all\` for your bet.
 							`;
 						}
 
@@ -69,7 +72,7 @@ module.exports = class RouletteCommand extends Command {
 	}
 
 	async run(msg, args) {
-		const bet = args.bet;
+		const bet = parseInt(/-?(all|a)/ig.test(args.bet) ? await Currency.getBalance(msg.author.id) : args.bet);
 		const space = args.space.toLowerCase();
 
 		let roulette = Roulette.findGame(msg.guild.id);
