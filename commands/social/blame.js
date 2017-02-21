@@ -32,19 +32,17 @@ module.exports = class BlameCommand extends Command {
 		const user = args.member || msg.member;
 		const Image = Canvas.Image;
 
-
-		const fillValue = Math.min(Math.max(currentExp / (levelBounds.upperBound - levelBounds.lowerBound), 0), 1);
-
 		Canvas.registerFont(path.join(__dirname, '..', '..', 'assets', 'profile', 'fonts', 'Roboto.ttf'), { family: 'Roboto' });
 		Canvas.registerFont(path.join(__dirname, '..', '..', 'assets', 'profile', 'fonts', 'NotoEmoji-Regular.ttf'), { family: 'Roboto' });
 
+		
 		const canvas = new Canvas(300, 300);
 		const ctx = canvas.getContext('2d');
 
 		const lines = this.wrapText(ctx, personalMessage, 110);
 
 		const base = new Image();
-		const cond = new Image();
+		
 
 		const generate = () => {
 			// Environment Variables
@@ -56,26 +54,24 @@ module.exports = class BlameCommand extends Command {
 			ctx.shadowColor = 'rgba(0, 0, 0, 0.4)';
 			ctx.shadowOffsetY = 2;
 			ctx.shadowBlur = 2;
+			
+			//blame
+			ctx.font = '20px Roboto';
+			ctx.fillStyle = '#F01111';
+			ctx.fillText("Blame", 50, 173);
+			
+			//user
+			ctx.font = '20px Roboto';
+			ctx.fillStyle = '#F01111';
+			ctx.fillText(member, 50, 150);
 
-
-			// Image
-			ctx.beginPath();
-			ctx.arc(79, 76, 55, 0, Math.PI * 2, true);
-			ctx.closePath();
-			ctx.clip();
-			ctx.shadowBlur = 5;
-			ctx.shadowColor = 'rgba(0, 0, 0, 0.2)';
-			ctx.drawImage(cond, 24, 21, 110, 110);
+			
 		};
 
-		base.src = await fs.readFileAsync(path.join(__dirname, '..', '..', 'assets', 'profile', 'backgrounds', `${profile ? profile.background : 'default'}.png`));
-		cond.src = await request({
-			uri: user.user.displayAvatarURL.replace(/(png|jpg|jpeg|gif|webp)\?size=1024/, 'png'),
-			encoding: null
-		});
+		base.src = await fs.readFileAsync(path.join(__dirname, '..', '..', 'assets', 'blame', 'backgrounds', `bg.png`));
 		await generate();
 
-		return msg.channel.sendFile(await canvas.toBuffer(), `profile.png`);
+		return msg.channel.sendFile(await canvas.toBuffer(), `blame.png`);
 	}
 
 	wrapText(ctx, text, maxWidth) {
