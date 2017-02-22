@@ -4,13 +4,13 @@ const Database = require('../PostgreSQL');
 
 const database = new Database();
 
-let Tag = database.db.define('tags', {
-	userID: { type: Sequelize.STRING },
-	userName: { type: Sequelize.STRING },
-	guildID: { type: Sequelize.STRING },
-	guildName: { type: Sequelize.STRING },
-	name: { type: Sequelize.STRING },
-	content: { type: Sequelize.STRING(1800) }, // eslint-disable-line new-cap
+const Tag = database.db.define('tags', {
+	userID: Sequelize.STRING,
+	userName: Sequelize.STRING,
+	guildID: Sequelize.STRING,
+	guildName: Sequelize.STRING,
+	name: Sequelize.STRING,
+	content: Sequelize.STRING(1800), // eslint-disable-line new-cap
 	type: {
 		type: Sequelize.BOOLEAN,
 		defaultValue: false

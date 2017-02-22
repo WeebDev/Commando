@@ -4,7 +4,7 @@ const Database = require('../PostgreSQL');
 
 const database = new Database();
 
-let Item = database.db.define('items', {
+const Item = database.db.define('items', {
 	name: Sequelize.STRING,
 	price: Sequelize.INTEGER
 });

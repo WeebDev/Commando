@@ -1,7 +1,7 @@
 const { escapeMarkdown } = require('discord.js');
 const { oneLineTrim } = require('common-tags');
 
-const config = require('./settings');
+const config = require('../settings');
 
 module.exports = class Song {
 	constructor(video, member) {

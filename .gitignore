@@ -29,6 +29,5 @@ node_modules
 
 .vscode
 settings.json
-settings.db
 docsdata.json
 assets/profile/backgrounds/**

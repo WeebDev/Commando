@@ -2,11 +2,11 @@
 
 ## Installation guide for Ubuntu 16.04.2 LTS 
 
-#### Make sure the node version is > 7.0.0
+#### Make sure the node version is > 7.6.0
 
 ```bash
 node -v
-> 7.5.0
+> 7.6.0
 ```
 
 #### Install PostgresSQL
@@ -58,10 +58,10 @@ After you clone the settings, edit them with your connection information. You'll
 #### Launch Commando
 If there is a sequelize error, re-run the start command.
 ```bash
-node --harmony Commando.js
+node Commando.js
 ```
 
 If you run node with pm2
 ```bash
-pm2 start Commando.js --node-args='--harmony'
+pm2 start Commando.js
 ```
