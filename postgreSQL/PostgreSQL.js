@@ -15,6 +15,8 @@ class Database {
 	start() {
 		this.database.authenticate()
 			.then(() => winston.info('Connection has been established successfully.'))
+			.then(() => this.database.sync())
+			.then(() => winston.info('Syncing Database...'))
 			.catch(err => winston.error(`Unable to connect to the database: ${err}`));
 	}
 }

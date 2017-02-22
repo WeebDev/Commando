@@ -5,7 +5,6 @@ const Currency = require('./currency/Currency');
 const Experience = require('./currency/Experience');
 const { oneLine } = require('common-tags');
 const path = require('path');
-const sequelize = require('sequelize');
 const winston = require('winston');
 
 const Database = require('./postgreSQL/PostgreSQL');
@@ -26,7 +25,6 @@ let earnedRecently = [];
 let gainedXPRecently = [];
 
 database.start();
-sequelize.sync();
 redis.start();
 
 client.setProvider(new SequelizeProvider(database.db));
