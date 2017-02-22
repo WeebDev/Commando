@@ -66,8 +66,8 @@ client.on('error', winston.error)
 				return attachment.url.match(/\.(png|jpg|jpeg|gif|webp)$/);
 			});
 			const moneyEarned = hasImageAttachment
-				? Math.ceil(Math.random() * 7) + 1
-				: Math.ceil(Math.random() * 7) + 5;
+				? Math.ceil(Math.random() * 7) + 5
+				: Math.ceil(Math.random() * 7) + 1;
 
 			Currency._changeBalance(message.author.id, moneyEarned);
 
