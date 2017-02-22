@@ -32,3 +32,4 @@ settings.json
 repos/*
 docsdata.json
 assets/profile/backgrounds/**
+.travis.yml
