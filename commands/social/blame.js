@@ -34,10 +34,10 @@ module.exports = class BlameCommand extends Command {
 
 		Canvas.registerFont(path.join(__dirname, '..', '..', 'assets', 'profile', 'fonts', 'Roboto.ttf'), { family: 'Roboto' });
 		Canvas.registerFont(path.join(__dirname, '..', '..', 'assets', 'profile', 'fonts', 'NotoEmoji-Regular.ttf'), { family: 'Roboto' });
-		
+
 		const canvas = new Canvas(300, 300);
 		const ctx = canvas.getContext('2d');
-		
+
 		const base = new Image();
 
 		const generate = () => {
@@ -50,12 +50,12 @@ module.exports = class BlameCommand extends Command {
 			ctx.shadowColor = 'rgba(0, 0, 0, 0.4)';
 			ctx.shadowOffsetY = 2;
 			ctx.shadowBlur = 2;
-			
+
 			// Blame message
 			ctx.font = '20px Roboto';
 			ctx.fillStyle = '#F01111';
-			ctx.fillText("Blame", 50, 173);
-			
+			ctx.fillText('Blame', 50, 173);
+
 			// User
 			ctx.font = '20px Roboto';
 			ctx.fillStyle = '#F01111';
