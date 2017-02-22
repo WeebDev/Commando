@@ -34,15 +34,9 @@ module.exports = class BlameCommand extends Command {
 
 		Canvas.registerFont(path.join(__dirname, '..', '..', 'assets', 'profile', 'fonts', 'Roboto.ttf'), { family: 'Roboto' });
 		Canvas.registerFont(path.join(__dirname, '..', '..', 'assets', 'profile', 'fonts', 'NotoEmoji-Regular.ttf'), { family: 'Roboto' });
-
 		
 		const canvas = new Canvas(300, 300);
 		const ctx = canvas.getContext('2d');
-
-		const lines = this.wrapText(ctx, personalMessage, 110);
-
-		const base = new Image();
-		
 
 		const generate = () => {
 			// Environment Variables
@@ -55,61 +49,19 @@ module.exports = class BlameCommand extends Command {
 			ctx.shadowOffsetY = 2;
 			ctx.shadowBlur = 2;
 			
-			//blame
+			// Blame message
 			ctx.font = '20px Roboto';
 			ctx.fillStyle = '#F01111';
 			ctx.fillText("Blame", 50, 173);
 			
-			//user
+			// User
 			ctx.font = '20px Roboto';
 			ctx.fillStyle = '#F01111';
-			ctx.fillText(member, 50, 150);
-
-			
+			ctx.fillText(user, 50, 150);
 		};
-
 		base.src = await fs.readFileAsync(path.join(__dirname, '..', '..', 'assets', 'blame', 'backgrounds', `bg.png`));
 		await generate();
 
 		return msg.channel.sendFile(await canvas.toBuffer(), `blame.png`);
-	}
-
-	wrapText(ctx, text, maxWidth) {
-		const words = text.split(' ');
-		let lines = [];
-		let line = '';
-
-		if (ctx.measureText(text).width < maxWidth) {
-			return [text];
-		}
-
-		while (words.length > 0) {
-			let split = false;
-
-			while (ctx.measureText(words[0]).width >= maxWidth) {
-				const tmp = words[0];
-				words[0] = tmp.slice(0, -1);
-
-				if (!split) {
-					split = true;
-					words.splice(1, 0, tmp.slice(-1));
-				} else {
-					words[1] = tmp.slice(-1) + words[1];
-				}
-			}
-
-			if (ctx.measureText(line + words[0]).width < maxWidth) {
-				line += `${words.shift()} `;
-			} else {
-				lines.push(line);
-				line = '';
-			}
-
-			if (words.length === 0) {
-				lines.push(line);
-			}
-		}
-
-		return lines;
 	}
 };
