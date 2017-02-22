@@ -37,6 +37,8 @@ module.exports = class BlameCommand extends Command {
 		
 		const canvas = new Canvas(300, 300);
 		const ctx = canvas.getContext('2d');
+		
+		const base = new Image();
 
 		const generate = () => {
 			// Environment Variables
