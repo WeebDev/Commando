@@ -3,7 +3,7 @@ const Redis = require('../redis/Redis');
 
 const redis = new Redis();
 
-// rate * convert to decimal
+// Rate * convert to decimal
 const INTEREST_MATURE_RATE = 0.1;
 const UPDATE_DURATION = 30 * 60 * 1000;
 const MIN_INTEREST_RATE = 0.001;
