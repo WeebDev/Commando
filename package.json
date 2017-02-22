@@ -1,11 +1,11 @@
 {
   "name": "commando",
-  "version": "0.16.1",
+  "version": "0.17.0",
   "description": ".",
   "license": "MIT",
   "author": "Crawl",
   "scripts": {
-    "start": "node --harmony Commando.js",
+    "start": "node Commando.js",
     "update": "npm update",
     "test": "eslint . silent"
   },
@@ -32,24 +32,23 @@
     "jsdoc-parse": "1.2.7",
     "moment": "^2.17.1",
     "moment-duration-format": "^1.3.0",
-    "nani": "^1.2.0",
     "node-opus": "^0.2.4",
     "pg": "^6.1.2",
     "pg-hstore": "^2.3.2",
     "prism-media": "hydrabolt/prism-media",
-    "raven": "^1.1.1",
+    "raven": "^1.1.2",
     "redis": "^2.6.5",
     "request": "^2.79.0",
     "request-promise": "^4.1.1",
     "sequelize": "sequelize/sequelize",
     "simple-youtube-api": "^2.1.0",
     "winston": "^2.3.1",
-    "ytdl-core": "^0.9.0"
+    "ytdl-core": "^0.9.1"
   },
   "devDependencies": {
-    "eslint": "^3.15.0"
+    "eslint": "^3.16.0"
   },
   "engines": {
-    "node": ">=7.0.0"
+    "node": ">=7.6.0"
   }
 }

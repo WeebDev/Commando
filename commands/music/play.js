@@ -7,7 +7,7 @@ const YouTube = require('simple-youtube-api');
 const ytdl = require('ytdl-core');
 
 const config = require('../../settings');
-const Song = require('../../Song');
+const Song = require('../../structures/Song');
 const { version } = require('../../package');
 
 module.exports = class PlaySongCommand extends Command {

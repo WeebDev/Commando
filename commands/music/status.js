@@ -1,7 +1,7 @@
 const { Command } = require('discord.js-commando');
 const { stripIndents } = require('common-tags');
 
-const Song = require('../../Song');
+const Song = require('../../structures/Song');
 
 module.exports = class MusicStatusCommand extends Command {
 	constructor(client) {

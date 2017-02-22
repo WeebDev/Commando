@@ -15,8 +15,8 @@ class Redis {
 	}
 
 	start() {
-		this.redis.on('error', err => { winston.error(err); })
-			.on('reconnecting', () => { winston.warn('Reconnecting...'); });
+		this.redis.on('error', err => winston.error(err))
+			.on('reconnecting', () => winston.warn('Reconnecting...'));
 	}
 }
 

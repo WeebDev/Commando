@@ -6,7 +6,6 @@ const Experience = require('./currency/Experience');
 const fs = require('fs');
 const { oneLine } = require('common-tags');
 const path = require('path');
-const Raven = require('raven');
 const winston = require('winston');
 
 const Database = require('./postgreSQL/PostgreSQL');
@@ -35,9 +34,6 @@ const client = new commando.Client({
 let earnedRecently = [];
 let gainedXPRecently = [];
 
-Raven.config(config.ravenKey);
-Raven.install();
-
 database.start();
 redis.start();
 
@@ -59,8 +55,8 @@ client.on('error', winston.error)
 		`);
 		Currency.leaderboard();
 	})
-	.on('disconnect', () => { winston.warn('Disconnected!'); })
-	.on('reconnect', () => { winston.warn('Reconnecting...'); })
+	.on('disconnect', () => winston.warn('Disconnected!'))
+	.on('reconnect', () => winston.warn('Reconnecting...'))
 	.on('commandRun', (cmd, promise, msg, args) => {
 		winston.info(oneLine`${msg.author.username}#${msg.author.discriminator} (${msg.author.id})
 			> ${msg.guild ? `${msg.guild.name} (${msg.guild.id})` : 'DM'}
