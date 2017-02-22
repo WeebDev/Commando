@@ -18,7 +18,7 @@ class EmojiArgumentType extends ArgumentType {
 		return false;
 	}
 
-	parse(value, msg) {
+	parse(value, msg) { // eslint-disable-line consistent-return
 		if (value.match(regex)) {
 			const emoji = msg.client.emojis.get(value.match(regex)[2]);
 			if (emoji) return emoji;
