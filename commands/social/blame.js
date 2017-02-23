@@ -61,7 +61,7 @@ module.exports = class BlameCommand extends Command {
 			ctx.fillStyle = '#F01111';
 			ctx.fillText(user, 50, 150);
 		};
-		base.src = await fs.readFileAsync(path.join(__dirname, '..', '..', 'assets', 'blame', 'backgrounds', `bg.png`));
+		base.src = await fs.readFileAsync(path.join(__dirname, '..', '..', 'assets', `bg.png`));
 		await generate();
 
 		return msg.channel.sendFile(await canvas.toBuffer(), `blame.png`);
