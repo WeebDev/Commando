@@ -99,9 +99,12 @@ client.on('error', winston.error)
 	})
 	.on('messageReactionAdd', async (messageReaction, user) => {
 		if (messageReaction.emoji.name !== '⭐') return;
+
 		const starboard = messageReaction.message.guild.channels.find('name', 'starboard');
+
 		if (!starboard) return;
 		let image;
+
 		if (messageReaction.message.attachments.some(attachment => attachment.url.match(/\.(png|jpg|jpeg|gif|webp)$/))) image = messageReaction.message.attachments.first().url;
 		await starboard.send(stripIndents`
 			●▬▬▬▬▬▬▬▬▬▬▬▬▬▬●

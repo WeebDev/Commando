@@ -14,14 +14,14 @@ module.exports = class UnstarCommand extends Command {
 					key: 'message',
 					prompt: 'What would you like to star?\n',
 					type: 'message',
-					default: null
+					default: ''
 				}
 			]
 		});
 	}
 
 	async run(msg, args) {
-		if (!msg.guild.channels.exists('name', 'starboard') || this.client.users.get('219833449530261506').presence.status === 'online') return;
+		if (!msg.guild.channels.exists('name', 'starboard')) return;
 		args.message.delete().catch(null);
 		msg.delete().catch(null);
 		return;

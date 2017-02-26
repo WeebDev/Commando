@@ -1,6 +1,6 @@
 {
   "name": "commando",
-  "version": "0.17.0",
+  "version": "0.18.0",
   "description": ".",
   "license": "MIT",
   "author": "Crawl",
@@ -44,7 +44,7 @@
     "ytdl-core": "^0.9.1"
   },
   "devDependencies": {
-    "eslint": "^3.16.0"
+    "eslint": "^3.16.1"
   },
   "engines": {
     "node": ">=7.6.0"
