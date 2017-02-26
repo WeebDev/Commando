@@ -50,19 +50,18 @@ module.exports = class PleaseCommand extends Command {
 			ctx.shadowColor = 'rgba(0, 0, 0, 0.4)';
 			ctx.shadowOffsetY = 2;
 			ctx.shadowBlur = 2;
-      
-      // User
+
+			// User
 			ctx.font = '20px Roboto';
 			ctx.fillStyle = '#F01111';
 			ctx.fillText(user, 50, 173);
-      
+
 			// Blame message
 			ctx.font = '20px Roboto';
 			ctx.fillStyle = '#F01111';
-			ctx.fillText('Pls', 50, 150);
-
-			
+			ctx.fillText('Pls', 50, 150);	
 		};
+
 		base.src = await fs.readFileAsync(path.join(__dirname, '..', '..', 'assets', `bg.png`));
 		await generate();
 
