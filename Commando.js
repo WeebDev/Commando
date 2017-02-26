@@ -4,6 +4,7 @@ const commando = require('discord.js-commando');
 const Currency = require('./currency/Currency');
 const Experience = require('./currency/Experience');
 const { oneLine, stripIndents } = require('common-tags');
+const moment = require('moment');
 const path = require('path');
 const winston = require('winston');
 
@@ -98,17 +99,16 @@ client.on('error', winston.error)
 	})
 	.on('messageReactionAdd', async (messageReaction, user) => {
 		if (messageReaction.emoji.name !== '⭐') return;
-		if (!messageReaction.message.guild.channels.exists('name', 'starboard')) return;
-		const moment = require('moment');
+		const starboard = messageReaction.message.guild.channels.find('name', 'starboard');
+		if (!starboard) return;
 		let image;
 		if (messageReaction.message.attachments.some(attachment => attachment.url.match(/\.(png|jpg|jpeg|gif|webp)$/))) image = messageReaction.message.attachments.first().url;
-		await messageReaction.message.guild.channels.find('name', 'starboard').send(stripIndents`
+		await starboard.send(stripIndents`
 			●▬▬▬▬▬▬▬▬▬▬▬▬▬▬●
 			**Author**: \`${user.username} #${user.discriminator}\` | **Channel**: \`${messageReaction.message.channel.name}\` | **ID**: \`${messageReaction.message.id}\` | **Time**: \`${moment(new Date()).format('DD/MM/YYYY @ hh:mm:ss a')}\`
 			**Message**:
 			${messageReaction.message.cleanContent}
-			`).catch(null);
-		image ? await messageReaction.message.guild.channels.find('name', 'starboard').sendFile(image) : null; // eslint-disable-line no-unused-expressions
+			`, { file: image }).catch(null);
 	})
 	.on('commandError', (cmd, err) => {
 		if (err instanceof commando.FriendlyError) return;
