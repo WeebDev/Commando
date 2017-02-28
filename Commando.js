@@ -3,6 +3,7 @@ global.Promise = require('bluebird');
 const commando = require('discord.js-commando');
 const Currency = require('./currency/Currency');
 const Experience = require('./currency/Experience');
+const starBoard = require('./postgreSQL/models/StarBoard');
 const { oneLine, stripIndents } = require('common-tags');
 const moment = require('moment');
 const path = require('path');
@@ -100,18 +101,46 @@ client.on('error', winston.error)
 	.on('messageReactionAdd', async (messageReaction, user) => {
 		if (messageReaction.emoji.name !== '⭐') return;
 
-		const starboard = messageReaction.message.guild.channels.find('name', 'starboard');
-
+		const message = messageReaction.message;
+		const starboard = message.guild.channels.find('name', 'starboard');
 		if (!starboard) return;
-		let image;
+		if (message.author.id === user.id) return;
+		let settings = await starBoard.findOne({ where: { guildID: message.guild.id } });
+		if (!settings) settings = await starBoard.create({ guildID: message.guild.id });
+		let starred = settings.starred;
 
-		if (messageReaction.message.attachments.some(attachment => attachment.url.match(/\.(png|jpg|jpeg|gif|webp)$/))) image = messageReaction.message.attachments.first().url;
-		await starboard.send(stripIndents`
-			●▬▬▬▬▬▬▬▬▬▬▬▬▬▬●
-			**Author**: \`${user.username} #${user.discriminator}\` | **Channel**: \`${messageReaction.message.channel.name}\` | **ID**: \`${messageReaction.message.id}\` | **Time**: \`${moment(new Date()).format('DD/MM/YYYY @ hh:mm:ss a')}\`
-			**Message**:
-			${messageReaction.message.cleanContent}
-			`, { file: image }).catch(null);
+		if (starred.hasOwnProperty(message.id)) {
+			if (starred[message.id].stars.includes(user.id)) return message.reply('you cannot star the same message twice!'); // eslint-disable-line consistent-return
+			const starCount = starred[message.id].count += 1;
+			const starredMessage = await starboard.fetchMessage(starred[message.id].starredMessageID);
+			const edit = starredMessage.content.replace(`⭐ ${starCount - 1}`, `⭐ ${starCount}`);
+			await starredMessage.edit(edit);
+			starred[message.id].count = starCount;
+			starred[message.id].stars.push(user.id);
+			settings.starred = starred;
+			await settings.save();
+		} else {
+			const starCount = 1;
+			let image;
+
+			if (message.attachments.some(attachment => attachment.url.match(/\.(png|jpg|jpeg|gif|webp)$/))) image = message.attachments.first().url;
+			const sentStar = await starboard.send(stripIndents`
+				●▬▬▬▬▬▬▬▬▬▬▬▬▬▬●
+				⭐ ${starCount}
+				**Author**: \`${message.author.username} #${message.author.discriminator}\` | **Channel**: \`${message.channel.name}\` | **ID**: \`${message.id}\` | **Time**: \`${moment(new Date()).format('DD/MM/YYYY @ hh:mm:ss a')}\`
+				**Message**:
+				${message.cleanContent}
+				`, { file: image }).catch(null);
+
+			starred[message.id] = {};
+			starred[message.id].author = message.author.id;
+			starred[message.id].starredMessageID = sentStar.id;
+			starred[message.id].count = starCount;
+			starred[message.id].stars = [];
+			starred[message.id].stars.push(user.id);
+			settings.starred = starred;
+			await settings.save();
+		}
 	})
 	.on('commandError', (cmd, err) => {
 		if (err instanceof commando.FriendlyError) return;

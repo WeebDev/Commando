@@ -1,4 +1,5 @@
 const { Command } = require('discord.js-commando');
+const starBoard = require('../../postgreSQL/models/StarBoard');
 
 module.exports = class UnstarCommand extends Command {
 	constructor(client) {
@@ -12,7 +13,7 @@ module.exports = class UnstarCommand extends Command {
 			args: [
 				{
 					key: 'message',
-					prompt: 'What would you like to star?\n',
+					prompt: 'What would you like to unstar?\n',
 					type: 'message',
 					default: ''
 				}
@@ -21,9 +22,30 @@ module.exports = class UnstarCommand extends Command {
 	}
 
 	async run(msg, args) {
-		if (!msg.guild.channels.exists('name', 'starboard')) return;
-		args.message.delete().catch(null);
-		msg.delete().catch(null);
-		return;
+		const starboard = msg.guild.channels.find('name', 'starboard');
+		if (!starboard) return msg.reply('I could not find a channel named `starboard`.');
+
+		const settings = await starBoard.findOne({ where: { guildID: msg.guild.id } });
+		if (!settings) return msg.reply('Nobody\'s starred before!');
+		let starred = settings.starred;
+		if (!starred.hasOwnProperty(args.message.id)) return msg.reply('This message isn\t starred...');
+		if (!starred[args.message.id].stars.includes(msg.author.id)) return msg.reply('You can only unstar a message you have starred before!');
+
+		const starCount = starred[args.message.id].count -= 1;
+		const starredMessage = await starboard.fetchMessage(starred[args.message.id].starredMessageID);
+
+		if (starred[args.message.id].count === 0) {
+			delete starred[args.message.id];
+			await starredMessage.delete().catch(null);
+		} else {
+			const edit = starredMessage.content.replace(`⭐ ${starCount + 1}`, `⭐ ${starCount}`);
+			await starredMessage.edit(edit).catch(null);
+
+			starred[args.message.id].count = starCount;
+			starred[args.message.id].stars.splice(starred[args.message.id].stars.indexOf(msg.author.id));
+		}
+		settings.starred = starred;
+		await settings.save();
+		return msg.delete().catch(null);
 	}
 };
