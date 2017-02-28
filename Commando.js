@@ -22,6 +22,7 @@ const client = new commando.Client({
 	unknownCommandResponse: false,
 	disableEveryone: true
 });
+const invitePattern = new RegExp('/https:\/\/discord\.gg\/\w{5}/');
 
 let earnedRecently = [];
 let gainedXPRecently = [];
@@ -59,7 +60,7 @@ client.on('error', winston.error)
 	.on('message', async (message) => {
 		if (message.channel.type === 'dm') return;
 
-		if (message.guild.id === '222078108977594368' && !message.member.roles.has('242700009961816065') && message.content.includes('discord.gg')) {
+		if (message.guild.id === '222078108977594368' && !message.member.roles.has('242700009961816065') && invitePattern.test(message.content)) {
 			message.delete();
 			message.reply('Please do not post invite links on this server. If you wish to give invite links, do so in direct messages.');
 		}
