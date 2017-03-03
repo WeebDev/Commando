@@ -60,9 +60,8 @@ module.exports = class ItemTradeCommand extends Command {
 		const user = args.member;
 		const offerAmount = args.offerAmount;
 		const receiveAmount = args.receiveAmount;
-
-		const offerItem = args.offerItem.toLowerCase().match(/^donuts?$/) ? '' : args.offerItem.toLowerCase();
-		const receiveItem = args.receiveItem.toLowerCase().match(/^donuts?$/) ? '' : args.receiveItem.toLowerCase();
+		const offerItem = this.convert(args.offerItem, offerAmount);
+		const receiveItem = this.convert(args.receiveItem, receiveAmount);
 
 		if (user.id === msg.author.id) return msg.reply('what are you trying to achieve by trading with yourself?');
 		if (user.user.bot) return msg.reply('bots got nothing to trade, man.');
@@ -77,8 +76,8 @@ module.exports = class ItemTradeCommand extends Command {
 		const offerItemBalance = offerInv.content[offerItem] ? offerInv.content[offerItem].amount : 0;
 		const receiveItemBalance = receiveInv.content[receiveItem] ? receiveInv.content[receiveItem].amount : 0;
 
-		if (!offerItem && offerAmount > offerBalance) return msg.reply(`you only have ${Currency.convert(offerBalance)}`);
-		if (!receiveItem && receiveAmount > receiveBalance) return msg.reply(`${user.displayName} only has ${Currency.convert(receiveBalance)}`);
+		if (!offerItem && (offerAmount > offerBalance)) return msg.reply(`you have ${Currency.convert(offerBalance)}`);
+		if (!receiveItem && (receiveAmount > receiveBalance)) return msg.reply(`${user.displayName} has ${Currency.convert(receiveBalance)}`);
 		if (offerAmount > offerItemBalance) return msg.reply(`,you have ${offerItemBalance} ${offerItem}s.`);
 		if (receiveAmount > receiveItemBalance) return msg.reply(`,${user.displayName} has ${receiveItemBalance} ${receiveItem}s.`);
 
@@ -110,6 +109,14 @@ module.exports = class ItemTradeCommand extends Command {
 		else this.sendItems(receiveInv, offerInv, receiveItem, receiveAmount);
 
 		return msg.say('Trade successful.');
+	}
+
+	convert(item, amount) {
+		item = item.toLowerCase();
+		if (/donuts?/.test(item)) return '';
+
+		if (amount > 1 && /s$/.test(item)) return item.slice(0, -1);
+		return item;
 	}
 
 	sendItems(fromInventory, toInventory, item, amount) {
