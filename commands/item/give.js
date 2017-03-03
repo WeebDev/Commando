@@ -47,7 +47,7 @@ module.exports = class ItemGiveCommand extends Command {
 
 	async run(msg, args) {
 		const user = args.member;
-		const item = args.item.toLowerCase();
+		const item = this.convert(args.item);
 		const inventory = await Inventory.fetchInventory(msg.author.id);
 
 		if (!inventory.content[item]) return msg.reply(`you don't have any ${item}s.`);
@@ -69,5 +69,12 @@ module.exports = class ItemGiveCommand extends Command {
 		receiveInv.addItems(itemGroup);
 
 		return msg.reply(`${user.displayName} successfully received your item(s)!`);
+	}
+
+	convert(item) {
+		item = item.toLowerCase();
+
+		if (/s$/.test(item)) return item.slice(0, -1);
+		return item;
 	}
 };
