@@ -27,6 +27,8 @@ module.exports = class StarCommand extends Command {
 	async run(msg, args) {
 		const starboard = msg.guild.channels.find('name', 'starboard');
 
+		if (!starboard) return msg.reply('can\'t star things without a #starboard channel. Create one now!');
+
 		if (args.message.author.id === msg.author.id) return msg.reply('sorry, you cannot star your own message!');
 		let settings = await starBoard.findOne({ where: { guildID: msg.guild.id } });
 		if (!settings) settings = await starBoard.create({ guildID: msg.guild.id });
