@@ -60,8 +60,8 @@ module.exports = class ItemTradeCommand extends Command {
 		const user = args.member;
 		const offerAmount = args.offerAmount;
 		const receiveAmount = args.receiveAmount;
-		const offerItem = this.convert(args.offerItem, offerAmount);
-		const receiveItem = this.convert(args.receiveItem, receiveAmount);
+		const offerItem = this.isDonuts(args.offerItem, offerAmount);
+		const receiveItem = this.isDonuts(args.receiveItem, receiveAmount);
 
 		if (user.id === msg.author.id) return msg.reply('what are you trying to achieve by trading with yourself?');
 		if (user.user.bot) return msg.reply('bots got nothing to trade, man.');
@@ -111,14 +111,10 @@ module.exports = class ItemTradeCommand extends Command {
 		return msg.say('Trade successful.');
 	}
 
-	convert(item, amount) {
-		item = item.toLowerCase();
+	isDonuts(item, amount) {
 		if (/donuts?/.test(item)) return '';
-
-		if (amount > 1 && /s$/.test(item)) return item.slice(0, -1);
-		return item;
+		return ItemGroup.convert(item, amount);
 	}
-
 	sendItems(fromInventory, toInventory, item, amount) {
 		const itemGroup = new ItemGroup(item, amount);
 

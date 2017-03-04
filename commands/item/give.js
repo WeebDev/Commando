@@ -32,9 +32,8 @@ module.exports = class ItemGiveCommand extends Command {
 					key: 'amount',
 					label: 'amount of items to give',
 					prompt: 'how many items do you want to give to that user?\n',
-					validate: amount => {
-						return /^(?:\d+|-all)$/g.test(amount);
-					}
+					type: 'integer',
+					min: 1
 				},
 				{
 					key: 'item',
@@ -47,20 +46,16 @@ module.exports = class ItemGiveCommand extends Command {
 
 	async run(msg, args) {
 		const user = args.member;
-		const item = this.convert(args.item);
+		const amount = args.amount;
+		const item = ItemGroup.convert(args.item, amount);
 		const inventory = await Inventory.fetchInventory(msg.author.id);
 
-		if (!inventory.content[item]) return msg.reply(`you don't have any ${item}s.`);
-
-		const itemBalance = inventory.content[item].amount;
-		const amount = args.amount === '-all'
-			? inventory.content[item].amount
-			: parseInt(args.amount);
+		const itemBalance = inventory.content[item] ? inventory.content[item].amount : 0;
 
 		if (user.id === msg.author.id) return msg.reply("giving items to yourself won't change anything.");
 		if (user.user.bot) return msg.reply("don't give your items to bots: they're bots, man.");
-		if (amount <= 0) return msg.reply("you can't trade 0 or less items.");
-		if (amount > itemBalance) return msg.reply(`you only have ${itemBalance} ${item}(s).`);
+		if (amount <= 0) return msg.reply("you can't give 0 or less items.");
+		if (amount > itemBalance) return msg.reply(`you have ${itemBalance} ${item}(s).`);
 
 		const itemGroup = new ItemGroup(item, amount);
 		const receiveInv = await Inventory.fetchInventory(user.id);
@@ -69,12 +64,5 @@ module.exports = class ItemGiveCommand extends Command {
 		receiveInv.addItems(itemGroup);
 
 		return msg.reply(`${user.displayName} successfully received your item(s)!`);
-	}
-
-	convert(item) {
-		item = item.toLowerCase();
-
-		if (/s$/.test(item)) return item.slice(0, -1);
-		return item;
 	}
 };
