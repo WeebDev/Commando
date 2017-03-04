@@ -8,7 +8,7 @@ module.exports = class StarCommand extends Command {
 	constructor(client) {
 		super(client, {
 			name: 'star',
-			group: 'fun',
+			group: 'util',
 			memberName: 'star',
 			description: 'Stars a message.',
 			examples: ['star 189696688657530880'],
@@ -26,6 +26,8 @@ module.exports = class StarCommand extends Command {
 
 	async run(msg, args) {
 		const starboard = msg.guild.channels.find('name', 'starboard');
+
+		if (!starboard) return msg.reply('can\'t star things without a #starboard channel. Create one now!');
 
 		if (args.message.author.id === msg.author.id) return msg.reply('sorry, you cannot star your own message!');
 		let settings = await starBoard.findOne({ where: { guildID: msg.guild.id } });
