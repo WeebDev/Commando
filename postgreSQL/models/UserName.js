@@ -5,12 +5,14 @@ const Database = require('../PostgreSQL');
 const database = new Database();
 
 const UserName = database.db.define('UserNames', {
-	userid: Sequelize.STRING,
-	username: Sequelize.STRING
+  	userid: Sequelize.STRING,
+  	username: Sequelize.STRING
 }, {
 	indexes: [{
-		fields: ['userid', 'username'],
-		unique: true
+    	fields: ['userid']
+	}, {
+    	fields: ['userid', 'username'],
+    	unique: true
 	}]
 });
 
