@@ -8,7 +8,7 @@ module.exports = class TranslateCommand extends Command {
 		super(client, {
 			name: 'translate',
 			aliases: ['t'],
-			group: 'translate',
+			group: 'util',
 			memberName: 'translate',
 			description: 'Translates text.',
 			throttling: {
