@@ -179,8 +179,7 @@ client.on('error', winston.error)
 	})
 	.on('userUpdate', (oldUser, newUser) => {
 		if (oldUser.username !== newUser.username) {
-			userName.create({userid: newUser.id, username: oldUser.username}).catch(()=>{})
-			console.log('created oldusername in db')
+			userName.create({ userid: newUser.id, username: oldUser.username }).catch(() => null);
 		}
 	});
 

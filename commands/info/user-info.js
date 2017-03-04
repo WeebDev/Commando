@@ -32,7 +32,7 @@ module.exports = class UserInfoCommand extends Command {
 		const member = args.member;
 		const user = member.user;
 
-		const userNames = await userName.findAll({where: {userid: user.id}});
+		const userNames = await userName.findAll({ where: { userid: user.id } });
 
 		return msg.embed({
 			color: 3447003,
@@ -51,7 +51,7 @@ module.exports = class UserInfoCommand extends Command {
 						• Created at: ${moment.utc(user.createdAt).format('dddd, MMMM Do YYYY, HH:mm:ss ZZ')}${user.bot
 							? '\n• Is a bot account'
 							: ''}
-						• Aliases: ${userNames.length ? userNames.map(u => u.username).join(", ") : user.username}
+						• Aliases: ${userNames.length ? userNames.map(uName => uName.username).join(', ') : user.username}
 						• Status: ${user.presence.status}
 						• Game: ${user.presence.game ? user.presence.game.name : 'None'}
 					`
