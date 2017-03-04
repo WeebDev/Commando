@@ -5,7 +5,7 @@ module.exports = class UnstarCommand extends Command {
 	constructor(client) {
 		super(client, {
 			name: 'unstar',
-			group: 'fun',
+			group: 'util',
 			memberName: 'unstar',
 			description: 'Unstars a message.',
 			examples: ['unstar 189696688657530880'],

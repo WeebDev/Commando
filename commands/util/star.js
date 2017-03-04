@@ -8,7 +8,7 @@ module.exports = class StarCommand extends Command {
 	constructor(client) {
 		super(client, {
 			name: 'star',
-			group: 'fun',
+			group: 'util',
 			memberName: 'star',
 			description: 'Stars a message.',
 			examples: ['star 189696688657530880'],
