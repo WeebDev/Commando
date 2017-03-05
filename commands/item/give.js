@@ -7,12 +7,7 @@ module.exports = class ItemGiveCommand extends Command {
 	constructor(client) {
 		super(client, {
 			name: 'give',
-			aliases: [
-				'give-item',
-				'give-itmes',
-				'item-give',
-				'items-give'
-			],
+			aliases: ['give-item', 'give-itmes', 'item-give', 'items-give'],
 			group: 'item',
 			memberName: 'give',
 			description: `Give your items to another user.`,
@@ -29,16 +24,16 @@ module.exports = class ItemGiveCommand extends Command {
 					type: 'member'
 				},
 				{
-					key: 'amount',
-					label: 'amount of items to give',
-					prompt: 'how many items do you want to give to that user?\n',
-					type: 'integer',
-					min: 1
-				},
-				{
 					key: 'item',
 					prompt: 'what item would you like to give?\n',
 					type: 'string'
+				},
+				{
+					key: 'amount',
+					label: 'amount of items to give',
+					prompt: 'how many items do you want to give?\n',
+					type: 'integer',
+					min: 1
 				}
 			]
 		});

@@ -8,11 +8,7 @@ module.exports = class ItemTradeCommand extends Command {
 	constructor(client) {
 		super(client, {
 			name: 'item-trade',
-			aliases: [
-				'trade-items',
-				'trade-item',
-				'items-trade'
-			],
+			aliases: ['trade-items', 'trade-item', 'items-trade'],
 			group: 'item',
 			memberName: 'trade',
 			description: `Trade items with another user.`,
@@ -29,21 +25,14 @@ module.exports = class ItemTradeCommand extends Command {
 					type: 'member'
 				},
 				{
-					key: 'offerAmount',
-					label: 'amount of items to give',
-					prompt: 'how many would you like to offer?\n',
-					type: 'integer',
-					min: 1
-				},
-				{
 					key: 'offerItem',
-					prompt: 'what item would you like to offer?\n',
+					prompt: 'what item would you like to trade?\n',
 					type: 'string'
 				},
 				{
-					key: 'receiveAmount',
-					label: 'amount of items to receive',
-					prompt: 'how many would you like to receive?\n',
+					key: 'offerAmount',
+					label: 'amount of items to give',
+					prompt: 'how many items would you like to trade?\n',
 					type: 'integer',
 					min: 1
 				},
@@ -51,6 +40,13 @@ module.exports = class ItemTradeCommand extends Command {
 					key: 'receiveItem',
 					prompt: 'what item would you like to receive?\n',
 					type: 'string'
+				},
+				{
+					key: 'receiveAmount',
+					label: 'amount of items to receive',
+					prompt: 'how many items would you like to receive?\n',
+					type: 'integer',
+					min: 1
 				}
 			]
 		});
@@ -65,7 +61,7 @@ module.exports = class ItemTradeCommand extends Command {
 
 		if (user.id === msg.author.id) return msg.reply('what are you trying to achieve by trading with yourself?');
 		if (user.user.bot) return msg.reply('bots got nothing to trade, man.');
-		if (!(offerItem + receiveItem)) return msg.reply("you can't trade donuts for donuts.");
+		if (!offerItem && !receiveItem) return msg.reply("you can't trade donuts for donuts.");
 
 		const offerBalance = Currency.getBalance(msg.author.id);
 		const receiveBalance = Currency.getBalance(user.id);
@@ -73,17 +69,17 @@ module.exports = class ItemTradeCommand extends Command {
 		const offerInv = Inventory.fetchInventory(msg.author.id);
 		const receiveInv = Inventory.fetchInventory(user.id);
 
-		const offerItemBalance = offerInv.content[offerItem] ? offerInv.content[offerItem].amount : 0;
-		const receiveItemBalance = receiveInv.content[receiveItem] ? receiveInv.content[receiveItem].amount : 0;
+		const offerItemBalance = offerInv.content[offerItem] ? offerInv.content[offerItem].amount : null;
+		const receiveItemBalance = receiveInv.content[receiveItem] ? receiveInv.content[receiveItem].amount : null;
 
-		if (!offerItem && (offerAmount > offerBalance)) return msg.reply(`you have ${Currency.convert(offerBalance)}`);
-		if (!receiveItem && (receiveAmount > receiveBalance)) return msg.reply(`${user.displayName} has ${Currency.convert(receiveBalance)}`);
-		if (offerAmount > offerItemBalance) return msg.reply(`,you have ${offerItemBalance} ${offerItem}s.`);
-		if (receiveAmount > receiveItemBalance) return msg.reply(`,${user.displayName} has ${receiveItemBalance} ${receiveItem}s.`);
+		const offerValidation = this.validate(offerItem, offerAmount, offerBalance, offerItemBalance, 'you');
+		const receiveValidation = this.validate(receiveItem, receiveAmount, receiveBalance, receiveItemBalance, user.displayName);
+		if (offerValidation) return msg.reply(offerValidation);
+		if (receiveValidation) return msg.reply(receiveValidation);
 
 		const embed = {
 			title: `${msg.member.displayName} < -- > ${user.displayName}`,
-			description: 'Type `accept` within the next 30 seconds to accept this offer.',
+			description: 'Type `accept` within the next 30 seconds to accept this trade.',
 			fields: [
 				{
 					name: msg.member.displayName,
@@ -111,8 +107,21 @@ module.exports = class ItemTradeCommand extends Command {
 		return msg.say('Trade successful.');
 	}
 
+	validate(item, amount, balance, itemBalance, user) {
+		const person = user === 'you';
+
+		if (item) {
+			if (!itemBalance) return `${user} ${person ? "don't" : "doesn't"} have any ${item}s.`;
+			if (amount > itemBalance) return `${user} ${person ? 'have' : 'has'} only ${itemBalance} ${item}s.`;
+		} else if (amount > balance) {
+			return `${user} ${person ? 'have' : 'has'} only ${Currency.convert(balance)}`;
+		}
+
+		return null;
+	}
+
 	isDonuts(item, amount) {
-		if (/donuts?/.test(item)) return '';
+		if (/donuts?/.test(item)) return null;
 		return ItemGroup.convert(item, amount);
 	}
 	sendItems(fromInventory, toInventory, item, amount) {
