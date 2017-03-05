@@ -37,7 +37,7 @@ module.exports = class RepShowCommand extends Command {
 		}));
 
 		const embed = {
-			color: positive > negative ? 0x52C652 : 0xE93F3C,
+			color: positive === negative ? 0xF5AD1E : positive > negative ? 0x52C652 : 0xE93F3C,
 			author: {
 				name: `${msg.author.username}#${msg.author.discriminator} (${msg.author.id})`,
 				icon_url: msg.author.displayAvatarURL // eslint-disable-line camelcase
