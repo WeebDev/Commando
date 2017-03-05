@@ -38,9 +38,9 @@ module.exports = class TranslateCommand extends Command {
 	}
 
 	async run(msg, args) {
+		const query = encodeURIComponent(args.query);
 		const to = args.to;
 		const from = args.from;
-		const query = encodeURIComponent(args.query);
 		const response = await request({
 			uri: `https://api.kurisubrooks.com/api/translate?to=${to}&from=${from}&query=${query}`,
 			headers: { 'User-Agent': `Commando v${version} (https://github.com/WeebDev/Commando/)` },
