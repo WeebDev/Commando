@@ -59,14 +59,14 @@ client.on('error', winston.error)
 	})
 	.on('message', async (message) => {
 		if (message.channel.type === 'dm') return;
+		if (message.author.bot) return;
 
-		if (message.guild.id === '222078108977594368' && !message.member.roles.has('242700009961816065') && /(discord\.gg\/.+|discordapp\.com\/invite\/.+)/i.test(message.content)) {
+		if (message.guild.id === '222078108977594368' && !message.member.roles.exists('name', 'Server Staff') && /(discord\.gg\/.+|discordapp\.com\/invite\/.+)/i.test(message.content)) {
 			if (message.deletable && message.author.id !== client.user.id) message.delete();
 			message.reply('Please do not post invite links on this server. If you wish to give invite links, do so in direct messages.');
 		}
 		const channelLocks = client.provider.get(message.guild.id, 'locks', []);
 		if (channelLocks.includes(message.channel.id)) return;
-		if (message.author.bot) return;
 
 		if (!earnedRecently.includes(message.author.id)) {
 			const hasImageAttachment = message.attachments.some(attachment => {
