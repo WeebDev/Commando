@@ -4,7 +4,7 @@ const Database = require('../PostgreSQL');
 
 const database = new Database();
 
-const UserName = database.db.define('UserNames', {
+const UserName = database.db.define('userName', {
 	userid: Sequelize.STRING,
 	username: Sequelize.STRING
 }, {

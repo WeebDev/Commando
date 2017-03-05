@@ -1,12 +1,7 @@
 global.Promise = require('bluebird');
 
 const commando = require('discord.js-commando');
-const Currency = require('./currency/Currency');
-const Experience = require('./currency/Experience');
-const starBoard = require('./postgreSQL/models/StarBoard');
-const userName = require('./postgreSQL/models/UserName');
-const { oneLine, stripIndents } = require('common-tags');
-const moment = require('moment');
+const { oneLine } = require('common-tags');
 const path = require('path');
 const winston = require('winston');
 
@@ -23,6 +18,11 @@ const client = new commando.Client({
 	unknownCommandResponse: false,
 	disableEveryone: true
 });
+
+const Currency = require('./currency/Currency');
+const Experience = require('./currency/Experience');
+const starBoard = require('./postgreSQL/models/StarBoard');
+const userName = require('./postgreSQL/models/UserName');
 
 let earnedRecently = [];
 let gainedXPRecently = [];
@@ -105,45 +105,102 @@ client.on('error', winston.error)
 	})
 	.on('messageReactionAdd', async (messageReaction, user) => {
 		if (messageReaction.emoji.name !== '⭐') return;
+		if (messageReaction.message.author.id === user.id) return message.channel.send(`${user}, you cannot star your own messages!`); // eslint-disable-line consistent-return
 
 		const message = messageReaction.message;
 		const starboard = message.guild.channels.find('name', 'starboard');
 		if (!starboard) return;
-		if (message.author.id === user.id) return;
+
 		let settings = await starBoard.findOne({ where: { guildID: message.guild.id } });
 		if (!settings) settings = await starBoard.create({ guildID: message.guild.id });
-		let starred = settings.starred;
+		const starred = settings.starred;
 
 		if (starred.hasOwnProperty(message.id)) {
-			if (starred[message.id].stars.includes(user.id)) return message.reply('you cannot star the same message twice!'); // eslint-disable-line consistent-return
+			if (starred[message.id].stars.includes(user.id)) return message.channel.send(`${user}, you cannot star the same message twice!`); // eslint-disable-line consistent-return
 			const starCount = starred[message.id].count += 1;
 			const starredMessage = await starboard.fetchMessage(starred[message.id].starredMessageID);
-			const edit = starredMessage.content.replace(`⭐ ${starCount - 1}`, `⭐ ${starCount}`);
-			await starredMessage.edit(edit);
+			const starredMessageContent = starred[message.id].starredMessageContent;
+			const starredMessageAttachmentImage = starred[message.id].starredMessageImage;
+			const starredMessageDate = starred[message.id].starredMessageDate;
+			const edit = starredMessage.embeds[0].footer.text.replace(`${starCount - 1} ⭐`, `${starCount} ⭐`);
+			await starredMessage.edit({
+				embed: {
+					author: {
+						icon_url: message.author.displayAvatarURL, // eslint-disable-line camelcase
+						name: `${message.author.username}#${message.author.discriminator} (${message.author.id})`
+					},
+					color: 0xFFAC33,
+					fields: [
+						{
+							name: 'ID',
+							value: message.id,
+							inline: true
+						},
+						{
+							name: 'Channel',
+							value: message.channel.toString(),
+							inline: true
+						},
+						{
+							name: 'Message',
+							value: starredMessageContent ? starredMessageContent : '\u200B'
+						}
+					],
+					image: { url: starredMessageAttachmentImage ? starredMessageAttachmentImage : undefined },
+					timestamp: starredMessageDate,
+					footer: { text: edit }
+				}
+			}).catch(null);
 			starred[message.id].count = starCount;
 			starred[message.id].stars.push(user.id);
 			settings.starred = starred;
+
 			await settings.save();
 		} else {
 			const starCount = 1;
-			let image;
+			let attachmentImage;
+			if (message.attachments.some(attachment => attachment.url.match(/\.(png|jpg|jpeg|gif|webp)$/))) attachmentImage = message.attachments.first().url;
 
-			if (message.attachments.some(attachment => attachment.url.match(/\.(png|jpg|jpeg|gif|webp)$/))) image = message.attachments.first().url;
-			const sentStar = await starboard.send(stripIndents`
-				●▬▬▬▬▬▬▬▬▬▬▬▬▬▬●
-				⭐ ${starCount}
-				**Author**: \`${message.author.username} #${message.author.discriminator}\` | **Channel**: \`${message.channel.name}\` | **ID**: \`${message.id}\` | **Time**: \`${moment(new Date()).format('DD/MM/YYYY @ hh:mm:ss a')}\`
-				**Message**:
-				${message.cleanContent}
-				`, { file: image }).catch(null);
+			const sentStar = await starboard.send({
+				embed: {
+					author: {
+						icon_url: message.author.displayAvatarURL, // eslint-disable-line camelcase
+						name: `${message.author.username}#${message.author.discriminator} (${message.author.id})`
+					},
+					color: 0xFFAC33,
+					fields: [
+						{
+							name: 'ID',
+							value: message.id,
+							inline: true
+						},
+						{
+							name: 'Channel',
+							value: message.channel.toString(),
+							inline: true
+						},
+						{
+							name: 'Message',
+							value: message.content ? message.cleanContent : '\u200B'
+						}
+					],
+					image: { url: attachmentImage ? attachmentImage.toString() : undefined },
+					timestamp: message.createdAt,
+					footer: { text: `${starCount} ⭐` }
+				}
+			}).catch(null);
 
 			starred[message.id] = {};
-			starred[message.id].author = message.author.id;
+			starred[message.id].authorID = message.author.id;
 			starred[message.id].starredMessageID = sentStar.id;
+			starred[message.id].starredMessageContent = message.cleanContent;
+			starred[message.id].starredMessageImage = attachmentImage || '';
+			starred[message.id].starredMessageDate = message.createdAt;
 			starred[message.id].count = starCount;
 			starred[message.id].stars = [];
 			starred[message.id].stars.push(user.id);
 			settings.starred = starred;
+
 			await settings.save();
 		}
 	})

@@ -37,14 +37,14 @@ module.exports = class StarCommand extends Command {
 		if (starred.hasOwnProperty(args.message.id)) {
 			if (starred[args.message.id].stars.includes(msg.author.id)) return msg.reply('you cannot star the same message twice!');
 			const starCount = starred[args.message.id].count += 1;
-			const starredMessage = await starboard.fetchMessage(starred[args.message.id].starredMessageID).catch(error => winston.error(error));
+			const starredMessage = await starboard.fetchMessage(starred[args.message.id].starredMessageID).catch(null);
 			const edit = starredMessage.content.replace(`⭐ ${starCount - 1}`, `⭐ ${starCount}`);
 			await starredMessage.edit(edit);
 			starred[args.message.id].count = starCount;
 			starred[args.message.id].stars.push(msg.author.id);
 			settings.starred = starred;
 
-			await settings.save().catch(error => winston.error(error));
+			await settings.save();
 		} else {
 			const starCount = 1;
 			let image;
@@ -65,7 +65,7 @@ module.exports = class StarCommand extends Command {
 			starred[args.message.id].stars.push(msg.author.id);
 			settings.starred = starred;
 
-			await settings.save().catch(error => winston.error(error));
+			await settings.save();
 		}
 
 		return msg.delete().catch(null);
