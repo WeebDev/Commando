@@ -18,7 +18,7 @@ module.exports = class UnlockAllCommand extends Command {
 	}
 
 	hasPermission(msg) {
-		return msg.member.hasPermission('MANAGE_GUILD');
+		return this.client.isOwner(msg.author) || msg.member.hasPermission('MANAGE_GUILD');
 	}
 
 	async run(msg) {

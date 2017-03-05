@@ -106,7 +106,7 @@ module.exports = class StarCommand extends Command {
 				const linkMatch = message.content.match(linkRegex);
 				if (linkMatch) {
 					try {
-						const url = new URL(linkMatch[0].url);
+						const url = new URL(linkMatch[0]);
 						const ext = path.extname(url.pathname);
 						if (extensions.has(ext)) attachmentImage = linkMatch[0]; // eslint-disable-line max-depth
 					} catch (err) {
