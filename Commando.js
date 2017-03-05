@@ -109,7 +109,10 @@ client.on('error', winston.error)
 		const message = messageReaction.message;
 		const starboard = message.guild.channels.find('name', 'starboard');
 		if (!starboard) return;
-		if (message.author.id === user.id) return message.channel.send(`${user}, you cannot star your own messages!`); // eslint-disable-line consistent-return
+		if (message.author.id === user.id) {
+			messageReaction.remove(user.id);
+			return message.channel.send(`${user}, you cannot star your own messages!`); // eslint-disable-line consistent-return
+		}
 
 		let settings = await starBoard.findOne({ where: { guildID: message.guild.id } });
 		if (!settings) settings = await starBoard.create({ guildID: message.guild.id });
@@ -160,7 +163,10 @@ client.on('error', winston.error)
 		} else {
 			const starCount = 1;
 			let attachmentImage;
-			if (message.attachments.some(attachment => attachment.url.match(/\.(png|jpg|jpeg|gif|webp)$/))) attachmentImage = message.attachments.first().url;
+			const attachmentRegex = /\.(png|jpg|jpeg|gif|webp)$/;
+			const linkRegex = /https?:\/\/(?:\w+\.)?[\w-]+\.[\w]{2,3}(?:\/[\w-_\.]+)+\.(?:png|jpg|jpeg|gif|webp)/; // eslint-disable-line no-useless-escape
+			if (message.attachments.some(attachment => attachment.url.match(attachmentRegex))) attachmentImage = message.attachments.first().url;
+			if (message.content.match(linkRegex)) attachmentImage = message.content.match(linkRegex)[0];
 
 			const sentStar = await starboard.send({
 				embed: {

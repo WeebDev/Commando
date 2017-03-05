@@ -7,7 +7,7 @@ const database = new Database();
 let StarBoard = database.db.define('starBoard', {
 	guildID: Sequelize.STRING,
 	starred: {
-		type: Sequelize.JSON(), // eslint-disable-line new-cap
+		type: Sequelize.JSONB(), // eslint-disable-line new-cap
 		defaultValue: {}
 	}
 });

@@ -25,14 +25,21 @@ module.exports = class StarCommand extends Command {
 
 		const starboard = msg.guild.channels.find('name', 'starboard');
 		if (!starboard) return msg.reply('can\'t star things without a #starboard channel. Create one now!');
-		if (args.message.author.id === msg.author.id) return msg.reply('sorry, you cannot star your own message!');
+		if (args.message.author.id === msg.author.id) {
+			msg.reply('sorry, you cannot star your own message!');
+			return msg.delete().catch(null);
+		}
 
 		let settings = await starBoard.findOne({ where: { guildID: msg.guild.id } });
 		if (!settings) settings = await starBoard.create({ guildID: msg.guild.id });
 		const starred = settings.starred;
 
 		if (starred.hasOwnProperty(args.message.id)) {
-			if (starred[args.message.id].stars.includes(msg.author.id)) return msg.reply('you cannot star the same message twice!');
+			if (starred[args.message.id].stars.includes(msg.author.id)) {
+				msg.reply('you cannot star the same message twice!');
+				return msg.delete().catch(null);
+			}
+
 			const starCount = starred[args.message.id].count += 1;
 			const starredMessage = await starboard.fetchMessage(starred[message.id].starredMessageID).catch(null);
 			const starredMessageContent = starred[message.id].starredMessageContent;
@@ -76,7 +83,10 @@ module.exports = class StarCommand extends Command {
 		} else {
 			const starCount = 1;
 			let attachmentImage;
-			if (message.attachments.some(attachment => attachment.url.match(/\.(png|jpg|jpeg|gif|webp)$/))) attachmentImage = message.attachments.first().url;
+			const attachmentRegex = /\.(png|jpg|jpeg|gif|webp)$/;
+			const linkRegex = /https?:\/\/(?:\w+\.)?[\w-]+\.[\w]{2,3}(?:\/[\w-_\.]+)+\.(?:png|jpg|jpeg|gif|webp)/; // eslint-disable-line no-useless-escape
+			if (message.attachments.some(attachment => attachment.url.match(attachmentRegex))) attachmentImage = message.attachments.first().url;
+			if (message.content.match(linkRegex)) attachmentImage = message.content.match(linkRegex)[0];
 
 			const sentStar = await starboard.send({
 				embed: {

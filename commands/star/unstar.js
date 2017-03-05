@@ -27,11 +27,20 @@ module.exports = class UnstarCommand extends Command {
 		if (!starboard) return msg.reply('can\'t unstar things without a #starboard channel. Create one now!');
 
 		const settings = await starBoard.findOne({ where: { guildID: msg.guild.id } });
-		if (!settings) return msg.reply('nobody\'s starred before!');
+		if (!settings) {
+			msg.reply('nobody\'s starred before!');
+			return msg.delete().catch(null);
+		}
 		let starred = settings.starred;
 
-		if (!starred.hasOwnProperty(message.id)) return msg.reply('this message isn\'t starred.');
-		if (!starred[message.id].stars.includes(msg.author.id)) return msg.reply('you can only unstar a message you have starred before!');
+		if (!starred.hasOwnProperty(message.id)) {
+			msg.reply('this message isn\'t starred.');
+			return msg.delete().catch(null);
+		}
+		if (!starred[message.id].stars.includes(msg.author.id)) {
+			msg.reply('you can only unstar a message you have starred before!');
+			return msg.delete().catch(null);
+		}
 
 		const starCount = starred[message.id].count -= 1;
 		const starredMessage = await starboard.fetchMessage(starred[message.id].starredMessageID).catch(null);
