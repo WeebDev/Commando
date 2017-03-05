@@ -32,7 +32,7 @@ module.exports = class ItemTradeCommand extends Command {
 				{
 					key: 'offerAmount',
 					label: 'amount of items to give',
-					prompt: 'how many items would you like to trade?\n',
+					prompt: 'how many would you like to trade?\n',
 					type: 'integer',
 					min: 1
 				},
@@ -124,6 +124,7 @@ module.exports = class ItemTradeCommand extends Command {
 		if (/donuts?/.test(item)) return null;
 		return ItemGroup.convert(item, amount);
 	}
+
 	sendItems(fromInventory, toInventory, item, amount) {
 		const itemGroup = new ItemGroup(item, amount);
 
