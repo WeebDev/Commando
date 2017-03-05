@@ -54,10 +54,10 @@ module.exports = class ItemTradeCommand extends Command {
 
 	async run(msg, args) {
 		const user = args.member;
-		const offerAmount = args.offerAmount;
-		const receiveAmount = args.receiveAmount;
 		const offerItem = this.isDonuts(args.offerItem, offerAmount);
+		const offerAmount = args.offerAmount;
 		const receiveItem = this.isDonuts(args.receiveItem, receiveAmount);
+		const receiveAmount = args.receiveAmount;
 
 		if (user.id === msg.author.id) return msg.reply('what are you trying to achieve by trading with yourself?');
 		if (user.user.bot) return msg.reply('bots got nothing to trade, man.');
@@ -65,10 +65,8 @@ module.exports = class ItemTradeCommand extends Command {
 
 		const offerBalance = Currency.getBalance(msg.author.id);
 		const receiveBalance = Currency.getBalance(user.id);
-
 		const offerInv = Inventory.fetchInventory(msg.author.id);
 		const receiveInv = Inventory.fetchInventory(user.id);
-
 		const offerItemBalance = offerInv.content[offerItem] ? offerInv.content[offerItem].amount : null;
 		const receiveItemBalance = receiveInv.content[receiveItem] ? receiveInv.content[receiveItem].amount : null;
 
@@ -122,6 +120,7 @@ module.exports = class ItemTradeCommand extends Command {
 
 	isDonuts(item, amount) {
 		if (/donuts?/.test(item)) return null;
+
 		return ItemGroup.convert(item, amount);
 	}
 
@@ -149,8 +148,9 @@ module.exports = class ItemTradeCommand extends Command {
 				time: 30e3
 			});
 
-			if (responses.size === 0) resolve(false);
-			resolve(true);
+			if (responses.size === 0) return resolve(false);
+
+			return resolve(true);
 		});
 	}
 };
