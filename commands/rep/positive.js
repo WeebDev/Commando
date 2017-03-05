@@ -10,6 +10,7 @@ module.exports = class RepPositiveCommand extends Command {
 			group: 'rep',
 			memberName: 'positive',
 			description: 'Add a positive reputation point to a user.',
+			guildOnly: true,
 
 			args: [
 				{
@@ -50,6 +51,6 @@ module.exports = class RepPositiveCommand extends Command {
 			reputationMessage: message || null
 		});
 
-		return msg.reply(`you've successfully added a positive reputation point to ${user.displayName}.`);
+		return msg.reply(`you've successfully added a positive reputation point to ${user.member.displayName}.`);
 	}
 };
