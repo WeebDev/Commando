@@ -53,7 +53,7 @@ module.exports = class TagDeleteCommand extends Command {
 
 	async run(msg, args) {
 		const name = args.name.toLowerCase();
-		const staffRole = await msg.member.roles.exists('name', 'Server Staff');
+		const staffRole = this.client.isOwner(msg.author) || await msg.member.roles.exists('name', 'Server Staff');
 
 		let tag = await Tag.findOne({ where: { name, guildID: msg.guild.id } });
 		if (!tag) return msg.say(`A tag with the name **${name}** doesn't exist, ${msg.author}`);

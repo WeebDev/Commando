@@ -148,7 +148,7 @@ module.exports = class PlaySongCommand extends Command {
 	addSong(msg, video) {
 		const queue = this.queue.get(msg.guild.id);
 
-		if (!msg.author.id.includes(this.client.options.owner)) {
+		if (!this.client.isOwner(msg.author)) {
 			const maxLength = this.client.provider.get(msg.guild.id, 'maxLength', config.maxLength);
 			if (maxLength > 0 && video.durationSeconds > maxLength * 60) {
 				return oneLine`

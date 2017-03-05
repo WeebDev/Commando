@@ -29,25 +29,25 @@ module.exports = class UnstarCommand extends Command {
 		const settings = await starBoard.findOne({ where: { guildID: msg.guild.id } });
 		if (!settings) {
 			msg.reply('nobody\'s starred before!');
-			return msg.delete().catch(null);
+			return msg.delete().catch(err => null); // eslint-disable-line
 		}
 		let starred = settings.starred;
 
 		if (!starred.hasOwnProperty(message.id)) {
 			msg.reply('this message isn\'t starred.');
-			return msg.delete().catch(null);
+			return msg.delete().catch(err => null); // eslint-disable-line
 		}
 		if (!starred[message.id].stars.includes(msg.author.id)) {
 			msg.reply('you can only unstar a message you have starred before!');
-			return msg.delete().catch(null);
+			return msg.delete().catch(err => null); // eslint-disable-line
 		}
 
 		const starCount = starred[message.id].count -= 1;
-		const starredMessage = await starboard.fetchMessage(starred[message.id].starredMessageID).catch(null);
+		const starredMessage = await starboard.fetchMessage(starred[message.id].starredMessageID).catch(err => null); // eslint-disable-line
 
 		if (starred[message.id].count === 0) {
 			delete starred[message.id];
-			await starredMessage.delete().catch(null);
+			await starredMessage.delete().catch(err => null); // eslint-disable-line
 		} else {
 			const starredMessageContent = starred[message.id].starredMessageContent;
 			const starredMessageAttachmentImage = starred[message.id].starredMessageImage;
@@ -80,7 +80,7 @@ module.exports = class UnstarCommand extends Command {
 					timestamp: starredMessageDate,
 					footer: { text: edit }
 				}
-			}).catch(null);
+			}).catch(err => null); // eslint-disable-line
 
 			starred[message.id].count = starCount;
 			starred[message.id].stars.splice(starred[message.id].stars.indexOf(msg.author.id));
@@ -89,6 +89,6 @@ module.exports = class UnstarCommand extends Command {
 		settings.starred = starred;
 		await settings.save();
 
-		return msg.delete().catch(null);
+		return msg.delete().catch(err => null); // eslint-disable-line
 	}
 };

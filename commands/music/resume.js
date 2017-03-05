@@ -17,7 +17,7 @@ module.exports = class ResumeSongCommand extends Command {
 	}
 
 	hasPermission(msg) {
-		return msg.member.hasPermission('MANAGE_MESSAGES');
+		return this.client.isOwner(msg.author) || msg.member.hasPermission('MANAGE_MESSAGES');
 	}
 
 	async run(msg) {

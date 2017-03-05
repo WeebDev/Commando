@@ -4,6 +4,7 @@ const commando = require('discord.js-commando');
 const fs = require('fs');
 const { oneLine } = require('common-tags');
 const path = require('path');
+const { URL } = require('url');
 const winston = require('winston');
 
 const Database = require('./postgreSQL/PostgreSQL');
@@ -69,14 +70,14 @@ client.on('error', winston.error)
 	})
 	.on('message', async (message) => {
 		if (message.channel.type === 'dm') return;
+		if (message.author.bot) return;
 
-		if (message.guild.id === '222078108977594368' && !message.member.roles.has('242700009961816065') && /(discord\.gg\/.+|discordapp\.com\/invite\/.+)/i.test(message.content)) {
+		if (message.guild.id === '222078108977594368' && !message.member.roles.exists('name', 'Server Staff') && /(discord\.gg\/.+|discordapp\.com\/invite\/.+)/i.test(message.content)) {
 			if (message.deletable && message.author.id !== client.user.id) message.delete();
 			message.reply('Please do not post invite links on this server. If you wish to give invite links, do so in direct messages.');
 		}
 		const channelLocks = client.provider.get(message.guild.id, 'locks', []);
 		if (channelLocks.includes(message.channel.id)) return;
-		if (message.author.bot) return;
 
 		if (!earnedRecently.includes(message.author.id)) {
 			const hasImageAttachment = message.attachments.some(attachment => {
@@ -271,10 +272,33 @@ client.on('error', winston.error)
 		} else {
 			const starCount = 1;
 			let attachmentImage;
-			const attachmentRegex = /\.(png|jpg|jpeg|gif|webp)$/;
+			const extensions = new Set(['.png', '.jpg', '.jpeg', '.gif', '.webp']);
 			const linkRegex = /https?:\/\/(?:\w+\.)?[\w-]+\.[\w]{2,3}(?:\/[\w-_\.]+)+\.(?:png|jpg|jpeg|gif|webp)/; // eslint-disable-line no-useless-escape
-			if (message.attachments.some(attachment => attachment.url.match(attachmentRegex))) attachmentImage = message.attachments.first().url;
-			if (message.content.match(linkRegex)) attachmentImage = message.content.match(linkRegex)[0];
+
+			if (message.attachments.some(attachment => {
+				try {
+					const url = new URL(attachment.url);
+					const ext = path.extname(url.pathname);
+					return extensions.has(ext);
+				} catch (err) {
+					if (err.message !== 'Invalid URL') winston.error(err);
+					return false;
+				}
+			})) attachmentImage = message.attachments.first().url;
+
+			if (!attachmentImage) {
+				const linkMatch = message.content.match(linkRegex);
+				if (linkMatch) {
+					try {
+						const url = new URL(linkMatch[0]);
+						const ext = path.extname(url.pathname);
+						if (extensions.has(ext)) attachmentImage = linkMatch[0]; // eslint-disable-line max-depth
+					} catch (err) {
+						if (err.message === 'Invalid URL') winston.info('No valid image link.'); // eslint-disable-line max-depth
+						else winston.error(err);
+					}
+				}
+			}
 
 			const sentStar = await starboard.send({
 				embed: {
