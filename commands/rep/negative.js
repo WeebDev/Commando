@@ -21,6 +21,7 @@ module.exports = class RepNegativeCommand extends Command {
 					key: 'message',
 					prompt: 'add a nice message.',
 					type: 'string',
+					max: 200,
 					default: ''
 				}
 			]
