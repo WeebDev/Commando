@@ -1,8 +1,6 @@
 global.Promise = require('bluebird');
 
 const commando = require('discord.js-commando');
-const Currency = require('./currency/Currency');
-const Experience = require('./currency/Experience');
 const fs = require('fs');
 const { oneLine } = require('common-tags');
 const path = require('path');
@@ -30,6 +28,11 @@ const client = new commando.Client({
 	unknownCommandResponse: false,
 	disableEveryone: true
 });
+
+const Currency = require('./currency/Currency');
+const Experience = require('./currency/Experience');
+const starBoard = require('./postgreSQL/models/StarBoard');
+const userName = require('./postgreSQL/models/UserName');
 
 let earnedRecently = [];
 let gainedXPRecently = [];
@@ -67,6 +70,10 @@ client.on('error', winston.error)
 	.on('message', async (message) => {
 		if (message.channel.type === 'dm') return;
 
+		if (message.guild.id === '222078108977594368' && !message.member.roles.has('242700009961816065') && /(discord\.gg\/.+|discordapp\.com\/invite\/.+)/i.test(message.content)) {
+			if (message.deletable && message.author.id !== client.user.id) message.delete();
+			message.reply('Please do not post invite links on this server. If you wish to give invite links, do so in direct messages.');
+		}
 		const channelLocks = client.provider.get(message.guild.id, 'locks', []);
 		if (channelLocks.includes(message.channel.id)) return;
 		if (message.author.bot) return;
@@ -204,6 +211,175 @@ client.on('error', winston.error)
 		lookup.respond(msg, params);
 		return;
 	})
+	.on('messageReactionAdd', async (messageReaction, user) => {
+		if (messageReaction.emoji.name !== '⭐') return;
+
+		const message = messageReaction.message;
+		const starboard = message.guild.channels.find('name', 'starboard');
+		if (!starboard) return;
+		if (message.author.id === user.id) {
+			messageReaction.remove(user.id);
+			return message.channel.send(`${user}, you cannot star your own messages!`); // eslint-disable-line consistent-return
+		}
+
+		let settings = await starBoard.findOne({ where: { guildID: message.guild.id } });
+		if (!settings) settings = await starBoard.create({ guildID: message.guild.id });
+		const starred = settings.starred;
+
+		if (starred.hasOwnProperty(message.id)) {
+			if (starred[message.id].stars.includes(user.id)) return message.channel.send(`${user}, you cannot star the same message twice!`); // eslint-disable-line consistent-return
+			const starCount = starred[message.id].count += 1;
+			const starredMessage = await starboard.fetchMessage(starred[message.id].starredMessageID).catch(null);
+			const starredMessageContent = starred[message.id].starredMessageContent;
+			const starredMessageAttachmentImage = starred[message.id].starredMessageImage;
+			const starredMessageDate = starred[message.id].starredMessageDate;
+			const edit = starredMessage.embeds[0].footer.text.replace(`${starCount - 1} ⭐`, `${starCount} ⭐`);
+			await starredMessage.edit({
+				embed: {
+					author: {
+						icon_url: message.author.displayAvatarURL, // eslint-disable-line camelcase
+						name: `${message.author.username}#${message.author.discriminator} (${message.author.id})`
+					},
+					color: 0xFFAC33,
+					fields: [
+						{
+							name: 'ID',
+							value: message.id,
+							inline: true
+						},
+						{
+							name: 'Channel',
+							value: message.channel.toString(),
+							inline: true
+						},
+						{
+							name: 'Message',
+							value: starredMessageContent ? starredMessageContent : '\u200B'
+						}
+					],
+					image: { url: starredMessageAttachmentImage ? starredMessageAttachmentImage : undefined },
+					timestamp: starredMessageDate,
+					footer: { text: edit }
+				}
+			}).catch(null);
+
+			starred[message.id].count = starCount;
+			starred[message.id].stars.push(user.id);
+			settings.starred = starred;
+
+			await settings.save();
+		} else {
+			const starCount = 1;
+			let attachmentImage;
+			const attachmentRegex = /\.(png|jpg|jpeg|gif|webp)$/;
+			const linkRegex = /https?:\/\/(?:\w+\.)?[\w-]+\.[\w]{2,3}(?:\/[\w-_\.]+)+\.(?:png|jpg|jpeg|gif|webp)/; // eslint-disable-line no-useless-escape
+			if (message.attachments.some(attachment => attachment.url.match(attachmentRegex))) attachmentImage = message.attachments.first().url;
+			if (message.content.match(linkRegex)) attachmentImage = message.content.match(linkRegex)[0];
+
+			const sentStar = await starboard.send({
+				embed: {
+					author: {
+						icon_url: message.author.displayAvatarURL, // eslint-disable-line camelcase
+						name: `${message.author.username}#${message.author.discriminator} (${message.author.id})`
+					},
+					color: 0xFFAC33,
+					fields: [
+						{
+							name: 'ID',
+							value: message.id,
+							inline: true
+						},
+						{
+							name: 'Channel',
+							value: message.channel.toString(),
+							inline: true
+						},
+						{
+							name: 'Message',
+							value: message.content ? message.cleanContent : '\u200B'
+						}
+					],
+					image: { url: attachmentImage ? attachmentImage.toString() : undefined },
+					timestamp: message.createdAt,
+					footer: { text: `${starCount} ⭐` }
+				}
+			}).catch(null);
+
+			starred[message.id] = {};
+			starred[message.id].authorID = message.author.id;
+			starred[message.id].starredMessageID = sentStar.id;
+			starred[message.id].starredMessageContent = message.cleanContent;
+			starred[message.id].starredMessageImage = attachmentImage || '';
+			starred[message.id].starredMessageDate = message.createdAt;
+			starred[message.id].count = starCount;
+			starred[message.id].stars = [];
+			starred[message.id].stars.push(user.id);
+			settings.starred = starred;
+
+			await settings.save();
+		}
+	})
+	.on('messageReactionRemove', async (messageReaction, user) => {
+		if (messageReaction.emoji.name !== '⭐') return;
+
+		const message = messageReaction.message;
+		const starboard = message.guild.channels.find('name', 'starboard');
+		if (!starboard) return;
+
+		const settings = await starBoard.findOne({ where: { guildID: message.guild.id } });
+		if (!settings) return;
+		let starred = settings.starred;
+
+		if (!starred.hasOwnProperty(message.id)) return;
+		if (!starred[message.id].stars.includes(user.id)) return;
+
+		const starCount = starred[message.id].count -= 1;
+		const starredMessage = await starboard.fetchMessage(starred[message.id].starredMessageID).catch(null);
+
+		if (starred[message.id].count === 0) {
+			delete starred[message.id];
+			await starredMessage.delete().catch(null);
+		} else {
+			const starredMessageContent = starred[message.id].starredMessageContent;
+			const starredMessageAttachmentImage = starred[message.id].starredMessageImage;
+			const starredMessageDate = starred[message.id].starredMessageDate;
+			const edit = starredMessage.embeds[0].footer.text.replace(`${starCount + 1} ⭐`, `${starCount} ⭐`);
+			await starredMessage.edit({
+				embed: {
+					author: {
+						icon_url: message.author.displayAvatarURL, // eslint-disable-line camelcase
+						name: `${message.author.username}#${message.author.discriminator} (${message.author.id})`
+					},
+					color: 0xFFAC33,
+					fields: [
+						{
+							name: 'ID',
+							value: message.id,
+							inline: true
+						},
+						{
+							name: 'Channel',
+							value: message.channel.toString(),
+							inline: true
+						},
+						{
+							name: 'Message',
+							value: starredMessageContent ? starredMessageContent : '\u200B'
+						}
+					],
+					image: { url: starredMessageAttachmentImage ? starredMessageAttachmentImage : undefined },
+					timestamp: starredMessageDate,
+					footer: { text: edit }
+				}
+			}).catch(null);
+
+			starred[message.id].count = starCount;
+			starred[message.id].stars.splice(starred[message.id].stars.indexOf(user.id));
+		}
+
+		settings.starred = starred;
+		await settings.save();
+	})
 	.on('commandError', (cmd, err) => {
 		if (err instanceof commando.FriendlyError) return;
 		winston.error(`Error in command ${cmd.groupID}:${cmd.memberName}`, err);
@@ -233,6 +409,11 @@ client.on('error', winston.error)
 			${enabled ? 'enabled' : 'disabled'}
 			${guild ? `in guild ${guild.name} (${guild.id})` : 'globally'}.
 		`);
+	})
+	.on('userUpdate', (oldUser, newUser) => {
+		if (oldUser.username !== newUser.username) {
+			userName.create({ userid: newUser.id, username: oldUser.username }).catch(() => null);
+		}
 	});
 
 client.registry
@@ -244,7 +425,8 @@ client.registry
 		['item', 'Item'],
 		['weather', 'Weather'],
 		['music', 'Music'],
-		['tags', 'Tags']
+		['tags', 'Tags'],
+		['starboard', 'Starboard']
 	])
 	.registerDefaults()
 	.registerTypesIn(path.join(__dirname, 'types'))

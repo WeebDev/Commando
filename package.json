@@ -1,6 +1,6 @@
 {
   "name": "commando",
-  "version": "0.17.0",
+  "version": "0.19.0",
   "description": ".",
   "license": "MIT",
   "author": "Crawl",
@@ -36,17 +36,16 @@
     "pg": "^6.1.2",
     "pg-hstore": "^2.3.2",
     "prism-media": "hydrabolt/prism-media",
-    "raven": "^1.1.2",
     "redis": "^2.6.5",
     "request": "^2.79.0",
     "request-promise": "^4.1.1",
     "sequelize": "sequelize/sequelize",
     "simple-youtube-api": "^2.1.0",
     "winston": "^2.3.1",
-    "ytdl-core": "^0.9.1"
+    "ytdl-core": "^0.9.2"
   },
   "devDependencies": {
-    "eslint": "^3.16.0"
+    "eslint": "^3.17.0"
   },
   "engines": {
     "node": ">=7.6.0"
