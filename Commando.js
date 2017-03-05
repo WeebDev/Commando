@@ -205,6 +205,67 @@ client.on('error', winston.error)
 			await settings.save();
 		}
 	})
+	.on('messageReactionRemove', async (messageReaction, user) => {
+		if (messageReaction.emoji.name !== '⭐') return;
+
+		const message = messageReaction.message;
+		const starboard = message.guild.channels.find('name', 'starboard');
+		if (!starboard) return;
+
+		const settings = await starBoard.findOne({ where: { guildID: message.guild.id } });
+		if (!settings) return;
+		let starred = settings.starred;
+
+		if (!starred.hasOwnProperty(message.id)) return;
+		if (!starred[message.id].stars.includes(user.id)) return;
+
+		const starCount = starred[message.id].count -= 1;
+		const starredMessage = await starboard.fetchMessage(starred[message.id].starredMessageID).catch(null);
+
+		if (starred[message.id].count === 0) {
+			delete starred[message.id];
+			await starredMessage.delete().catch(null);
+		} else {
+			const starredMessageContent = starred[message.id].starredMessageContent;
+			const starredMessageAttachmentImage = starred[message.id].starredMessageImage;
+			const starredMessageDate = starred[message.id].starredMessageDate;
+			const edit = starredMessage.embeds[0].footer.text.replace(`${starCount + 1} ⭐`, `${starCount} ⭐`);
+			await starredMessage.edit({
+				embed: {
+					author: {
+						icon_url: message.author.displayAvatarURL, // eslint-disable-line camelcase
+						name: `${message.author.username}#${message.author.discriminator} (${message.author.id})`
+					},
+					color: 0xFFAC33,
+					fields: [
+						{
+							name: 'ID',
+							value: message.id,
+							inline: true
+						},
+						{
+							name: 'Channel',
+							value: message.channel.toString(),
+							inline: true
+						},
+						{
+							name: 'Message',
+							value: starredMessageContent ? starredMessageContent : '\u200B'
+						}
+					],
+					image: { url: starredMessageAttachmentImage ? starredMessageAttachmentImage : undefined },
+					timestamp: starredMessageDate,
+					footer: { text: edit }
+				}
+			}).catch(null);
+
+			starred[message.id].count = starCount;
+			starred[message.id].stars.splice(starred[message.id].stars.indexOf(user.id));
+		}
+
+		settings.starred = starred;
+		await settings.save();
+	})
 	.on('commandError', (cmd, err) => {
 		if (err instanceof commando.FriendlyError) return;
 		winston.error(`Error in command ${cmd.groupID}:${cmd.memberName}`, err);

@@ -13,7 +13,7 @@ module.exports = class UnstarCommand extends Command {
 			args: [
 				{
 					key: 'message',
-					prompt: 'What would you like to unstar?\n',
+					prompt: 'what would you like to unstar?\n',
 					type: 'message'
 				}
 			]

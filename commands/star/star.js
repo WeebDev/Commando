@@ -13,7 +13,7 @@ module.exports = class StarCommand extends Command {
 			args: [
 				{
 					key: 'message',
-					prompt: 'What would you like to star?\n',
+					prompt: 'what would you like to star?\n',
 					type: 'message'
 				}
 			]
