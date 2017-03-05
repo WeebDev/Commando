@@ -26,7 +26,7 @@ module.exports = class TranslateCommand extends Command {
 					key: 'to',
 					prompt: 'what language would you want to translate to?\n',
 					type: 'string'
-				}
+				},
 				{
 					key: 'from',
 					prompt: 'what language would you want to translate from?\n',
