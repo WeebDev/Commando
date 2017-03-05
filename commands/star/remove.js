@@ -7,7 +7,7 @@ module.exports = class RemoveStarMessageCommand extends Command {
 			name: 'remove-star-message',
 			aliases: ['rmstar'],
 			group: 'starboard',
-			memberName: 'remove-star-message',
+			memberName: 'remove',
 			description: 'Removes the starred message.',
 			examples: ['remove-star 189696688657530880', 'rmstar 189696688657530880'],
 

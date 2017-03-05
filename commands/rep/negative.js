@@ -2,13 +2,13 @@ const { Command } = require('discord.js-commando');
 
 const UserRep = require('../../postgreSQL/models/UserRep');
 
-module.exports = class RepAddCommand extends Command {
+module.exports = class RepNegativeCommand extends Command {
 	constructor(client) {
 		super(client, {
 			name: 'rep-remove',
 			aliases: ['remove-rep', 'rep-rem', 'rem-rep', 'rep-neg', 'neg-rep', '--'],
 			group: 'rep',
-			memberName: 'neg',
+			memberName: 'negative',
 			description: 'Add a negative reputation point to a user.',
 
 			args: [

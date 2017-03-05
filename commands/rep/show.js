@@ -1,6 +1,5 @@
 const { Command, util } = require('discord.js-commando');
 
-const config = require('../../settings');
 const UserRep = require('../../postgreSQL/models/UserRep');
 
 module.exports = class RepShowCommand extends Command {
@@ -40,7 +39,7 @@ module.exports = class RepShowCommand extends Command {
 		const embed = {
 			color: positive > negative ? 0x52C652 : 0xE93F3C,
 			author: {
-				name: `${msg.member.displayName}`,
+				name: `${msg.author.username}#${msg.author.discriminator} (${msg.author.id})`,
 				icon_url: msg.author.displayAvatarURL // eslint-disable-line camelcase
 			},
 			fields: [
