@@ -50,6 +50,6 @@ module.exports = class RepPositiveCommand extends Command {
 			reputationMessage: message || null
 		});
 
-		return msg.reply(`you've successfully added a positive reputation point to ${user}.`);
+		return msg.reply(`you've successfully added a positive reputation point to ${user.displayName}.`);
 	}
 };

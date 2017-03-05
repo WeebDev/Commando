@@ -50,6 +50,6 @@ module.exports = class RepNegativeCommand extends Command {
 			reputationMessage: message || null
 		});
 
-		return msg.reply(`you've successfully added a negative reputation point to ${user}.`);
+		return msg.reply(`you've successfully added a negative reputation point to ${user.displayName}.`);
 	}
 };
