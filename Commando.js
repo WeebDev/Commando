@@ -122,11 +122,16 @@ client.on('error', winston.error)
 		if (starred.hasOwnProperty(message.id)) {
 			if (starred[message.id].stars.includes(user.id)) return message.channel.send(`${user}, you cannot star the same message twice!`); // eslint-disable-line consistent-return
 			const starCount = starred[message.id].count += 1;
-			const starredMessage = await starboard.fetchMessage(starred[message.id].starredMessageID).catch(null);
+			const starredMessage = await starboard.fetchMessage(starred[message.id].starredMessageID).catch(err => null); // eslint-disable-line
 			const starredMessageContent = starred[message.id].starredMessageContent;
 			const starredMessageAttachmentImage = starred[message.id].starredMessageImage;
 			const starredMessageDate = starred[message.id].starredMessageDate;
-			const edit = starredMessage.embeds[0].footer.text.replace(`${starCount - 1} ⭐`, `${starCount} ⭐`);
+
+			let edit;
+			if (starCount - 1 < 5) starredMessage.embeds[0].footer.text.replace(`${starCount - 1} ⭐`, `${starCount} ⭐`);
+			else if (starCount - 1 >= 5 < 10) starredMessage.embeds[0].footer.text.replace(`${starCount - 1} ⭐`, `${starCount} 🌟`);
+			else if (starCount - 1 >= 10) starredMessage.embeds[0].footer.text.replace(`${starCount - 1} 🌟`, `${starCount} 🌠`);
+
 			await starredMessage.edit({
 				embed: {
 					author: {
@@ -154,7 +159,7 @@ client.on('error', winston.error)
 					timestamp: starredMessageDate,
 					footer: { text: edit }
 				}
-			}).catch(null);
+			}).catch(err => null); // eslint-disable-line
 
 			starred[message.id].count = starCount;
 			starred[message.id].stars.push(user.id);
@@ -212,14 +217,14 @@ client.on('error', winston.error)
 						},
 						{
 							name: 'Message',
-							value: message.content ? message.cleanContent : '\u200B'
+							value: message.content ? message.cleanContent.substring(0, 1000) : '\u200B'
 						}
 					],
 					image: { url: attachmentImage ? attachmentImage.toString() : undefined },
 					timestamp: message.createdAt,
 					footer: { text: `${starCount} ⭐` }
 				}
-			}).catch(null);
+			}).catch(err => null); // eslint-disable-line
 
 			starred[message.id] = {};
 			starred[message.id].authorID = message.author.id;
@@ -250,16 +255,21 @@ client.on('error', winston.error)
 		if (!starred[message.id].stars.includes(user.id)) return;
 
 		const starCount = starred[message.id].count -= 1;
-		const starredMessage = await starboard.fetchMessage(starred[message.id].starredMessageID).catch(null);
+		const starredMessage = await starboard.fetchMessage(starred[message.id].starredMessageID).catch(err => null); // eslint-disable-line
 
 		if (starred[message.id].count === 0) {
 			delete starred[message.id];
-			await starredMessage.delete().catch(null);
+			await starredMessage.delete().catch(err => null); // eslint-disable-line
 		} else {
 			const starredMessageContent = starred[message.id].starredMessageContent;
 			const starredMessageAttachmentImage = starred[message.id].starredMessageImage;
 			const starredMessageDate = starred[message.id].starredMessageDate;
-			const edit = starredMessage.embeds[0].footer.text.replace(`${starCount + 1} ⭐`, `${starCount} ⭐`);
+
+			let edit;
+			if (starCount - 1 < 5) starredMessage.embeds[0].footer.text.replace(`${starCount - 1} ⭐`, `${starCount} ⭐`);
+			else if (starCount - 1 >= 5 < 10) starredMessage.embeds[0].footer.text.replace(`${starCount - 1} ⭐`, `${starCount} 🌟`);
+			else if (starCount - 1 >= 10) starredMessage.embeds[0].footer.text.replace(`${starCount - 1} 🌟`, `${starCount} 🌠`);
+
 			await starredMessage.edit({
 				embed: {
 					author: {
@@ -287,7 +297,7 @@ client.on('error', winston.error)
 					timestamp: starredMessageDate,
 					footer: { text: edit }
 				}
-			}).catch(null);
+			}).catch(err => null); // eslint-disable-line
 
 			starred[message.id].count = starCount;
 			starred[message.id].stars.splice(starred[message.id].stars.indexOf(user.id));

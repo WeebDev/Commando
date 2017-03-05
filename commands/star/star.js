@@ -50,7 +50,12 @@ module.exports = class StarCommand extends Command {
 			const starredMessageContent = starred[message.id].starredMessageContent;
 			const starredMessageAttachmentImage = starred[message.id].starredMessageImage;
 			const starredMessageDate = starred[message.id].starredMessageDate;
-			const edit = starredMessage.embeds[0].footer.text.replace(`${starCount - 1} ⭐`, `${starCount} ⭐`);
+
+			let edit;
+			if (starCount - 1 < 5) starredMessage.embeds[0].footer.text.replace(`${starCount - 1} ⭐`, `${starCount} ⭐`);
+			else if (starCount - 1 >= 5 < 10) starredMessage.embeds[0].footer.text.replace(`${starCount - 1} ⭐`, `${starCount} 🌟`);
+			else if (starCount - 1 >= 10) starredMessage.embeds[0].footer.text.replace(`${starCount - 1} 🌟`, `${starCount} 🌠`);
+
 			await starredMessage.edit({
 				embed: {
 					author: {
@@ -136,7 +141,7 @@ module.exports = class StarCommand extends Command {
 						},
 						{
 							name: 'Message',
-							value: message.content ? message.cleanContent : '\u200B'
+							value: message.content ? message.cleanContent.substring(0, 1000) : '\u200B'
 						}
 					],
 					image: { url: attachmentImage ? attachmentImage.toString() : undefined },
