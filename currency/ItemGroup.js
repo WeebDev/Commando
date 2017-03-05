@@ -8,6 +8,7 @@ class ItemGroup {
 		item = item.toLowerCase();
 
 		if (amount > 1 && /s$/.test(item)) return item.slice(0, -1);
+
 		return item;
 	}
 }
