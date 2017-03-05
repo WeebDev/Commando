@@ -37,14 +37,14 @@ module.exports = class RemoveStarMessageCommand extends Command {
 
 		if (!starred.hasOwnProperty(message.id)) return msg.reply('this message isn\'t starred.');
 
-		const starredMessage = await starboard.fetchMessage(starred[message.id].starredMessageID).catch(null);
+		const starredMessage = await starboard.fetchMessage(starred[message.id].starredMessageID).catch(err => null); // eslint-disable-line
 
 		delete starred[message.id];
-		await starredMessage.delete().catch(null);
+		await starredMessage.delete().catch(err => null); // eslint-disable-line
 
 		settings.starred = starred;
 		await settings.save();
 
-		return msg.delete().catch(null);
+		return msg.delete().catch(err => null); // eslint-disable-line
 	}
 };
