@@ -6,7 +6,7 @@ module.exports = class RepAddCommand extends Command {
 	constructor(client) {
 		super(client, {
 			name: 'rep-add',
-			aliases: ['add-rep', 'rep-pos', 'pos-rep'],
+			aliases: ['add-rep', 'rep-pos', 'pos-rep', '++'],
 			group: 'rep',
 			memberName: 'pos',
 			description: 'Add a positive reputation point to a user.',

@@ -6,7 +6,7 @@ module.exports = class RepAddCommand extends Command {
 	constructor(client) {
 		super(client, {
 			name: 'rep-remove',
-			aliases: ['remove-rep', 'rep-rem', 'rem-rep', 'rep-neg', 'neg-rep'],
+			aliases: ['remove-rep', 'rep-rem', 'rem-rep', 'rep-neg', 'neg-rep', '--'],
 			group: 'rep',
 			memberName: 'neg',
 			description: 'Add a negative reputation point to a user.',
