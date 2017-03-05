@@ -30,7 +30,7 @@ module.exports = class ViewQueueCommand extends Command {
 	}
 
 	async run(msg, args) {
-		const page = args.page;
+		const { page } = args;
 		const queue = this.queue.get(msg.guild.id);
 		if (!queue) return msg.reply('there are no songs in the queue. Why not start the party yourself?');
 

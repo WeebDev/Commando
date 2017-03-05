@@ -49,7 +49,7 @@ module.exports = class CleanCommand extends Command {
 	}
 
 	async run(msg, args) { // eslint-disable-line consistent-return
-		const limit = args.limit;
+		const { limit } = args;
 		const filter = args.filter.toLowerCase();
 		let messageFilter;
 

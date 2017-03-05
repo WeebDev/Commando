@@ -48,8 +48,7 @@ module.exports = class MoneyAddCommand extends Command {
 	}
 
 	async run(msg, args) {
-		const user = args.member;
-		const donuts = args.donuts;
+		const { user, donuts } = args;
 
 		Currency._changeBalance(user.id, donuts);
 

@@ -30,7 +30,7 @@ module.exports = class InventoryShowCommand extends Command {
 	}
 
 	async run(msg, args) {
-		const page = args.page;
+		const { page } = args;
 		let items = [];
 
 		const inventory = await Inventory.fetchInventory(msg.author.id);

@@ -49,7 +49,7 @@ module.exports = class BlackjackCommand extends Command {
 	}
 
 	async run(msg, args) {
-		const bet = args.bet;
+		const { bet } = args;
 
 		if (Blackjack.gameExists(msg.author.id)) {
 			return msg.reply(`you can't start 2 games of blackjack at the same time.`);

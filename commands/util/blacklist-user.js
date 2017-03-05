@@ -28,7 +28,7 @@ module.exports = class BlacklistUserCommand extends Command {
 	}
 
 	async run(msg, args) {
-		const user = args.user;
+		const { user } = args;
 
 		if (this.client.options.owner === user.id) return msg.reply('the bot owner can not be blacklisted.');
 

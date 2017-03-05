@@ -28,7 +28,7 @@ module.exports = class StoreInfoCommand extends Command {
 	}
 
 	async run(msg, args) {
-		const page = args.page;
+		const { page } = args;
 		const storeItems = Store.getItems().array();
 
 		const paginated = util.paginate(storeItems, page, Math.floor(config.paginationItems));

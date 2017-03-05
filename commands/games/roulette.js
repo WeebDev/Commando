@@ -69,7 +69,7 @@ module.exports = class RouletteCommand extends Command {
 	}
 
 	async run(msg, args) {
-		const bet = args.bet;
+		const { bet } = args;
 		const space = args.space.toLowerCase();
 
 		let roulette = Roulette.findGame(msg.guild.id);
