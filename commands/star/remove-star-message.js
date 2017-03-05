@@ -22,7 +22,7 @@ module.exports = class RemoveStarMessageCommand extends Command {
 	}
 
 	hasPermission(msg) {
-		return msg.member.roles.exists('name', 'Dev');
+		return msg.member.roles.exists('name', 'Server Staff');
 	}
 
 	async run(msg, args) {
