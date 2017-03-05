@@ -31,7 +31,7 @@ module.exports = class ItemGiveCommand extends Command {
 				{
 					key: 'amount',
 					label: 'amount of items to give',
-					prompt: 'how many items do you want to give?\n',
+					prompt: 'how many do you want to give?\n',
 					type: 'integer',
 					min: 1
 				}
@@ -44,7 +44,6 @@ module.exports = class ItemGiveCommand extends Command {
 		const amount = args.amount;
 		const item = ItemGroup.convert(args.item, amount);
 		const inventory = await Inventory.fetchInventory(msg.author.id);
-
 		const itemBalance = inventory.content[item] ? inventory.content[item].amount : 0;
 
 		if (user.id === msg.author.id) return msg.reply("giving items to yourself won't change anything.");
