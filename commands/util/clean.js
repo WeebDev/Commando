@@ -80,16 +80,14 @@ module.exports = class CleanCommand extends Command {
 		}
 
 		if (!filter) {
-			const messagesToDelete = await msg.channel.fetchMessages({ limit: limit });
+			const messagesToDelete = await msg.channel.fetchMessages({ limit: limit }).catch(null);
 
-			msg.channel.bulkDelete(messagesToDelete.array().reverse());
+			msg.channel.bulkDelete(messagesToDelete.array().reverse()).catch(null);
 		} else {
-			const messages = await msg.channel.fetchMessages({ limit: limit });
+			const messages = await msg.channel.fetchMessages({ limit: limit }).catch(null);
 			const messagesToDelete = messages.filter(messageFilter);
 
-			msg.channel.bulkDelete(messagesToDelete.array().reverse());
+			msg.channel.bulkDelete(messagesToDelete.array().reverse()).catch(null);
 		}
 	}
 };
-
-process.on('unhandledRejection', err => { winston.error(`Uncaught Promise Error: \n${err.stack}`); });

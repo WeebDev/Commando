@@ -105,11 +105,11 @@ client.on('error', winston.error)
 	})
 	.on('messageReactionAdd', async (messageReaction, user) => {
 		if (messageReaction.emoji.name !== '⭐') return;
-		if (messageReaction.message.author.id === user.id) return message.channel.send(`${user}, you cannot star your own messages!`); // eslint-disable-line consistent-return
 
 		const message = messageReaction.message;
 		const starboard = message.guild.channels.find('name', 'starboard');
 		if (!starboard) return;
+		if (message.author.id === user.id) return message.channel.send(`${user}, you cannot star your own messages!`); // eslint-disable-line consistent-return
 
 		let settings = await starBoard.findOne({ where: { guildID: message.guild.id } });
 		if (!settings) settings = await starBoard.create({ guildID: message.guild.id });
@@ -118,7 +118,7 @@ client.on('error', winston.error)
 		if (starred.hasOwnProperty(message.id)) {
 			if (starred[message.id].stars.includes(user.id)) return message.channel.send(`${user}, you cannot star the same message twice!`); // eslint-disable-line consistent-return
 			const starCount = starred[message.id].count += 1;
-			const starredMessage = await starboard.fetchMessage(starred[message.id].starredMessageID);
+			const starredMessage = await starboard.fetchMessage(starred[message.id].starredMessageID).catch(null);
 			const starredMessageContent = starred[message.id].starredMessageContent;
 			const starredMessageAttachmentImage = starred[message.id].starredMessageImage;
 			const starredMessageDate = starred[message.id].starredMessageDate;
@@ -151,6 +151,7 @@ client.on('error', winston.error)
 					footer: { text: edit }
 				}
 			}).catch(null);
+
 			starred[message.id].count = starCount;
 			starred[message.id].stars.push(user.id);
 			settings.starred = starred;
@@ -249,7 +250,8 @@ client.registry
 		['item', 'Item'],
 		['weather', 'Weather'],
 		['music', 'Music'],
-		['tags', 'Tags']
+		['tags', 'Tags'],
+		['starboard', 'Starboard']
 	])
 	.registerDefaults()
 	.registerTypesIn(path.join(__dirname, 'types'))
