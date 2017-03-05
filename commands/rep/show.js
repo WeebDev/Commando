@@ -10,6 +10,7 @@ module.exports = class RepShowCommand extends Command {
 			group: 'rep',
 			memberName: 'show',
 			description: 'Display the reputation a user has received from other people.',
+			guildOnly: true,
 
 			args: [
 				{
