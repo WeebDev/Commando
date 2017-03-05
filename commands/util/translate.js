@@ -10,7 +10,7 @@ module.exports = class TranslateCommand extends Command {
 			aliases: ['t'],
 			group: 'util',
 			memberName: 'translate',
-			description: 'Translates text.',
+			description: 'Translates the input text into the specified output language.',
 			throttling: {
 				usages: 5,
 				duration: 60
@@ -23,23 +23,26 @@ module.exports = class TranslateCommand extends Command {
 					type: 'string'
 				},
 				{
-					key: 'to',
-					prompt: 'what languages do you want to translate to?\n',
-					type: 'string'
-				},
-				{
 					key: 'from',
-					prompt: 'what languages do you want to translate from?\n',
+					prompt: 'what language would you want to translate from?\n',
 					type: 'string',
 					default: ''
+				},
+				{
+					key: 'to',
+					prompt: 'what language would you want to translate to?\n',
+					type: 'string'
 				}
 			]
 		});
 	}
 
 	async run(msg, args) {
+		const to = args.to;
+		const from = args.from;
+		const query = encodeURIComponent(args.query);
 		const response = await request({
-			uri: `https://api.kurisubrooks.com/api/translate?to=${args.to}&from=${args.from}&query=${encodeURIComponent(args.query)}`,
+			uri: `https://api.kurisubrooks.com/api/translate?to=${to}&from=${from}&query=${query}`,
 			headers: { 'User-Agent': `Commando v${version} (https://github.com/WeebDev/Commando/)` },
 			json: true
 		});
@@ -68,9 +71,9 @@ module.exports = class TranslateCommand extends Command {
 
 	handleError(response) {
 		if (response.error === `unknown language in 'to' field`) {
-			return 'Unknown \'to\' Language';
+			return `Unknown 'to' Language`;
 		} else if (response.error === `unknown language in 'from' field`) {
-			return 'Unknown \'from\' Language';
+			return `Unknown 'from' Language`;
 		} else {
 			return 'Internal Server Error';
 		}
