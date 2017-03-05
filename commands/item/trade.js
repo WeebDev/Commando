@@ -54,10 +54,10 @@ module.exports = class ItemTradeCommand extends Command {
 
 	async run(msg, args) {
 		const user = args.member;
-		const offerItem = this.isDonuts(args.offerItem, offerAmount);
 		const offerAmount = args.offerAmount;
-		const receiveItem = this.isDonuts(args.receiveItem, receiveAmount);
 		const receiveAmount = args.receiveAmount;
+		const offerItem = this.isDonuts(args.offerItem, offerAmount);
+		const receiveItem = this.isDonuts(args.receiveItem, receiveAmount);
 
 		if (user.id === msg.author.id) return msg.reply('what are you trying to achieve by trading with yourself?');
 		if (user.user.bot) return msg.reply('bots got nothing to trade, man.');
