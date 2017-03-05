@@ -1,5 +1,4 @@
 const { Command } = require('discord.js-commando');
-const winston = require('winston');
 
 module.exports = class CleanCommand extends Command {
 	constructor(client) {
