@@ -1,5 +1,8 @@
 const { Command } = require('discord.js-commando');
 const starBoard = require('../../postgreSQL/models/StarBoard');
+const path = require('path');
+const { URL } = require('url');
+const winston = require('winston');
 
 module.exports = class StarCommand extends Command {
 	constructor(client) {
@@ -25,23 +28,25 @@ module.exports = class StarCommand extends Command {
 
 		const starboard = msg.guild.channels.find('name', 'starboard');
 		if (!starboard) return msg.reply('can\'t star things without a #starboard channel. Create one now!');
-		if (args.message.author.id === msg.author.id) {
+		if (message.author.id === msg.author.id) {
 			msg.reply('sorry, you cannot star your own message!');
-			return msg.delete().catch(null);
+
+			return msg.delete().catch(err => null); // eslint-disable-line
 		}
 
 		let settings = await starBoard.findOne({ where: { guildID: msg.guild.id } });
 		if (!settings) settings = await starBoard.create({ guildID: msg.guild.id });
 		const starred = settings.starred;
 
-		if (starred.hasOwnProperty(args.message.id)) {
-			if (starred[args.message.id].stars.includes(msg.author.id)) {
+		if (starred.hasOwnProperty(message.id)) {
+			if (starred[message.id].stars.includes(msg.author.id)) {
 				msg.reply('you cannot star the same message twice!');
-				return msg.delete().catch(null);
+
+				return msg.delete().catch(err => null); // eslint-disable-line
 			}
 
-			const starCount = starred[args.message.id].count += 1;
-			const starredMessage = await starboard.fetchMessage(starred[message.id].starredMessageID).catch(null);
+			const starCount = starred[message.id].count += 1;
+			const starredMessage = await starboard.fetchMessage(starred[message.id].starredMessageID).catch(err => null); // eslint-disable-line
 			const starredMessageContent = starred[message.id].starredMessageContent;
 			const starredMessageAttachmentImage = starred[message.id].starredMessageImage;
 			const starredMessageDate = starred[message.id].starredMessageDate;
@@ -83,10 +88,33 @@ module.exports = class StarCommand extends Command {
 		} else {
 			const starCount = 1;
 			let attachmentImage;
-			const attachmentRegex = /\.(png|jpg|jpeg|gif|webp)$/;
+			const extensions = new Set(['.png', '.jpg', '.jpeg', '.gif', '.webp']);
 			const linkRegex = /https?:\/\/(?:\w+\.)?[\w-]+\.[\w]{2,3}(?:\/[\w-_\.]+)+\.(?:png|jpg|jpeg|gif|webp)/; // eslint-disable-line no-useless-escape
-			if (message.attachments.some(attachment => attachment.url.match(attachmentRegex))) attachmentImage = message.attachments.first().url;
-			if (message.content.match(linkRegex)) attachmentImage = message.content.match(linkRegex)[0];
+
+			if (message.attachments.some(attachment => {
+				try {
+					const url = new URL(attachment.url);
+					const ext = path.extname(url.pathname);
+					return extensions.has(ext);
+				} catch (err) {
+					if (err.message !== 'Invalid URL') winston.error(err);
+					return false;
+				}
+			})) attachmentImage = message.attachments.first().url;
+
+			if (!attachmentImage) {
+				const linkMatch = message.content.match(linkRegex);
+				if (linkMatch) {
+					try {
+						const url = new URL(linkMatch[0]);
+						const ext = path.extname(url.pathname);
+						if (extensions.has(ext)) attachmentImage = linkMatch[0]; // eslint-disable-line max-depth
+					} catch (err) {
+						if (err.message === 'Invalid URL') winston.info('No valid image link.'); // eslint-disable-line max-depth
+						else winston.error(err);
+					}
+				}
+			}
 
 			const sentStar = await starboard.send({
 				embed: {
@@ -115,22 +143,22 @@ module.exports = class StarCommand extends Command {
 					timestamp: message.createdAt,
 					footer: { text: `${starCount} ⭐` }
 				}
-			}).catch(null);
+			}).catch(err => null); // eslint-disable-line
 
-			starred[args.message.id] = {};
-			starred[args.message.id].author = message.author.id;
-			starred[args.message.id].starredMessageID = sentStar.id;
+			starred[message.id] = {};
+			starred[message.id].author = message.author.id;
+			starred[message.id].starredMessageID = sentStar.id;
 			starred[message.id].starredMessageContent = message.cleanContent;
 			starred[message.id].starredMessageImage = attachmentImage || '';
 			starred[message.id].starredMessageDate = message.createdAt;
-			starred[args.message.id].count = starCount;
-			starred[args.message.id].stars = [];
-			starred[args.message.id].stars.push(msg.author.id);
+			starred[message.id].count = starCount;
+			starred[message.id].stars = [];
+			starred[message.id].stars.push(msg.author.id);
 			settings.starred = starred;
 
 			await settings.save();
 		}
 
-		return msg.delete().catch(null);
+		return msg.delete().catch(err => null); // eslint-disable-line
 	}
 };

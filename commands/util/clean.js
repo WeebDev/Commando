@@ -45,7 +45,7 @@ module.exports = class CleanCommand extends Command {
 	}
 
 	hasPermission(msg) {
-		return msg.member.roles.exists('name', 'Server Staff');
+		return this.client.isOwner(msg.author) || msg.member.roles.exists('name', 'Server Staff');
 	}
 
 	async run(msg, args) { // eslint-disable-line consistent-return

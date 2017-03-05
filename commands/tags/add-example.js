@@ -40,7 +40,7 @@ module.exports = class ExampleAddCommand extends Command {
 	}
 
 	hasPermission(msg) {
-		return msg.member.roles.exists('name', 'Server Staff');
+		return this.client.isOwner(msg.author) || msg.member.roles.exists('name', 'Server Staff');
 	}
 
 	async run(msg, args) {
