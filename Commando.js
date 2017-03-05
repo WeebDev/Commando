@@ -4,6 +4,7 @@ const commando = require('discord.js-commando');
 const Currency = require('./currency/Currency');
 const Experience = require('./currency/Experience');
 const starBoard = require('./postgreSQL/models/StarBoard');
+const userName = require('./postgreSQL/models/UserName');
 const { oneLine, stripIndents } = require('common-tags');
 const moment = require('moment');
 const path = require('path');
@@ -175,6 +176,11 @@ client.on('error', winston.error)
 			${enabled ? 'enabled' : 'disabled'}
 			${guild ? `in guild ${guild.name} (${guild.id})` : 'globally'}.
 		`);
+	})
+	.on('userUpdate', (oldUser, newUser) => {
+		if (oldUser.username !== newUser.username) {
+			userName.create({ userid: newUser.id, username: oldUser.username }).catch(() => null);
+		}
 	});
 
 client.registry
