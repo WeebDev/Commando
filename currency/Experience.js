@@ -3,7 +3,7 @@ const Redis = require('../redis/Redis');
 
 const redis = new Redis();
 
-setInterval(() => Experience.saveExperience(), 30 * 60 * 1000);
+setInterval(async () => await Experience.saveExperience(), 30 * 60 * 1000);
 
 class Experience {
 	static addExperience(userID, earned) {
