@@ -36,7 +36,7 @@ module.exports = class StarCommand extends Command {
 		}
 
 		if (moment().diff(message.member.joinedAt, 'hours') < 24) {
-			return msg.reply('sorry, you can only star messages after being on the guild for over a day!');
+			return msg.reply('sorry, you can only star messages after being in the guild for over a day!');
 		}
 
 		let settings = await starBoard.findOne({ where: { guildID: msg.guild.id } });
