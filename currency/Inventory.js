@@ -9,14 +9,14 @@ setInterval(() => {
 		const ids = Object.keys(inventories || {});
 
 		for (const id of ids) {
-			UserProfile.findOne({ where: { userID: id } }).then(user => {
+			UserProfile.findOne({ where: { userID: id } }).then(async user => {
 				if (!user) {
-					UserProfile.create({
+					await UserProfile.create({
 						userID: id,
 						inventory: JSON.stringify(inventories[id])
 					});
 				} else {
-					user.update({ inventory: JSON.stringify(inventories[id]) });
+					await user.update({ inventory: JSON.stringify(inventories[id]) });
 				}
 			});
 		}
@@ -57,8 +57,8 @@ class Inventory {
 		}
 	}
 
-	save() {
-		return redis.db.hsetAsync('inventory', this.user, JSON.stringify(this.content));
+	async save() {
+		return await redis.db.hsetAsync('inventory', this.user, JSON.stringify(this.content));
 	}
 
 	static fetchInventory(user) {

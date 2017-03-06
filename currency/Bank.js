@@ -14,9 +14,9 @@ redis.db.getAsync('bankupdate').then(update => {
 
 class Bank {
 	static changeLedger(user, amount) {
-		redis.db.hgetAsync('ledger', user).then(balance => {
-			balance = parseInt(balance) || 0;
-			redis.db.hsetAsync('ledger', user, amount + parseInt(balance));
+		redis.db.hgetAsync('ledger', user).then(async balance => {
+			const bal = parseInt(balance) || 0;
+			await redis.db.hsetAsync('ledger', user, amount + parseInt(bal));
 		});
 	}
 
@@ -43,11 +43,11 @@ class Bank {
 		const previousBankBalance = await redis.db.getAsync('lastbankbalance') || bankBalance;
 		const bankBalanceDelta = (bankBalance - previousBankBalance) / previousBankBalance;
 
-		redis.db.hgetallAsync('ledger').then(balances => {
+		redis.db.hgetallAsync('ledger').then(async balances => {
 			if (!balances) return;
 
 			for (const [user, balance] of Object.entries(balances)) {
-				redis.db.hsetAsync('ledger', user, Math.round(balance * (interestRate + 1)));
+				await redis.db.hsetAsync('ledger', user, Math.round(balance * (interestRate + 1)));
 			}
 		});
 
@@ -55,6 +55,7 @@ class Bank {
 		redis.db.setAsync('interestrate', newInterestRate);
 		redis.db.setAsync('lastbankbalance', bankBalance);
 
+		redis.db.del('bankupdate');
 		redis.db.setAsync('bankupdate', Date.now());
 		redis.db.expire('bankupdate', UPDATE_DURATION);
 

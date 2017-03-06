@@ -7,9 +7,9 @@ setInterval(() => Experience.saveExperience(), 30 * 60 * 1000);
 
 class Experience {
 	static addExperience(userID, earned) {
-		return redis.db.hgetAsync('experience', userID).then(balance => {
-			balance = parseInt(balance) || 0;
-			redis.db.hsetAsync('experience', userID, earned + parseInt(balance));
+		return redis.db.hgetAsync('experience', userID).then(async balance => {
+			const bal = parseInt(balance) || 0;
+			await redis.db.hsetAsync('experience', userID, earned + parseInt(bal));
 		});
 	}
 
@@ -47,23 +47,22 @@ class Experience {
 		return Math.floor(0.177 * Math.sqrt(experience)) + 1;
 	}
 
-	static saveExperience() {
-		redis.db.hgetallAsync('experience').then(experiences => {
-			const ids = Object.keys(experiences || {});
+	static async saveExperience() {
+		const experiences = await redis.db.hgetallAsync('experience');
 
-			for (const id of ids) {
-				UserProfile.findOne({ where: { userID: id } }).then(user => {
-					if (!user) {
-						UserProfile.create({
-							userID: id,
-							experience: experiences[id]
-						});
-					} else {
-						user.update({ experience: experiences[id] });
-					}
+		const ids = Object.keys(experiences || {});
+
+		for (const id of ids) {
+			const user = await UserProfile.findOne({ where: { userID: id } });
+			if (!user) {
+				UserProfile.create({
+					userID: id,
+					experience: experiences[id]
 				});
+			} else {
+				user.update({ experience: experiences[id] });
 			}
-		});
+		}
 	}
 }
 

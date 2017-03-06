@@ -72,7 +72,7 @@ module.exports = class BuyItemCommand extends Command {
 		let inventory = await Inventory.fetchInventory(msg.author.id);
 		inventory.addItems(new ItemGroup(storeItem, amount));
 		Currency.removeBalance(msg.author.id, amount * storeItem.price);
-		inventory.save();
+		await inventory.save();
 
 		return msg.reply(stripIndents`
 			you have successfully purchased ${amount} ${itemName}${plural

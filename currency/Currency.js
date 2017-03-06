@@ -10,10 +10,11 @@ redis.db.hgetAsync('money', 'bank').then(balance => {
 });
 
 class Currency {
-	static async _changeBalance(user, amount) {
-		const balance = await redis.db.hgetAsync('money', user);
-		const bal = parseInt(balance) || 0;
-		redis.db.hsetAsync('money', user, amount + parseInt(bal));
+	static _changeBalance(user, amount) {
+		redis.db.hgetAsync('money', user).then(async balance => {
+			const bal = parseInt(balance) || 0;
+			await redis.db.hsetAsync('money', user, amount + parseInt(bal));
+		});
 	}
 
 	static changeBalance(user, amount) {
