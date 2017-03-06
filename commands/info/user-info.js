@@ -29,7 +29,7 @@ module.exports = class UserInfoCommand extends Command {
 	}
 
 	async run(msg, args) {
-		const member = args.member;
+		const { member } = args;
 		const user = member.user;
 
 		const userNames = await userName.findAll({ where: { userid: user.id } });

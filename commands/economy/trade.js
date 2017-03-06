@@ -54,8 +54,7 @@ module.exports = class MoneyTradeCommand extends Command {
 	}
 
 	async run(msg, args) {
-		const user = args.member;
-		const donuts = args.donuts;
+		const { user, donuts } = args;
 
 		if (user.id === msg.author.id) return msg.reply(`you can't trade ${Currency.textPlural} with yourself, ya dingus.`);
 		if (user.user.bot) return msg.reply(`don't give your ${Currency.textPlural} to bots: they're bots, man.`);

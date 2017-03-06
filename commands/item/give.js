@@ -40,8 +40,7 @@ module.exports = class ItemGiveCommand extends Command {
 	}
 
 	async run(msg, args) {
-		const user = args.member;
-		const amount = args.amount;
+		const { user, amount } = args;
 		const item = ItemGroup.convert(args.item, amount);
 		const inventory = await Inventory.fetchInventory(msg.author.id);
 		const itemBalance = inventory.content[item] ? inventory.content[item].amount : 0;

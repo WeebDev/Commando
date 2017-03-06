@@ -33,7 +33,7 @@ module.exports = class WeatherCommand extends Command {
 	}
 
 	async run(msg, args) {
-		const location = args.location;
+		const { location } = args;
 		const Image = Canvas.Image;
 
 		Canvas.registerFont(path.join(__dirname, '..', '..', 'assets', 'weather', 'fonts', 'Roboto-Regular.ttf'), { family: 'Roboto' });

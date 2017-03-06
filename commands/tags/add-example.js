@@ -45,7 +45,7 @@ module.exports = class ExampleAddCommand extends Command {
 
 	async run(msg, args) {
 		const name = args.name.toLowerCase();
-		const content = args.content;
+		const { content } = args;
 		const staffRole = await msg.member.roles.exists('name', 'Server Staff');
 		if (!staffRole) return msg.say(`Only the **Server Staff** can add examples, ${msg.author}`);
 

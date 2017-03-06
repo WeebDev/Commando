@@ -37,11 +37,13 @@ module.exports = class LaunchCybernukeCommand extends Command {
 	}
 
 	async run(msg, args) {
+		const { age, join } = args;
+
 		const statusMsg = await msg.reply('Calculating targeting parameters for cybernuke...');
 		await msg.guild.fetchMembers();
 
-		const memberCutoff = Date.now() - (args.join * 60000);
-		const ageCutoff = Date.now() - (args.age * 60000);
+		const memberCutoff = Date.now() - (join * 60000);
+		const ageCutoff = Date.now() - (age * 60000);
 		const members = msg.guild.members.filter(
 			mem => mem.joinedTimestamp > memberCutoff && mem.user.createdTimestamp > ageCutoff
 		);

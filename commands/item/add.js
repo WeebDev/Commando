@@ -40,7 +40,7 @@ module.exports = class ItemAddCommand extends Command {
 
 	async run(msg, args) {
 		const name = args.name.toLowerCase();
-		const price = args.price;
+		const { price } = args;
 		const item = Store.getItem(name);
 
 		if (item) return msg.reply('an item with that name already exists.');

@@ -75,7 +75,7 @@ module.exports = class SlotMachineCommand extends Command {
 	}
 
 	async run(msg, args) {
-		const coins = args.coins;
+		const { coins } = args;
 		const inventory = await Inventory.fetchInventory(msg.author.id);
 		const item = Store.getItem('coin');
 

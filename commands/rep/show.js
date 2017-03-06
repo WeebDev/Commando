@@ -24,7 +24,7 @@ module.exports = class RepShowCommand extends Command {
 	}
 
 	async run(msg, args) {
-		const page = args.page;
+		const { page } = args;
 
 		const reputation = await UserRep.findAll({ where: { userID: msg.author.id } });
 		const positive = reputation.filter(rep => rep.reputationType.trim() === '+').length;

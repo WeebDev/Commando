@@ -38,7 +38,7 @@ module.exports = class DepositCommand extends Command {
 	}
 
 	async run(msg, args) {
-		const donuts = args.donuts;
+		const { donuts } = args;
 
 		if (donuts <= 0) return msg.reply(`you can't deposit 0 or less ${Currency.convert(0)}.`);
 

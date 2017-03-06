@@ -53,9 +53,7 @@ module.exports = class ItemTradeCommand extends Command {
 	}
 
 	async run(msg, args) {
-		const user = args.member;
-		const offerAmount = args.offerAmount;
-		const receiveAmount = args.receiveAmount;
+		const { user, offerAmount, receiveAmount } = args;
 		const offerItem = this.isDonuts(args.offerItem, offerAmount);
 		const receiveItem = this.isDonuts(args.receiveItem, receiveAmount);
 

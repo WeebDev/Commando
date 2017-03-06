@@ -29,7 +29,7 @@ module.exports = class RemindMeCommand extends Command {
 	}
 
 	async run(msg, args) {
-		const remind = args.remind;
+		const { remind } = args;
 
 		const remindTime = sherlock.parse(remind);
 		const time = remindTime.startDate.getTime() - Date.now();

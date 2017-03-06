@@ -45,7 +45,7 @@ module.exports = class MoneyLeaderboardCommand extends Command {
 	}
 
 	async run(msg, args) {
-		const page = args.page;
+		const { page } = args;
 
 		const lastUpdate = await redis.db.getAsync('moneyleaderboardreset');
 		const cooldown = 30 * 60 * 1000;
