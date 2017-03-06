@@ -14,9 +14,9 @@ module.exports = class RepNegativeCommand extends Command {
 
 			args: [
 				{
-					key: 'user',
+					key: 'member',
 					prompt: 'whom would you like to give a negative reputation point?',
-					type: 'user'
+					type: 'member'
 				},
 				{
 					key: 'message',
@@ -30,13 +30,13 @@ module.exports = class RepNegativeCommand extends Command {
 	}
 
 	async run(msg, args) {
-		const { user, message } = args;
+		const { member, message } = args;
 
-		if (user.id === msg.author.id) return msg.reply('you can\'t change your own reputation like that!');
+		if (member.id === msg.author.id) return msg.reply('you can\'t change your own reputation like that!');
 
 		const alreadyRepped = await UserRep.findOne({
 			where: {
-				userID: user.id,
+				userID: member.id,
 				reputationBy: msg.author.id
 			}
 		});
@@ -45,12 +45,12 @@ module.exports = class RepNegativeCommand extends Command {
 		if (alreadyRepped) await alreadyRepped.destroy();
 
 		await UserRep.create({
-			userID: user.id,
+			userID: member.id,
 			reputationType: '-',
 			reputationBy: msg.author.id,
 			reputationMessage: message || null
 		});
 
-		return msg.reply(`you've successfully added a negative reputation point to ${user.member.displayName}.`);
+		return msg.reply(`you've successfully added a negative reputation point to ${member.displayName}.`);
 	}
 };
