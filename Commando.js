@@ -66,6 +66,7 @@ client.on('error', winston.error)
 			if (message.deletable) message.delete();
 			message.reply('Please do not post invite links on this server. If you wish to give invite links, do so in direct messages.');
 		}
+
 		const channelLocks = client.provider.get(message.guild.id, 'locks', []);
 		if (channelLocks.includes(message.channel.id)) return;
 
@@ -89,13 +90,14 @@ client.on('error', winston.error)
 		if (!gainedXPRecently.includes(message.author.id)) {
 			const xpEarned = Math.ceil(Math.random() * 9) + 3;
 			const oldLevel = await Experience.getLevel(message.author.id);
+
 			Experience.addExperience(message.author.id, xpEarned).then(async () => {
 				const newLevel = await Experience.getLevel(message.author.id);
 
 				if (newLevel > oldLevel) {
 					Currency._changeBalance(message.author.id, 100 * newLevel);
 				}
-			}).catch(winston.error);
+			}).catch(() => null);
 
 			gainedXPRecently.push(message.author.id);
 			setTimeout(() => {
@@ -360,3 +362,7 @@ client.registry
 	.registerCommandsIn(path.join(__dirname, 'commands'));
 
 client.login(config.token);
+
+process.on('unhandledRejection', err => {
+	console.error('Uncaught Promise Error: \n' + err.stack); // eslint-disable-line
+});

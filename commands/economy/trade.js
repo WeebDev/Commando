@@ -54,10 +54,10 @@ module.exports = class MoneyTradeCommand extends Command {
 	}
 
 	async run(msg, args) {
-		const { user, donuts } = args;
+		const { member, donuts } = args;
 
-		if (user.id === msg.author.id) return msg.reply(`you can't trade ${Currency.textPlural} with yourself, ya dingus.`);
-		if (user.user.bot) return msg.reply(`don't give your ${Currency.textPlural} to bots: they're bots, man.`);
+		if (member.id === msg.author.id) return msg.reply(`you can't trade ${Currency.textPlural} with yourself, ya dingus.`);
+		if (member.user.bot) return msg.reply(`don't give your ${Currency.textPlural} to bots: they're bots, man.`);
 		if (donuts <= 0) return msg.reply(`you can't trade 0 or less ${Currency.convert(0)}.`);
 
 		const userBalance = await Currency.getBalance(msg.author.id);
@@ -70,8 +70,8 @@ module.exports = class MoneyTradeCommand extends Command {
 		}
 
 		Currency.removeBalance(msg.author.id, donuts);
-		Currency.addBalance(user.id, donuts);
+		Currency.addBalance(member.id, donuts);
 
-		return msg.reply(`${user.displayName} successfully received your ${Currency.convert(donuts)}!`);
+		return msg.reply(`${member.displayName} successfully received your ${Currency.convert(donuts)}!`);
 	}
 };
