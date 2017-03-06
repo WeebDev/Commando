@@ -5,18 +5,15 @@ const redis = new Redis();
 
 const UPDATE_DURATION = 30 * 60 * 1000;
 
-setInterval(() => Currency.leaderboard(), UPDATE_DURATION);
-
 redis.db.hgetAsync('money', 'bank').then(balance => {
 	if (!balance) redis.db.hsetAsync('money', 'bank', 5000);
 });
 
 class Currency {
-	static _changeBalance(user, amount) {
-		redis.db.hgetAsync('money', user).then(balance => {
-			balance = parseInt(balance) || 0;
-			redis.db.hsetAsync('money', user, amount + parseInt(balance));
-		});
+	static async _changeBalance(user, amount) {
+		const balance = await redis.db.hgetAsync('money', user);
+		const bal = parseInt(balance) || 0;
+		redis.db.hsetAsync('money', user, amount + parseInt(bal));
 	}
 
 	static changeBalance(user, amount) {
@@ -66,6 +63,8 @@ class Currency {
 			}
 		}
 
+		setTimeout(() => Currency.leaderboard(), UPDATE_DURATION);
+		redis.db.del('moneyleaderboardreset');
 		redis.db.setAsync('moneyleaderboardreset', Date.now());
 		redis.db.expire('moneyleaderboardreset', UPDATE_DURATION);
 	}

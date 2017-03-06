@@ -79,14 +79,14 @@ module.exports = class CleanCommand extends Command {
 		}
 
 		if (!filter) {
-			const messagesToDelete = await msg.channel.fetchMessages({ limit: limit }).catch(null);
+			const messagesToDelete = await msg.channel.fetchMessages({ limit: limit }).catch(() => null);
 
-			msg.channel.bulkDelete(messagesToDelete.array().reverse()).catch(null);
+			msg.channel.bulkDelete(messagesToDelete.array().reverse()).catch(() => null);
 		} else {
-			const messages = await msg.channel.fetchMessages({ limit: limit }).catch(null);
+			const messages = await msg.channel.fetchMessages({ limit: limit }).catch(() => null);
 			const messagesToDelete = messages.filter(messageFilter);
 
-			msg.channel.bulkDelete(messagesToDelete.array().reverse()).catch(null);
+			msg.channel.bulkDelete(messagesToDelete.array().reverse()).catch(() => null);
 		}
 	}
 };

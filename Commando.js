@@ -55,7 +55,7 @@ client.on('error', winston.error)
 		winston.info(oneLine`${msg.author.username}#${msg.author.discriminator} (${msg.author.id})
 			> ${msg.guild ? `${msg.guild.name} (${msg.guild.id})` : 'DM'}
 			>> ${cmd.groupID}:${cmd.memberName}
-			${Object.values(args)[0] !== '' ? `>>> ${Object.values(args)}` : ''}
+			${Object.values(args)[0] !== '' || [] ? `>>> ${Object.values(args)}` : ''}
 		`);
 	})
 	.on('message', async (message) => {
@@ -63,7 +63,7 @@ client.on('error', winston.error)
 		if (message.author.bot) return;
 
 		if (message.guild.id === '222078108977594368' && !message.member.roles.exists('name', 'Server Staff') && /(discord\.gg\/.+|discordapp\.com\/invite\/.+)/i.test(message.content)) {
-			if (message.deletable && message.author.id !== client.user.id) message.delete();
+			if (message.deletable) message.delete();
 			message.reply('Please do not post invite links on this server. If you wish to give invite links, do so in direct messages.');
 		}
 		const channelLocks = client.provider.get(message.guild.id, 'locks', []);
@@ -122,7 +122,7 @@ client.on('error', winston.error)
 		if (starred.hasOwnProperty(message.id)) {
 			if (starred[message.id].stars.includes(user.id)) return message.channel.send(`${user}, you cannot star the same message twice!`); // eslint-disable-line consistent-return
 			const starCount = starred[message.id].count += 1;
-			const starredMessage = await starboard.fetchMessage(starred[message.id].starredMessageID).catch(err => null); // eslint-disable-line
+			const starredMessage = await starboard.fetchMessage(starred[message.id].starredMessageID).catch(() => null);
 			const starredMessageContent = starred[message.id].starredMessageContent;
 			const starredMessageAttachmentImage = starred[message.id].starredMessageImage;
 			const starredMessageDate = starred[message.id].starredMessageDate;
@@ -159,7 +159,7 @@ client.on('error', winston.error)
 					timestamp: starredMessageDate,
 					footer: { text: edit }
 				}
-			}).catch(err => null); // eslint-disable-line
+			}).catch(() => null);
 
 			starred[message.id].count = starCount;
 			starred[message.id].stars.push(user.id);
@@ -255,11 +255,11 @@ client.on('error', winston.error)
 		if (!starred[message.id].stars.includes(user.id)) return;
 
 		const starCount = starred[message.id].count -= 1;
-		const starredMessage = await starboard.fetchMessage(starred[message.id].starredMessageID).catch(err => null); // eslint-disable-line
+		const starredMessage = await starboard.fetchMessage(starred[message.id].starredMessageID).catch(() => null);
 
 		if (starred[message.id].count === 0) {
 			delete starred[message.id];
-			await starredMessage.delete().catch(err => null); // eslint-disable-line
+			await starredMessage.delete().catch(() => null);
 		} else {
 			const starredMessageContent = starred[message.id].starredMessageContent;
 			const starredMessageAttachmentImage = starred[message.id].starredMessageImage;
@@ -297,7 +297,7 @@ client.on('error', winston.error)
 					timestamp: starredMessageDate,
 					footer: { text: edit }
 				}
-			}).catch(err => null); // eslint-disable-line
+			}).catch(() => null);
 
 			starred[message.id].count = starCount;
 			starred[message.id].stars.splice(starred[message.id].stars.indexOf(user.id));
@@ -338,7 +338,7 @@ client.on('error', winston.error)
 	})
 	.on('userUpdate', (oldUser, newUser) => {
 		if (oldUser.username !== newUser.username) {
-			userName.create({ userid: newUser.id, username: oldUser.username }).catch(() => null);
+			userName.create({ userID: newUser.id, username: oldUser.username }).catch(() => null);
 		}
 	});
 
