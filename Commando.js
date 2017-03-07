@@ -104,6 +104,7 @@ client.on('error', winston.error)
 	.on('messageReactionAdd', async (messageReaction, user) => {
 		if (messageReaction.emoji.name !== '⭐') return;
 
+		if (messageReaction.message.guild.member(user).joinedAt < 86400000) return; // eslint-disable-line consistent-return
 		const message = messageReaction.message;
 		const starboard = message.guild.channels.find('name', 'starboard');
 		if (!starboard) return;
