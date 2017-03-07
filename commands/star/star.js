@@ -3,7 +3,6 @@ const starBoard = require('../../postgreSQL/models/StarBoard');
 const path = require('path');
 const { URL } = require('url');
 const winston = require('winston');
-const moment = require('moment');
 
 module.exports = class StarCommand extends Command {
 	constructor(client) {
@@ -29,14 +28,11 @@ module.exports = class StarCommand extends Command {
 
 		const starboard = msg.guild.channels.find('name', 'starboard');
 		if (!starboard) return msg.reply('can\'t star things without a #starboard channel. Create one now!');
+		if (msg.member.joinedAt < 86400000) return;
 		if (message.author.id === msg.author.id) {
 			msg.reply('sorry, you cannot star your own message!');
 
 			return msg.delete().catch(err => null); // eslint-disable-line
-		}
-
-		if (moment().diff(message.member.joinedAt, 'hours') < 24) {
-			return msg.reply('sorry, you can only star messages after being in the guild for over a day!');
 		}
 
 		let settings = await starBoard.findOne({ where: { guildID: msg.guild.id } });
