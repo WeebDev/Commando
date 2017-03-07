@@ -25,10 +25,10 @@ module.exports = class StarCommand extends Command {
 
 	async run(msg, args) {
 		const { message } = args;
-
+		
+		if (msg.member.joinedAt < 86400000) return;
 		const starboard = msg.guild.channels.find('name', 'starboard');
 		if (!starboard) return msg.reply('can\'t star things without a #starboard channel. Create one now!');
-		if (msg.member.joinedAt < 86400000) return;
 		if (message.author.id === msg.author.id) {
 			msg.reply('sorry, you cannot star your own message!');
 
