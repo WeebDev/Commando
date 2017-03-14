@@ -5,9 +5,11 @@
   "license": "MIT",
   "author": "Crawl",
   "scripts": {
-    "start": "node Commando.js",
-    "update": "npm update",
-    "test": "eslint . silent"
+    "lint:gulp": "gulp lint",
+    "build:gulp": "gulp build",
+    "lint": "npm run lint:gulp -s",
+    "prebuild": "npm run lint:gulp -s",
+    "build": "npm run build:gulp -s"
   },
   "repository": {
     "type": "git",
@@ -43,7 +45,17 @@
     "ytdl-core": "^0.10.0"
   },
   "devDependencies": {
-    "eslint": "^3.17.1"
+    "@types/common-tags": "^1.2.5",
+    "@types/node": "^7.0.5",
+    "@types/request-promise": "^4.1.33",
+    "@types/winston": "^2.2.0",
+    "del": "^2.2.2",
+    "gulp": "^3.9.1",
+    "gulp-tslint": "^7.1.0",
+    "gulp-typescript": "^3.1.5",
+    "tslint": "^4.5.1",
+    "tslint-eslint-rules": "^3.4.0",
+    "typescript": "^2.2.1"
   },
   "engines": {
     "node": ">=7.6.0"
