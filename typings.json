@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "redis": "registry:npm/redis#2.6.0+20160901110043",
+    "sequelize": "registry:npm/sequelize#4.0.0-1+20161101121248"
+  }
+}
