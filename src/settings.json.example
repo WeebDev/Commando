@@ -1,0 +1,14 @@
+{
+	"token": "YOUR_TOKEN",
+	"owner": "YOUR_ID",
+	"exampleChannel": "example channel ID",
+	"db": "postgreSQL URL",
+	"WeatherAPIKey": "darksky.net API Key",
+	"GoogleAPIKey": "Google Geocode API Key",
+	"soundcloudID": "SoundCloud API Key",
+	"paginationItems": 10,
+	"defaultVolume": 2,
+	"maxLength": 15,
+	"maxSongs": 5,
+	"passes": 2
+}
