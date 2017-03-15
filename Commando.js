@@ -126,9 +126,10 @@ client.on('error', winston.error)
 			const starredMessageDate = starred[message.id].starredMessageDate;
 
 			let edit;
-			if ((starCount - 1) < 5) edit = starredMessage.embeds[0].footer.text.replace(`${starCount - 1} ⭐`, `${starCount} ⭐`);
-			else if ((starCount - 1) >= 5 && (starCount - 1) < 10) edit = starredMessage.embeds[0].footer.text.replace(`${starCount - 1} ⭐`, `${starCount} 🌟`);
-			else if ((starCount - 1) >= 10) edit = starredMessage.embeds[0].footer.text.replace(`${starCount - 1} 🌟`, `${starCount} 🌠`);
+			if (starCount < 5) edit = starredMessage.embeds[0].footer.text = `${starCount} ⭐`;
+			else if (starCount >= 5 && starCount < 10) edit = starredMessage.embeds[0].footer.text = `${starCount} 🌟`;
+			else if (starCount >= 10) edit = starredMessage.embeds[0].footer.text = `${starCount} ✨`;
+			else if (starCount >= 15) edit = starredMessage.embeds[0].footer.text = `${starCount} 🌠`;
 
 			await starredMessage.edit({
 				embed: {
@@ -264,9 +265,10 @@ client.on('error', winston.error)
 			const starredMessageDate = starred[message.id].starredMessageDate;
 
 			let edit;
-			if ((starCount + 1) < 5) edit = starredMessage.embeds[0].footer.text.replace(`${starCount + 1} ⭐`, `${starCount} ⭐`);
-			else if ((starCount + 1) >= 5 && (starCount + 1) < 10) edit = starredMessage.embeds[0].footer.text.replace(`${starCount + 1} 🌟`, `${starCount} ⭐`);
-			else if ((starCount + 1) >= 10) edit = starredMessage.embeds[0].footer.text.replace(`${starCount + 1} 🌠`, `${starCount} 🌟`);
+			if (starCount < 5) edit = starredMessage.embeds[0].footer.text = `${starCount} ⭐`;
+			else if (starCount >= 5 && starCount < 10) edit = starredMessage.embeds[0].footer.text = `${starCount} 🌟`;
+			else if (starCount >= 10) edit = starredMessage.embeds[0].footer.text = `${starCount} ✨`;
+			else if (starCount >= 15) edit = starredMessage.embeds[0].footer.text = `${starCount} 🌠`;
 
 			await starredMessage.edit({
 				embed: {
