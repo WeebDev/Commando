@@ -31,7 +31,6 @@ module.exports = class RepPositiveCommand extends Command {
 
 	async run(msg, args) {
 		const { member, message } = args;
-
 		if (member.id === msg.author.id) return msg.reply('you can\'t change your own reputation like that!');
 
 		const alreadyRepped = await UserRep.findOne({
@@ -41,7 +40,7 @@ module.exports = class RepPositiveCommand extends Command {
 			}
 		});
 
-		if (alreadyRepped && alreadyRepped.reputationType === '+') return msg.reply('you have already given a positive reputation point to this user.');
+		if (alreadyRepped && alreadyRepped.reputationType === '+') return msg.reply('you have already given a positive reputation point to this user.'); // eslint-disable-line max-len
 		if (alreadyRepped) await alreadyRepped.destroy();
 
 		await UserRep.create({
@@ -50,7 +49,6 @@ module.exports = class RepPositiveCommand extends Command {
 			reputationBy: msg.author.id,
 			reputationMessage: message || null
 		});
-
 		return msg.reply(`you've successfully added a positive reputation point to ${member.displayName}.`);
 	}
 };

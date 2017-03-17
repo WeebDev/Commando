@@ -1,22 +1,24 @@
 const Sequelize = require('sequelize');
 const winston = require('winston');
 
-const db = require('../settings').db;
+const { db } = require('../settings');
+
+const database = new Sequelize(db, { logging: false });
 
 class Database {
-	constructor() {
-		this.database = new Sequelize(db, { logging: false });
-	}
-
 	get db() {
-		return this.database;
+		return database;
 	}
 
 	start() {
-		this.database.authenticate()
-			.then(() => winston.info('Connection has been established successfully.'))
-			.then(() => this.database.sync())
-			.then(() => winston.info('Syncing Database...'))
+		database.authenticate()
+			.then(() => winston.info('Connection to database has been established successfully.'))
+			.then(() => winston.info('Synchronizing database...'))
+			.then(() => database.sync()
+				.then(() => winston.info('Synchronizing database done!'))
+				.catch(error => winston.error(`Error synchronizing the database: ${error}`))
+			)
+			.then(() => winston.info('Ready to rock!'))
 			.catch(err => winston.error(`Unable to connect to the database: ${err}`));
 	}
 }

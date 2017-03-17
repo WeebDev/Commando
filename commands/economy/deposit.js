@@ -23,9 +23,7 @@ module.exports = class DepositCommand extends Command {
 					key: 'donuts',
 					label: 'amount of donuts to deposit',
 					prompt: `how many ${Currency.textPlural} do you want to deposit?\n`,
-					validate: donuts => {
-						return /^(?:\d+|-all|-a)$/g.test(donuts);
-					},
+					validate: donuts => /^(?:\d+|-all|-a)$/g.test(donuts),
 					parse: async (donuts, msg) => {
 						const balance = await Currency.getBalance(msg.author.id);
 
@@ -43,7 +41,6 @@ module.exports = class DepositCommand extends Command {
 		if (donuts <= 0) return msg.reply(`you can't deposit 0 or less ${Currency.convert(0)}.`);
 
 		const userBalance = await Currency.getBalance(msg.author.id);
-
 		if (userBalance < donuts) {
 			return msg.reply(stripIndents`
 				you don't have that many ${Currency.textPlural} to deposit!
@@ -52,7 +49,6 @@ module.exports = class DepositCommand extends Command {
 		}
 
 		Bank.deposit(msg.author.id, donuts);
-
 		return msg.reply(`successfully deposited ${Currency.convert(donuts)} to the bank!`);
 	}
 };

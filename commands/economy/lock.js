@@ -30,7 +30,7 @@ module.exports = class LockCommand extends Command {
 		return this.client.isOwner(msg.author) || msg.member.hasPermission('MANAGE_GUILD');
 	}
 
-	async run(msg, args) {
+	run(msg, args) {
 		const channel = args.channel || msg.channel;
 		if (channel.type !== 'text') return msg.reply('you can only lock text channels.');
 
@@ -39,7 +39,6 @@ module.exports = class LockCommand extends Command {
 
 		channelLocks.push(channel.id);
 		this.client.provider.set(msg.guild.id, 'locks', channelLocks);
-
 		return msg.reply(stripIndents`
 			this channel has been locked. You can no longer earn xp or ${Currency.textPlural} in ${channel}.
 		`);

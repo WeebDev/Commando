@@ -54,6 +54,7 @@ module.exports = class LaunchCybernukeCommand extends Command {
 		let statusMsg2;
 
 		while (!statusMsg2) {
+			/* eslint-disable no-await-in-loop */
 			const responses = await msg.channel.awaitMessages(msg2 => msg2.author.id === msg.author.id, {
 				maxMatches: 1,
 				time: 10000

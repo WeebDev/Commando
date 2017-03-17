@@ -22,10 +22,9 @@ class RussianRoulette {
 	}
 
 	awaitPlayers(time) {
-		return new Promise((resolve) => {
+		return new Promise(resolve => {
 			setTimeout(() => {
 				games.delete(this.guildID);
-
 				return resolve(this.players);
 			}, time);
 		});

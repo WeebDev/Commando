@@ -17,7 +17,7 @@ module.exports = class SaveQueueCommand extends Command {
 		});
 	}
 
-	async run(msg) {
+	run(msg) {
 		const queue = this.queue.get(msg.guild.id);
 		if (!queue) return msg.reply('there isn\'t any music playing right now. You should get on that.');
 		const song = queue.songs[0];
@@ -36,13 +36,11 @@ module.exports = class SaveQueueCommand extends Command {
 			`,
 			image: { url: song.thumbnail }
 		};
-
 		return msg.author.sendMessage('', { embed });
 	}
 
 	get queue() {
 		if (!this._queue) this._queue = this.client.registry.resolveCommand('music:play').queue;
-
 		return this._queue;
 	}
 };

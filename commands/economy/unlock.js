@@ -30,22 +30,18 @@ module.exports = class UnlockCommand extends Command {
 		return this.client.isOwner(msg.author) || msg.member.hasPermission('MANAGE_GUILD');
 	}
 
-	async run(msg, args) {
+	run(msg, args) {
 		const channel = args.channel || msg.channel;
-
 		if (channel.type !== 'text') return msg.reply('you can only unlock text channels.');
 
 		const channelLocks = this.client.provider.get(msg.guild.id, 'locks', []);
-
 		if (!channelLocks.includes(channel.id)) {
 			return msg.reply('this channel is not locked.');
 		}
 
 		const index = channelLocks.indexOf(channel.id);
 		channelLocks.splice(index, 1);
-
 		this.client.provider.set(msg.guild.id, 'locks', channelLocks);
-
 		return msg.reply(stripIndents`
 			the channel lock has been lifted. You can now earn xp and ${Currency.textPlural} in ${channel} again.
 		`);

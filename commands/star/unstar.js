@@ -22,38 +22,37 @@ module.exports = class UnstarCommand extends Command {
 
 	async run(msg, args) {
 		const { message } = args;
-
 		const starboard = msg.guild.channels.find('name', 'starboard');
 		if (!starboard) return msg.reply('can\'t unstar things without a #starboard channel. Create one now!');
 
 		const settings = await starBoard.findOne({ where: { guildID: msg.guild.id } });
 		if (!settings) {
 			msg.reply('nobody\'s starred before!');
-			return msg.delete().catch(err => null); // eslint-disable-line
+			return msg.delete().catch(err => null); // eslint-disable-line no-unused-vars, handle-callback-err
 		}
-		let starred = settings.starred;
 
+		let starred = settings.starred;
 		if (!starred.hasOwnProperty(message.id)) {
 			msg.reply('this message isn\'t starred.');
-			return msg.delete().catch(err => null); // eslint-disable-line
+			return msg.delete().catch(err => null); // eslint-disable-line no-unused-vars, handle-callback-err
 		}
 		if (!starred[message.id].stars.includes(msg.author.id)) {
 			msg.reply('you can only unstar a message you have starred before!');
-			return msg.delete().catch(err => null); // eslint-disable-line
+			return msg.delete().catch(err => null); // eslint-disable-line no-unused-vars, handle-callback-err
 		}
 
 		const starCount = starred[message.id].count -= 1;
-		const starredMessage = await starboard.fetchMessage(starred[message.id].starredMessageID).catch(err => null); // eslint-disable-line
+		const starredMessage = await starboard.fetchMessage(starred[message.id].starredMessageID).catch(err => null); // eslint-disable-line no-unused-vars, handle-callback-err, max-len
 
 		if (starred[message.id].count === 0) {
 			delete starred[message.id];
-			await starredMessage.delete().catch(err => null); // eslint-disable-line
+			await starredMessage.delete().catch(err => null); // eslint-disable-line no-unused-vars, handle-callback-err
 		} else {
 			const starredMessageContent = starred[message.id].starredMessageContent;
 			const starredMessageAttachmentImage = starred[message.id].starredMessageImage;
 			const starredMessageDate = starred[message.id].starredMessageDate;
-
 			let edit;
+
 			if (starCount < 5) edit = starredMessage.embeds[0].footer.text = `${starCount} ⭐`;
 			else if (starCount >= 5 && starCount < 10) edit = starredMessage.embeds[0].footer.text = `${starCount} 🌟`;
 			else if (starCount >= 10) edit = starredMessage.embeds[0].footer.text = `${starCount} ✨`;
@@ -86,7 +85,7 @@ module.exports = class UnstarCommand extends Command {
 					timestamp: starredMessageDate,
 					footer: { text: edit }
 				}
-			}).catch(err => null); // eslint-disable-line
+			}).catch(err => null); // eslint-disable-line no-unused-vars, handle-callback-err
 
 			starred[message.id].count = starCount;
 			starred[message.id].stars.splice(starred[message.id].stars.indexOf(msg.author.id));
@@ -94,7 +93,6 @@ module.exports = class UnstarCommand extends Command {
 
 		settings.starred = starred;
 		await settings.save();
-
-		return msg.delete().catch(err => null); // eslint-disable-line
+		return msg.delete().catch(err => null); // eslint-disable-line no-unused-vars, handle-callback-err
 	}
 };

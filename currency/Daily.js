@@ -16,15 +16,12 @@ module.exports = class Daily {
 
 	static async received(userID) {
 		const lastDaily = await redis.db.getAsync(`daily${userID}`);
-
 		if (!lastDaily) return false;
-
 		return Date.now() - DAY_DURATION < lastDaily;
 	}
 
 	static async nextDaily(userID) {
 		const lastDaily = await redis.db.getAsync(`daily${userID}`);
-
 		return DAY_DURATION - (Date.now() - lastDaily);
 	}
 

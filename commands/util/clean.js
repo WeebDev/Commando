@@ -72,21 +72,20 @@ module.exports = class CleanCommand extends Command {
 			} else if (filter === 'upload') {
 				messageFilter = message => message.attachments.size !== 0;
 			} else if (filter === 'links') {
-				messageFilter = message => message.content.search(/https?:\/\/[^ \/\.]+\.[^ \/\.]+/) !== -1; // eslint-disable-line no-useless-escape
+				messageFilter = message => message.content.search(/https?:\/\/[^ \/\.]+\.[^ \/\.]+/) !== -1; // eslint-disable-line
 			} else {
 				return msg.say(`${msg.author}, this is not a valid filter. \`help clean\` for all available filters.`);
 			}
 		}
 
+		/* eslint-disable no-unused-vars, handle-callback-err */
 		if (!filter) {
-			const messagesToDelete = await msg.channel.fetchMessages({ limit: limit }).catch(() => null);
-
-			msg.channel.bulkDelete(messagesToDelete.array().reverse()).catch(() => null);
+			const messagesToDelete = await msg.channel.fetchMessages({ limit: limit }).catch(err => null);
+			msg.channel.bulkDelete(messagesToDelete.array().reverse()).catch(err => null);
 		} else {
-			const messages = await msg.channel.fetchMessages({ limit: limit }).catch(() => null);
+			const messages = await msg.channel.fetchMessages({ limit: limit }).catch(err => null);
 			const messagesToDelete = messages.filter(messageFilter);
-
-			msg.channel.bulkDelete(messagesToDelete.array().reverse()).catch(() => null);
+			msg.channel.bulkDelete(messagesToDelete.array().reverse()).catch(err => null);
 		}
 	}
 };

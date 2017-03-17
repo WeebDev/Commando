@@ -28,7 +28,7 @@ module.exports = class MaxSongsCommand extends Command {
 		return this.client.isOwner(msg.author) || msg.member.hasPermission('ADMINISTRATOR');
 	}
 
-	async run(msg, args) {
+	run(msg, args) {
 		if (!args) {
 			const maxSongs = this.client.provider.get(msg.guild.id, 'maxSongs', config.maxSongs);
 			return msg.reply(`the maximum songs a user may have in the queue at one time is ${maxSongs}.`);

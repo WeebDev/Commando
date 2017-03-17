@@ -14,6 +14,4 @@ const UserName = database.db.define('userName', {
 	}]
 });
 
-UserName.sync();
-
 module.exports = UserName;

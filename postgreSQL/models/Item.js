@@ -9,6 +9,4 @@ const Item = database.db.define('items', {
 	price: Sequelize.INTEGER
 });
 
-Item.sync();
-
 module.exports = Item;

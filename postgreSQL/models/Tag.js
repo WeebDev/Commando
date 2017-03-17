@@ -29,6 +29,4 @@ const Tag = database.db.define('tags', {
 	}
 });
 
-Tag.sync();
-
 module.exports = Tag;

@@ -31,9 +31,8 @@ module.exports = class SkipSongCommand extends Command {
 		if (!queue.voiceChannel.members.has(msg.author.id)) {
 			return msg.reply('you\'re not in the voice channel. You better not be trying to mess with their mojo, man.');
 		}
-		if (!queue.songs[0].dispatcher) return msg.reply('the song hasn\'t even begun playing yet. Why not give it a chance?');
+		if (!queue.songs[0].dispatcher) return msg.reply('the song hasn\'t even begun playing yet. Why not give it a chance?'); // eslint-disable-line max-len
 
-		// Determine the vote threshold, and handle immediate skipping
 		const threshold = Math.ceil((queue.voiceChannel.members.size - 1) / 3);
 		const force = threshold <= 1
 		|| queue.voiceChannel.members.size < threshold
@@ -51,7 +50,6 @@ module.exports = class SkipSongCommand extends Command {
 
 			const time = this.setTimeout(vote);
 			const remaining = threshold - vote.count;
-
 			return msg.say(oneLine`
 				${vote.count} vote${vote.count > 1 ? 's' : ''} received so far,
 				${remaining} more ${remaining > 1 ? 'are' : 'is'} needed to skip.
@@ -70,7 +68,6 @@ module.exports = class SkipSongCommand extends Command {
 			const time = this.setTimeout(newVote);
 			this.votes.set(msg.guild.id, newVote);
 			const remaining = threshold - 1;
-
 			return msg.say(oneLine`
 				Starting a voteskip.
 				${remaining} more vote${remaining > 1 ? 's are' : ' is'} required for the song to be skipped.
@@ -87,7 +84,6 @@ module.exports = class SkipSongCommand extends Command {
 
 		const song = queue.songs[0];
 		song.dispatcher.end();
-
 		return `**${song}**`;
 	}
 
@@ -98,13 +94,11 @@ module.exports = class SkipSongCommand extends Command {
 			this.votes.delete(vote.guild);
 			vote.queue.textChannel.sendMessage('The vote to skip the current song has ended. Get outta here, party poopers.');
 		}, time);
-
 		return Math.round(time / 1000);
 	}
 
 	get queue() {
 		if (!this._queue) this._queue = this.client.registry.resolveCommand('music:play').queue;
-
 		return this._queue;
 	}
 };

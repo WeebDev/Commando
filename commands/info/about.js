@@ -15,7 +15,7 @@ module.exports = class AboutCommand extends Command {
 		});
 	}
 
-	async run(msg) {
+	run(msg) {
 		return msg.embed({
 			color: 3447003,
 			description: stripIndents`

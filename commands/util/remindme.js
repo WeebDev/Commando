@@ -30,10 +30,8 @@ module.exports = class RemindMeCommand extends Command {
 
 	async run(msg, args) {
 		const { remind } = args;
-
 		const remindTime = sherlock.parse(remind);
 		const time = remindTime.startDate.getTime() - Date.now();
-
 		const preRemind = await msg.say(stripIndents`
 			I will remind you '${remindTime.eventTitle}' ${moment().add(time, 'ms').fromNow()}.
 		`);
@@ -42,7 +40,6 @@ module.exports = class RemindMeCommand extends Command {
 				${msg.author} you wanted me to remind you of: '${remindTime.eventTitle}'
 			`)), time);
 		});
-
 		return [preRemind, remindMessage];
 	}
 };

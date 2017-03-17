@@ -29,7 +29,7 @@ module.exports = class ViewQueueCommand extends Command {
 		});
 	}
 
-	async run(msg, args) {
+	run(msg, args) {
 		const { page } = args;
 		const queue = this.queue.get(msg.guild.id);
 		if (!queue) return msg.reply('there are no songs in the queue. Why not start the party yourself?');
@@ -45,6 +45,7 @@ module.exports = class ViewQueueCommand extends Command {
 				name: `${msg.author.username}#${msg.author.discriminator} (${msg.author.id})`,
 				icon_url: msg.author.displayAvatarURL // eslint-disable-line camelcase
 			},
+			/* eslint-disable max-len */
 			description: stripIndents`
 				__**Song queue, page ${paginated.page}**__
 				${paginated.items.map(song => `**-** ${!isNaN(song.id) ? `${song.name} (${song.lengthString})` : `[${song.name}](${`https://www.youtube.com/watch?v=${song.id}`})`} (${song.lengthString})`).join('\n')}
@@ -60,13 +61,11 @@ module.exports = class ViewQueueCommand extends Command {
 				**Total queue time:** ${Song.timeString(totalLength)}
 			`
 		};
-
 		return msg.embed(embed);
 	}
 
 	get queue() {
 		if (!this._queue) this._queue = this.client.registry.resolveCommand('music:play').queue;
-
 		return this._queue;
 	}
 };

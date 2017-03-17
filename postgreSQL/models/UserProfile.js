@@ -36,6 +36,4 @@ const UserProfile = database.db.define('userProfiles', {
 	}
 });
 
-UserProfile.sync();
-
 module.exports = UserProfile;

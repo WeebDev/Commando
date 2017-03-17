@@ -27,9 +27,8 @@ module.exports = class WhitelistUserCommand extends Command {
 		return this.client.isOwner(msg.author);
 	}
 
-	async run(msg, args) {
+	run(msg, args) {
 		const { user } = args;
-
 		const blacklist = this.client.provider.get('global', 'userBlacklist', []);
 		if (!blacklist.includes(user.id)) return msg.reply('that user is not blacklisted.');
 
@@ -41,7 +40,6 @@ module.exports = class WhitelistUserCommand extends Command {
 		} else {
 			this.client.provider.set('global', 'userBlacklist', blacklist);
 		}
-
 		return msg.reply(`${user.username}#${user.discriminator} has been removed from the blacklist.`);
 	}
 };

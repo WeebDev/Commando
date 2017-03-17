@@ -35,9 +35,7 @@ client.setProvider(new SequelizeProvider(database.db));
 
 client.dispatcher.addInhibitor(msg => {
 	const blacklist = client.provider.get('global', 'userBlacklist', []);
-
 	if (!blacklist.includes(msg.author.id)) return false;
-
 	return `User ${msg.author.username}#${msg.author.discriminator} (${msg.author.id}) has been blacklisted.`;
 });
 
@@ -58,17 +56,16 @@ client.on('error', winston.error)
 			${Object.values(args)[0] !== '' || [] ? `>>> ${Object.values(args)}` : ''}
 		`);
 	})
-	.on('message', async (message) => {
+	.on('message', async message => {
 		if (message.channel.type === 'dm') return;
 		if (message.author.bot) return;
 
 		const channelLocks = client.provider.get(message.guild.id, 'locks', []);
 		if (channelLocks.includes(message.channel.id)) return;
-
 		if (!earnedRecently.includes(message.author.id)) {
-			const hasImageAttachment = message.attachments.some(attachment => {
-				return attachment.url.match(/\.(png|jpg|jpeg|gif|webp)$/);
-			});
+			const hasImageAttachment = message.attachments.some(attachment =>
+				attachment.url.match(/\.(png|jpg|jpeg|gif|webp)$/)
+			);
 			const moneyEarned = hasImageAttachment
 				? Math.ceil(Math.random() * 7) + 5
 				: Math.ceil(Math.random() * 7) + 1;
@@ -88,11 +85,10 @@ client.on('error', winston.error)
 
 			Experience.addExperience(message.author.id, xpEarned).then(async () => {
 				const newLevel = await Experience.getLevel(message.author.id);
-
 				if (newLevel > oldLevel) {
 					Currency._changeBalance(message.author.id, 100 * newLevel);
 				}
-			}).catch(() => null);
+			}).catch(err => null); // eslint-disable-line no-unused-vars, handle-callback-err
 
 			gainedXPRecently.push(message.author.id);
 			setTimeout(() => {
@@ -110,7 +106,7 @@ client.on('error', winston.error)
 		if (!starboard) return;
 		if (message.author.id === user.id) {
 			messageReaction.remove(user.id);
-			return message.channel.send(`${user}, you cannot star your own messages!`); // eslint-disable-line consistent-return
+			return message.channel.send(`${user}, you cannot star your own messages!`); // eslint-disable-line consistent-return, max-len
 		}
 
 		let settings = await starBoard.findOne({ where: { guildID: message.guild.id } });
@@ -118,9 +114,9 @@ client.on('error', winston.error)
 		const starred = settings.starred;
 
 		if (starred.hasOwnProperty(message.id)) {
-			if (starred[message.id].stars.includes(user.id)) return message.channel.send(`${user}, you cannot star the same message twice!`); // eslint-disable-line consistent-return
+			if (starred[message.id].stars.includes(user.id)) return message.channel.send(`${user}, you cannot star the same message twice!`); // eslint-disable-line consistent-return, max-len
 			const starCount = starred[message.id].count += 1;
-			const starredMessage = await starboard.fetchMessage(starred[message.id].starredMessageID).catch(() => null);
+			const starredMessage = await starboard.fetchMessage(starred[message.id].starredMessageID).catch(err => null); // eslint-disable-line no-unused-vars, handle-callback-err, max-len
 			const starredMessageContent = starred[message.id].starredMessageContent;
 			const starredMessageAttachmentImage = starred[message.id].starredMessageImage;
 			const starredMessageDate = starred[message.id].starredMessageDate;
@@ -158,7 +154,7 @@ client.on('error', winston.error)
 					timestamp: starredMessageDate,
 					footer: { text: edit }
 				}
-			}).catch(() => null);
+			}).catch(err => null); // eslint-disable-line no-unused-vars, handle-callback-err
 
 			starred[message.id].count = starCount;
 			starred[message.id].stars.push(user.id);
@@ -169,7 +165,7 @@ client.on('error', winston.error)
 			const starCount = 1;
 			let attachmentImage;
 			const extensions = new Set(['.png', '.jpg', '.jpeg', '.gif', '.webp']);
-			const linkRegex = /https?:\/\/(?:\w+\.)?[\w-]+\.[\w]{2,3}(?:\/[\w-_\.]+)+\.(?:png|jpg|jpeg|gif|webp)/; // eslint-disable-line no-useless-escape
+			const linkRegex = /https?:\/\/(?:\w+\.)?[\w-]+\.[\w]{2,3}(?:\/[\w-_\.]+)+\.(?:png|jpg|jpeg|gif|webp)/; // eslint-disable-line no-useless-escape, max-len
 
 			if (message.attachments.some(attachment => {
 				try {
@@ -254,11 +250,11 @@ client.on('error', winston.error)
 		if (!starred[message.id].stars.includes(user.id)) return;
 
 		const starCount = starred[message.id].count -= 1;
-		const starredMessage = await starboard.fetchMessage(starred[message.id].starredMessageID).catch(() => null);
+		const starredMessage = await starboard.fetchMessage(starred[message.id].starredMessageID).catch(err => null); // eslint-disable-line no-unused-vars, handle-callback-err, max-len
 
 		if (starred[message.id].count === 0) {
 			delete starred[message.id];
-			await starredMessage.delete().catch(() => null);
+			await starredMessage.delete().catch(err => null); // eslint-disable-line no-unused-vars, handle-callback-err
 		} else {
 			const starredMessageContent = starred[message.id].starredMessageContent;
 			const starredMessageAttachmentImage = starred[message.id].starredMessageImage;
@@ -297,7 +293,7 @@ client.on('error', winston.error)
 					timestamp: starredMessageDate,
 					footer: { text: edit }
 				}
-			}).catch(() => null);
+			}).catch(err => null); // eslint-disable-line no-unused-vars, handle-callback-err
 
 			starred[message.id].count = starCount;
 			starred[message.id].stars.splice(starred[message.id].stars.indexOf(user.id));
@@ -338,7 +334,7 @@ client.on('error', winston.error)
 	})
 	.on('userUpdate', (oldUser, newUser) => {
 		if (oldUser.username !== newUser.username) {
-			userName.create({ userID: newUser.id, username: oldUser.username }).catch(() => null);
+			userName.create({ userID: newUser.id, username: oldUser.username }).catch(err => null); // eslint-disable-line no-unused-vars, handle-callback-err, max-len
 		}
 	});
 
@@ -362,5 +358,5 @@ client.registry
 client.login(config.token);
 
 process.on('unhandledRejection', err => {
-	console.error('Uncaught Promise Error: \n' + err.stack); // eslint-disable-line
+	console.error(`Uncaught Promise Error: \n${err.stack}`); // eslint-disable-line no-console
 });

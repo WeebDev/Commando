@@ -46,7 +46,6 @@ module.exports = class MoneyLeaderboardCommand extends Command {
 
 	async run(msg, args) {
 		const { page } = args;
-
 		const lastUpdate = await redis.db.getAsync('moneyleaderboardreset');
 		const cooldown = 30 * 60 * 1000;
 		const reset = cooldown - (Date.now() - lastUpdate);
@@ -54,7 +53,7 @@ module.exports = class MoneyLeaderboardCommand extends Command {
 		const paginated = util.paginate(JSON.parse(money), page, Math.floor(config.paginationItems));
 		let ranking = config.paginationItems * (paginated.page - 1);
 
-		for (const user of paginated.items) await this.client.fetchUser(user.userID);
+		for (const user of paginated.items) await this.client.fetchUser(user.userID); // eslint-disable-line
 
 		return msg.embed({
 			color: 3447003,
@@ -78,12 +77,13 @@ module.exports = class MoneyLeaderboardCommand extends Command {
 		redis.db.expire('moneyleaderboard', 3600);
 		if (cache) return cache;
 
-		const money = await UserProfile.findAll({ where: { userID: { $ne: 'bank' } }, order: Sequelize.literal('networth DESC') });
+		const money = await UserProfile.findAll(
+			{ where: { userID: { $ne: 'bank' } }, order: Sequelize.literal('networth DESC') }
+		);
 		if (!money) return '';
 
 		redis.db.setAsync('moneyleaderboard', JSON.stringify(money));
 		redis.db.expire('moneyleaderboard', 3600);
-
 		return JSON.stringify(money);
 	}
 };

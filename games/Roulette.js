@@ -41,7 +41,7 @@ class Roulette {
 	}
 
 	awaitPlayers(time) {
-		return new Promise((resolve) => {
+		return new Promise(resolve => {
 			setTimeout(() => {
 				games.delete(this.guildID);
 				return resolve(this.players);
@@ -60,7 +60,6 @@ class Roulette {
 
 function generateSpaces() {
 	const winNumber = Math.floor(Math.random() * 37);
-
 	return [
 		winNumber.toString(),
 		getColor(winNumber),
@@ -73,30 +72,25 @@ function generateSpaces() {
 
 function getColor(number) {
 	if (number === 0) return null;
-
 	return roulette.red.includes(number) ? 'red' : 'black';
 }
 
 function getRange(number, size) {
 	if (number === 0) return null;
-
 	return spaces.get(size).values.find(value => {
 		const min = parseInt(value.split('-')[0]);
 		const max = parseInt(value.split('-')[1]);
-
 		return number >= min && number <= max;
 	});
 }
 
 function getColumn(number) {
 	if (number === 0) return null;
-
 	return spaces.get('columns').values[(number - 1) % 3];
 }
 
 function getParity(number) {
 	if (number === 0) return null;
-
 	return spaces.get('parity').values[number % 2];
 }
 

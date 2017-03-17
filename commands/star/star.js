@@ -25,14 +25,12 @@ module.exports = class StarCommand extends Command {
 
 	async run(msg, args) {
 		const { message } = args;
-
 		if (msg.member.joinedAt < 86400000) return; // eslint-disable-line consistent-return
 		const starboard = msg.guild.channels.find('name', 'starboard');
-		if (!starboard) return msg.reply('can\'t star things without a #starboard channel. Create one now!'); // eslint-disable-line consistent-return
+		if (!starboard) return msg.reply('can\'t star things without a #starboard channel. Create one now!'); // eslint-disable-line consistent-return, max-len
 		if (message.author.id === msg.author.id) {
 			msg.reply('sorry, you cannot star your own message!');
-
-			return msg.delete().catch(err => null); // eslint-disable-line
+			return msg.delete().catch(err => null); // eslint-disable-line no-unused-vars, handle-callback-err, consistent-return, max-len
 		}
 
 		let settings = await starBoard.findOne({ where: { guildID: msg.guild.id } });
@@ -42,17 +40,16 @@ module.exports = class StarCommand extends Command {
 		if (starred.hasOwnProperty(message.id)) {
 			if (starred[message.id].stars.includes(msg.author.id)) {
 				msg.reply('you cannot star the same message twice!');
-
-				return msg.delete().catch(err => null); // eslint-disable-line
+				return msg.delete().catch(err => null); // eslint-disable-line no-unused-vars, handle-callback-err, consistent-return, max-len
 			}
 
 			const starCount = starred[message.id].count += 1;
-			const starredMessage = await starboard.fetchMessage(starred[message.id].starredMessageID).catch(err => null); // eslint-disable-line
+			const starredMessage = await starboard.fetchMessage(starred[message.id].starredMessageID).catch(err => null); // eslint-disable-line no-unused-vars, handle-callback-err, max-len
 			const starredMessageContent = starred[message.id].starredMessageContent;
 			const starredMessageAttachmentImage = starred[message.id].starredMessageImage;
 			const starredMessageDate = starred[message.id].starredMessageDate;
-
 			let edit;
+
 			if (starCount < 5) edit = starredMessage.embeds[0].footer.text = `${starCount} ⭐`;
 			else if (starCount >= 5 && starCount < 10) edit = starredMessage.embeds[0].footer.text = `${starCount} 🌟`;
 			else if (starCount >= 10) edit = starredMessage.embeds[0].footer.text = `${starCount} ✨`;
@@ -90,13 +87,12 @@ module.exports = class StarCommand extends Command {
 			starred[message.id].count = starCount;
 			starred[message.id].stars.push(msg.author.id);
 			settings.starred = starred;
-
 			await settings.save();
 		} else {
 			const starCount = 1;
 			let attachmentImage;
 			const extensions = new Set(['.png', '.jpg', '.jpeg', '.gif', '.webp']);
-			const linkRegex = /https?:\/\/(?:\w+\.)?[\w-]+\.[\w]{2,3}(?:\/[\w-_\.]+)+\.(?:png|jpg|jpeg|gif|webp)/; // eslint-disable-line no-useless-escape
+			const linkRegex = /https?:\/\/(?:\w+\.)?[\w-]+\.[\w]{2,3}(?:\/[\w-_\.]+)+\.(?:png|jpg|jpeg|gif|webp)/; // eslint-disable-line no-useless-escape, max-len
 
 			if (message.attachments.some(attachment => {
 				try {
@@ -150,7 +146,7 @@ module.exports = class StarCommand extends Command {
 					timestamp: message.createdAt,
 					footer: { text: `${starCount} ⭐` }
 				}
-			}).catch(err => null); // eslint-disable-line
+			}).catch(err => null); // eslint-disable-line no-unused-vars, handle-callback-err
 
 			starred[message.id] = {};
 			starred[message.id].author = message.author.id;
@@ -162,10 +158,8 @@ module.exports = class StarCommand extends Command {
 			starred[message.id].stars = [];
 			starred[message.id].stars.push(msg.author.id);
 			settings.starred = starred;
-
 			await settings.save();
 		}
-
-		return msg.delete().catch(err => null); // eslint-disable-line
+		return msg.delete().catch(err => null); // eslint-disable-line no-unused-vars, handle-callback-err, consistent-return, max-len
 	}
 };

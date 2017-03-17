@@ -18,7 +18,7 @@ module.exports = class RouletteInfo extends Command {
 		});
 	}
 
-	async run(msg) {
+	run(msg) {
 		return msg.embed({
 			description: stripIndents`
 				To start a game or place a bet use \`roulette <${Currency.textPlural}> <space>\`

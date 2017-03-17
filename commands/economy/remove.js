@@ -47,11 +47,9 @@ module.exports = class MoneyRemoveCommand extends Command {
 		return this.client.isOwner(msg.author);
 	}
 
-	async run(msg, args) {
+	run(msg, args) {
 		const { user, donuts } = args;
-
 		Currency._changeBalance(user.id, donuts);
-
 		return msg.reply(`successfully removed ${Currency.convert(donuts)} from ${user.displayName}'s balance.`);
 	}
 };

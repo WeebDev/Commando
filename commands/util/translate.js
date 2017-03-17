@@ -47,7 +47,6 @@ module.exports = class TranslateCommand extends Command {
 		});
 
 		if (!response.ok) return msg.reply(this.handleError(response));
-
 		const embed = {
 			author: {
 				name: msg.member ? msg.member.displayName : msg.author.username,
@@ -64,7 +63,6 @@ module.exports = class TranslateCommand extends Command {
 				}
 			]
 		};
-
 		return msg.embed(embed);
 	}
 

@@ -43,26 +43,13 @@ module.exports = class ServerTagAddCommand extends Command {
 	}
 
 	async run(msg, args) {
-		const name = args.name.toLowerCase();
-		const { content } = args;
+		const name = this.content(args.name.toLowerCase(), msg);
+		const content = this.cleanContent(args.content, msg);
 		const staffRole = await msg.member.roles.exists('name', 'Server Staff');
 		if (!staffRole) return msg.say(`Only the **Server Staff** can add server tags, ${msg.author}`);
 
-		let tag = await Tag.findOne({ where: { name, guildID: msg.guild.id } });
+		const tag = await Tag.findOne({ where: { name, guildID: msg.guild.id } });
 		if (tag) return msg.say(`A server tag with the name **${name}** already exists, ${msg.author}`);
-
-		let cleanContent = content.replace(/@everyone/g, '@\u200Beveryone')
-			.replace(/@here/g, '@\u200Bhere')
-			.replace(/<@&[0-9]+>/g, roles => {
-				let replaceID = roles.replace(/<|&|>|@/g, '');
-				let role = msg.channel.guild.roles.get(replaceID);
-				return `@${role.name}`;
-			})
-			.replace(/<@!?[0-9]+>/g, user => {
-				let replaceID = user.replace(/<|!|>|@/g, '');
-				let member = msg.channel.guild.members.get(replaceID);
-				return `@${member.user.username}`;
-			});
 
 		return Tag.sync()
 			.then(() => {
@@ -74,13 +61,27 @@ module.exports = class ServerTagAddCommand extends Command {
 					channelID: msg.channel.id,
 					channelName: msg.channel.name,
 					name: name,
-					content: cleanContent,
+					content: content,
 					type: true
 				});
 
-				redis.db.setAsync(`tag${name}${msg.guild.id}`, cleanContent);
-
+				redis.db.setAsync(`tag${name}${msg.guild.id}`, content);
 				return msg.say(`A server tag with the name **${name}** has been added, ${msg.author}`);
+			});
+	}
+
+	cleanContent(content, msg) {
+		content.replace(/@everyone/g, '@\u200Beveryone')
+			.replace(/@here/g, '@\u200Bhere')
+			.replace(/<@&[0-9]+>/g, roles => {
+				const replaceID = roles.replace(/<|&|>|@/g, '');
+				const role = msg.channel.guild.roles.get(replaceID);
+				return `@${role.name}`;
+			})
+			.replace(/<@!?[0-9]+>/g, user => {
+				const replaceID = user.replace(/<|!|>|@/g, '');
+				const member = msg.channel.guild.members.get(replaceID);
+				return `@${member.user.username}`;
 			});
 	}
 };

@@ -38,16 +38,12 @@ module.exports = class PersonalMessageCommand extends Command {
 
 	async run(msg, args) {
 		const { personalMessage } = args;
-
 		const profile = await UserProfile.findOne({ where: { userID: msg.author.id } });
-
 		if (!profile) {
 			return UserProfile.create({
 				userID: msg.author.id,
 				personalMessage
-			}).then(() => {
-				return msg.reply('your message has been updated!');
-			});
+			}).then(() => msg.reply('your message has been updated!'));
 		}
 
 		profile.personalMessage = personalMessage;

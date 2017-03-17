@@ -32,14 +32,12 @@ module.exports = class MoneyInfoCommand extends Command {
 
 	async run(msg, args) {
 		const user = args.member || msg.author;
-
 		const money = await Currency.getBalance(user.id);
 		const balance = await Bank.getBalance(user.id) || 0;
 		const networth = (money || 0) + balance;
 
 		if (args.member) {
 			if (money === null) return msg.reply(`${user.displayName} hasn't earned any ${Currency.textPlural} yet.`);
-
 			return msg.reply(oneLine`
 				${user.displayName} has ${Currency.convert(money)} on hand and
 				${Currency.convert(balance)} in the bank.
@@ -48,7 +46,6 @@ module.exports = class MoneyInfoCommand extends Command {
 			`);
 		} else {
 			if (money === null) return msg.reply(`you haven't earned any ${Currency.textPlural} yet.`);
-
 			return msg.reply(oneLine`
 				you have ${Currency.convert(money)} on hand and
 				${Currency.convert(balance)} in the bank.

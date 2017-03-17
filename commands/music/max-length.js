@@ -29,7 +29,7 @@ module.exports = class MaxLengthCommand extends Command {
 		return this.client.isOwner(msg.author) || msg.member.hasPermission('ADMINISTRATOR');
 	}
 
-	async run(msg, args) {
+	run(msg, args) {
 		if (!args) {
 			const maxLength = this.client.provider.get(msg.guild.id, 'maxLength', config.maxLength);
 			return msg.reply(`the maximum length of a song is ${maxLength} minutes.`);

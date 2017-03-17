@@ -25,18 +25,14 @@ module.exports = class RepShowCommand extends Command {
 
 	async run(msg, args) {
 		const { page } = args;
-
 		const reputation = await UserRep.findAll({ where: { userID: msg.author.id } });
 		const positive = reputation.filter(rep => rep.reputationType.trim() === '+').length;
 		const negative = reputation.length - positive;
-
 		const paginated = util.paginate(reputation, page, 5);
-
 		const reputationMessages = paginated.items.map(rep => ({
 			name: `[ ${rep.reputationType.trim()} ] ${this.client.users.get(rep.reputationBy).username}`,
 			value: rep.reputationMessage || '*-no message-*'
 		}));
-
 		const embed = {
 			color: positive === negative ? 0xF5AD1E : positive > negative ? 0x52C652 : 0xE93F3C,
 			author: {
@@ -58,7 +54,6 @@ module.exports = class RepShowCommand extends Command {
 			],
 			footer: { text: paginated.maxPage > 1 ? `Use ${msg.usage()} to view a specific page.` : '' }
 		};
-
 		return msg.embed(embed);
 	}
 };

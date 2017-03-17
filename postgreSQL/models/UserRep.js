@@ -11,6 +11,4 @@ const UserProfile = database.db.define('userRep', {
 	reputationMessage: Sequelize.STRING() // eslint-disable-line new-cap
 });
 
-UserProfile.sync();
-
 module.exports = UserProfile;

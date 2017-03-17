@@ -68,7 +68,7 @@ module.exports = class RouletteCommand extends Command {
 		});
 	}
 
-	async run(msg, args) {
+	run(msg, args) {
 		const { bet } = args;
 		const space = args.space.toLowerCase();
 

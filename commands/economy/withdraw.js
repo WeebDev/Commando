@@ -23,9 +23,7 @@ module.exports = class WidthdrawCommand extends Command {
 					key: 'donuts',
 					label: 'amount of donuts to withdraw',
 					prompt: `how many ${Currency.textPlural} do you want to withdraw?\n`,
-					validate: donuts => {
-						return /^(?:\d+|-all|-a)$/g.test(donuts);
-					},
+					validate: donuts => /^(?:\d+|-all|-a)$/g.test(donuts),
 					parse: async (donuts, msg) => {
 						const balance = await Bank.getBalance(msg.author.id);
 
@@ -39,11 +37,9 @@ module.exports = class WidthdrawCommand extends Command {
 
 	async run(msg, args) {
 		const { donuts } = args;
-
 		if (donuts <= 0) return msg.reply(`you can't widthdraw 0 or less ${Currency.convert(0)}.`);
 
 		const userBalance = await Bank.getBalance(msg.author.id);
-
 		if (userBalance < donuts) {
 			return msg.reply(stripIndents`
 				you do not have that many ${Currency.textPlural} in your balance!
@@ -52,7 +48,6 @@ module.exports = class WidthdrawCommand extends Command {
 		}
 
 		const bankBalance = await Currency.getBalance('bank');
-
 		if (bankBalance < donuts) {
 			return msg.reply(stripIndents`
 				sorry, but the bank doesn't have enough ${Currency.textPlural} for you to withdraw!
@@ -61,7 +56,6 @@ module.exports = class WidthdrawCommand extends Command {
 		}
 
 		Bank.withdraw(msg.author.id, donuts);
-
 		return msg.reply(`successfully withdrew ${Currency.convert(donuts)} from the bank!`);
 	}
 };

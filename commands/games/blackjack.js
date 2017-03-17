@@ -48,7 +48,7 @@ module.exports = class BlackjackCommand extends Command {
 		});
 	}
 
-	async run(msg, args) {
+	run(msg, args) {
 		const { bet } = args;
 
 		if (Blackjack.gameExists(msg.author.id)) {
@@ -137,7 +137,6 @@ module.exports = class BlackjackCommand extends Command {
 					? 'won' : 'lost'} ${Currency.convert(Math.abs(winnings))}`}`;
 
 			if (winnings !== 0) Currency.changeBalance(msg.author.id, winnings);
-
 			return msg.embed(embed);
 		});
 	}
@@ -147,7 +146,6 @@ module.exports = class BlackjackCommand extends Command {
 		if (dealerValue > 21) return 'dealer bust';
 		if (playerValue === dealerValue) return 'push';
 		if (playerValue === 'Blackjack' || playerValue > dealerValue) return 'win';
-
 		return 'loss';
 	}
 
@@ -164,20 +162,17 @@ module.exports = class BlackjackCommand extends Command {
 
 				if (Blackjack.handValue(currentHand) === 'Blackjack') {
 					nextHand();
-
 					continue;
 				}
 
 				if (Blackjack.handValue(currentHand) >= 21) {
 					nextHand();
-
 					continue;
 				}
 
 				if (currentHand.doubled) {
 					blackjack.hit(currentHand);
 					nextHand();
-
 					continue;
 				}
 
@@ -186,7 +181,7 @@ module.exports = class BlackjackCommand extends Command {
 					&& Blackjack.handValue([currentHand[0]]) === Blackjack.handValue([currentHand[1]])
 					&& currentHand.length === 2;
 
-				await msg.embed({
+				await msg.embed({ // eslint-disable-line no-await-in-loop
 					title: `Blackjack | ${msg.member.displayName}`,
 					description: !canDoubleDown && !canSplit
 						? 'Type `hit` to draw another card or `stand` to pass.'
@@ -221,17 +216,16 @@ module.exports = class BlackjackCommand extends Command {
 					footer: { text: blackjack.cardsRemaining() ? `Cards remaining: ${blackjack.cardsRemaining()}` : `Shuffling` }
 				});
 
-				const responses = await msg.channel.awaitMessages(msg2 => {
-					return msg2.author.id === msg.author.id && (
+				const responses = await msg.channel.awaitMessages(msg2 => // eslint-disable-line no-await-in-loop
+					msg2.author.id === msg.author.id && (
 						msg2.content === 'hit'
 						|| msg2.content === 'stand'
 						|| (msg2.content === 'split' && canSplit)
 						|| (msg2.content === 'double down' && canDoubleDown)
-					);
-				}, {
-					maxMatches: 1,
-					time: 20e3
-				});
+					), {
+						maxMatches: 1,
+						time: 20e3
+					});
 
 				if (responses.size === 0) break;
 
@@ -241,21 +235,17 @@ module.exports = class BlackjackCommand extends Command {
 					if (currentHand === hands[hands.length - 1]) break;
 					nextHand();
 				}
-
 				if (action === 'hit') blackjack.hit(currentHand);
-
 				if (action === 'split' && canSplit) {
 					totalBet += bet;
 					hands.push([currentHand.pop()]);
 					blackjack.hit(currentHand);
 				}
-
 				if (action === 'double down' && canDoubleDown) {
 					totalBet += bet;
 					currentHand.doubled = true;
 				}
 			}
-
 			return resolve(hands);
 		});
 	}

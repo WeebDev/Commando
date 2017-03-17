@@ -67,9 +67,8 @@ module.exports = class ItemTradeCommand extends Command {
 		const receiveInv = Inventory.fetchInventory(user.id);
 		const offerItemBalance = offerInv.content[offerItem] ? offerInv.content[offerItem].amount : null;
 		const receiveItemBalance = receiveInv.content[receiveItem] ? receiveInv.content[receiveItem].amount : null;
-
 		const offerValidation = this.validate(offerItem, offerAmount, offerBalance, offerItemBalance, 'you');
-		const receiveValidation = this.validate(receiveItem, receiveAmount, receiveBalance, receiveItemBalance, user.displayName);
+		const receiveValidation = this.validate(receiveItem, receiveAmount, receiveBalance, receiveItemBalance, user.displayName); // eslint-disable-line max-len
 		if (offerValidation) return msg.reply(offerValidation);
 		if (receiveValidation) return msg.reply(receiveValidation);
 
@@ -93,13 +92,10 @@ module.exports = class ItemTradeCommand extends Command {
 		};
 
 		if (!await this.response(msg, user, embed)) return msg.reply(`${user.displayName} declined or failed to respond.`);
-
 		if (!offerItem) this.sendDonuts(msg.author, user, offerAmount);
 		else this.sendItems(offerInv, receiveInv, offerItem, offerAmount);
-
 		if (!receiveItem) this.sendDonuts(user, msg.author, receiveAmount);
 		else this.sendItems(receiveInv, offerInv, receiveItem, receiveAmount);
-
 		return msg.say('Trade successful.');
 	}
 
@@ -112,13 +108,11 @@ module.exports = class ItemTradeCommand extends Command {
 		} else if (amount > balance) {
 			return `${user} ${person ? 'have' : 'has'} only ${Currency.convert(balance)}`;
 		}
-
 		return null;
 	}
 
 	isDonuts(item, amount) {
 		if (/donuts?/.test(item)) return null;
-
 		return ItemGroup.convert(item, amount);
 	}
 
@@ -139,15 +133,14 @@ module.exports = class ItemTradeCommand extends Command {
 			msg.say(`${user}, ${msg.member.displayName} wants to trade with you.`);
 			msg.embed(embed);
 
-			const responses = await msg.channel.awaitMessages(response => {
-				return response.author.id === user.id && response.content.toLowerCase() === 'accept';
-			}, {
-				maxMatches: 1,
-				time: 30e3
-			});
+			const responses = await msg.channel.awaitMessages(response =>
+				response.author.id === user.id && response.content.toLowerCase() === 'accept',
+				{
+					maxMatches: 1,
+					time: 30e3
+				});
 
 			if (responses.size === 0) return resolve(false);
-
 			return resolve(true);
 		});
 	}

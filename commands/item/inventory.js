@@ -32,7 +32,6 @@ module.exports = class InventoryShowCommand extends Command {
 	async run(msg, args) {
 		const { page } = args;
 		let items = [];
-
 		const inventory = await Inventory.fetchInventory(msg.author.id);
 		for (const item of Object.keys(inventory.content)) {
 			items.push({
@@ -44,7 +43,6 @@ module.exports = class InventoryShowCommand extends Command {
 		const paginated = util.paginate(items, page, Math.floor(config.paginationItems));
 
 		if (items.length === 0) return msg.reply('can\'t show what you don\'t have, man.');
-
 		return msg.embed({
 			description: `__**${msg.author.username}#${msg.author.discriminator}'s inventory:**__`,
 			fields: [

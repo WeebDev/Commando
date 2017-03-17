@@ -79,7 +79,7 @@ module.exports = class PlaySongCommand extends Command {
 				this.youtube.searchVideos(url, 1).then(videos => {
 					this.youtube.getVideoByID(videos[0].id).then(video2 => {
 						this.handleVideo(video2, queue, voiceChannel, msg, statusMsg);
-					}).catch((error) => {
+					}).catch(error => {
 						winston.error(error);
 						statusMsg.edit(`${msg.author}, couldn't obtain the search result video's details.`);
 					});
@@ -169,7 +169,6 @@ module.exports = class PlaySongCommand extends Command {
 		winston.info('Adding song to queue.', { song: video.id, guild: msg.guild.id });
 		const song = new Song(video, msg.member);
 		queue.songs.push(song);
-
 		return `👍 ${song.url.match(/^https?:\/\/(api.soundcloud.com)\/(.*)$/) ? `${song}` : `[${song}](${`${song.url}`})`}`;
 	}
 
@@ -195,7 +194,7 @@ module.exports = class PlaySongCommand extends Command {
 				name: song.username,
 				icon_url: song.avatar // eslint-disable-line camelcase
 			},
-			description: `${song.url.match(/^https?:\/\/(api.soundcloud.com)\/(.*)$/) ? `${song}` : `[${song}](${`${song.url}`})`}`,
+			description: `${song.url.match(/^https?:\/\/(api.soundcloud.com)\/(.*)$/) ? `${song}` : `[${song}](${`${song.url}`})`}`, // eslint-disable-line max-len
 			image: { url: song.thumbnail }
 		};
 
@@ -203,7 +202,7 @@ module.exports = class PlaySongCommand extends Command {
 		let stream;
 		let streamErrored = false;
 		if (song.url.match(/^https?:\/\/(api.soundcloud.com)\/(.*)$/)) {
-			stream = request({ uri: song.url, headers: { 'User-Agent': `Commando v${version} (https://github.com/WeebDev/Commando/)` }, followAllRedirects: true });
+			stream = request({ uri: song.url, headers: { 'User-Agent': `Commando v${version} (https://github.com/WeebDev/Commando/)` }, followAllRedirects: true }); // eslint-disable-line max-len
 		} else {
 			stream = ytdl(song.url, { audioonly: true })
 				.on('error', err => {
@@ -231,7 +230,6 @@ module.exports = class PlaySongCommand extends Command {
 
 	get votes() {
 		if (!this._votes) this._votes = this.client.registry.resolveCommand('music:skip').votes;
-
 		return this._votes;
 	}
 };

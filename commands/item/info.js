@@ -27,10 +27,9 @@ module.exports = class StoreInfoCommand extends Command {
 		});
 	}
 
-	async run(msg, args) {
+	run(msg, args) {
 		const item = args.item.toLowerCase();
 		const storeItem = Store.getItem(item);
-
 		if (!storeItem) {
 			return msg.reply(stripIndents`
 				sorry, but that item doesn't exist.
@@ -40,7 +39,6 @@ module.exports = class StoreInfoCommand extends Command {
 		}
 
 		const storeItemName = storeItem.name.replace(/(\b\w)/gi, lc => lc.toUpperCase());
-
 		return msg.reply(`one ${storeItemName} costs ${storeItem.price} 🍩s`);
 	}
 };

@@ -113,7 +113,7 @@ class SequelizeProvider extends SettingProvider {
 		for (const [event, listener] of this.listeners) client.on(event, listener);
 	}
 
-	async destroy() {
+	destroy() {
 		// Remove all listeners from the client
 		for (const [event, listener] of this.listeners) this.client.removeListener(event, listener);
 		this.listeners.clear();
@@ -133,7 +133,7 @@ class SequelizeProvider extends SettingProvider {
 		}
 
 		settings[key] = val;
-		await this.model.upsert({ guild: guild !== 'global' ? guild : '0', settings: JSON.stringify(settings) }, { where: { guild: guild !== 'global' ? guild : '0' } });
+		await this.model.upsert({ guild: guild !== 'global' ? guild : '0', settings: JSON.stringify(settings) }, { where: { guild: guild !== 'global' ? guild : '0' } }); // eslint-disable-line max-len
 		if (guild === 'global') this.updateOtherShards(key, val);
 		return val;
 	}
@@ -145,7 +145,7 @@ class SequelizeProvider extends SettingProvider {
 
 		const val = settings[key];
 		settings[key] = undefined;
-		await this.model.upsert({ guild: guild !== 'global' ? guild : '0', settings: JSON.stringify(settings) }, { where: { guild: guild !== 'global' ? guild : '0' } });
+		await this.model.upsert({ guild: guild !== 'global' ? guild : '0', settings: JSON.stringify(settings) }, { where: { guild: guild !== 'global' ? guild : '0' } }); // eslint-disable-line max-len
 		if (guild === 'global') this.updateOtherShards(key, undefined);
 		return val;
 	}

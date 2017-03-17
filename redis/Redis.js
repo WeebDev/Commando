@@ -5,17 +5,15 @@ const winston = require('winston');
 bluebird.promisifyAll(redisClient.RedisClient.prototype);
 bluebird.promisifyAll(redisClient.Multi.prototype);
 
-class Redis {
-	constructor() {
-		this.redis = redisClient.createClient({ db: 2 });
-	}
+const redis = redisClient.createClient({ db: 2 });
 
+class Redis {
 	get db() {
-		return this.redis;
+		return redis;
 	}
 
 	start() {
-		this.redis.on('error', err => winston.error(err))
+		redis.on('error', err => winston.error(err))
 			.on('reconnecting', () => winston.warn('Reconnecting...'));
 	}
 }

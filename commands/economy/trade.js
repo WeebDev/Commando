@@ -39,9 +39,7 @@ module.exports = class MoneyTradeCommand extends Command {
 					key: 'donuts',
 					label: 'amount of donuts to trade',
 					prompt: `how many ${Currency.textPlural} do you want to give that user?\n`,
-					validate: donuts => {
-						return /^(?:\d+|-all)$/g.test(donuts);
-					},
+					validate: donuts => /^(?:\d+|-all)$/g.test(donuts),
 					parse: async (donuts, msg) => {
 						const balance = await Currency.getBalance(msg.author.id);
 
@@ -56,12 +54,11 @@ module.exports = class MoneyTradeCommand extends Command {
 	async run(msg, args) {
 		const { member, donuts } = args;
 
-		if (member.id === msg.author.id) return msg.reply(`you can't trade ${Currency.textPlural} with yourself, ya dingus.`);
+		if (member.id === msg.author.id) return msg.reply(`you can't trade ${Currency.textPlural} with yourself, ya dingus.`); // eslint-disable-line
 		if (member.user.bot) return msg.reply(`don't give your ${Currency.textPlural} to bots: they're bots, man.`);
 		if (donuts <= 0) return msg.reply(`you can't trade 0 or less ${Currency.convert(0)}.`);
 
 		const userBalance = await Currency.getBalance(msg.author.id);
-
 		if (userBalance < donuts) {
 			return msg.reply(stripIndents`
 				you don't have that many ${Currency.textPlural} to trade!
@@ -71,7 +68,6 @@ module.exports = class MoneyTradeCommand extends Command {
 
 		Currency.removeBalance(msg.author.id, donuts);
 		Currency.addBalance(member.id, donuts);
-
 		return msg.reply(`${member.displayName} successfully received your ${Currency.convert(donuts)}!`);
 	}
 };

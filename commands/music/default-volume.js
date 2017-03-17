@@ -22,7 +22,7 @@ module.exports = class DefaultVolumeCommand extends Command {
 		return this.client.isOwner(msg.author) || msg.member.hasPermission('ADMINISTRATOR');
 	}
 
-	async run(msg, args) {
+	run(msg, args) {
 		if (!args) {
 			const defaultVolume = this.client.provider.get(msg.guild.id, 'defaultVolume', config.defaultVolume);
 			return msg.reply(`the default volume level is ${defaultVolume}.`);

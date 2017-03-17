@@ -57,8 +57,8 @@ class Inventory {
 		}
 	}
 
-	async save() {
-		return await redis.db.hsetAsync('inventory', this.user, JSON.stringify(this.content));
+	save() {
+		return redis.db.hsetAsync('inventory', this.user, JSON.stringify(this.content));
 	}
 
 	static fetchInventory(user) {

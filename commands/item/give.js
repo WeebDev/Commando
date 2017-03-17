@@ -55,7 +55,6 @@ module.exports = class ItemGiveCommand extends Command {
 
 		inventory.removeItems(itemGroup);
 		receiveInv.addItems(itemGroup);
-
 		return msg.reply(`${user.displayName} successfully received your item(s)!`);
 	}
 };

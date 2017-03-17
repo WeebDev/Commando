@@ -27,14 +27,11 @@ module.exports = class StoreInfoCommand extends Command {
 		});
 	}
 
-	async run(msg, args) {
+	run(msg, args) {
 		const { page } = args;
 		const storeItems = Store.getItems().array();
-
 		const paginated = util.paginate(storeItems, page, Math.floor(config.paginationItems));
-
 		if (storeItems.length === 0) return msg.reply('can\'t show what we don\'t have, man.');
-
 		return msg.embed({
 			description: `__**Items:**__`,
 			fields: [

@@ -36,9 +36,9 @@ module.exports = class WeatherCommand extends Command {
 		const { location } = args;
 		const Image = Canvas.Image;
 
-		Canvas.registerFont(path.join(__dirname, '..', '..', 'assets', 'weather', 'fonts', 'Roboto-Regular.ttf'), { family: 'Roboto' });
-		Canvas.registerFont(path.join(__dirname, '..', '..', 'assets', 'weather', 'fonts', 'RobotoCondensed-Regular.ttf'), { family: 'Roboto Condensed' });
-		Canvas.registerFont(path.join(__dirname, '..', '..', 'assets', 'weather', 'fonts', 'RobotoMono-Light.ttf'), { family: 'Roboto Mono' });
+		Canvas.registerFont(path.join(__dirname, '..', '..', 'assets', 'weather', 'fonts', 'Roboto-Regular.ttf'), { family: 'Roboto' }); // eslint-disable-line max-len
+		Canvas.registerFont(path.join(__dirname, '..', '..', 'assets', 'weather', 'fonts', 'RobotoCondensed-Regular.ttf'), { family: 'Roboto Condensed' }); // eslint-disable-line max-len
+		Canvas.registerFont(path.join(__dirname, '..', '..', 'assets', 'weather', 'fonts', 'RobotoMono-Light.ttf'), { family: 'Roboto Mono' }); // eslint-disable-line max-len
 
 		if (!config.GoogleAPIKey) return msg.reply('my Commander has not set the Google API Key. Go yell at him.');
 		if (!config.WeatherAPIKey) return msg.reply('my Commander has not set the Weather API Key. Go yell at him.');
@@ -62,7 +62,7 @@ module.exports = class WeatherCommand extends Command {
 		const params = `${response.results[0].geometry.location.lat},${response.results[0].geometry.location.lng}`;
 
 		const locality = response.results[0].address_components.find(loc => loc.types.includes('locality'));
-		const governing = response.results[0].address_components.find(gov => gov.types.includes('administrative_area_level_1'));
+		const governing = response.results[0].address_components.find(gov => gov.types.includes('administrative_area_level_1')); // eslint-disable-line max-len
 		const country = response.results[0].address_components.find(cou => cou.types.includes('country'));
 		const continent = response.results[0].address_components.find(con => con.types.includes('continent'));
 
@@ -80,18 +80,12 @@ module.exports = class WeatherCommand extends Command {
 		const chanceofrain = Math.round((res.currently.precipProbability * 100) / 5) * 5;
 		const temperature = Math.round(res.currently.temperature);
 		const humidity = Math.round(res.currently.humidity * 100);
-		/* const windBearing = res.currently.windBearing;*/
-
 		const canvas = new Canvas(400, 180);
-		/* const pointerCanvas = new Canvas(16, 16);*/
 		const ctx = canvas.getContext('2d');
-		/* const pntr = pointerCanvas.getContext('2d');*/
 		const base = new Image();
 		const cond = new Image();
 		const humid = new Image();
 		const precip = new Image();
-		/* const pointer = new Image();*/
-
 		let theme = 'light';
 		let fontColor = '#FFFFFF';
 
@@ -137,14 +131,6 @@ module.exports = class WeatherCommand extends Command {
 			// Precip Image
 			ctx.drawImage(precip, 358, 108);
 
-			/* // Pointer Image
-			pntr.drawImage(pointer, 35, 160);
-			pntr.patternQuality = 'billinear';
-			pntr.filter = 'billinear';
-			pntr.antialias = 'subpixel';
-			pntr.translate(7.5, 7.5);
-			pntr.rotate((windBearing || 0) * Math.PI / 180 / 10);*/
-
 			// Titles
 			ctx.font = "16px 'Roboto Condensed'";
 			ctx.fillText(`${humidity}%`, 353, 100);
@@ -152,12 +138,10 @@ module.exports = class WeatherCommand extends Command {
 		};
 
 		base.src = await fs.readFileAsync(this.getBase(icon));
-		cond.src = await fs.readFileAsync(path.join(__dirname, '..', '..', 'assets', 'weather', 'icons', theme, `${icon}.png`));
-		humid.src = await fs.readFileAsync(path.join(__dirname, '..', '..', 'assets', 'weather', 'icons', theme, 'humidity.png'));
-		precip.src = await fs.readFileAsync(path.join(__dirname, '..', '..', 'assets', 'weather', 'icons', theme, 'precip.png'));
-		/* pointer.src = await fs.readFileAsync(path.join(__dirname, '..', '..', 'assets', 'weather', 'icons', theme, 'pointer.png'));*/
+		cond.src = await fs.readFileAsync(path.join(__dirname, '..', '..', 'assets', 'weather', 'icons', theme, `${icon}.png`)); // eslint-disable-line max-len
+		humid.src = await fs.readFileAsync(path.join(__dirname, '..', '..', 'assets', 'weather', 'icons', theme, 'humidity.png')); // eslint-disable-line max-len
+		precip.src = await fs.readFileAsync(path.join(__dirname, '..', '..', 'assets', 'weather', 'icons', theme, 'precip.png')); // eslint-disable-line max-len
 		generate();
-
 		return msg.channel.sendFile(canvas.toBuffer(), `${geocodelocation}.png`);
 	}
 

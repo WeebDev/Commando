@@ -47,11 +47,9 @@ module.exports = class MoneyAddCommand extends Command {
 		return this.client.isOwner(msg.author);
 	}
 
-	async run(msg, args) {
+	run(msg, args) {
 		const { user, donuts } = args;
-
 		Currency._changeBalance(user.id, donuts);
-
 		return msg.reply(`successfully added ${Currency.convert(donuts)} to ${user.displayName}'s balance.`);
 	}
 };

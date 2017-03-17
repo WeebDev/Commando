@@ -21,10 +21,9 @@ module.exports = class LockAllCommand extends Command {
 		return this.client.isOwner(msg.author) || msg.member.hasPermission('MANAGE_GUILD');
 	}
 
-	async run(msg) {
+	run(msg) {
 		const channels = msg.guild.channels.filter(channel => channel.type === 'text');
 		const channelLocks = this.client.provider.get(msg.guild.id, 'locks', []);
-
 		for (const channel of channels.values()) {
 			if (channelLocks.includes(channel.id)) continue;
 
@@ -32,7 +31,6 @@ module.exports = class LockAllCommand extends Command {
 		}
 
 		this.client.provider.set(msg.guild.id, 'locks', channelLocks);
-
 		return msg.reply(stripIndents`
 			all channels on this server have been locked. You can no longer earn xp or ${Currency.textPlural} anywhere.
 		`);

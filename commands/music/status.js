@@ -19,7 +19,7 @@ module.exports = class MusicStatusCommand extends Command {
 		});
 	}
 
-	async run(msg) {
+	run(msg) {
 		const queue = this.queue.get(msg.guild.id);
 		if (!queue) return msg.say('There isn\'t any music playing right now. You should get on that.');
 		const song = queue.songs[0];
@@ -39,13 +39,11 @@ module.exports = class MusicStatusCommand extends Command {
 			`,
 			image: { url: song.thumbnail }
 		};
-
 		return msg.embed(embed);
 	}
 
 	get queue() {
 		if (!this._queue) this._queue = this.client.registry.resolveCommand('music:play').queue;
-
 		return this._queue;
 	}
 };

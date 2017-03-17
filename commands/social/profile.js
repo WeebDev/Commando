@@ -37,7 +37,6 @@ module.exports = class ProfileCommand extends Command {
 	async run(msg, args) {
 		const user = args.member || msg.member;
 		const Image = Canvas.Image;
-
 		const profile = await UserProfile.findOne({ where: { userID: user.id } });
 		const personalMessage = profile ? profile.personalMessage : '';
 		const money = await Currency.getBalance(user.id);
@@ -47,20 +46,16 @@ module.exports = class ProfileCommand extends Command {
 		const level = await Experience.getLevel(user.id);
 		const levelBounds = await Experience.getLevelBounds(level);
 		const totalExp = await Experience.getTotalExperience(user.id);
-
 		const fillValue = Math.min(Math.max(currentExp / (levelBounds.upperBound - levelBounds.lowerBound), 0), 1);
 
-		Canvas.registerFont(path.join(__dirname, '..', '..', 'assets', 'profile', 'fonts', 'Roboto.ttf'), { family: 'Roboto' });
-		Canvas.registerFont(path.join(__dirname, '..', '..', 'assets', 'profile', 'fonts', 'NotoEmoji-Regular.ttf'), { family: 'Roboto' });
+		Canvas.registerFont(path.join(__dirname, '..', '..', 'assets', 'profile', 'fonts', 'Roboto.ttf'), { family: 'Roboto' }); // eslint-disable-line max-len
+		Canvas.registerFont(path.join(__dirname, '..', '..', 'assets', 'profile', 'fonts', 'NotoEmoji-Regular.ttf'), { family: 'Roboto' }); // eslint-disable-line max-len
 
 		const canvas = new Canvas(300, 300);
 		const ctx = canvas.getContext('2d');
-
 		const lines = this.wrapText(ctx, personalMessage, 110);
-
 		const base = new Image();
 		const cond = new Image();
-
 		const generate = () => {
 			// Environment Variables
 			ctx.drawImage(base, 0, 0);
@@ -157,14 +152,13 @@ module.exports = class ProfileCommand extends Command {
 			ctx.drawImage(cond, 24, 21, 110, 110);
 		};
 
-		base.src = await fs.readFileAsync(path.join(__dirname, '..', '..', 'assets', 'profile', 'backgrounds', `${profile ? profile.background : 'default'}.png`));
+		base.src = await fs.readFileAsync(path.join(__dirname, '..', '..', 'assets', 'profile', 'backgrounds', `${profile ? profile.background : 'default'}.png`)); // eslint-disable-line max-len
 		cond.src = await request({
 			uri: user.user.displayAvatarURL.replace(/(png|jpg|jpeg|gif|webp)\?size=1024/, 'png'),
 			encoding: null
 		});
-		await generate();
-
-		return msg.channel.sendFile(await canvas.toBuffer(), `profile.png`);
+		generate();
+		return msg.channel.sendFile(canvas.toBuffer(), `profile.png`);
 	}
 
 	wrapText(ctx, text, maxWidth) {
@@ -178,7 +172,6 @@ module.exports = class ProfileCommand extends Command {
 
 		while (words.length > 0) {
 			let split = false;
-
 			while (ctx.measureText(words[0]).width >= maxWidth) {
 				const tmp = words[0];
 				words[0] = tmp.slice(0, -1);
@@ -202,7 +195,6 @@ module.exports = class ProfileCommand extends Command {
 				lines.push(line);
 			}
 		}
-
 		return lines;
 	}
 };

@@ -43,7 +43,6 @@ module.exports = class BuyItemCommand extends Command {
 		const itemName = item.replace(/(\b\w)/gi, lc => lc.toUpperCase());
 		const { amount } = args;
 		const storeItem = Store.getItem(item);
-
 		if (!storeItem) {
 			return msg.reply(stripIndents`
 				that item does not exist.
@@ -53,9 +52,7 @@ module.exports = class BuyItemCommand extends Command {
 		}
 
 		const balance = await Currency.getBalance(msg.author.id);
-
 		const plural = amount > 1 || amount === 0;
-
 		if (balance < storeItem.price * amount) {
 			return msg.reply(stripIndents`
 				you don't have enough donuts to buy ${amount} ${itemName}${plural
@@ -72,8 +69,7 @@ module.exports = class BuyItemCommand extends Command {
 		let inventory = await Inventory.fetchInventory(msg.author.id);
 		inventory.addItems(new ItemGroup(storeItem, amount));
 		Currency.removeBalance(msg.author.id, amount * storeItem.price);
-		await inventory.save();
-
+		inventory.save();
 		return msg.reply(stripIndents`
 			you have successfully purchased ${amount} ${itemName}${plural
 				? 's'

@@ -108,7 +108,6 @@ module.exports = class SlotMachineCommand extends Command {
 		}
 
 		Currency.addBalance(msg.author.id, coins * winnings);
-
 		return msg.embed({
 			color: 0x5C913B,
 			description: stripIndents`
@@ -132,7 +131,6 @@ module.exports = class SlotMachineCommand extends Command {
 
 	generateRoll() {
 		const roll = [];
-
 		reels.forEach((reel, index) => {
 			const rand = Math.floor(Math.random() * reel.length);
 
@@ -140,7 +138,6 @@ module.exports = class SlotMachineCommand extends Command {
 			roll[index + 3] = reel[rand];
 			roll[index + 6] = rand === reel.length - 1 ? reel[0] : reel[rand + 1];
 		});
-
 		return roll;
 	}
 };

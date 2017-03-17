@@ -12,6 +12,4 @@ let StarBoard = database.db.define('starBoard', {
 	}
 });
 
-StarBoard.sync();
-
 module.exports = StarBoard;

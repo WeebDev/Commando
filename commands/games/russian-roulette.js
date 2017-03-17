@@ -43,7 +43,6 @@ module.exports = class RussianRouletteCommand extends Command {
 			}
 
 			roulette.join(msg.author, donuts);
-
 			return msg.reply('you have successfully joined the game.');
 		}
 

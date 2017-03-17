@@ -44,12 +44,10 @@ module.exports = class DailyCommand extends Command {
 
 		if (user.id !== msg.author.id) {
 			Daily.receive(msg.author.id, user.id);
-
 			return msg.reply(`${user} has successfully received your daily ${Currency.convert(Daily.dailyDonationPayout)}.`);
 		}
 
 		Daily.receive(msg.author.id);
-
 		return msg.reply(`You have successfully received your daily ${Currency.convert(Daily.dailyPayout)}.`);
 	}
 };

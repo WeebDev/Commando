@@ -61,7 +61,6 @@ class Blackjack {
 		}
 
 		if (value === 21 && hand.length === 2) return false;
-
 		return aces !== 0;
 	}
 
@@ -80,16 +79,13 @@ class Blackjack {
 		}
 
 		if (value === 21 && hand.length === 2) return 'Blackjack';
-
 		return value;
 	}
 }
 
 function cardValue(card) {
 	const index = ranks.indexOf(card.slice(0, -1));
-
 	if (index === 0) return 11;
-
 	return index >= 10 ? 10 : index + 1;
 }
 
@@ -105,7 +101,6 @@ function shuffle(array) {
 		value[length] = value[random];
 		value[random] = temp;
 	}
-
 	return value;
 }
 
