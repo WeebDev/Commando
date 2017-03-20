@@ -3,7 +3,7 @@ const { Command, util } = require('discord.js-commando');
 const moment = require('moment');
 const Sequelize = require('sequelize');
 
-const config = require('../../settings');
+const { paginationItems } = require('../../settings');
 const Currency = require('../../currency/Currency.js');
 const Redis = require('../../redis/Redis');
 const UserProfile = require('../../postgreSQL/models/UserProfile');
@@ -50,8 +50,8 @@ module.exports = class MoneyLeaderboardCommand extends Command {
 		const cooldown = 30 * 60 * 1000;
 		const reset = cooldown - (Date.now() - lastUpdate);
 		const money = await this.findCached();
-		const paginated = util.paginate(JSON.parse(money), page, Math.floor(config.paginationItems));
-		let ranking = config.paginationItems * (paginated.page - 1);
+		const paginated = util.paginate(JSON.parse(money), page, Math.floor(paginationItems));
+		let ranking = paginationItems * (paginated.page - 1);
 
 		for (const user of paginated.items) await this.client.fetchUser(user.userID); // eslint-disable-line
 

@@ -1,6 +1,6 @@
 const { Command } = require('discord.js-commando');
 
-const config = require('../../settings');
+const { exampleChannel } = require('../../settings');
 const Redis = require('../../redis/Redis');
 const Tag = require('../../postgreSQL/models/Tag');
 
@@ -64,7 +64,7 @@ module.exports = class TagDeleteCommand extends Command {
 				Tag.destroy({ where: { name, guildID: msg.guild.id } });
 				redis.db.delAsync(`tag${name}${msg.guild.id}`);
 				if (tag.example) {
-					msg.guild.channels.get(config.exampleChannel).fetchMessage(tag.exampleID).then(del => del.delete());
+					msg.guild.channels.get(exampleChannel).fetchMessage(tag.exampleID).then(del => del.delete());
 				}
 				return msg.say(`The tag **${name}** has been deleted, ${msg.author}`);
 			});

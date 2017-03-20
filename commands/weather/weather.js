@@ -6,7 +6,7 @@ const fs = global.Promise.promisifyAll(require('fs'));
 const path = require('path');
 const request = require('request-promise');
 
-const config = require('../../settings');
+const { GoogleAPIKey, WeatherAPIKey } = require('../../settings');
 const { version } = require('../../package');
 
 module.exports = class WeatherCommand extends Command {
@@ -40,13 +40,13 @@ module.exports = class WeatherCommand extends Command {
 		Canvas.registerFont(path.join(__dirname, '..', '..', 'assets', 'weather', 'fonts', 'RobotoCondensed-Regular.ttf'), { family: 'Roboto Condensed' }); // eslint-disable-line max-len
 		Canvas.registerFont(path.join(__dirname, '..', '..', 'assets', 'weather', 'fonts', 'RobotoMono-Light.ttf'), { family: 'Roboto Mono' }); // eslint-disable-line max-len
 
-		if (!config.GoogleAPIKey) return msg.reply('my Commander has not set the Google API Key. Go yell at him.');
-		if (!config.WeatherAPIKey) return msg.reply('my Commander has not set the Weather API Key. Go yell at him.');
+		if (!GoogleAPIKey) return msg.reply('my Commander has not set the Google API Key. Go yell at him.');
+		if (!WeatherAPIKey) return msg.reply('my Commander has not set the Weather API Key. Go yell at him.');
 
 		const locationURI = encodeURIComponent(location.replace(/ /g, '+'));
 
 		const response = await request({
-			uri: `https://maps.googleapis.com/maps/api/geocode/json?address=${locationURI}&key=${config.GoogleAPIKey}`,
+			uri: `https://maps.googleapis.com/maps/api/geocode/json?address=${locationURI}&key=${GoogleAPIKey}`,
 			headers: { 'User-Agent': `Commando v${version} (https://github.com/WeebDev/Commando/)` },
 			json: true
 		});
@@ -58,7 +58,7 @@ module.exports = class WeatherCommand extends Command {
 		let state;
 
 		const geocodelocation = response.results[0].formatted_address;
-		const wAPIKey = config.WeatherAPIKey;
+		const wAPIKey = WeatherAPIKey;
 		const params = `${response.results[0].geometry.location.lat},${response.results[0].geometry.location.lng}`;
 
 		const locality = response.results[0].address_components.find(loc => loc.types.includes('locality'));

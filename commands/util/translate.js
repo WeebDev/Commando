@@ -1,7 +1,7 @@
 const { Command } = require('discord.js-commando');
 const request = require('request-promise');
 
-const config = require('../../settings');
+const { sherlockAPIKey } = require('../../settings');
 const { version } = require('../../package');
 
 module.exports = class TranslateCommand extends Command {
@@ -42,13 +42,13 @@ module.exports = class TranslateCommand extends Command {
 		const query = encodeURIComponent(args.query);
 		const { to, from } = args;
 
-		if (!config.sherlockAPIKey) return msg.reply('my Commander has not set the Sherlock API Key. Go yell at him.');
+		if (!sherlockAPIKey) return msg.reply('my Commander has not set the Sherlock API Key. Go yell at him.');
 
 		const response = await request({
 			method: 'POST',
 			headers: {
 				'User-Agent': `Commando v${version} (https://github.com/WeebDev/Commando/)`,
-				Authorization: config.sherlockAPIKey
+				Authorization: sherlockAPIKey
 			},
 			uri: `https://api.kurisubrooks.com/api/translate`,
 			body: { to, from, query },
