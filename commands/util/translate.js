@@ -1,6 +1,7 @@
 const { Command } = require('discord.js-commando');
 const request = require('request-promise');
 
+const config = require('../../settings');
 const { version } = require('../../package');
 
 module.exports = class TranslateCommand extends Command {
@@ -40,9 +41,17 @@ module.exports = class TranslateCommand extends Command {
 	async run(msg, args) {
 		const query = encodeURIComponent(args.query);
 		const { to, from } = args;
+
+		if (!config.sherlockAPIKey) return msg.reply('my Commander has not set the Sherlock API Key. Go yell at him.');
+
 		const response = await request({
-			uri: `https://api.kurisubrooks.com/api/translate?to=${to}&from=${from}&query=${query}`,
-			headers: { 'User-Agent': `Commando v${version} (https://github.com/WeebDev/Commando/)` },
+			method: 'POST',
+			headers: {
+				'User-Agent': `Commando v${version} (https://github.com/WeebDev/Commando/)`,
+				Authorization: config.sherlockAPIKey
+			},
+			uri: `https://api.kurisubrooks.com/api/translate`,
+			body: { to, from, query },
 			json: true
 		});
 
@@ -67,9 +76,11 @@ module.exports = class TranslateCommand extends Command {
 	}
 
 	handleError(response) {
-		if (response.error === `unknown language in 'to' field`) {
+		if (response.error === `Missing 'query' field` || response.error === `Missing 'to' lang field`) {
+			return `Required Fields are missing!`;
+		} else if (response.error === `Unknown 'to' Language`) {
 			return `Unknown 'to' Language`;
-		} else if (response.error === `unknown language in 'from' field`) {
+		} else if (response.error === `Unknown 'from' Language`) {
 			return `Unknown 'from' Language`;
 		} else {
 			return 'Internal Server Error';

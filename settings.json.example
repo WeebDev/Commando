@@ -6,6 +6,7 @@
 	"WeatherAPIKey": "darksky.net API Key",
 	"GoogleAPIKey": "Google Geocode API Key",
 	"soundcloudID": "SoundCloud API Key",
+	"sherlockAPIKey": "Sherlock API Key",
 	"paginationItems": 10,
 	"defaultVolume": 2,
 	"maxLength": 15,
