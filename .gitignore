@@ -29,5 +29,7 @@ node_modules
 
 .vscode
 settings.json
+repos/*
 docsdata.json
 assets/profile/backgrounds/**
+.travis.yml
