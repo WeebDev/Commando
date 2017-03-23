@@ -78,7 +78,7 @@ module.exports = class StarCommand extends Command {
 							value: starredMessageContent ? starredMessageContent : '\u200B'
 						}
 					],
-					image: { url: starredMessageAttachmentImage ? starredMessageAttachmentImage : undefined },
+					image: { url: starredMessageAttachmentImage || undefined },
 					timestamp: starredMessageDate,
 					footer: { text: edit }
 				}
