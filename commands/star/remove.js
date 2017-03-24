@@ -10,6 +10,7 @@ module.exports = class RemoveStarMessageCommand extends Command {
 			memberName: 'remove',
 			description: 'Removes the starred message.',
 			examples: ['remove-star 189696688657530880', 'rmstar 189696688657530880'],
+			guildOnly: true,
 
 			args: [
 				{

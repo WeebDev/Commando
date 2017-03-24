@@ -9,6 +9,7 @@ module.exports = class ShowStarCommand extends Command {
 			memberName: 'show-star',
 			description: 'Shows who starred a message.',
 			examples: ['show-star 189696688657530880'],
+			guildOnly: true,
 
 			args: [
 				{
@@ -52,22 +53,20 @@ module.exports = class ShowStarCommand extends Command {
 			if (user) starredUsers.push(user);
 		}
 
-		return msg.channel.send({
-			embed: {
-				author: {
-					icon_url: message.author.displayAvatarURL, // eslint-disable-line camelcase
-					name: `${message.author.username}#${message.author.discriminator} (${message.author.id})`
-				},
-				color: 0xFFAC33,
-				fields: [
-					{
-						name: 'Starred by:',
-						value: starredUsers.join(', ')
-					}
-				],
-				timestamp: starredMessageDate,
-				footer: { text: starText }
-			}
+		return msg.embed({
+			author: {
+				icon_url: message.author.displayAvatarURL, // eslint-disable-line camelcase
+				name: `${message.author.username}#${message.author.discriminator} (${message.author.id})`
+			},
+			color: 0xFFAC33,
+			fields: [
+				{
+					name: 'Starred by:',
+					value: starredUsers.join(', ')
+				}
+			],
+			timestamp: starredMessageDate,
+			footer: { text: starText }
 		});
 	}
 };

@@ -9,6 +9,7 @@ module.exports = class UnstarCommand extends Command {
 			memberName: 'unstar',
 			description: 'Unstars a message.',
 			examples: ['unstar 189696688657530880'],
+			guildOnly: true,
 
 			args: [
 				{
