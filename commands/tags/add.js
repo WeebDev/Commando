@@ -40,9 +40,6 @@ module.exports = class TagAddCommand extends Command {
 
 	async run(msg, args) {
 		const name = this.cleanContent(args.name.toLowerCase(), msg);
-
-		console.log(name);
-
 		const content = this.cleanContent(args.content, msg);
 		const tag = await Tag.findOne({ where: { name, guildID: msg.guild.id } });
 		if (tag) return msg.say(`A tag with the name **${name}** already exists, ${msg.author}`);
