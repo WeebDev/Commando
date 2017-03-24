@@ -39,7 +39,10 @@ module.exports = class TagAddCommand extends Command {
 	}
 
 	async run(msg, args) {
-		const name = this.content(args.name.toLowerCase(), msg);
+		const name = this.cleanContent(args.name.toLowerCase(), msg);
+
+		console.log(name);
+
 		const content = this.cleanContent(args.content, msg);
 		const tag = await Tag.findOne({ where: { name, guildID: msg.guild.id } });
 		if (tag) return msg.say(`A tag with the name **${name}** already exists, ${msg.author}`);
@@ -63,7 +66,7 @@ module.exports = class TagAddCommand extends Command {
 	}
 
 	cleanContent(content, msg) {
-		content.replace(/@everyone/g, '@\u200Beveryone')
+		return content.replace(/@everyone/g, '@\u200Beveryone')
 			.replace(/@here/g, '@\u200Bhere')
 			.replace(/<@&[0-9]+>/g, roles => {
 				const replaceID = roles.replace(/<|&|>|@/g, '');
