@@ -47,13 +47,13 @@ module.exports = class ProfileCommand extends Command {
 		const levelBounds = await Experience.getLevelBounds(level);
 		const totalExp = await Experience.getTotalExperience(user.id);
 		const fillValue = Math.min(Math.max(currentExp / (levelBounds.upperBound - levelBounds.lowerBound), 0), 1);
-		const lines = await this.wrapText(ctx, personalMessage, 110);
 
 		Canvas.registerFont(path.join(__dirname, '..', '..', 'assets', 'profile', 'fonts', 'Roboto.ttf'), { family: 'Roboto' }); // eslint-disable-line max-len
 		Canvas.registerFont(path.join(__dirname, '..', '..', 'assets', 'profile', 'fonts', 'NotoEmoji-Regular.ttf'), { family: 'Roboto' }); // eslint-disable-line max-len
 
 		const canvas = new Canvas(300, 300);
 		const ctx = canvas.getContext('2d');
+		const lines = await this.wrapText(ctx, personalMessage, 110);
 		const base = new Image();
 		const cond = new Image();
 		const generate = () => {
