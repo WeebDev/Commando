@@ -19,7 +19,7 @@ module.exports = class PersonalMessageCommand extends Command {
 
 			args: [
 				{
-					key: 'message',
+					key: 'personalMessage',
 					prompt: 'what would you like to set as your personal message?\n',
 					type: 'string',
 					validate: value => {
@@ -40,15 +40,15 @@ module.exports = class PersonalMessageCommand extends Command {
 		const { personalMessage } = args;
 		const profile = await UserProfile.findOne({ where: { userID: msg.author.id } });
 		if (!profile) {
-			return UserProfile.create({
+			await UserProfile.create({
 				userID: msg.author.id,
 				personalMessage
-			}).then(() => msg.reply('your message has been updated!'));
+			});
+			return msg.reply('your message has been updated!');
 		}
 
 		profile.personalMessage = personalMessage;
-		return profile.save().then(() => {
-			msg.reply('your message has been updated!');
-		});
+		await profile.save();
+		return msg.reply('your message has been updated!');
 	}
 };
