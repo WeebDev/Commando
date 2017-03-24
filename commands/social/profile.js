@@ -47,13 +47,13 @@ module.exports = class ProfileCommand extends Command {
 		const levelBounds = await Experience.getLevelBounds(level);
 		const totalExp = await Experience.getTotalExperience(user.id);
 		const fillValue = Math.min(Math.max(currentExp / (levelBounds.upperBound - levelBounds.lowerBound), 0), 1);
+		const lines = await this.wrapText(ctx, personalMessage, 110);
 
 		Canvas.registerFont(path.join(__dirname, '..', '..', 'assets', 'profile', 'fonts', 'Roboto.ttf'), { family: 'Roboto' }); // eslint-disable-line max-len
 		Canvas.registerFont(path.join(__dirname, '..', '..', 'assets', 'profile', 'fonts', 'NotoEmoji-Regular.ttf'), { family: 'Roboto' }); // eslint-disable-line max-len
 
 		const canvas = new Canvas(300, 300);
 		const ctx = canvas.getContext('2d');
-		const lines = this.wrapText(ctx, personalMessage, 110);
 		const base = new Image();
 		const cond = new Image();
 		const generate = () => {
@@ -162,39 +162,41 @@ module.exports = class ProfileCommand extends Command {
 	}
 
 	wrapText(ctx, text, maxWidth) {
-		const words = text.split(' ');
-		let lines = [];
-		let line = '';
+		return new Promise(resolve => {
+			const words = text.split(' ');
+			let lines = [];
+			let line = '';
 
-		if (ctx.measureText(text).width < maxWidth) {
-			return [text];
-		}
+			if (ctx.measureText(text).width < maxWidth) {
+				return resolve([text]);
+			}
 
-		while (words.length > 0) {
-			let split = false;
-			while (ctx.measureText(words[0]).width >= maxWidth) {
-				const tmp = words[0];
-				words[0] = tmp.slice(0, -1);
+			while (words.length > 0) {
+				let split = false;
+				while (ctx.measureText(words[0]).width >= maxWidth) {
+					const tmp = words[0];
+					words[0] = tmp.slice(0, -1);
 
-				if (!split) {
-					split = true;
-					words.splice(1, 0, tmp.slice(-1));
+					if (!split) {
+						split = true;
+						words.splice(1, 0, tmp.slice(-1));
+					} else {
+						words[1] = tmp.slice(-1) + words[1];
+					}
+				}
+
+				if (ctx.measureText(line + words[0]).width < maxWidth) {
+					line += `${words.shift()} `;
 				} else {
-					words[1] = tmp.slice(-1) + words[1];
+					lines.push(line);
+					line = '';
+				}
+
+				if (words.length === 0) {
+					lines.push(line);
 				}
 			}
-
-			if (ctx.measureText(line + words[0]).width < maxWidth) {
-				line += `${words.shift()} `;
-			} else {
-				lines.push(line);
-				line = '';
-			}
-
-			if (words.length === 0) {
-				lines.push(line);
-			}
-		}
-		return lines;
+			return resolve(lines);
+		});
 	}
 };
