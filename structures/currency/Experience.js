@@ -1,5 +1,5 @@
-const UserProfile = require('../postgreSQL/models/UserProfile');
-const Redis = require('../redis/Redis');
+const UserProfile = require('../../models/UserProfile');
+const Redis = require('../Redis');
 
 const redis = new Redis();
 

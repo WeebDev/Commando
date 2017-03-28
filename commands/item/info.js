@@ -1,7 +1,7 @@
 const { Command } = require('discord.js-commando');
 const { stripIndents } = require('common-tags');
 
-const Store = require('../../currency/Store');
+const Store = require('../../structures/currency/Store');
 
 module.exports = class StoreInfoCommand extends Command {
 	constructor(client) {

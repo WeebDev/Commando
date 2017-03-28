@@ -1,5 +1,5 @@
 const Currency = require('./Currency');
-const Redis = require('../redis/Redis');
+const Redis = require('../Redis');
 
 const redis = new Redis();
 

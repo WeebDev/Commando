@@ -1,10 +1,10 @@
 const { Command } = require('discord.js-commando');
 const { stripIndents } = require('common-tags');
 
-const Currency = require('../../currency/Currency');
-const Inventory = require('../../currency/Inventory');
-const ItemGroup = require('../../currency/ItemGroup');
-const Store = require('../../currency/Store');
+const Currency = require('../../structures/currency/Currency');
+const Inventory = require('../../structures/currency/Inventory');
+const ItemGroup = require('../../structures/currency/ItemGroup');
+const Store = require('../../structures/currency/Store');
 
 module.exports = class BuyItemCommand extends Command {
 	constructor(client) {

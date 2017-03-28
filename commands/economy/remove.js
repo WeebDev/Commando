@@ -1,6 +1,6 @@
 const { Command } = require('discord.js-commando');
 
-const Currency = require('../../currency/Currency');
+const Currency = require('../../structures/currency/Currency');
 
 module.exports = class MoneyRemoveCommand extends Command {
 	constructor(client) {

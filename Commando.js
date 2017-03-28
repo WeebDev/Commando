@@ -6,9 +6,9 @@ const path = require('path');
 const { URL } = require('url');
 const winston = require('winston');
 
-const Database = require('./postgreSQL/PostgreSQL');
-const Redis = require('./redis/Redis');
-const SequelizeProvider = require('./postgreSQL/SequelizeProvider');
+const Database = require('./structures/PostgreSQL');
+const Redis = require('./structures/Redis');
+const SequelizeProvider = require('./providers/SequelizeProvider');
 const config = require('./settings');
 
 const database = new Database();
@@ -20,10 +20,10 @@ const client = new commando.Client({
 	disableEveryone: true
 });
 
-const Currency = require('./currency/Currency');
-const Experience = require('./currency/Experience');
-const starBoard = require('./postgreSQL/models/StarBoard');
-const userName = require('./postgreSQL/models/UserName');
+const Currency = require('./structures/currency/Currency');
+const Experience = require('./structures/currency/Experience');
+const starBoard = require('./models/StarBoard');
+const userName = require('./models/UserName');
 
 let earnedRecently = [];
 let gainedXPRecently = [];

@@ -1,5 +1,6 @@
 const { Command } = require('discord.js-commando');
-const starBoard = require('../../postgreSQL/models/StarBoard');
+
+const starBoard = require('../../models/StarBoard');
 
 module.exports = class UnstarCommand extends Command {
 	constructor(client) {

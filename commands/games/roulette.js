@@ -1,8 +1,8 @@
 const { Command } = require('discord.js-commando');
 const { stripIndents } = require('common-tags');
 
-const Currency = require('../../currency/Currency');
-const Roulette = require('../../games/Roulette');
+const Currency = require('../../structures/currency/Currency');
+const Roulette = require('../../structures/games/Roulette');
 
 const colors = {
 	red: 0xBE1931,

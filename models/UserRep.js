@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 
-const Database = require('../PostgreSQL');
+const Database = require('../structures/PostgreSQL');
 
 const database = new Database();
 

@@ -1,13 +1,14 @@
 const Canvas = require('canvas');
 const { Command } = require('discord.js-commando');
-const Experience = require('../../currency/Experience');
+
 const fs = global.Promise.promisifyAll(require('fs'));
 const path = require('path');
 const request = require('request-promise');
 
-const Currency = require('../../currency/Currency');
-const Bank = require('../../currency/Bank');
-const UserProfile = require('../../postgreSQL/models/UserProfile');
+const Bank = require('../../structures/currency/Bank');
+const Currency = require('../../structures/currency/Currency');
+const Experience = require('../../currency/Experience');
+const UserProfile = require('../../models/UserProfile');
 
 module.exports = class ProfileCommand extends Command {
 	constructor(client) {

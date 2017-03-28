@@ -1,7 +1,7 @@
 const { Command } = require('discord.js-commando');
 const moment = require('moment');
 
-const Tag = require('../../postgreSQL/models/Tag');
+const Tag = require('../../models/Tag');
 
 module.exports = class TagWhoCommand extends Command {
 	constructor(client) {

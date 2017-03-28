@@ -3,10 +3,10 @@ const { Command, util } = require('discord.js-commando');
 const moment = require('moment');
 const Sequelize = require('sequelize');
 
+const Currency = require('../../structures/currency/Currency');
 const { paginationItems } = require('../../settings');
-const Currency = require('../../currency/Currency.js');
-const Redis = require('../../redis/Redis');
-const UserProfile = require('../../postgreSQL/models/UserProfile');
+const Redis = require('../../structures/Redis');
+const UserProfile = require('../../models/UserProfile');
 
 const redis = new Redis();
 

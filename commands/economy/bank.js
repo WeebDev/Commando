@@ -2,8 +2,8 @@ const { Command } = require('discord.js-commando');
 const { stripIndents } = require('common-tags');
 const moment = require('moment');
 
-const Currency = require('../../currency/Currency');
-const Bank = require('../../currency/Bank');
+const Bank = require('../../structures/currency/Bank');
+const Currency = require('../../structures/currency/Currency');
 
 module.exports = class BankInfoCommand extends Command {
 	constructor(client) {

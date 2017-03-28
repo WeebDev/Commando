@@ -1,8 +1,8 @@
 const { Command } = require('discord.js-commando');
 
-const Item = require('../../postgreSQL/models/Item');
-const Store = require('../../currency/Store');
-const StoreItem = require('../../currency/StoreItem');
+const Item = require('../../models/Item');
+const Store = require('../../structures/currency/Store');
+const StoreItem = require('../../structures/currency/StoreItem');
 
 module.exports = class ItemAddCommand extends Command {
 	constructor(client) {

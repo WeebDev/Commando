@@ -4,9 +4,11 @@ const games = new Map();
 const ranks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
 const suits = ['♣', '♦', '❤', '♠'];
 const DECK_TEMPLATE = suits
-	.map(suit => ranks.concat(ranks).concat(ranks).concat(ranks)
-		.map(rank => rank + suit))
-			.reduce((array, arr) => array.concat(arr));
+	.map(suit => ranks.concat(ranks)
+	.concat(ranks)
+	.concat(ranks)
+	.map(rank => rank + suit))
+	.reduce((array, arr) => array.concat(arr));
 
 class Blackjack {
 	constructor(msg) {
@@ -25,7 +27,7 @@ class Blackjack {
 			if (decks.has(this.guildID) && decks.get(this.guildID).length !== 0) {
 				this.deck = decks.get(this.guildID);
 			} else {
-				this.deck = shuffle(DECK_TEMPLATE);
+				this.deck = this._shuffle(DECK_TEMPLATE);
 				decks.set(this.guildID, this.deck);
 			}
 		}
@@ -51,8 +53,8 @@ class Blackjack {
 		let aces = 0;
 
 		hand.forEach(card => {
-			value += cardValue(card);
-			if (cardValue(card) === 11) aces++;
+			value += this._cardValue(card);
+			if (this._cardValue(card) === 11) aces++;
 		});
 
 		while (value > 21 && aces > 0) {
@@ -69,8 +71,8 @@ class Blackjack {
 		let aces = 0;
 
 		hand.forEach(card => {
-			value += cardValue(card);
-			if (cardValue(card) === 11) aces++;
+			value += this._cardValue(card);
+			if (this._cardValue(card) === 11) aces++;
 		});
 
 		while (value > 21 && aces > 0) {
@@ -81,27 +83,27 @@ class Blackjack {
 		if (value === 21 && hand.length === 2) return 'Blackjack';
 		return value;
 	}
-}
 
-function cardValue(card) {
-	const index = ranks.indexOf(card.slice(0, -1));
-	if (index === 0) return 11;
-	return index >= 10 ? 10 : index + 1;
-}
-
-function shuffle(array) {
-	let random;
-	let temp;
-	let length = array.length;
-	let value = array.slice();
-
-	while (length) {
-		random = Math.floor(Math.random() * length--);
-		temp = value[length];
-		value[length] = value[random];
-		value[random] = temp;
+	static _cardValue(card) {
+		const index = ranks.indexOf(card.slice(0, -1));
+		if (index === 0) return 11;
+		return index >= 10 ? 10 : index + 1;
 	}
-	return value;
+
+	static _shuffle(array) {
+		let random;
+		let temp;
+		let length = array.length;
+		let value = array.slice();
+
+		while (length) {
+			random = Math.floor(Math.random() * length--);
+			temp = value[length];
+			value[length] = value[random];
+			value[random] = temp;
+		}
+		return value;
+	}
 }
 
 module.exports = Blackjack;

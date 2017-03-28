@@ -1,7 +1,7 @@
 const { Command } = require('discord.js-commando');
 
-const Redis = require('../../redis/Redis');
-const Tag = require('../../postgreSQL/models/Tag');
+const Redis = require('../../structures/Redis');
+const Tag = require('../../models/Tag');
 
 const redis = new Redis();
 

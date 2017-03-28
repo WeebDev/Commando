@@ -5,7 +5,6 @@ module.exports = class BlameCommand extends Command {
 	constructor(client) {
 		super(client, {
 			name: 'blame',
-			aliases: [],
 			group: 'social',
 			memberName: 'blame',
 			description: 'Put the blame on someone.',
