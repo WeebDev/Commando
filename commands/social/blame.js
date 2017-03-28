@@ -26,7 +26,7 @@ module.exports = class BlameCommand extends Command {
 		});
 	}
 
-	async run(msg, args) {
+	run(msg, args) {
 		const user = args.member.displayName || 'Crawl';
 		const canvas = new Canvas();
 		const ctx = canvas.getContext('2d');
@@ -35,15 +35,18 @@ module.exports = class BlameCommand extends Command {
 		canvas.width = width;
 		canvas.height = height;
 
-		ctx.font = '700 32px Arial';
-		ctx.fillStyle = '#B93F2C';
-		ctx.textAlign = 'center';
-		ctx.fillText('Blame', canvas.width / 2, 35);
+		const generate = () => {
+			ctx.font = '700 32px Arial';
+			ctx.fillStyle = '#B93F2C';
+			ctx.textAlign = 'center';
+			ctx.fillText('Blame', canvas.width / 2, 35);
 
-		ctx.fillStyle = '#F01111';
-		ctx.fillText(user, canvas.width / 2, 70);
+			ctx.fillStyle = '#F01111';
+			ctx.fillText(user, canvas.width / 2, 70);
+		};
+		generate();
 
-		msg.channel.sendFile(canvas.toBuffer(), 'blame.png');
+		return msg.channel.sendFile(canvas.toBuffer(), 'blame.png');
 	}
 
 	textSizes(ctx, text) {
@@ -53,11 +56,9 @@ module.exports = class BlameCommand extends Command {
 			width: dimensions.width + 20,
 			height: dimensions.emHeightAscent + 54
 		};
-
 		if (dimensions.actualBoundingBoxDescent) {
 			sizes.height += dimensions.actualBoundingBoxDescent - 3;
 		}
-
 		return sizes;
 	}
 };
