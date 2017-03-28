@@ -5,7 +5,7 @@ module.exports = class PleaseCommand extends Command {
 	constructor(client) {
 		super(client, {
 			name: 'please',
-                        aliases: ['pls'],
+                       aliases: ['pls'],
 			group: 'social',
 			memberName: 'please',
 			description: 'Make someone else plead?..',
