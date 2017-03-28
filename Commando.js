@@ -1,6 +1,6 @@
 global.Promise = require('bluebird');
 
-const { CommandoClient } = require('discord.js-commando');
+const { CommandoClient, FriendlyError } = require('discord.js-commando');
 const { oneLine } = require('common-tags');
 const path = require('path');
 const { URL } = require('url');
@@ -303,7 +303,7 @@ client.on('error', winston.error)
 		await settings.save();
 	})
 	.on('commandError', (cmd, err) => {
-		if (err instanceof commando.FriendlyError) return;
+		if (err instanceof FriendlyError) return;
 		winston.error(`Error in command ${cmd.groupID}:${cmd.memberName}`, err);
 	})
 	.on('commandBlocked', (msg, reason) => {
