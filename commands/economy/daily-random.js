@@ -9,6 +9,7 @@ module.exports = class DailyRandomCommand extends Command {
 	constructor(client) {
 		super(client, {
 			name: 'daily-random',
+			aliases: ['daily-ran', 'daily-rng'],
 			group: 'economy',
 			memberName: 'daily-random',
 			description: `Gift your daily ${Currency.textPlural} to a random online user.`,
