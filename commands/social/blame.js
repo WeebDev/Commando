@@ -29,7 +29,7 @@ module.exports = class BlameCommand extends Command {
 		const member = args.member.displayName || 'Crawl';
 		const canvas = new Canvas();
 		const ctx = canvas.getContext('2d');
-		const { width, height } = this.textSizes(ctx, user);
+		const { width, height } = this.textSizes(ctx, member);
 
 		canvas.width = width;
 		canvas.height = height;
