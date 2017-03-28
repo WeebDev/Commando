@@ -3,6 +3,8 @@ const moment = require('moment');
 const sherlock = require('Sherlock');
 const { stripIndents } = require('common-tags');
 
+const Util = require('../../util/Util');
+
 module.exports = class RemindMeCommand extends Command {
 	constructor(client) {
 		super(client, {
@@ -22,7 +24,14 @@ module.exports = class RemindMeCommand extends Command {
 					key: 'remind',
 					label: 'reminder',
 					prompt: 'what would you like me to remind you about?\n',
-					type: 'string'
+					type: 'string',
+					validate: time => {
+						const remindTime = sherlock.parse(time);
+						if (!remindTime.startDate) return `please provide a valid starting time.`;
+
+						return true;
+					},
+					parse: time => sherlock.parse(time)
 				}
 			]
 		});
@@ -30,14 +39,13 @@ module.exports = class RemindMeCommand extends Command {
 
 	async run(msg, args) {
 		const { remind } = args;
-		const remindTime = sherlock.parse(remind);
-		const time = remindTime.startDate.getTime() - Date.now();
+		const time = remind.startDate.getTime() - Date.now();
 		const preRemind = await msg.say(stripIndents`
-			I will remind you '${remindTime.eventTitle}' ${moment().add(time, 'ms').fromNow()}.
+			I will remind you '${Util.cleanContent(remind.eventTitle, msg)}' ${moment().add(time, 'ms').fromNow()}.
 		`);
 		const remindMessage = await new Promise(resolve => {
 			setTimeout(() => resolve(msg.say(stripIndents`
-				${msg.author} you wanted me to remind you of: '${remindTime.eventTitle}'
+				${msg.author} you wanted me to remind you of: '${Util.cleanContent(remind.eventTitle, msg)}'
 			`)), time);
 		});
 		return [preRemind, remindMessage];

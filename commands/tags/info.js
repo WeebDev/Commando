@@ -30,7 +30,7 @@ module.exports = class TagWhoCommand extends Command {
 	}
 
 	async run(msg, args) {
-		const name = args;
+		const { name } = args;
 		const tag = await Tag.findOne({ where: { name, guildID: msg.guild.id } });
 		if (!tag) return msg.say(`A tag with the name **${name}** doesn't exist, ${msg.author}`);
 		return msg.embed({

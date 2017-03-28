@@ -32,7 +32,7 @@ module.exports = class TagSourceCommand extends Command {
 	}
 
 	run(msg, args) {
-		const name = args;
+		const { name } = args;
 		return this.findCached(msg, name, msg.guild.id);
 	}
 

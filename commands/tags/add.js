@@ -2,6 +2,7 @@ const { Command } = require('discord.js-commando');
 
 const Redis = require('../../redis/Redis');
 const Tag = require('../../postgreSQL/models/Tag');
+const Util = require('../../util/Util');
 
 const redis = new Redis();
 
@@ -39,8 +40,8 @@ module.exports = class TagAddCommand extends Command {
 	}
 
 	async run(msg, args) {
-		const name = this.cleanContent(args.name.toLowerCase(), msg);
-		const content = this.cleanContent(args.content, msg);
+		const name = Util.cleanContent(args.name.toLowerCase(), msg);
+		const content = Util.cleanContent(args.content, msg);
 		const tag = await Tag.findOne({ where: { name, guildID: msg.guild.id } });
 		if (tag) return msg.say(`A tag with the name **${name}** already exists, ${msg.author}`);
 
@@ -59,21 +60,6 @@ module.exports = class TagAddCommand extends Command {
 
 				redis.db.setAsync(`tag${name}${msg.guild.id}`, content);
 				return msg.say(`A tag with the name **${name}** has been added, ${msg.author}`);
-			});
-	}
-
-	cleanContent(content, msg) {
-		return content.replace(/@everyone/g, '@\u200Beveryone')
-			.replace(/@here/g, '@\u200Bhere')
-			.replace(/<@&[0-9]+>/g, roles => {
-				const replaceID = roles.replace(/<|&|>|@/g, '');
-				const role = msg.channel.guild.roles.get(replaceID);
-				return `@${role.name}`;
-			})
-			.replace(/<@!?[0-9]+>/g, user => {
-				const replaceID = user.replace(/<|!|>|@/g, '');
-				const member = msg.channel.guild.members.get(replaceID);
-				return `@${member.user.username}`;
 			});
 	}
 };
