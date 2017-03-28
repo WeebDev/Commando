@@ -74,16 +74,13 @@ module.exports = class MoneyLeaderboardCommand extends Command {
 
 	async findCached() {
 		const cache = await redis.db.getAsync('moneyleaderboard');
-		redis.db.expire('moneyleaderboard', 3600);
 		if (cache) return cache;
 
 		const money = await UserProfile.findAll(
 			{ where: { userID: { $ne: 'bank' } }, order: Sequelize.literal('networth DESC') }
 		);
-		if (!money) return '';
 
 		redis.db.setAsync('moneyleaderboard', JSON.stringify(money));
-		redis.db.expire('moneyleaderboard', 3600);
 		return JSON.stringify(money);
 	}
 };

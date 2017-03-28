@@ -37,7 +37,6 @@ class Bank {
 
 	static async applyInterest() {
 		const interestRate = await this.getInterestRate();
-
 		const bankBalance = await Currency.getBalance('bank');
 		const previousBankBalance = await redis.db.getAsync('lastbankbalance') || bankBalance;
 		const bankBalanceDelta = (bankBalance - previousBankBalance) / previousBankBalance;
@@ -54,9 +53,7 @@ class Bank {
 		const newInterestRate = Math.max(MIN_INTEREST_RATE, interestRate + (bankBalanceDelta * -INTEREST_MATURE_RATE));
 		redis.db.setAsync('interestrate', newInterestRate);
 		redis.db.setAsync('lastbankbalance', bankBalance);
-		redis.db.del('bankupdate');
 		redis.db.setAsync('bankupdate', Date.now());
-		redis.db.expire('bankupdate', UPDATE_DURATION);
 
 		setTimeout(() => Bank.applyInterest(), UPDATE_DURATION);
 	}
