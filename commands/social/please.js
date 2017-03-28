@@ -39,10 +39,10 @@ module.exports = class PleaseCommand extends Command {
 			ctx.font = '700 32px Arial';
 			ctx.fillStyle = '#B93F2C';
 			ctx.textAlign = 'center';
-			ctx.fillText(member, canvas.width / 2, 70);
+			ctx.fillText(member, canvas.width / 2, 35);
 
 			ctx.fillStyle = '#F01111';
-			ctx.fillText('Pls', canvas.width / 2, 35);
+			ctx.fillText('Pls', canvas.width / 2, 70);
 		};
 		generate();
 
