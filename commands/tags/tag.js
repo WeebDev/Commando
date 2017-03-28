@@ -23,14 +23,15 @@ module.exports = class TagCommand extends Command {
 					key: 'name',
 					label: 'tagname',
 					prompt: 'what tag would you like to see?\n',
-					type: 'string'
+					type: 'string',
+					parse: str => str.toLowerCase()
 				}
 			]
 		});
 	}
 
 	run(msg, args) {
-		const name = args.name.toLowerCase();
+		const name = args;
 		return this.findCached(msg, name, msg.guild.id);
 	}
 

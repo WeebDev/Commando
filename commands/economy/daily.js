@@ -32,7 +32,7 @@ module.exports = class DailyCommand extends Command {
 
 	async run(msg, args) {
 		const received = await Daily.received(msg.author.id);
-		const user = args.member || msg.member;
+		const member = args.member || msg.member;
 
 		if (received) {
 			const nextDaily = await Daily.nextDaily(msg.author.id);
@@ -42,9 +42,11 @@ module.exports = class DailyCommand extends Command {
 			`);
 		}
 
-		if (user.id !== msg.author.id) {
-			Daily.receive(msg.author.id, user.id);
-			return msg.reply(`${user} has successfully received your daily ${Currency.convert(Daily.dailyDonationPayout)}.`);
+		if (member.id !== msg.author.id) {
+			Daily.receive(msg.author.id, member.id);
+			return msg.reply(
+				`${member} has successfully received your daily ${Currency.convert(Daily.dailyDonationPayout)}.`
+			);
 		}
 
 		Daily.receive(msg.author.id);

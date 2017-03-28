@@ -32,7 +32,8 @@ module.exports = class CleanCommand extends Command {
 					key: 'filter',
 					prompt: 'what filter would you like to apply?\n',
 					type: 'string',
-					default: ''
+					default: '',
+					parse: str => str.toLowerCase()
 				},
 				{
 					key: 'member',
@@ -49,8 +50,7 @@ module.exports = class CleanCommand extends Command {
 	}
 
 	async run(msg, args) { // eslint-disable-line consistent-return
-		const { limit } = args;
-		const filter = args.filter.toLowerCase();
+		const { filter, limit } = args;
 		let messageFilter;
 
 		if (filter) {

@@ -27,7 +27,7 @@ module.exports = class DepositCommand extends Command {
 					parse: async (donuts, msg) => {
 						const balance = await Currency.getBalance(msg.author.id);
 
-						if (donuts === '-all' || donuts === '-a') return parseInt(balance);
+						if (['all', '-all', '-a'].includes(donuts)) return parseInt(balance);
 						return parseInt(donuts);
 					}
 				}

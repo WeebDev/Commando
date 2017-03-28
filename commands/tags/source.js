@@ -24,14 +24,15 @@ module.exports = class TagSourceCommand extends Command {
 					key: 'name',
 					label: 'tagname',
 					prompt: 'what tag source would you like to see?\n',
-					type: 'string'
+					type: 'string',
+					parse: str => str.toLowerCase()
 				}
 			]
 		});
 	}
 
 	run(msg, args) {
-		const name = args.name.toLowerCase();
+		const name = args;
 		return this.findCached(msg, name, msg.guild.id);
 	}
 

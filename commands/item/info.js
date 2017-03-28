@@ -21,14 +21,15 @@ module.exports = class StoreInfoCommand extends Command {
 				{
 					key: 'item',
 					prompt: 'which item would you like to know the price of?\n',
-					type: 'string'
+					type: 'string',
+					parse: str => str.toLowerCase()
 				}
 			]
 		});
 	}
 
 	run(msg, args) {
-		const item = args.item.toLowerCase();
+		const { item } = args;
 		const storeItem = Store.getItem(item);
 		if (!storeItem) {
 			return msg.reply(stripIndents`

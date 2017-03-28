@@ -62,16 +62,15 @@ module.exports = class RouletteCommand extends Command {
 						}
 
 						return true;
-					}
+					},
+					parse: str => str.toLowerCase()
 				}
 			]
 		});
 	}
 
 	run(msg, args) {
-		const { bet } = args;
-		const space = args.space.toLowerCase();
-
+		const { bet, space } = args;
 		let roulette = Roulette.findGame(msg.guild.id);
 
 		if (roulette) {

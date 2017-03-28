@@ -31,15 +31,15 @@ module.exports = class MoneyInfoCommand extends Command {
 	}
 
 	async run(msg, args) {
-		const user = args.member || msg.author;
-		const money = await Currency.getBalance(user.id);
-		const balance = await Bank.getBalance(user.id) || 0;
+		const member = args.member || msg.author;
+		const money = await Currency.getBalance(member.id);
+		const balance = await Bank.getBalance(member.id) || 0;
 		const networth = (money || 0) + balance;
 
 		if (args.member) {
-			if (money === null) return msg.reply(`${user.displayName} hasn't earned any ${Currency.textPlural} yet.`);
+			if (money === null) return msg.reply(`${member.displayName} hasn't earned any ${Currency.textPlural} yet.`);
 			return msg.reply(oneLine`
-				${user.displayName} has ${Currency.convert(money)} on hand and
+				${member.displayName} has ${Currency.convert(money)} on hand and
 				${Currency.convert(balance)} in the bank.
 				Their net worth is ${Currency.convert(networth)}.
 				Good on them!

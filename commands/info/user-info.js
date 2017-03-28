@@ -32,6 +32,7 @@ module.exports = class UserInfoCommand extends Command {
 		const { member } = args;
 		const user = member.user;
 		const userNames = await userName.findAll({ where: { userID: user.id } });
+
 		return msg.embed({
 			color: 3447003,
 			fields: [
