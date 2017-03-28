@@ -18,7 +18,7 @@ module.exports = class PleaseCommand extends Command {
 			args: [
 				{
 					key: 'member',
-					prompt: 'whom would you like to blame?\n',
+					prompt: 'whom would you like to make plead?\n',
 					type: 'member',
 					default: ''
 				}
