@@ -7,7 +7,7 @@ const request = require('request-promise');
 
 const Bank = require('../../structures/currency/Bank');
 const Currency = require('../../structures/currency/Currency');
-const Experience = require('../../currency/Experience');
+const Experience = require('../../structures/currency/Experience');
 const UserProfile = require('../../models/UserProfile');
 
 module.exports = class ProfileCommand extends Command {
