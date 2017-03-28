@@ -1,37 +1,29 @@
 const { Command } = require('discord.js-commando');
 const moment = require('moment');
-const { stripIndents } = require('common-tags');
+const { oneLine, stripIndents } = require('common-tags');
 
 const Currency = require('../../structures/currency/Currency');
 const Daily = require('../../structures/currency/Daily');
 
-module.exports = class DailyCommand extends Command {
+module.exports = class DailyRandomCommand extends Command {
 	constructor(client) {
 		super(client, {
-			name: 'daily',
+			name: 'daily-random',
 			group: 'economy',
-			memberName: 'daily',
-			description: `Receive or gift your daily ${Currency.textPlural}.`,
+			memberName: 'daily-random',
+			description: `Gift your daily ${Currency.textPlural} to a random online user.`,
 			guildOnly: true,
 			throttling: {
 				usages: 2,
 				duration: 3
-			},
-
-			args: [
-				{
-					key: 'member',
-					prompt: 'whom do you want to give your daily?\n',
-					type: 'member',
-					default: ''
-				}
-			]
+			}
 		});
 	}
 
-	async run(msg, args) {
+	async run(msg) {
 		const received = await Daily.received(msg.author.id);
-		const member = args.member || msg.member;
+		const guild = await msg.guild.fetchMembers();
+		const member = guild.members.filter(mem => mem.presence.status === 'online' && !mem.user.bot).random();
 
 		if (received) {
 			const nextDaily = await Daily.nextDaily(msg.author.id);
@@ -43,9 +35,10 @@ module.exports = class DailyCommand extends Command {
 
 		if (member.id !== msg.author.id) {
 			Daily.receive(msg.author.id, member.id);
-			return msg.reply(
-				`${member} has successfully received your daily ${Currency.convert(Daily.dailyDonationPayout)}.`
-			);
+			return msg.reply(oneLine`
+				${member.displayName}#${member.user.discriminator} (${member.id}) has successfully received your daily
+				${Currency.convert(Daily.dailyDonationPayout)}.
+			`);
 		}
 
 		Daily.receive(msg.author.id);
