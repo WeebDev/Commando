@@ -32,7 +32,7 @@ module.exports = class BlameCommand extends Command {
 		const ctx = canvas.getContext('2d');
 		const { width, height } = this.textSizes(ctx, user);
 
-		canvas.width = width;
+		canvas.width = width < 130 ? 130 : width;
 		canvas.height = height;
 
 		ctx.font = '700 32px Arial';
