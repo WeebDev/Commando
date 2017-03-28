@@ -6,6 +6,7 @@ module.exports = class ShowStarCommand extends Command {
 	constructor(client) {
 		super(client, {
 			name: 'show-star',
+			aliases: ['star-info'],
 			group: 'starboard',
 			memberName: 'show-star',
 			description: 'Shows who starred a message.',
