@@ -62,8 +62,7 @@ module.exports = class MoneyLeaderboardCommand extends Command {
 
 				${paginated.items.map(user => oneLine`
 					**${++ranking} -**
-					${`${this.client.users.get(user.userID).username}
-					#${this.client.users.get(user.userID).discriminator}`}
+					${`${this.client.users.get(user.userID).username}#${this.client.users.get(user.userID).discriminator}`}
 					(**${Currency.convert(user.networth)}**)`).join('\n')}
 
 				${moment.duration(reset).format('hh [hours] mm [minutes]')} until the next update.
