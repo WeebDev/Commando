@@ -26,7 +26,7 @@ module.exports = class BlameCommand extends Command {
 	}
 
 	run(msg, args) {
-		const user = args.member.displayName || 'Crawl';
+		const member = args.member.displayName || 'Crawl';
 		const canvas = new Canvas();
 		const ctx = canvas.getContext('2d');
 		const { width, height } = this.textSizes(ctx, user);
@@ -41,7 +41,7 @@ module.exports = class BlameCommand extends Command {
 			ctx.fillText('Blame', canvas.width / 2, 35);
 
 			ctx.fillStyle = '#F01111';
-			ctx.fillText(user, canvas.width / 2, 70);
+			ctx.fillText(member, canvas.width / 2, 70);
 		};
 		generate();
 
