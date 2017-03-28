@@ -1,24 +1,21 @@
-const { escapeMarkdown } = require('discord.js');
+const { Util } = require('discord.js');
 const { oneLineTrim } = require('common-tags');
 
 const { soundcloudID } = require('../settings');
 
 module.exports = class Song {
 	constructor(video, member) {
-		this.name = escapeMarkdown(video.title);
+		this.name = Util.escapeMarkdown(video.title);
 		this.id = video.id;
-		this.length = video.durationSeconds ? parseInt(video.durationSeconds) : parseInt(video.duration) / 1000;
+		this.length = video.durationSeconds ? video.durationSeconds : video.duration / 1000;
 		this.member = member;
 		this.dispatcher = null;
 		this.playing = false;
 	}
 
 	get url() {
-		if (!isNaN(this.id)) {
-			return `https://api.soundcloud.com/tracks/${this.id}/stream?client_id=${soundcloudID}`;
-		} else {
-			return `https://www.youtube.com/watch?v=${this.id}`;
-		}
+		if (!isNaN(Number(this.id))) return `https://api.soundcloud.com/tracks/${this.id}/stream?client_id=${soundcloudID}`;
+		else return `https://www.youtube.com/watch?v=${this.id}`;
 	}
 
 	get thumbnail() {
@@ -28,7 +25,7 @@ module.exports = class Song {
 
 	get username() {
 		const name = `${this.member.user.username}#${this.member.user.discriminator} (${this.member.user.id})`;
-		return escapeMarkdown(name);
+		return Util.escapeMarkdown(name);
 	}
 
 	get avatar() {

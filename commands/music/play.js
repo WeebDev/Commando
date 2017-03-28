@@ -1,12 +1,12 @@
 const { Command } = require('discord.js-commando');
 const { escapeMarkdown } = require('discord.js');
-const { oneLine } = require('common-tags');
+const { oneLine, stripIndents } = require('common-tags');
 const request = require('request-promise');
 const winston = require('winston');
 const YouTube = require('simple-youtube-api');
 const ytdl = require('ytdl-core');
 
-const config = require('../../settings');
+const { defaultVolume, googleAPIKey, maxLength, maxSongs, passes, soundcloudID } = require('../../settings');
 const Song = require('../../structures/Song');
 const { version } = require('../../package');
 
@@ -33,7 +33,7 @@ module.exports = class PlaySongCommand extends Command {
 		});
 
 		this.queue = new Map();
-		this.youtube = new YouTube(config.GoogleAPIKey);
+		this.youtube = new YouTube(googleAPIKey);
 	}
 
 	async run(msg, args) {
@@ -62,36 +62,41 @@ module.exports = class PlaySongCommand extends Command {
 		if (url.match(/^https?:\/\/(soundcloud.com|snd.sc)\/(.*)$/)) {
 			try {
 				const video = await request({
-					uri: `http://api.soundcloud.com/resolve.json?url=${url}&client_id=${config.soundcloudID}`,
+					uri: `http://api.soundcloud.com/resolve.json?url=${url}&client_id=${soundcloudID}`,
 					headers: { 'User-Agent': `Commando v${version} (https://github.com/WeebDev/Commando/)` },
 					json: true
 				});
-
 				return this.handleVideo(video, queue, voiceChannel, msg, statusMsg);
 			} catch (error) {
 				winston.error(`${error.statusCode}: ${error.statusMessage}`);
 				return statusMsg.edit(`${msg.author}, ❌ This track is not able to be streamed by SoundCloud.`);
 			}
+		} else if (url.match(/^https?:\/\/(www.youtube.com|youtube.com)\/playlist(.*)$/)) {
+			const playlist = await this.youtube.getPlaylist(url);
+			return this.handlePlaylist(playlist, queue, voiceChannel, msg, statusMsg);
 		} else {
-			return this.youtube.getVideo(url).then(video => {
-				this.handleVideo(video, queue, voiceChannel, msg, statusMsg);
-			}).catch(() => {
-				this.youtube.searchVideos(url, 1).then(videos => {
-					this.youtube.getVideoByID(videos[0].id).then(video2 => {
-						this.handleVideo(video2, queue, voiceChannel, msg, statusMsg);
-					}).catch(error => {
-						winston.error(error);
-						statusMsg.edit(`${msg.author}, couldn't obtain the search result video's details.`);
-					});
-				}).catch(() => {
-					statusMsg.edit(`${msg.author}, there were no search results.`);
-				});
-			});
+			try {
+				const video = await this.youtube.getVideo(url);
+				return this.handleVideo(video, queue, voiceChannel, msg, statusMsg);
+			} catch (error) {
+				try {
+					const videos = await this.youtube.searchVideos(url, 1)
+						.catch(() => statusMsg.edit(`${msg.author}, there were no search results.`));
+					const video2 = await this.youtube.getVideoByID(videos[0].id);
+					return this.handleVideo(video2, queue, voiceChannel, msg, statusMsg);
+				} catch (err) {
+					winston.error(err);
+					return statusMsg.edit(`${msg.author}, couldn't obtain the search result video's details.`);
+				}
+			}
 		}
 	}
 
-	async handleVideo(video, queue, voiceChannel, msg, statusMsg) { // eslint-disable-line consistent-return
-		if (video.durationSeconds === 0) return statusMsg.edit(`${msg.author}, you can't play live streams.`);
+	async handleVideo(video, queue, voiceChannel, msg, statusMsg) {
+		if (video.durationSeconds === 0) {
+			statusMsg.edit(`${msg.author}, you can't play live streams.`);
+			return null;
+		}
 
 		if (!queue) {
 			queue = {
@@ -99,12 +104,12 @@ module.exports = class PlaySongCommand extends Command {
 				voiceChannel: voiceChannel,
 				connection: null,
 				songs: [],
-				volume: this.client.provider.get(msg.guild.id, 'defaultVolume', config.defaultVolume)
+				volume: this.client.provider.get(msg.guild.id, 'defaultVolume', defaultVolume)
 			};
-			await this.queue.set(msg.guild.id, queue);
+			this.queue.set(msg.guild.id, queue);
 
-			let result = await this.addSong(msg, video);
-			let resultMessage = {
+			const result = await this.addSong(msg, video);
+			const resultMessage = {
 				color: 3447003,
 				author: {
 					name: `${msg.author.username}#${msg.author.discriminator} (${msg.author.id})`,
@@ -115,24 +120,26 @@ module.exports = class PlaySongCommand extends Command {
 
 			if (!result.startsWith('👍')) {
 				this.queue.delete(msg.guild.id);
-				return statusMsg.edit('', { embed: resultMessage });
+				statusMsg.edit('', { embed: resultMessage });
+				return null;
 			}
 
 			statusMsg.edit(`${msg.author}, joining your voice channel...`);
 			try {
 				const connection = await queue.voiceChannel.join();
-
 				queue.connection = connection;
-				await this.play(msg.guild, queue.songs[0]);
+				this.play(msg.guild, queue.songs[0]);
 				statusMsg.delete();
+				return null;
 			} catch (error) {
 				winston.error('Error occurred when joining voice channel.', error);
 				this.queue.delete(msg.guild.id);
 				statusMsg.edit(`${msg.author}, unable to join your voice channel.`);
+				return null;
 			}
 		} else {
-			let result = await this.addSong(msg, video);
-			let resultMessage = {
+			const result = await this.addSong(msg, video);
+			const resultMessage = {
 				color: 3447003,
 				author: {
 					name: `${msg.author.username}#${msg.author.discriminator} (${msg.author.id})`,
@@ -140,36 +147,95 @@ module.exports = class PlaySongCommand extends Command {
 				},
 				description: result
 			};
-
 			statusMsg.edit('', { embed: resultMessage });
+			return null;
 		}
+	}
+
+	async handlePlaylist(playlist, queue, voiceChannel, msg, statusMsg) {
+		const videos = await playlist.getVideos();
+		for (const video of Object.values(videos)) {
+			const video2 = await this.youtube.getVideoByID(video.id); // eslint-disable-line no-await-in-loop
+			if (video2.durationSeconds === 0) {
+				statusMsg.edit(`${msg.author}, you can't play live streams.`);
+				return null;
+			}
+
+			if (!queue) {
+				queue = {
+					textChannel: msg.channel,
+					voiceChannel: voiceChannel,
+					connection: null,
+					songs: [],
+					volume: this.client.provider.get(msg.guild.id, 'defaultVolume', defaultVolume)
+				};
+				this.queue.set(msg.guild.id, queue);
+
+				const result = await this.addSong(msg, video2); // eslint-disable-line no-await-in-loop
+				if (!result.startsWith('👍')) this.queue.delete(msg.guild.id);
+
+				statusMsg.edit(`${msg.author}, joining your voice channel...`);
+				try {
+					const connection = await queue.voiceChannel.join(); // eslint-disable-line no-await-in-loop
+					queue.connection = connection;
+					this.play(msg.guild, queue.songs[0]);
+				} catch (error) {
+					winston.error('Error occurred when joining voice channel.', error);
+					this.queue.delete(msg.guild.id);
+					statusMsg.edit(`${msg.author}, unable to join your voice channel.`);
+				}
+			} else {
+				await this.addSong(msg, video2); // eslint-disable-line no-await-in-loop
+			}
+		}
+
+		const resultMessage = {
+			color: 3447003,
+			author: {
+				name: `${msg.author.username}#${msg.author.discriminator} (${msg.author.id})`,
+				icon_url: msg.author.displayAvatarURL // eslint-disable-line camelcase
+			},
+			description: stripIndents`
+				Playlist: [${playlist.title}](https://www.youtube.com/playlist?list=${playlist.id}) has been added to the queue!
+
+				Check what's been added with: \`?queue\` or \`@Commando#3509 queue\`!
+			`
+		};
+		statusMsg.edit('', { embed: resultMessage });
+		return null;
 	}
 
 	addSong(msg, video) {
 		const queue = this.queue.get(msg.guild.id);
 
 		if (!this.client.isOwner(msg.author)) {
-			const maxLength = this.client.provider.get(msg.guild.id, 'maxLength', config.maxLength);
-			if (maxLength > 0 && video.durationSeconds > maxLength * 60) {
+			const songMaxLength = this.client.provider.get(msg.guild.id, 'maxLength', maxLength);
+			if (songMaxLength > 0 && video.durationSeconds > songMaxLength * 60) {
 				return oneLine`
 					👎 ${escapeMarkdown(video.title)}
 					(${Song.timeString(video.durationSeconds)})
-					is too long. No songs longer than ${maxLength} minutes!
+					is too long. No songs longer than ${songMaxLength} minutes!
 				`;
 			}
 			if (queue.songs.some(song => song.id === video.id)) {
 				return `👎 ${escapeMarkdown(video.title)} is already queued.`;
 			}
-			const maxSongs = this.client.provider.get(msg.guild.id, 'maxSongs', config.maxSongs);
-			if (maxSongs > 0 && queue.songs.reduce((prev, song) => prev + song.member.id === msg.author.id, 0) >= maxSongs) {
-				return `👎 you already have ${maxSongs} songs in the queue. Don't hog all the airtime!`;
+			const songMaxSongs = this.client.provider.get(msg.guild.id, 'maxSongs', maxSongs);
+			if (songMaxSongs > 0
+				&& queue.songs.reduce((prev, song) => prev + song.member.id === msg.author.id, 0)
+				>= songMaxSongs) {
+				return `👎 you already have ${songMaxSongs} songs in the queue. Don't hog all the airtime!`;
 			}
 		}
 
 		winston.info('Adding song to queue.', { song: video.id, guild: msg.guild.id });
 		const song = new Song(video, msg.member);
 		queue.songs.push(song);
-		return `👍 ${song.url.match(/^https?:\/\/(api.soundcloud.com)\/(.*)$/) ? `${song}` : `[${song}](${`${song.url}`})`}`;
+		return oneLine`
+			👍 ${song.url.match(/^https?:\/\/(api.soundcloud.com)\/(.*)$/)
+			? `${song}`
+			: `[${song}](${`${song.url}`})`}
+		`;
 	}
 
 	play(guild, song) {
@@ -194,7 +260,11 @@ module.exports = class PlaySongCommand extends Command {
 				name: song.username,
 				icon_url: song.avatar // eslint-disable-line camelcase
 			},
-			description: `${song.url.match(/^https?:\/\/(api.soundcloud.com)\/(.*)$/) ? `${song}` : `[${song}](${`${song.url}`})`}`, // eslint-disable-line max-len
+			description: `
+				${song.url.match(/^https?:\/\/(api.soundcloud.com)\/(.*)$/)
+				? `${song}`
+				: `[${song}](${`${song.url}`})`}
+			`,
 			image: { url: song.thumbnail }
 		};
 
@@ -202,7 +272,11 @@ module.exports = class PlaySongCommand extends Command {
 		let stream;
 		let streamErrored = false;
 		if (song.url.match(/^https?:\/\/(api.soundcloud.com)\/(.*)$/)) {
-			stream = request({ uri: song.url, headers: { 'User-Agent': `Commando v${version} (https://github.com/WeebDev/Commando/)` }, followAllRedirects: true }); // eslint-disable-line max-len
+			stream = request({
+				uri: song.url,
+				headers: { 'User-Agent': `Commando v${version} (https://github.com/WeebDev/Commando/)` },
+				followAllRedirects: true
+			});
 		} else {
 			stream = ytdl(song.url, { audioonly: true })
 				.on('error', err => {
@@ -213,7 +287,7 @@ module.exports = class PlaySongCommand extends Command {
 					this.play(guild, queue.songs[0]);
 				});
 		}
-		const dispatcher = queue.connection.playStream(stream, { passes: config.passes })
+		const dispatcher = queue.connection.playStream(stream, { passes })
 			.on('end', () => {
 				if (streamErrored) return;
 				queue.songs.shift();
