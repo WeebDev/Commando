@@ -28,20 +28,15 @@ module.exports = class DailyRandomCommand extends Command {
 		if (received) {
 			const nextDaily = await Daily.nextDaily(msg.author.id);
 			return msg.reply(stripIndents`
-				you have already received your daily ${Currency.textPlural}.
-				You can receive your next daily in ${moment.duration(nextDaily).format('hh [hours] mm [minutes]')}
+				you have already gifted your daily ${Currency.textPlural}.
+				You can gift away your next daily in ${moment.duration(nextDaily).format('hh [hours] mm [minutes]')}
 			`);
 		}
 
-		if (member.id !== msg.author.id) {
-			Daily.receive(msg.author.id, member.id);
-			return msg.reply(oneLine`
-				${member.displayName}#${member.user.discriminator} (${member.id}) has successfully received your daily
-				${Currency.convert(Daily.dailyDonationPayout)}.
-			`);
-		}
-
-		Daily.receive(msg.author.id);
-		return msg.reply(`You have successfully received your daily ${Currency.convert(Daily.dailyPayout)}.`);
+		Daily.receive(msg.author.id, member.id);
+		return msg.reply(oneLine`
+			${member.displayName}#${member.user.discriminator} (${member.id}) has successfully received your daily
+			${Currency.convert(Daily.dailyDonationPayout)}.
+		`);
 	}
 };
