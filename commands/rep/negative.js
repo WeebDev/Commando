@@ -1,6 +1,6 @@
 const { Command } = require('discord.js-commando');
 
-const UserRep = require('../../postgreSQL/models/UserRep');
+const UserRep = require('../../models/UserRep');
 
 module.exports = class RepNegativeCommand extends Command {
 	constructor(client) {

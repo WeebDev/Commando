@@ -1,5 +1,5 @@
-const Redis = require('../redis/Redis');
-const UserProfile = require('../postgreSQL/models/UserProfile');
+const Redis = require('../Redis');
+const UserProfile = require('../../models/UserProfile');
 
 const redis = new Redis();
 
@@ -11,9 +11,9 @@ redis.db.hgetAsync('money', 'bank').then(balance => {
 
 class Currency {
 	static _changeBalance(user, amount) {
-		redis.db.hgetAsync('money', user).then(async balance => {
+		redis.db.hgetAsync('money', user).then(balance => {
 			const bal = parseInt(balance) || 0;
-			await redis.db.hsetAsync('money', user, amount + parseInt(bal));
+			return redis.db.hsetAsync('money', user, amount + parseInt(bal));
 		});
 	}
 
@@ -65,9 +65,7 @@ class Currency {
 		}
 
 		setTimeout(() => Currency.leaderboard(), UPDATE_DURATION);
-		redis.db.del('moneyleaderboardreset');
 		redis.db.setAsync('moneyleaderboardreset', Date.now());
-		redis.db.expire('moneyleaderboardreset', UPDATE_DURATION);
 	}
 
 	static convert(amount, text = false) {

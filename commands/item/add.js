@@ -1,8 +1,8 @@
 const { Command } = require('discord.js-commando');
 
-const Item = require('../../postgreSQL/models/Item');
-const Store = require('../../currency/Store');
-const StoreItem = require('../../currency/StoreItem');
+const Item = require('../../models/Item');
+const Store = require('../../structures/currency/Store');
+const StoreItem = require('../../structures/currency/StoreItem');
 
 module.exports = class ItemAddCommand extends Command {
 	constructor(client) {
@@ -22,7 +22,8 @@ module.exports = class ItemAddCommand extends Command {
 				{
 					key: 'name',
 					prompt: 'what should the new item be called?\n',
-					type: 'string'
+					type: 'string',
+					parse: str => str.toLowerCase()
 				},
 				{
 					key: 'price',
@@ -39,8 +40,7 @@ module.exports = class ItemAddCommand extends Command {
 	}
 
 	run(msg, args) {
-		const name = args.name.toLowerCase();
-		const { price } = args;
+		const { name, price } = args;
 		const item = Store.getItem(name);
 
 		if (item) return msg.reply('an item with that name already exists.');

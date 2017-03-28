@@ -1,10 +1,10 @@
 const { Command } = require('discord.js-commando');
 const { stripIndents } = require('common-tags');
 
-const Currency = require('../../currency/Currency');
-const Inventory = require('../../currency/Inventory');
-const ItemGroup = require('../../currency/ItemGroup');
-const Store = require('../../currency/Store');
+const Currency = require('../../structures/currency/Currency');
+const Inventory = require('../../structures/currency/Inventory');
+const ItemGroup = require('../../structures/currency/ItemGroup');
+const Store = require('../../structures/currency/Store');
 
 module.exports = class BuyItemCommand extends Command {
 	constructor(client) {
@@ -24,7 +24,8 @@ module.exports = class BuyItemCommand extends Command {
 				{
 					key: 'item',
 					prompt: 'what do you want to buy?\n',
-					type: 'string'
+					type: 'string',
+					parse: str => str.toLowerCase()
 				},
 				{
 					key: 'amount',
@@ -39,9 +40,8 @@ module.exports = class BuyItemCommand extends Command {
 	}
 
 	async run(msg, args) {
-		const item = args.item.toLowerCase();
+		const { amount, item } = args;
 		const itemName = item.replace(/(\b\w)/gi, lc => lc.toUpperCase());
-		const { amount } = args;
 		const storeItem = Store.getItem(item);
 		if (!storeItem) {
 			return msg.reply(stripIndents`
@@ -66,7 +66,7 @@ module.exports = class BuyItemCommand extends Command {
 			`);
 		}
 
-		let inventory = await Inventory.fetchInventory(msg.author.id);
+		const inventory = await Inventory.fetchInventory(msg.author.id);
 		inventory.addItems(new ItemGroup(storeItem, amount));
 		Currency.removeBalance(msg.author.id, amount * storeItem.price);
 		inventory.save();

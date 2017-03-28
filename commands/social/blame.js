@@ -31,6 +31,7 @@ module.exports = class BlameCommand extends Command {
 		const ctx = canvas.getContext('2d');
 		const { width, height } = this.textSizes(ctx, member);
 
+
 		canvas.width = width < 130 ? 130 : width;
 		canvas.height = height;
 

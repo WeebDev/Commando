@@ -3,10 +3,10 @@ const { Command, util } = require('discord.js-commando');
 const moment = require('moment');
 const Sequelize = require('sequelize');
 
+const Currency = require('../../structures/currency/Currency');
 const { paginationItems } = require('../../settings');
-const Currency = require('../../currency/Currency.js');
-const Redis = require('../../redis/Redis');
-const UserProfile = require('../../postgreSQL/models/UserProfile');
+const Redis = require('../../structures/Redis');
+const UserProfile = require('../../models/UserProfile');
 
 const redis = new Redis();
 
@@ -62,8 +62,7 @@ module.exports = class MoneyLeaderboardCommand extends Command {
 
 				${paginated.items.map(user => oneLine`
 					**${++ranking} -**
-					${`${this.client.users.get(user.userID).username}
-					#${this.client.users.get(user.userID).discriminator}`}
+					${`${this.client.users.get(user.userID).username}#${this.client.users.get(user.userID).discriminator}`}
 					(**${Currency.convert(user.networth)}**)`).join('\n')}
 
 				${moment.duration(reset).format('hh [hours] mm [minutes]')} until the next update.
@@ -74,16 +73,13 @@ module.exports = class MoneyLeaderboardCommand extends Command {
 
 	async findCached() {
 		const cache = await redis.db.getAsync('moneyleaderboard');
-		redis.db.expire('moneyleaderboard', 3600);
 		if (cache) return cache;
 
 		const money = await UserProfile.findAll(
 			{ where: { userID: { $ne: 'bank' } }, order: Sequelize.literal('networth DESC') }
 		);
-		if (!money) return '';
 
 		redis.db.setAsync('moneyleaderboard', JSON.stringify(money));
-		redis.db.expire('moneyleaderboard', 3600);
 		return JSON.stringify(money);
 	}
 };

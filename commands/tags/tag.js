@@ -1,7 +1,7 @@
 const { Command } = require('discord.js-commando');
 
-const Redis = require('../../redis/Redis');
-const Tag = require('../../postgreSQL/models/Tag');
+const Redis = require('../../structures/Redis');
+const Tag = require('../../models/Tag');
 
 const redis = new Redis();
 
@@ -23,14 +23,15 @@ module.exports = class TagCommand extends Command {
 					key: 'name',
 					label: 'tagname',
 					prompt: 'what tag would you like to see?\n',
-					type: 'string'
+					type: 'string',
+					parse: str => str.toLowerCase()
 				}
 			]
 		});
 	}
 
 	run(msg, args) {
-		const name = args.name.toLowerCase();
+		const { name } = args;
 		return this.findCached(msg, name, msg.guild.id);
 	}
 
@@ -45,9 +46,10 @@ module.exports = class TagCommand extends Command {
 		const tag = await Tag.findOne({ where: { name: name, guildID: guildID } });
 		if (!tag) return msg.say(`A tag with the name **${name}** doesn't exist, ${msg.author}`);
 		tag.increment('uses');
-		return redis.db.setAsync(`tag${name}${guildID}`, tag.content)
+		redis.db.setAsync(`tag${name}${guildID}`, tag.content)
 		.then(() => {
 			msg.say(tag.content);
 		});
+		return redis.db.expire(`tag${name}${guildID}`, 3600);
 	}
 };

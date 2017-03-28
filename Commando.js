@@ -1,29 +1,29 @@
 global.Promise = require('bluebird');
 
-const commando = require('discord.js-commando');
+const { CommandoClient, FriendlyError } = require('discord.js-commando');
 const { oneLine } = require('common-tags');
 const path = require('path');
 const { URL } = require('url');
 const winston = require('winston');
 
-const Database = require('./postgreSQL/PostgreSQL');
-const Redis = require('./redis/Redis');
-const SequelizeProvider = require('./postgreSQL/SequelizeProvider');
+const Database = require('./structures/PostgreSQL');
+const Redis = require('./structures/Redis');
+const SequelizeProvider = require('./providers/SequelizeProvider');
 const config = require('./settings');
 
 const database = new Database();
 const redis = new Redis();
-const client = new commando.Client({
+const client = new CommandoClient({
 	owner: config.owner,
 	commandPrefix: '?',
 	unknownCommandResponse: false,
 	disableEveryone: true
 });
 
-const Currency = require('./currency/Currency');
-const Experience = require('./currency/Experience');
-const starBoard = require('./postgreSQL/models/StarBoard');
-const userName = require('./postgreSQL/models/UserName');
+const Currency = require('./structures/currency/Currency');
+const Experience = require('./structures/currency/Experience');
+const starBoard = require('./models/StarBoard');
+const userName = require('./models/UserName');
 
 let earnedRecently = [];
 let gainedXPRecently = [];
@@ -303,7 +303,7 @@ client.on('error', winston.error)
 		await settings.save();
 	})
 	.on('commandError', (cmd, err) => {
-		if (err instanceof commando.FriendlyError) return;
+		if (err instanceof FriendlyError) return;
 		winston.error(`Error in command ${cmd.groupID}:${cmd.memberName}`, err);
 	})
 	.on('commandBlocked', (msg, reason) => {

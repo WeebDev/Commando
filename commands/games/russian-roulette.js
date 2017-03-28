@@ -1,8 +1,8 @@
 const { Command } = require('discord.js-commando');
 const { stripIndents } = require('common-tags');
 
-const Currency = require('../../currency/Currency');
-const RussianRoulette = require('../../games/Russian-roulette');
+const Currency = require('../../structures/currency/Currency');
+const RussianRoulette = require('../../structures/games/RussianRoulette');
 
 module.exports = class RussianRouletteCommand extends Command {
 	constructor(client) {

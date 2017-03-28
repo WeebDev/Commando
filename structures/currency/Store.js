@@ -1,6 +1,6 @@
 const { Collection } = require('discord.js');
 
-const Item = require('../postgreSQL/models/Item');
+const Item = require('../../models/Item');
 const StoreItem = require('./StoreItem');
 
 const storeItems = new Collection();

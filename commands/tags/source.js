@@ -1,7 +1,7 @@
 const { Command } = require('discord.js-commando');
 
-const Redis = require('../../redis/Redis');
-const Tag = require('../../postgreSQL/models/Tag');
+const Redis = require('../../structures/Redis');
+const Tag = require('../../models/Tag');
 
 const redis = new Redis();
 
@@ -24,14 +24,15 @@ module.exports = class TagSourceCommand extends Command {
 					key: 'name',
 					label: 'tagname',
 					prompt: 'what tag source would you like to see?\n',
-					type: 'string'
+					type: 'string',
+					parse: str => str.toLowerCase()
 				}
 			]
 		});
 	}
 
 	run(msg, args) {
-		const name = args.name.toLowerCase();
+		const { name } = args;
 		return this.findCached(msg, name, msg.guild.id);
 	}
 

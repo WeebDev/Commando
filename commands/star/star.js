@@ -1,8 +1,9 @@
 const { Command } = require('discord.js-commando');
-const starBoard = require('../../postgreSQL/models/StarBoard');
 const path = require('path');
 const { URL } = require('url');
 const winston = require('winston');
+
+const starBoard = require('../../models/StarBoard');
 
 module.exports = class StarCommand extends Command {
 	constructor(client) {

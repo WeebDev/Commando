@@ -1,7 +1,7 @@
 const { Command } = require('discord.js-commando');
 const { stripIndents } = require('common-tags');
 
-const Tag = require('../../postgreSQL/models/Tag');
+const Tag = require('../../models/Tag');
 
 module.exports = class TagListCommand extends Command {
 	constructor(client) {

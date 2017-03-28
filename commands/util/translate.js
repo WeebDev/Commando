@@ -44,19 +44,23 @@ module.exports = class TranslateCommand extends Command {
 
 		if (!sherlockAPIKey) return msg.reply('my Commander has not set the Sherlock API Key. Go yell at him.');
 
-		const response = await request({
-			method: 'POST',
-			headers: {
-				'User-Agent': `Commando v${version} (https://github.com/WeebDev/Commando/)`,
-				Authorization: sherlockAPIKey
-			},
-			uri: `https://api.kurisubrooks.com/api/translate`,
-			body: { to, from, query },
-			json: true
-		});
+		let response;
+		try {
+			response = await request({
+				method: 'POST',
+				headers: {
+					'User-Agent': `Commando v${version} (https://github.com/WeebDev/Commando/)`,
+					Authorization: sherlockAPIKey
+				},
+				uri: `https://api.kurisubrooks.com/api/translate`,
+				body: { to, from, query },
+				json: true
+			});
+		} catch (error) {
+			if (error.error) return msg.reply(this.handleError(error.error));
+		}
 
-		if (!response.ok) return msg.reply(this.handleError(response));
-		const embed = {
+		return msg.embed({
 			author: {
 				name: msg.member ? msg.member.displayName : msg.author.username,
 				icon_url: msg.author.avatarURL // eslint-disable-line camelcase
@@ -71,19 +75,18 @@ module.exports = class TranslateCommand extends Command {
 					value: response.result
 				}
 			]
-		};
-		return msg.embed(embed);
+		});
 	}
 
 	handleError(response) {
-		if (response.error === `Missing 'query' field` || response.error === `Missing 'to' lang field`) {
-			return `Required Fields are missing!`;
-		} else if (response.error === `Unknown 'to' Language`) {
-			return `Unknown 'to' Language`;
-		} else if (response.error === `Unknown 'from' Language`) {
-			return `Unknown 'from' Language`;
+		if (response.error === 'Missing \'query\' field' || response.error === 'Missing \'to\' lang field') {
+			return 'Required Fields are missing!';
+		} else if (response.error === 'Unknown \'to\' Language') {
+			return 'Unknown \'to\' Language.';
+		} else if (response.error === 'Unknown \'from\' Language') {
+			return 'Unknown \'from\' Language.';
 		} else {
-			return 'Internal Server Error';
+			return 'Internal Server Error.';
 		}
 	}
 };

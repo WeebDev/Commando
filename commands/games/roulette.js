@@ -1,8 +1,8 @@
 const { Command } = require('discord.js-commando');
 const { stripIndents } = require('common-tags');
 
-const Currency = require('../../currency/Currency');
-const Roulette = require('../../games/Roulette');
+const Currency = require('../../structures/currency/Currency');
+const Roulette = require('../../structures/games/Roulette');
 
 const colors = {
 	red: 0xBE1931,
@@ -62,16 +62,15 @@ module.exports = class RouletteCommand extends Command {
 						}
 
 						return true;
-					}
+					},
+					parse: str => str.toLowerCase()
 				}
 			]
 		});
 	}
 
 	run(msg, args) {
-		const { bet } = args;
-		const space = args.space.toLowerCase();
-
+		const { bet, space } = args;
 		let roulette = Roulette.findGame(msg.guild.id);
 
 		if (roulette) {

@@ -1,8 +1,8 @@
 const { Command } = require('discord.js-commando');
 const { stripIndents } = require('common-tags');
 
-const Currency = require('../../currency/Currency');
-const Bank = require('../../currency/Bank');
+const Bank = require('../../structures/currency/Bank');
+const Currency = require('../../structures/currency/Currency');
 
 module.exports = class DepositCommand extends Command {
 	constructor(client) {
@@ -23,11 +23,11 @@ module.exports = class DepositCommand extends Command {
 					key: 'donuts',
 					label: 'amount of donuts to deposit',
 					prompt: `how many ${Currency.textPlural} do you want to deposit?\n`,
-					validate: donuts => /^(?:\d+|-all|-a)$/g.test(donuts),
+					validate: donuts => /^(?:\d+|all|-all|-a)$/g.test(donuts),
 					parse: async (donuts, msg) => {
 						const balance = await Currency.getBalance(msg.author.id);
 
-						if (donuts === '-all' || donuts === '-a') return parseInt(balance);
+						if (['all', '-all', '-a'].includes(donuts)) return parseInt(balance);
 						return parseInt(donuts);
 					}
 				}

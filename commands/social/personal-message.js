@@ -1,6 +1,6 @@
 const { Command } = require('discord.js-commando');
 
-const UserProfile = require('../../postgreSQL/models/UserProfile');
+const UserProfile = require('../../models/UserProfile');
 
 module.exports = class PersonalMessageCommand extends Command {
 	constructor(client) {

@@ -1,7 +1,7 @@
 const { Command } = require('discord.js-commando');
 const moment = require('moment');
 
-const Tag = require('../../postgreSQL/models/Tag');
+const Tag = require('../../models/Tag');
 
 module.exports = class TagWhoCommand extends Command {
 	constructor(client) {
@@ -22,14 +22,15 @@ module.exports = class TagWhoCommand extends Command {
 					key: 'name',
 					label: 'tagname',
 					prompt: 'what tag would you like to have information on?\n',
-					type: 'string'
+					type: 'string',
+					parse: str => str.toLowerCase()
 				}
 			]
 		});
 	}
 
 	async run(msg, args) {
-		const name = args.name.toLowerCase();
+		const { name } = args;
 		const tag = await Tag.findOne({ where: { name, guildID: msg.guild.id } });
 		if (!tag) return msg.say(`A tag with the name **${name}** doesn't exist, ${msg.author}`);
 		return msg.embed({

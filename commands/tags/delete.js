@@ -1,8 +1,8 @@
 const { Command } = require('discord.js-commando');
 
 const { exampleChannel } = require('../../settings');
-const Redis = require('../../redis/Redis');
-const Tag = require('../../postgreSQL/models/Tag');
+const Redis = require('../../structures/Redis');
+const Tag = require('../../models/Tag');
 
 const redis = new Redis();
 
@@ -45,14 +45,15 @@ module.exports = class TagDeleteCommand extends Command {
 					key: 'name',
 					label: 'tagname',
 					prompt: 'what tag would you like to delete?\n',
-					type: 'string'
+					type: 'string',
+					parse: str => str.toLowerCase()
 				}
 			]
 		});
 	}
 
 	async run(msg, args) {
-		const name = args.name.toLowerCase();
+		const { name } = args;
 		const staffRole = this.client.isOwner(msg.author) || await msg.member.roles.exists('name', 'Server Staff');
 		const tag = await Tag.findOne({ where: { name, guildID: msg.guild.id } });
 		if (!tag) return msg.say(`A tag with the name **${name}** doesn't exist, ${msg.author}`);

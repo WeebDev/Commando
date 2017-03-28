@@ -1,4 +1,5 @@
-const Discord = require('discord.js');
+const { Collection } = require('discord.js');
+
 const games = new Map();
 
 const roulette = {
@@ -6,7 +7,7 @@ const roulette = {
 	black: [2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35]
 };
 
-const spaces = new Discord.Collection([
+const spaces = new Collection([
 	['numbers', { values: roulette.red.concat(roulette.black).concat([0]).map(item => item.toString()), multiplier: 36 }],
 	['dozens', { values: ['1-12', '13-24', '25-36'], multiplier: 3 }],
 	['columns', { values: ['1st', '2nd', '3rd'], multiplier: 3 }],
@@ -19,7 +20,7 @@ class Roulette {
 	constructor(guildID) {
 		this.guildID = guildID;
 		this.players = [];
-		this.winSpaces = generateSpaces();
+		this.winSpaces = this._generateSpaces();
 
 		games.set(this.guildID, this);
 	}
@@ -56,42 +57,42 @@ class Roulette {
 	static hasSpace(space) {
 		return !!spaces.find(spc => spc.values.includes(space));
 	}
-}
 
-function generateSpaces() {
-	const winNumber = Math.floor(Math.random() * 37);
-	return [
-		winNumber.toString(),
-		getColor(winNumber),
-		getRange(winNumber, 'dozens'),
-		getColumn(winNumber),
-		getRange(winNumber, 'halves'),
-		getParity(winNumber)
-	];
-}
+	static _generateSpaces() {
+		const winNumber = Math.floor(Math.random() * 37);
+		return [
+			winNumber.toString(),
+			this._getColor(winNumber),
+			this._getRange(winNumber, 'dozens'),
+			this._getColumn(winNumber),
+			this._getRange(winNumber, 'halves'),
+			this._getParity(winNumber)
+		];
+	}
 
-function getColor(number) {
-	if (number === 0) return null;
-	return roulette.red.includes(number) ? 'red' : 'black';
-}
+	static _getColor(number) {
+		if (number === 0) return null;
+		return roulette.red.includes(number) ? 'red' : 'black';
+	}
 
-function getRange(number, size) {
-	if (number === 0) return null;
-	return spaces.get(size).values.find(value => {
-		const min = parseInt(value.split('-')[0]);
-		const max = parseInt(value.split('-')[1]);
-		return number >= min && number <= max;
-	});
-}
+	static _getRange(number, size) {
+		if (number === 0) return null;
+		return spaces.get(size).values.find(value => {
+			const min = parseInt(value.split('-')[0]);
+			const max = parseInt(value.split('-')[1]);
+			return number >= min && number <= max;
+		});
+	}
 
-function getColumn(number) {
-	if (number === 0) return null;
-	return spaces.get('columns').values[(number - 1) % 3];
-}
+	static _getColumn(number) {
+		if (number === 0) return null;
+		return spaces.get('columns').values[(number - 1) % 3];
+	}
 
-function getParity(number) {
-	if (number === 0) return null;
-	return spaces.get('parity').values[number % 2];
+	static _getParity(number) {
+		if (number === 0) return null;
+		return spaces.get('parity').values[number % 2];
+	}
 }
 
 module.exports = Roulette;
