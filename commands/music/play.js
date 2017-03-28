@@ -179,6 +179,7 @@ module.exports = class PlaySongCommand extends Command {
 					const connection = await queue.voiceChannel.join(); // eslint-disable-line no-await-in-loop
 					queue.connection = connection;
 					this.play(msg.guild, queue.songs[0]);
+					statusMsg.delete();
 				} catch (error) {
 					winston.error('Error occurred when joining voice channel.', error);
 					this.queue.delete(msg.guild.id);
@@ -189,7 +190,7 @@ module.exports = class PlaySongCommand extends Command {
 			}
 		}
 
-		const resultMessage = {
+		queue.textChannel.sendEmbed({
 			color: 3447003,
 			author: {
 				name: `${msg.author.username}#${msg.author.discriminator} (${msg.author.id})`,
@@ -200,8 +201,7 @@ module.exports = class PlaySongCommand extends Command {
 
 				Check what's been added with: \`?queue\` or \`@Commando#3509 queue\`!
 			`
-		};
-		statusMsg.edit('', { embed: resultMessage });
+		});
 		return null;
 	}
 
@@ -254,7 +254,7 @@ module.exports = class PlaySongCommand extends Command {
 			return;
 		}
 
-		const playingMessage = {
+		const playing = queue.textChannel.sendEmbed({
 			color: 3447003,
 			author: {
 				name: song.username,
@@ -266,9 +266,7 @@ module.exports = class PlaySongCommand extends Command {
 				: `[${song}](${`${song.url}`})`}
 			`,
 			image: { url: song.thumbnail }
-		};
-
-		const playing = queue.textChannel.sendMessage('', { embed: playingMessage });
+		});
 		let stream;
 		let streamErrored = false;
 		if (song.url.match(/^https?:\/\/(api.soundcloud.com)\/(.*)$/)) {
