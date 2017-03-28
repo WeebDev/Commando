@@ -1,6 +1,6 @@
 const { Command } = require('discord.js-commando');
 const request = require('request-promise');
-const { stripIndents } = require('common-tags');
+const { oneLine, stripIndents } = require('common-tags');
 
 const { version } = require('../../package');
 
@@ -37,7 +37,10 @@ module.exports = class FortuneCommand extends Command {
 				},
 				{
 					key: 'option',
-					prompt: 'what options would you like the strawpoll to have?\n',
+					prompt: oneLine`
+						what options would you like to have?
+						Every message you send will be interpreted as a single option.\n
+					`,
 					type: 'string',
 					validate: option => {
 						if (option.length > 160) {
