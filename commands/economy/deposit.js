@@ -23,7 +23,7 @@ module.exports = class DepositCommand extends Command {
 					key: 'donuts',
 					label: 'amount of donuts to deposit',
 					prompt: `how many ${Currency.textPlural} do you want to deposit?\n`,
-					validate: donuts => /^(?:\d+|-all|-a)$/g.test(donuts),
+					validate: donuts => /^(?:\d+|all|-all|-a)$/g.test(donuts),
 					parse: async (donuts, msg) => {
 						const balance = await Currency.getBalance(msg.author.id);
 
