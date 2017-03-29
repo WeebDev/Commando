@@ -8,7 +8,7 @@ const winston = require('winston');
 
 const Database = require('./structures/PostgreSQL');
 const Redis = require('./structures/Redis');
-const SequelizeProvider = require('./providers/SequelizeProvider');
+const SequelizeProvider = require('./providers/Sequelize');
 const config = require('./settings');
 
 const database = new Database();
