@@ -5,12 +5,12 @@ const starBoard = require('../../models/StarBoard');
 module.exports = class ShowStarCommand extends Command {
 	constructor(client) {
 		super(client, {
-			name: 'show-star',
-			aliases: ['star-info'],
+			name: 'star-info',
+			aliases: ['star-inf', 'star-show'],
 			group: 'starboard',
-			memberName: 'show-star',
+			memberName: 'info',
 			description: 'Shows who starred a message.',
-			examples: ['show-star 189696688657530880'],
+			examples: ['star-info 189696688657530880'],
 			guildOnly: true,
 
 			args: [
@@ -34,7 +34,7 @@ module.exports = class ShowStarCommand extends Command {
 			return msg.delete().catch(err => null); // eslint-disable-line no-unused-vars, handle-callback-err
 		}
 
-		let starred = settings.starred;
+		const starred = settings.starred;
 		if (!starred.hasOwnProperty(message.id)) {
 			msg.reply('this message isn\'t starred.');
 			return msg.delete().catch(err => null); // eslint-disable-line no-unused-vars, handle-callback-err
