@@ -20,7 +20,7 @@ class Roulette {
 	constructor(guildID) {
 		this.guildID = guildID;
 		this.players = [];
-		this.winSpaces = this._generateSpaces();
+		this.winSpaces = Roulette._generateSpaces();
 
 		games.set(this.guildID, this);
 	}
@@ -62,11 +62,11 @@ class Roulette {
 		const winNumber = Math.floor(Math.random() * 37);
 		return [
 			winNumber.toString(),
-			this._getColor(winNumber),
-			this._getRange(winNumber, 'dozens'),
-			this._getColumn(winNumber),
-			this._getRange(winNumber, 'halves'),
-			this._getParity(winNumber)
+			Roulette._getColor(winNumber),
+			Roulette._getRange(winNumber, 'dozens'),
+			Roulette._getColumn(winNumber),
+			Roulette._getRange(winNumber, 'halves'),
+			Roulette._getParity(winNumber)
 		];
 	}
 
