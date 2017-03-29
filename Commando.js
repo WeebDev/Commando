@@ -306,7 +306,7 @@ client.on('error', winston.error)
 		if (msg.channel.type === 'dm') return;
 		if (msg.author.bot) return;
 
-		const args = { name: msg.content.split('?')[1] };
+		const args = { name: msg.content.split(client.commandPrefix)[1] };
 		client.registry.resolveCommand('tags:tag').run(msg, args);
 	})
 	.on('commandError', (cmd, err) => {
