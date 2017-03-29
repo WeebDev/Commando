@@ -233,8 +233,8 @@ module.exports = class PlaySongCommand extends Command {
 		queue.songs.push(song);
 		return oneLine`
 			👍 ${song.url.match(/^https?:\/\/(api.soundcloud.com)\/(.*)$/)
-			? `${song}`
-			: `[${song}](${`${song.url}`})`}
+				? `${song}`
+				: `[${song}](${`${song.url}`})`}
 		`;
 	}
 

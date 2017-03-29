@@ -31,8 +31,12 @@ module.exports = class SaveQueueCommand extends Command {
 			},
 			description: stripIndents`
 				**Currently playing:**
-				${song.url.match(/^https?:\/\/(api.soundcloud.com)\/(.*)$/) ? `${song}` : `[${song}](${`${song.url}`})`}
-				${song.url.match(/^https?:\/\/(api.soundcloud.com)\/(.*)$/) ? 'A SoundCloud song is currently playing.' : ''}
+				${song.url.match(/^https?:\/\/(api.soundcloud.com)\/(.*)$/)
+					? `${song}`
+					: `[${song}](${`${song.url}`})`}
+				${song.url.match(/^https?:\/\/(api.soundcloud.com)\/(.*)$/)
+					? 'A SoundCloud song is currently playing.'
+					: ''}
 			`,
 			image: { url: song.thumbnail }
 		};

@@ -30,13 +30,9 @@ module.exports = class ChangeVolumeCommand extends Command {
 		let volume = parseInt(args);
 		if (isNaN(volume)) {
 			volume = args.toLowerCase();
-			if (volume === 'up' || volume === '+') {
-				volume = queue.volume + 2;
-			} else if (volume === 'down' || volume === '-') {
-				volume = queue.volume - 2;
-			} else {
-				return msg.reply(`invalid volume level. The dial goes from 0-10, baby.`);
-			}
+			if (volume === 'up' || volume === '+') volume = queue.volume + 2;
+			else if (volume === 'down' || volume === '-') volume = queue.volume - 2;
+			else return msg.reply(`invalid volume level. The dial goes from 0-10, baby.`);
 			if (volume === 11) volume = 10;
 		}
 

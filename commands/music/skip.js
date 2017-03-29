@@ -35,9 +35,9 @@ module.exports = class SkipSongCommand extends Command {
 
 		const threshold = Math.ceil((queue.voiceChannel.members.size - 1) / 3);
 		const force = threshold <= 1
-		|| queue.voiceChannel.members.size < threshold
-		|| (msg.member.hasPermission('MANAGE_MESSAGES')
-		&& args.toLowerCase() === 'force');
+			|| queue.voiceChannel.members.size < threshold
+			|| (msg.member.hasPermission('MANAGE_MESSAGES')
+			&& args.toLowerCase() === 'force');
 		if (force) return msg.reply(this.skip(msg.guild, queue));
 
 		const vote = this.votes.get(msg.guild.id);
@@ -84,7 +84,7 @@ module.exports = class SkipSongCommand extends Command {
 
 		const song = queue.songs[0];
 		song.dispatcher.end();
-		return `**${song}**`;
+		return `Skipped: **${song}**`;
 	}
 
 	setTimeout(vote) {

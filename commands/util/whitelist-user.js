@@ -35,11 +35,8 @@ module.exports = class WhitelistUserCommand extends Command {
 		const index = blacklist.indexOf(user.id);
 		blacklist.splice(index, 1);
 
-		if (blacklist.length === 0) {
-			this.client.provider.remove('global', 'userBlacklist');
-		} else {
-			this.client.provider.set('global', 'userBlacklist', blacklist);
-		}
+		if (blacklist.length === 0) this.client.provider.remove('global', 'userBlacklist');
+		else this.client.provider.set('global', 'userBlacklist', blacklist);
 		return msg.reply(`${user.username}#${user.discriminator} has been removed from the blacklist.`);
 	}
 };

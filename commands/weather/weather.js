@@ -44,7 +44,6 @@ module.exports = class WeatherCommand extends Command {
 		if (!weatherAPIKey) return msg.reply('my Commander has not set the Weather API Key. Go yell at him.');
 
 		const locationURI = encodeURIComponent(location.replace(/ /g, '+'));
-
 		const response = await request({
 			uri: `https://maps.googleapis.com/maps/api/geocode/json?address=${locationURI}&key=${googleAPIKey}`,
 			headers: { 'User-Agent': `Commando v${version} (https://github.com/WeebDev/Commando/)` },
@@ -54,9 +53,6 @@ module.exports = class WeatherCommand extends Command {
 		if (response.status !== 'OK') return msg.reply(this.handleNotOK(msg, response.status));
 		if (response.results.length === 0) return msg.reply('your request returned no results.');
 
-		let city;
-		let state;
-
 		const geocodelocation = response.results[0].formatted_address;
 		const params = `${response.results[0].geometry.location.lat},${response.results[0].geometry.location.lng}`;
 
@@ -65,8 +61,8 @@ module.exports = class WeatherCommand extends Command {
 		const country = response.results[0].address_components.find(cou => cou.types.includes('country'));
 		const continent = response.results[0].address_components.find(con => con.types.includes('continent'));
 
-		city = locality || governing || country || continent || {};
-		state = locality && governing ? governing : locality ? country : {};
+		const city = locality || governing || country || continent || {};
+		const state = locality && governing ? governing : locality ? country : {};
 
 		const res = await request({
 			uri: `https://api.darksky.net/forecast/${weatherAPIKey}/${params}?exclude=minutely,hourly,flags&units=auto`,
@@ -79,15 +75,16 @@ module.exports = class WeatherCommand extends Command {
 		const chanceofrain = Math.round((res.currently.precipProbability * 100) / 5) * 5;
 		const temperature = Math.round(res.currently.temperature);
 		const humidity = Math.round(res.currently.humidity * 100);
+
 		const canvas = new Canvas(400, 180);
 		const ctx = canvas.getContext('2d');
 		const base = new Image();
 		const cond = new Image();
 		const humid = new Image();
 		const precip = new Image();
+
 		let theme = 'light';
 		let fontColor = '#FFFFFF';
-
 		if (icon === 'snow' || icon === 'sleet' || icon === 'fog') {
 			theme = 'dark';
 			fontColor = '#444444';
@@ -141,21 +138,16 @@ module.exports = class WeatherCommand extends Command {
 		humid.src = await fs.readFileAsync(path.join(__dirname, '..', '..', 'assets', 'weather', 'icons', theme, 'humidity.png')); // eslint-disable-line max-len
 		precip.src = await fs.readFileAsync(path.join(__dirname, '..', '..', 'assets', 'weather', 'icons', theme, 'precip.png')); // eslint-disable-line max-len
 		generate();
+
 		return msg.channel.sendFile(canvas.toBuffer(), `${geocodelocation}.png`);
 	}
 
 	handleNotOK(msg, status) {
-		if (status === 'ZERO_RESULTS') {
-			return 'your request returned no results.';
-		} else if (status === 'REQUEST_DENIED') {
-			return 'Geocode API Request was denied.';
-		} else if (status === 'INVALID_REQUEST') {
-			return 'Invalid Request,';
-		} else if (status === 'OVER_QUERY_LIMIT') {
-			return 'Query Limit Exceeded. Try again tomorrow.';
-		} else {
-			return 'Unknown.';
-		}
+		if (status === 'ZERO_RESULTS') return 'your request returned no results.';
+		else if (status === 'REQUEST_DENIED') return 'Geocode API Request was denied.';
+		else if (status === 'INVALID_REQUEST') return 'Invalid Request,';
+		else if (status === 'OVER_QUERY_LIMIT') return 'Query Limit Exceeded. Try again tomorrow.';
+		else return 'Unknown.';
 	}
 
 	getBase(icon) {
