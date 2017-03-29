@@ -9,12 +9,12 @@ const winston = require('winston');
 const Database = require('./structures/PostgreSQL');
 const Redis = require('./structures/Redis');
 const SequelizeProvider = require('./providers/Sequelize');
-const config = require('./settings');
+const { owner, token } = require('./settings');
 
 const database = new Database();
 const redis = new Redis();
 const client = new CommandoClient({
-	owner: config.owner,
+	owner,
 	commandPrefix: '?',
 	unknownCommandResponse: false,
 	disableEveryone: true
@@ -355,7 +355,7 @@ client.registry
 	.registerTypesIn(path.join(__dirname, 'types'))
 	.registerCommandsIn(path.join(__dirname, 'commands'));
 
-client.login(config.token);
+client.login(token);
 
 process.on('unhandledRejection', err => {
 	console.error(`Uncaught Promise Error: \n${err.stack}`); // eslint-disable-line no-console
