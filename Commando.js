@@ -302,6 +302,13 @@ client.on('error', winston.error)
 		settings.starred = starred;
 		await settings.save();
 	})
+	.on('unknownCommand', msg => {
+		if (msg.channel.type === 'dm') return;
+		if (msg.author.bot) return;
+
+		const args = { name: msg.content.split('?')[1] };
+		client.registry.resolveCommand('tags:tag').run(msg, args);
+	})
 	.on('commandError', (cmd, err) => {
 		if (err instanceof FriendlyError) return;
 		winston.error(`Error in command ${cmd.groupID}:${cmd.memberName}`, err);
