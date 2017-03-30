@@ -44,7 +44,7 @@ module.exports = class TagCommand extends Command {
 		}
 
 		const tag = await Tag.findOne({ where: { name: name, guildID: guildID } });
-		if (!tag) return msg.say(`A tag with the name **${name}** doesn't exist, ${msg.author}`);
+		if (!tag) return; // eslint-disable-line consistent-return
 		tag.increment('uses');
 		const content = await redis.db.setAsync(`tag${name}${guildID}`, tag.content);
 		redis.db.expire(`tag${name}${guildID}`, 3600);
