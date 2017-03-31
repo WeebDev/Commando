@@ -2,9 +2,7 @@ const Sequelize = require('sequelize');
 
 const Database = require('../structures/PostgreSQL');
 
-const database = new Database();
-
-const UserProfile = database.db.define('userProfiles', {
+const UserProfile = Database.db.define('userProfiles', {
 	userID: Sequelize.STRING,
 	inventory: {
 		type: Sequelize.STRING,

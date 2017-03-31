@@ -2,9 +2,7 @@ const Sequelize = require('sequelize');
 
 const Database = require('../structures/PostgreSQL');
 
-const database = new Database();
-
-const Tag = database.db.define('tags', {
+const Tag = Database.db.define('tags', {
 	userID: Sequelize.STRING,
 	userName: Sequelize.STRING,
 	guildID: Sequelize.STRING,
