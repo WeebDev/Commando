@@ -6,7 +6,7 @@ const { db } = require('../settings');
 const database = new Sequelize(db, { logging: false });
 
 class Database {
-	get db() {
+	static get db() {
 		return database;
 	}
 
