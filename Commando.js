@@ -31,7 +31,7 @@ let gainedXPRecently = [];
 database.start();
 redis.start();
 
-client.setProvider(new SequelizeProvider(database.db));
+client.setProvider(new SequelizeProvider(Database.db));
 
 client.dispatcher.addInhibitor(msg => {
 	const blacklist = client.provider.get('global', 'userBlacklist', []);
