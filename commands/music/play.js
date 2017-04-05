@@ -295,6 +295,7 @@ module.exports = class PlaySongCommand extends Command {
 				winston.error('Error occurred in stream dispatcher:', err);
 				queue.textChannel.sendMessage(`An error occurred while playing the song: \`${err}\``);
 			});
+		queue.connection.player.opusEncoder.setPLP(0.01);
 		dispatcher.setVolumeLogarithmic(queue.volume / 5);
 		song.dispatcher = dispatcher;
 		song.playing = true;
