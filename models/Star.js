@@ -32,6 +32,4 @@ const Star = Database.db.define('stars', {
 	}
 });
 
-Star.sync();
-
 module.exports = Star;

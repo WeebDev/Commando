@@ -3,7 +3,6 @@ global.Promise = require('bluebird');
 const { CommandoClient, FriendlyError } = require('discord.js-commando');
 const { oneLine } = require('common-tags');
 const path = require('path');
-const { URL } = require('url');
 const winston = require('winston');
 
 const Database = require('./structures/PostgreSQL');
