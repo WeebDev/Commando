@@ -22,6 +22,10 @@ module.exports = class DeleteStarCommand extends Command {
 		});
 	}
 
+	hasPermission(msg) {
+		return msg.member.roles.exists('name', 'Server Staff');
+	}
+
 	async run(msg, args) { // eslint-disable-line consistent-return
 		const { message } = args;
 
