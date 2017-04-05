@@ -9,6 +9,7 @@ const winston = require('winston');
 const Database = require('./structures/PostgreSQL');
 const Redis = require('./structures/Redis');
 const SequelizeProvider = require('./providers/Sequelize');
+const Starboard = require('./structures/stars/Starboard');
 const { owner, token } = require('./settings');
 
 const database = new Database();
@@ -22,7 +23,6 @@ const client = new CommandoClient({
 
 const Currency = require('./structures/currency/Currency');
 const Experience = require('./structures/currency/Experience');
-const starBoard = require('./models/StarBoard');
 const userName = require('./models/UserName');
 
 let earnedRecently = [];
@@ -97,210 +97,37 @@ client.on('error', winston.error)
 			}, 60 * 1000);
 		}
 	})
-	.on('messageReactionAdd', async (messageReaction, user) => {
-		if (messageReaction.emoji.name !== '⭐') return;
+	.on('messageReactionAdd', async (reaction, user) => {
+		if (reaction.emoji.name !== '⭐') return;
 
-		if (messageReaction.message.guild.member(user).joinedAt < 86400000) return; // eslint-disable-line consistent-return
-		const message = messageReaction.message;
+		const { message } = reaction;
+
 		const starboard = message.guild.channels.find('name', 'starboard');
-		if (!starboard) return;
-		if (message.author.id === user.id) {
-			messageReaction.remove(user.id);
-			return message.channel.send(`${user}, you cannot star your own messages!`); // eslint-disable-line consistent-return, max-len
-		}
+		if (!starboard) return message.channel.send(`${user}, can't star things without a #starboard...`); // eslint-disable-line
 
-		let settings = await starBoard.findOne({ where: { guildID: message.guild.id } });
-		if (!settings) settings = await starBoard.create({ guildID: message.guild.id });
-		const starred = settings.starred;
+		const isAuthor = await Starboard.isAuthor(message.id, user.id);
+		if (isAuthor || message.author.id === user.id) return message.channel.send(`${user}, you can't star your own messages.`); // eslint-disable-line
 
-		if (starred.hasOwnProperty(message.id)) {
-			if (starred[message.id].stars.includes(user.id)) return message.channel.send(`${user}, you cannot star the same message twice!`); // eslint-disable-line consistent-return, max-len
-			const starCount = starred[message.id].count += 1;
-			const starredMessage = await starboard.fetchMessage(starred[message.id].starredMessageID).catch(err => null); // eslint-disable-line no-unused-vars, handle-callback-err, max-len
-			const starredMessageContent = starred[message.id].starredMessageContent;
-			const starredMessageAttachmentImage = starred[message.id].starredMessageImage;
-			const starredMessageDate = starred[message.id].starredMessageDate;
+		const hasStarred = await Starboard.hasStarred(message.id, user.id);
+		if (hasStarred) return message.channel.send(`${user}, you've already starred this message.`); // eslint-disable-line
 
-			let edit;
-			if (starCount < 5) edit = starredMessage.embeds[0].footer.text = `${starCount} ⭐`;
-			else if (starCount >= 5 && starCount < 10) edit = starredMessage.embeds[0].footer.text = `${starCount} 🌟`;
-			else if (starCount >= 10) edit = starredMessage.embeds[0].footer.text = `${starCount} ✨`;
-			else if (starCount >= 15) edit = starredMessage.embeds[0].footer.text = `${starCount} 🌠`;
+		const isStarred = await Starboard.isStarred(message.id);
+		if (isStarred) return Starboard.addStar(message, starboard, user.id); // eslint-disable-line
 
-			await starredMessage.edit({
-				embed: {
-					author: {
-						icon_url: message.author.displayAvatarURL, // eslint-disable-line camelcase
-						name: `${message.author.username}#${message.author.discriminator} (${message.author.id})`
-					},
-					color: 0xFFAC33,
-					fields: [
-						{
-							name: 'ID',
-							value: message.id,
-							inline: true
-						},
-						{
-							name: 'Channel',
-							value: message.channel.toString(),
-							inline: true
-						},
-						{
-							name: 'Message',
-							value: starredMessageContent ? starredMessageContent : '\u200B'
-						}
-					],
-					image: { url: starredMessageAttachmentImage || undefined },
-					timestamp: starredMessageDate,
-					footer: { text: edit }
-				}
-			}).catch(err => null); // eslint-disable-line no-unused-vars, handle-callback-err
-
-			starred[message.id].count = starCount;
-			starred[message.id].stars.push(user.id);
-			settings.starred = starred;
-
-			await settings.save();
-		} else {
-			const starCount = 1;
-			let attachmentImage;
-			const extensions = new Set(['.png', '.jpg', '.jpeg', '.gif', '.webp']);
-			const linkRegex = /https?:\/\/(?:\w+\.)?[\w-]+\.[\w]{2,3}(?:\/[\w-_\.]+)+\.(?:png|jpg|jpeg|gif|webp)/; // eslint-disable-line no-useless-escape, max-len
-
-			if (message.attachments.some(attachment => {
-				try {
-					const url = new URL(attachment.url);
-					const ext = path.extname(url.pathname);
-					return extensions.has(ext);
-				} catch (err) {
-					if (err.message !== 'Invalid URL') winston.error(err);
-					return false;
-				}
-			})) attachmentImage = message.attachments.first().url;
-
-			if (!attachmentImage) {
-				const linkMatch = message.content.match(linkRegex);
-				if (linkMatch) {
-					try {
-						const url = new URL(linkMatch[0]);
-						const ext = path.extname(url.pathname);
-						if (extensions.has(ext)) attachmentImage = linkMatch[0]; // eslint-disable-line max-depth
-					} catch (err) {
-						if (err.message === 'Invalid URL') winston.info('No valid image link.'); // eslint-disable-line max-depth
-						else winston.error(err);
-					}
-				}
-			}
-
-			const sentStar = await starboard.send({
-				embed: {
-					author: {
-						icon_url: message.author.displayAvatarURL, // eslint-disable-line camelcase
-						name: `${message.author.username}#${message.author.discriminator} (${message.author.id})`
-					},
-					color: 0xFFAC33,
-					fields: [
-						{
-							name: 'ID',
-							value: message.id,
-							inline: true
-						},
-						{
-							name: 'Channel',
-							value: message.channel.toString(),
-							inline: true
-						},
-						{
-							name: 'Message',
-							value: message.content ? message.cleanContent.substring(0, 1000) : '\u200B'
-						}
-					],
-					image: { url: attachmentImage ? attachmentImage.toString() : undefined },
-					timestamp: message.createdAt,
-					footer: { text: `${starCount} ⭐` }
-				}
-			}).catch(err => null); // eslint-disable-line
-
-			starred[message.id] = {};
-			starred[message.id].authorID = message.author.id;
-			starred[message.id].starredMessageID = sentStar.id;
-			starred[message.id].starredMessageContent = message.cleanContent;
-			starred[message.id].starredMessageImage = attachmentImage || '';
-			starred[message.id].starredMessageDate = message.createdAt;
-			starred[message.id].count = starCount;
-			starred[message.id].stars = [];
-			starred[message.id].stars.push(user.id);
-			settings.starred = starred;
-
-			await settings.save();
-		}
+		Starboard.createStar(message, starboard, user.id);
 	})
-	.on('messageReactionRemove', async (messageReaction, user) => {
-		if (messageReaction.emoji.name !== '⭐') return;
+	.on('messageReactionRemove', async (reaction, user) => {
+		if (reaction.emoji.name !== '⭐') return;
 
-		const message = messageReaction.message;
+		const { message } = reaction;
+
 		const starboard = message.guild.channels.find('name', 'starboard');
-		if (!starboard) return;
+		if (!starboard) return message.channel.send(`${user}, you can't unstar things without a #starboard...`); // eslint-disable-line
 
-		const settings = await starBoard.findOne({ where: { guildID: message.guild.id } });
-		if (!settings) return;
-		let starred = settings.starred;
+		const hasStarred = await Starboard.hasStarred(message.id, user.id);
+		if (!hasStarred) return message.channel.send(`${user}, you never starred this message.`); // eslint-disable-line
 
-		if (!starred.hasOwnProperty(message.id)) return;
-		if (!starred[message.id].stars.includes(user.id)) return;
-
-		const starCount = starred[message.id].count -= 1;
-		const starredMessage = await starboard.fetchMessage(starred[message.id].starredMessageID).catch(err => null); // eslint-disable-line no-unused-vars, handle-callback-err, max-len
-
-		if (starred[message.id].count === 0) {
-			delete starred[message.id];
-			await starredMessage.delete().catch(err => null); // eslint-disable-line no-unused-vars, handle-callback-err
-		} else {
-			const starredMessageContent = starred[message.id].starredMessageContent;
-			const starredMessageAttachmentImage = starred[message.id].starredMessageImage;
-			const starredMessageDate = starred[message.id].starredMessageDate;
-
-			let edit;
-			if (starCount < 5) edit = starredMessage.embeds[0].footer.text = `${starCount} ⭐`;
-			else if (starCount >= 5 && starCount < 10) edit = starredMessage.embeds[0].footer.text = `${starCount} 🌟`;
-			else if (starCount >= 10) edit = starredMessage.embeds[0].footer.text = `${starCount} ✨`;
-			else if (starCount >= 15) edit = starredMessage.embeds[0].footer.text = `${starCount} 🌠`;
-
-			await starredMessage.edit({
-				embed: {
-					author: {
-						icon_url: message.author.displayAvatarURL, // eslint-disable-line camelcase
-						name: `${message.author.username}#${message.author.discriminator} (${message.author.id})`
-					},
-					color: 0xFFAC33,
-					fields: [
-						{
-							name: 'ID',
-							value: message.id,
-							inline: true
-						},
-						{
-							name: 'Channel',
-							value: message.channel.toString(),
-							inline: true
-						},
-						{
-							name: 'Message',
-							value: starredMessageContent ? starredMessageContent : '\u200B'
-						}
-					],
-					image: { url: starredMessageAttachmentImage ? starredMessageAttachmentImage : undefined },
-					timestamp: starredMessageDate,
-					footer: { text: edit }
-				}
-			}).catch(err => null); // eslint-disable-line no-unused-vars, handle-callback-err
-
-			starred[message.id].count = starCount;
-			starred[message.id].stars.splice(starred[message.id].stars.indexOf(user.id));
-		}
-
-		settings.starred = starred;
-		await settings.save();
+		Starboard.removeStar(message, starboard, user.id);
 	})
 	.on('unknownCommand', msg => {
 		if (msg.channel.type === 'dm') return;
@@ -355,7 +182,7 @@ client.registry
 		['weather', 'Weather'],
 		['music', 'Music'],
 		['tags', 'Tags'],
-		['starboard', 'Starboard'],
+		['stars', 'Stars'],
 		['rep', 'Reputation']
 	])
 	.registerDefaults()
