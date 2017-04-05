@@ -74,7 +74,7 @@ module.exports = class MoneyLeaderboardCommand extends Command {
 	async findCached() {
 		const cache = await redis.db.getAsync('moneyleaderboard');
 		const cacheExpire = await redis.db.ttlAsync('moneyleaderboard');
-		if (cacheExpire !== '-1' || cacheExpire !== '-2') return cache;
+		if (cacheExpire !== -1 && cacheExpire !== -2) return cache;
 
 		const money = await UserProfile.findAll(
 			{ where: { userID: { $ne: 'bank' } }, order: Sequelize.literal('networth DESC') }
