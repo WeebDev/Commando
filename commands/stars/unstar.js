@@ -23,13 +23,10 @@ module.exports = class UnstarCommand extends Command {
 
 	async run(msg, args) { // eslint-disable-line consistent-return
 		const { message } = args;
-
 		const starboard = msg.guild.channels.find('name', 'starboard');
 		if (!starboard) return msg.reply('you can\'t unstar things without a #starboard...');
-
 		const hasStarred = await Starboard.hasStarred(message.id, msg.author.id);
 		if (!hasStarred) return msg.reply('you never starred this message.');
-
 		Starboard.removeStar(message, starboard, msg.author.id);
 	}
 };

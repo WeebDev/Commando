@@ -7,7 +7,6 @@ const Star = require('../../models/Star');
 module.exports = class Starboard {
 	static async createStar(message, starboardChannel, starBy) {
 		const starboardMessage = await starboardChannel.send({ embed: Starboard._starEmbed(message, 1) });
-
 		return Star.create({
 			messageID: message.id,
 			content: message.content,
@@ -20,14 +19,12 @@ module.exports = class Starboard {
 	static async deleteStar(message, starboardChannel) {
 		const star = await Star.findByPrimary(message.id);
 		const starMessage = await starboardChannel.fetchMessage(star.starboardMessageID);
-
 		await starMessage.delete();
 		await star.destroy();
 	}
 
 	static async isStarred(messageID) {
 		const star = await Star.findByPrimary(messageID);
-
 		return !!star;
 	}
 
@@ -38,34 +35,27 @@ module.exports = class Starboard {
 				authorID: userID
 			}
 		});
-
 		return !!star;
 	}
 
 	static async hasStarred(messageID, userID) {
 		const star = await Star.findByPrimary(messageID);
-
 		if (!star) return false;
-
 		return star.starredBy.includes(userID);
 	}
 
 	static async addStar(message, starboardChannel, starredBy) {
 		const star = await Star.findByPrimary(message.id);
-
 		const { stars: newCount } = await star.increment('stars');
 		star.starredBy = star.starredBy.concat([starredBy]);
 		await star.save();
-
 		const starMessage = await starboardChannel.fetchMessage(star.starboardMessageID);
 		starMessage.edit({ embed: Starboard._starEmbed(message, newCount) });
 	}
 
 	static async removeStar(message, starboardChannel, starredBy) {
 		const star = await Star.findByPrimary(message.id);
-
 		await star.decrement('stars');
-
 		star.starredBy = star.starredBy.filter(user => user !== starredBy);
 		const { stars: newCount } = await star.save();
 
@@ -113,12 +103,10 @@ module.exports = class Starboard {
 		}
 
 		let footerText;
-
 		if (starCount >= 15) footerText = `${starCount} 🌠`;
 		else if (starCount >= 10) footerText = `${starCount} ✨`;
 		else if (starCount >= 5) footerText = `${starCount} 🌟`;
 		else footerText = `${starCount} ⭐`;
-
 		return {
 			author: {
 				icon_url: message.author.displayAvatarURL, // eslint-disable-line camelcase

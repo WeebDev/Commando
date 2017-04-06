@@ -26,17 +26,13 @@ module.exports = class DeleteStarCommand extends Command {
 		return msg.member.roles.exists('name', 'Server Staff');
 	}
 
-	async run(msg, args) { // eslint-disable-line consistent-return
+	async run(msg, args) {
 		const { message } = args;
-
 		const starboard = msg.guild.channels.find('name', 'starboard');
 		if (!starboard) return msg.reply('you can\'t delete stars if you don\'t even have a starboard.');
-
 		const isStarred = await Starboard.isStarred(message.id);
 		if (!isStarred) return msg.reply('that message is not on the #starboard.');
-
 		await Starboard.removeStar(message, starboard);
-
 		return msg.reply('successfully delete the message from the starboard');
 	}
 };
