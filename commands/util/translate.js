@@ -39,8 +39,7 @@ module.exports = class TranslateCommand extends Command {
 	}
 
 	async run(msg, args) {
-		const query = encodeURIComponent(args.query);
-		const { to, from } = args;
+		const { query, to, from } = args;
 
 		if (!sherlockAPIKey) return msg.reply('my Commander has not set the Sherlock API Key. Go yell at him.');
 
