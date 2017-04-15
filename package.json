@@ -31,7 +31,7 @@
     "erlpack": "hammerandchisel/erlpack",
     "moment": "^2.18.1",
     "moment-duration-format": "^1.3.0",
-    "node-opus": "^0.2.5",
+    "node-opus": "^0.2.6",
     "pg": "^6.1.5",
     "pg-hstore": "^2.3.2",
     "prism-media": "hydrabolt/prism-media",
@@ -41,7 +41,7 @@
     "sequelize": "sequelize/sequelize",
     "simple-youtube-api": "^2.1.0",
     "winston": "^2.3.1",
-    "ytdl-core": "^0.11.1"
+    "ytdl-core": "^0.12.1"
   },
   "devDependencies": {
     "eslint": "^3.19.0",
