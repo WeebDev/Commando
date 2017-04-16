@@ -36,7 +36,7 @@ module.exports = class FortuneCommand extends Command {
 					}
 				},
 				{
-					key: 'option',
+					key: 'options',
 					prompt: oneLine`
 						what options would you like to have?
 						Every message you send will be interpreted as a single option.\n
