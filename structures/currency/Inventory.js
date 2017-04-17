@@ -5,12 +5,12 @@ const Redis = require('../Redis');
 const redis = new Redis();
 
 setInterval(async () => {
-	const inventories = await redis.db.hgetallAsync('inventory')
+	const inventories = await redis.db.hgetallAsync('inventory');
 	const ids = Object.keys(inventories || {});
 
 	/* eslint-disable no-await-in-loop */
 	for (const id of ids) {
-		const user = UserProfile.findOne({ where: { userID: id } })
+		const user = UserProfile.findOne({ where: { userID: id } });
 		if (!user) {
 			await UserProfile.create({
 				userID: id,
