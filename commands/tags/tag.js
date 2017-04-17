@@ -1,9 +1,6 @@
 const { Command } = require('discord.js-commando');
 
-const Redis = require('../../structures/Redis');
 const Tag = require('../../models/Tag');
-
-const redis = new Redis();
 
 module.exports = class TagCommand extends Command {
 	constructor(client) {
