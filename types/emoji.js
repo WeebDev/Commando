@@ -24,6 +24,7 @@ class EmojiArgumentType extends ArgumentType {
 		} else if (value.match(emojiRegex)) {
 			return true;
 		}
+
 		return false;
 	}
 

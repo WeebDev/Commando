@@ -39,11 +39,13 @@ module.exports = class ChangeVolumeCommand extends Command {
 		volume = Math.min(Math.max(volume, 0), volume === 11 ? 11 : 10);
 		queue.volume = volume;
 		if (queue.songs[0].dispatcher) queue.songs[0].dispatcher.setVolumeLogarithmic(queue.volume / 5);
+
 		return msg.reply(`${volume === 11 ? 'this one goes to 11!' : `set the dial to ${volume}.`}`);
 	}
 
 	get queue() {
 		if (!this._queue) this._queue = this.client.registry.resolveCommand('music:play').queue;
+
 		return this._queue;
 	}
 };

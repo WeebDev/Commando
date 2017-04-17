@@ -28,6 +28,7 @@ module.exports = class DepositCommand extends Command {
 						const balance = await Currency.getBalance(msg.author.id);
 
 						if (['all', '-all', '-a'].includes(donuts)) return parseInt(balance);
+
 						return parseInt(donuts);
 					}
 				}
@@ -37,7 +38,6 @@ module.exports = class DepositCommand extends Command {
 
 	async run(msg, args) {
 		const { donuts } = args;
-
 		if (donuts <= 0) return msg.reply(`you can't deposit 0 or less ${Currency.convert(0)}.`);
 
 		const userBalance = await Currency.getBalance(msg.author.id);
@@ -49,6 +49,7 @@ module.exports = class DepositCommand extends Command {
 		}
 
 		Bank.deposit(msg.author.id, donuts);
+
 		return msg.reply(`successfully deposited ${Currency.convert(donuts)} to the bank!`);
 	}
 };

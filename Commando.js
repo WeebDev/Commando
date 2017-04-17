@@ -35,7 +35,7 @@ client.setProvider(new SequelizeProvider(Database.db));
 client.dispatcher.addInhibitor(msg => {
 	const blacklist = client.provider.get('global', 'userBlacklist', []);
 	if (!blacklist.includes(msg.author.id)) return false;
-	return `User ${msg.author.username}#${msg.author.discriminator} (${msg.author.id}) has been blacklisted.`;
+	return `User ${msg.author.tag} (${msg.author.id}) has been blacklisted.`;
 });
 
 client.on('error', winston.error)
@@ -49,7 +49,7 @@ client.on('error', winston.error)
 	.on('disconnect', () => winston.warn('Disconnected!'))
 	.on('reconnect', () => winston.warn('Reconnecting...'))
 	.on('commandRun', (cmd, promise, msg, args) => {
-		winston.info(oneLine`${msg.author.username}#${msg.author.discriminator} (${msg.author.id})
+		winston.info(oneLine`${msg.author.tag} (${msg.author.id})
 			> ${msg.guild ? `${msg.guild.name} (${msg.guild.id})` : 'DM'}
 			>> ${cmd.groupID}:${cmd.memberName}
 			${Object.values(args)[0] !== '' || [] ? `>>> ${Object.values(args)}` : ''}
@@ -107,7 +107,7 @@ client.on('error', winston.error)
 		const isAuthor = await Starboard.isAuthor(message.id, user.id);
 		if (isAuthor || message.author.id === user.id) return message.channel.send(`${user}, you can't star your own messages.`); // eslint-disable-line consistent-return, max-len
 		const hasStarred = await Starboard.hasStarred(message.id, user.id);
-		if (hasStarred) return message.channel.send(`${user}, you've already starred this message.`); // eslint-disable-line consistent-return, max-len
+		if (hasStarred) return; // eslint-disable-line consistent-return, max-len
 		const isStarred = await Starboard.isStarred(message.id);
 		if (isStarred) return Starboard.addStar(message, starboard, user.id); // eslint-disable-line consistent-return
 		Starboard.createStar(message, starboard, user.id);
@@ -118,7 +118,7 @@ client.on('error', winston.error)
 		const starboard = message.guild.channels.find('name', 'starboard');
 		if (!starboard) return message.channel.send(`${user}, you can't unstar things without a #starboard...`); // eslint-disable-line consistent-return, max-len
 		const hasStarred = await Starboard.hasStarred(message.id, user.id);
-		if (!hasStarred) return message.channel.send(`${user}, you never starred this message.`); // eslint-disable-line consistent-return, max-len
+		if (!hasStarred) return; // eslint-disable-line consistent-return, max-len
 		Starboard.removeStar(message, starboard, user.id);
 	})
 	.on('unknownCommand', msg => {
@@ -135,7 +135,7 @@ client.on('error', winston.error)
 	.on('commandBlocked', (msg, reason) => {
 		winston.info(oneLine`
 			Command ${msg.command ? `${msg.command.groupID}:${msg.command.memberName}` : ''}
-			blocked; User ${msg.author.username}#${msg.author.discriminator} (${msg.author.id}): ${reason}
+			blocked; User ${msg.author.tag} (${msg.author.id}): ${reason}
 		`);
 	})
 	.on('commandPrefixChange', (guild, prefix) => {

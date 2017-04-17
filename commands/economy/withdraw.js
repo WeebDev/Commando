@@ -28,6 +28,7 @@ module.exports = class WidthdrawCommand extends Command {
 						const balance = await Bank.getBalance(msg.author.id);
 
 						if (['all', '-all', '-a'].includes(donuts)) return parseInt(balance);
+
 						return parseInt(donuts);
 					}
 				}
@@ -56,6 +57,7 @@ module.exports = class WidthdrawCommand extends Command {
 		}
 
 		Bank.withdraw(msg.author.id, donuts);
+
 		return msg.reply(`successfully withdrew ${Currency.convert(donuts)} from the bank!`);
 	}
 };

@@ -32,6 +32,7 @@ module.exports = class StoreInfoCommand extends Command {
 		const storeItems = Store.getItems().array();
 		const paginated = util.paginate(storeItems, page, Math.floor(paginationItems));
 		if (storeItems.length === 0) return msg.reply('can\'t show what we don\'t have, man.');
+
 		return msg.embed({
 			description: `__**Items:**__`,
 			fields: [

@@ -19,6 +19,7 @@ class Experience {
 
 	static async getTotalExperience(userID) {
 		const experience = await redis.db.hgetAsync('experience', userID) || 0;
+
 		return experience;
 	}
 
@@ -26,12 +27,14 @@ class Experience {
 		const totalXP = await Experience.getTotalExperience(userID);
 		const level = await Experience.getLevel(userID);
 		const { lowerBound } = Experience.getLevelBounds(level);
+
 		return totalXP - lowerBound;
 	}
 
 	static getLevelBounds(level) {
 		const upperBound = Math.ceil((level / 0.177) ** 2);
 		const lowerBound = Math.ceil(((level - 1) / 0.177) ** 2);
+
 		return {
 			upperBound,
 			lowerBound
@@ -40,16 +43,16 @@ class Experience {
 
 	static async getLevel(userID) {
 		const experience = await Experience.getTotalExperience(userID);
+
 		return Math.floor(0.177 * Math.sqrt(experience)) + 1;
 	}
 
 	static async saveExperience() {
 		const experiences = await redis.db.hgetallAsync('experience');
-
 		const ids = Object.keys(experiences || {});
 
+		/* eslint-disable no-await-in-loop */
 		for (const id of ids) {
-			/* eslint-disable no-await-in-loop */
 			const user = await UserProfile.findOne({ where: { userID: id } });
 			if (!user) {
 				UserProfile.create({
@@ -60,6 +63,7 @@ class Experience {
 				user.update({ experience: experiences[id] });
 			}
 		}
+		/* eslint-enable no-await-in-loop */
 	}
 }
 

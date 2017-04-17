@@ -66,26 +66,32 @@ module.exports = class PlaySongCommand extends Command {
 					headers: { 'User-Agent': `Commando v${version} (https://github.com/WeebDev/Commando/)` },
 					json: true
 				});
+
 				return this.handleVideo(video, queue, voiceChannel, msg, statusMsg);
 			} catch (error) {
 				winston.error(`${error.statusCode}: ${error.statusMessage}`);
+
 				return statusMsg.edit(`${msg.author}, ❌ This track is not able to be streamed by SoundCloud.`);
 			}
 		} else if (url.match(/^https?:\/\/(www.youtube.com|youtube.com)\/playlist(.*)$/)) {
 			const playlist = await this.youtube.getPlaylist(url);
+
 			return this.handlePlaylist(playlist, queue, voiceChannel, msg, statusMsg);
 		} else {
 			try {
 				const video = await this.youtube.getVideo(url);
+
 				return this.handleVideo(video, queue, voiceChannel, msg, statusMsg);
 			} catch (error) {
 				try {
 					const videos = await this.youtube.searchVideos(url, 1)
 						.catch(() => statusMsg.edit(`${msg.author}, there were no search results.`));
 					const video2 = await this.youtube.getVideoByID(videos[0].id);
+
 					return this.handleVideo(video2, queue, voiceChannel, msg, statusMsg);
 				} catch (err) {
 					winston.error(err);
+
 					return statusMsg.edit(`${msg.author}, couldn't obtain the search result video's details.`);
 				}
 			}
@@ -95,6 +101,7 @@ module.exports = class PlaySongCommand extends Command {
 	async handleVideo(video, queue, voiceChannel, msg, statusMsg) {
 		if (video.durationSeconds === 0) {
 			statusMsg.edit(`${msg.author}, you can't play live streams.`);
+
 			return null;
 		}
 
@@ -121,6 +128,7 @@ module.exports = class PlaySongCommand extends Command {
 			if (!result.startsWith('👍')) {
 				this.queue.delete(msg.guild.id);
 				statusMsg.edit('', { embed: resultMessage });
+
 				return null;
 			}
 
@@ -130,11 +138,13 @@ module.exports = class PlaySongCommand extends Command {
 				queue.connection = connection;
 				this.play(msg.guild, queue.songs[0]);
 				statusMsg.delete();
+
 				return null;
 			} catch (error) {
 				winston.error('Error occurred when joining voice channel.', error);
 				this.queue.delete(msg.guild.id);
 				statusMsg.edit(`${msg.author}, unable to join your voice channel.`);
+
 				return null;
 			}
 		} else {
@@ -148,6 +158,7 @@ module.exports = class PlaySongCommand extends Command {
 				description: result
 			};
 			statusMsg.edit('', { embed: resultMessage });
+
 			return null;
 		}
 	}
@@ -158,6 +169,7 @@ module.exports = class PlaySongCommand extends Command {
 			const video2 = await this.youtube.getVideoByID(video.id); // eslint-disable-line no-await-in-loop
 			if (video2.durationSeconds === 0) {
 				statusMsg.edit(`${msg.author}, you can't play live streams.`);
+
 				return null;
 			}
 
@@ -187,6 +199,7 @@ module.exports = class PlaySongCommand extends Command {
 				}
 			} else {
 				await this.addSong(msg, video2); // eslint-disable-line no-await-in-loop
+				statusMsg.delete();
 			}
 		}
 
@@ -202,6 +215,7 @@ module.exports = class PlaySongCommand extends Command {
 				Check what's been added with: \`?queue\` or \`@Commando#3509 queue\`!
 			`
 		});
+
 		return null;
 	}
 
@@ -231,6 +245,7 @@ module.exports = class PlaySongCommand extends Command {
 		winston.info('Adding song to queue.', { song: video.id, guild: msg.guild.id });
 		const song = new Song(video, msg.member);
 		queue.songs.push(song);
+
 		return oneLine`
 			👍 ${song.url.match(/^https?:\/\/(api.soundcloud.com)\/(.*)$/)
 				? `${song}`
@@ -303,6 +318,7 @@ module.exports = class PlaySongCommand extends Command {
 
 	get votes() {
 		if (!this._votes) this._votes = this.client.registry.resolveCommand('music:skip').votes;
+
 		return this._votes;
 	}
 };

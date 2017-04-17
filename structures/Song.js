@@ -20,16 +20,19 @@ module.exports = class Song {
 
 	get thumbnail() {
 		const thumbnail = `https://img.youtube.com/vi/${this.id}/mqdefault.jpg`;
+
 		return thumbnail;
 	}
 
 	get username() {
-		const name = `${this.member.user.username}#${this.member.user.discriminator} (${this.member.user.id})`;
+		const name = `${this.member.user.tag} (${this.member.user.id})`;
+
 		return Util.escapeMarkdown(name);
 	}
 
 	get avatar() {
 		const avatar = `${this.member.user.displayAvatarURL}`;
+
 		return avatar;
 	}
 
@@ -48,6 +51,7 @@ module.exports = class Song {
 	static timeString(seconds, forceHours = false) {
 		const hours = Math.floor(seconds / 3600);
 		const minutes = Math.floor(seconds % 3600 / 60);
+
 		return oneLineTrim`
 			${forceHours || hours >= 1 ? `${hours}:` : ''}
 			${hours >= 1 ? `0${minutes}`.slice(-2) : minutes}:

@@ -60,6 +60,7 @@ class Roulette {
 
 	static _generateSpaces() {
 		const winNumber = Math.floor(Math.random() * 37);
+
 		return [
 			winNumber.toString(),
 			Roulette._getColor(winNumber),
@@ -72,11 +73,13 @@ class Roulette {
 
 	static _getColor(number) {
 		if (number === 0) return null;
+
 		return roulette.red.includes(number) ? 'red' : 'black';
 	}
 
 	static _getRange(number, size) {
 		if (number === 0) return null;
+
 		return spaces.get(size).values.find(value => {
 			const min = parseInt(value.split('-')[0]);
 			const max = parseInt(value.split('-')[1]);
@@ -86,11 +89,13 @@ class Roulette {
 
 	static _getColumn(number) {
 		if (number === 0) return null;
+
 		return spaces.get('columns').values[(number - 1) % 3];
 	}
 
 	static _getParity(number) {
 		if (number === 0) return null;
+
 		return spaces.get('parity').values[number % 2];
 	}
 }

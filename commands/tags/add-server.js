@@ -57,6 +57,7 @@ module.exports = class ServerTagAddCommand extends Command {
 			content: content,
 			type: true
 		});
+
 		return msg.say(`A server tag with the name **${name}** has been added, ${msg.author}`);
 	}
 };

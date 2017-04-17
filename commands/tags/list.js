@@ -21,7 +21,8 @@ module.exports = class TagListCommand extends Command {
 
 	async run(msg) {
 		const tags = await Tag.findAll({ where: { guildID: msg.guild.id } });
-		if (!tags) return msg.say(`${msg.guild.name} doesn't have any tags, ${msg.author}. Why not add one?`); // eslint-disable-line
+		if (!tags) return msg.say(`${msg.guild.name} doesn't have any tags, ${msg.author}. Why not add one?`);
+
 		const examples = tags.filter(tag => tag.type)
 			.filter(tag => tag.example)
 			.map(tag => tag.name)

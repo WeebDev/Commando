@@ -43,6 +43,7 @@ module.exports = class UnlockCommand extends Command {
 		const index = channelLocks.indexOf(channel.id);
 		channelLocks.splice(index, 1);
 		this.client.provider.set(msg.guild.id, 'locks', channelLocks);
+
 		return msg.reply(stripIndents`
 			the channel lock has been lifted. You can now earn xp and ${Currency.textPlural} in ${channel} again.
 		`);

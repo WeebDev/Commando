@@ -55,8 +55,13 @@ module.exports = class TagDeleteCommand extends Command {
 		const tag = await Tag.findOne({ where: { name, guildID: msg.guild.id } });
 		if (!tag) return msg.say(`A tag with the name **${name}** doesn't exist, ${msg.author}`);
 		if (tag.userID !== msg.author.id && !staffRole) return msg.say(`You can only delete your own tags, ${msg.author}`);
+
 		Tag.destroy({ where: { name, guildID: msg.guild.id } });
-		if (tag.example) msg.guild.channels.get(exampleChannel).fetchMessage(tag.exampleID).then(del => del.delete());
+		if (tag.example) {
+			const messageToDelete = await msg.guild.channels.get(exampleChannel).fetchMessage(tag.exampleID);
+			messageToDelete.delete();
+		}
+
 		return msg.say(`The tag **${name}** has been deleted, ${msg.author}`);
 	}
 };

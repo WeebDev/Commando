@@ -52,6 +52,7 @@ module.exports = class TagAddCommand extends Command {
 			name: name,
 			content: content
 		});
+
 		return msg.say(`A tag with the name **${name}** has been added, ${msg.author}`);
 	}
 };

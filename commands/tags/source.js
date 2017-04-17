@@ -32,6 +32,7 @@ module.exports = class TagSourceCommand extends Command {
 		const { name } = args;
 		const tag = await Tag.findOne({ where: { name, guildID: msg.guild.id } });
 		if (!tag) return msg.say(`A tag with the name **${name}** doesn't exist, ${msg.author}`);
+
 		return msg.code('md', tag.content);
 	}
 };

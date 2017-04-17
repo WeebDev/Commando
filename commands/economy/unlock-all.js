@@ -24,6 +24,7 @@ module.exports = class UnlockAllCommand extends Command {
 
 	run(msg) {
 		this.client.provider.set(msg.guild.id, 'locks', []);
+
 		return msg.reply(stripIndents`
 			the lock on all channels has been lifted.
 			You can now earn xp and ${Currency.textPlural} on the entire server again.

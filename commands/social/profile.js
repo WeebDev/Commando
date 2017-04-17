@@ -54,7 +54,7 @@ module.exports = class ProfileCommand extends Command {
 
 		const canvas = new Canvas(300, 300);
 		const ctx = canvas.getContext('2d');
-		const lines = await this.wrapText(ctx, personalMessage, 110);
+		const lines = await this._wrapText(ctx, personalMessage, 110);
 		const base = new Image();
 		const cond = new Image();
 		const generate = () => {
@@ -159,10 +159,11 @@ module.exports = class ProfileCommand extends Command {
 			encoding: null
 		});
 		generate();
+
 		return msg.channel.sendFile(canvas.toBuffer(), `profile.png`);
 	}
 
-	wrapText(ctx, text, maxWidth) {
+	_wrapText(ctx, text, maxWidth) {
 		return new Promise(resolve => {
 			const words = text.split(' ');
 			let lines = [];
@@ -197,6 +198,7 @@ module.exports = class ProfileCommand extends Command {
 					lines.push(line);
 				}
 			}
+
 			return resolve(lines);
 		});
 	}

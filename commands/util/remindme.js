@@ -48,6 +48,7 @@ module.exports = class RemindMeCommand extends Command {
 				${msg.author} you wanted me to remind you of: '${Util.cleanContent(remind.eventTitle, msg)}'
 			`)), time);
 		});
+
 		return [preRemind, remindMessage];
 	}
 };

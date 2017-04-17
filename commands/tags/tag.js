@@ -31,6 +31,7 @@ module.exports = class TagCommand extends Command {
 		const { name } = args;
 		const tag = await Tag.findOne({ where: { name, guildID: msg.guild.id } });
 		tag.increment('uses');
+
 		return msg.say(tag.content);
 	}
 };

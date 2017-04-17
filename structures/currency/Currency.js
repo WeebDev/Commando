@@ -13,6 +13,7 @@ class Currency {
 	static _changeBalance(user, amount) {
 		redis.db.hgetAsync('money', user).then(balance => {
 			const bal = parseInt(balance) || 0;
+
 			return redis.db.hsetAsync('money', user, amount + parseInt(bal));
 		});
 	}
@@ -32,6 +33,7 @@ class Currency {
 
 	static async getBalance(user) {
 		const money = await redis.db.hgetAsync('money', user) || 0;
+
 		return parseInt(money);
 	}
 
@@ -41,8 +43,8 @@ class Currency {
 
 		const ids = Object.keys(balances || {});
 
+		/* eslint-disable no-await-in-loop */
 		for (const id of ids) {
-			/* eslint-disable no-await-in-loop */
 			const money = parseInt(balances[id] || 0);
 			const balance = parseInt(bankBalances[id] || 0);
 			const networth = money + balance;
@@ -63,6 +65,7 @@ class Currency {
 				});
 			}
 		}
+		/* eslint-enable no-await-in-loop */
 
 		setTimeout(() => Currency.leaderboard(), UPDATE_DURATION);
 		redis.db.setAsync('moneyleaderboardreset', Date.now());
@@ -71,6 +74,7 @@ class Currency {
 	static convert(amount, text = false) {
 		if (isNaN(amount)) amount = parseInt(amount);
 		if (!text) return `${amount.toLocaleString()} ${Math.abs(amount) === 1 ? Currency.singular : Currency.plural}`;
+
 		return `${amount.toLocaleString()} ${Math.abs(amount) === 1 ? Currency.textSingular : Currency.textPlural}`;
 	}
 

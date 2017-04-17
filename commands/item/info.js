@@ -40,6 +40,7 @@ module.exports = class StoreInfoCommand extends Command {
 		}
 
 		const storeItemName = storeItem.name.replace(/(\b\w)/gi, lc => lc.toUpperCase());
+
 		return msg.reply(`one ${storeItemName} costs ${storeItem.price} 🍩s`);
 	}
 };

@@ -74,6 +74,7 @@ module.exports = class FortuneCommand extends Command {
 			},
 			json: true
 		});
+
 		return msg.say(stripIndents`🗳 ${response.title}
 			<http://strawpoll.me/${response.id}>
 		`);

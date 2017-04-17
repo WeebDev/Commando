@@ -39,6 +39,7 @@ module.exports = class DefaultVolumeCommand extends Command {
 		}
 
 		this.client.provider.set(msg.guild.id, 'defaultVolume', defaultVolume);
+
 		return msg.reply(`set the default volume level to ${defaultVolume}.`);
 	}
 };

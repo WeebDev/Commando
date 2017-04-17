@@ -32,7 +32,6 @@ module.exports = class RouletteCommand extends Command {
 					validate: async (bet, msg) => {
 						bet = parseInt(bet);
 						const balance = await Currency.getBalance(msg.author.id);
-
 						if (balance < bet) {
 							return `
 								you don't have enough ${Currency.textPlural} to bet.
@@ -72,12 +71,10 @@ module.exports = class RouletteCommand extends Command {
 	run(msg, args) {
 		const { bet, space } = args;
 		let roulette = Roulette.findGame(msg.guild.id);
-
 		if (roulette) {
 			if (roulette.hasPlayer(msg.author.id)) {
 				return msg.reply('you have already put a bet in this game of roulette.');
 			}
-
 			roulette.join(msg.author, bet, space);
 			Currency.removeBalance(msg.author.id, bet);
 
@@ -98,7 +95,6 @@ module.exports = class RouletteCommand extends Command {
 				setTimeout(() => msg.say('The roulette starts spinning!'), 14500);
 
 				const winners = await roulette.awaitPlayers(16000).filter(player => player.winnings !== 0);
-
 				winners.forEach(winner => Currency.changeBalance(winner.user.id, winner.winnings));
 
 				return msg.embed({

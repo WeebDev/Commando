@@ -36,6 +36,7 @@ module.exports = class BlacklistUserCommand extends Command {
 
 		blacklist.push(user.id);
 		this.client.provider.set('global', 'userBlacklist', blacklist);
+
 		return msg.reply(`${user.username}#${user.discriminator} has been blacklisted from using ${this.client.user}.`);
 	}
 };
