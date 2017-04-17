@@ -19,4 +19,3 @@ env:
   - CXX=g++-4.9
 before_install:
   - npm explore npm -g -- npm install node-gyp@latest
-install: npm install
