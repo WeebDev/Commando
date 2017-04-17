@@ -45,21 +45,16 @@ module.exports = class TagAddCommand extends Command {
 		const tag = await Tag.findOne({ where: { name, guildID: msg.guild.id } });
 		if (tag) return msg.say(`A tag with the name **${name}** already exists, ${msg.author}`);
 
-		return Tag.sync()
-			.then(() => {
-				Tag.create({
-					userID: msg.author.id,
-					userName: `${msg.author.username}#${msg.author.discriminator}`,
-					guildID: msg.guild.id,
-					guildName: msg.guild.name,
-					channelID: msg.channel.id,
-					channelName: msg.channel.name,
-					name: name,
-					content: content
-				});
-
-				redis.db.setAsync(`tag${name}${msg.guild.id}`, content);
-				return msg.say(`A tag with the name **${name}** has been added, ${msg.author}`);
-			});
+		await Tag.create({
+			userID: msg.author.id,
+			userName: `${msg.author.username}#${msg.author.discriminator}`,
+			guildID: msg.guild.id,
+			guildName: msg.guild.name,
+			channelID: msg.channel.id,
+			channelName: msg.channel.name,
+			name: name,
+			content: content
+		});
+		return msg.say(`A tag with the name **${name}** has been added, ${msg.author}`);
 	}
 };

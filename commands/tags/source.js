@@ -31,18 +31,10 @@ module.exports = class TagSourceCommand extends Command {
 		});
 	}
 
-	run(msg, args) {
+	async run(msg, args) {
 		const { name } = args;
-		return this.findCached(msg, name, msg.guild.id);
-	}
-
-	async findCached(msg, name, guildID) {
-		const cache = await redis.db.getAsync(`tag${name}${guildID}`);
-		if (cache) return msg.code('md', cache);
-		const tag = await Tag.findOne({ where: { name, guildID } });
-		if (!tag) {
-			return msg.say(`A tag with the name **${name}** doesn't exist, ${msg.author}`);
-		}
-		return redis.db.setAsync(`tag${name}${guildID}`, tag.content).then(() => msg.code('md', tag.content));
+		const tag = await Tag.findOne({ where: { name, guildID: msg.guild.id } });
+		if (!tag) return msg.say(`A tag with the name **${name}** doesn't exist, ${msg.author}`);
+		return msg.code('md', tag.content);
 	}
 };
