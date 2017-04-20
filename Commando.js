@@ -43,7 +43,8 @@ client.on('error', winston.error)
 	.once('ready', () => Currency.leaderboard())
 	.on('ready', () => {
 		winston.info(oneLine`
-			Client ready... Logged in as ${client.user.username}#${client.user.discriminator} (${client.user.id})
+			Client ready...
+			Logged in as ${client.user.tag} (${client.user.id})
 		`);
 	})
 	.on('disconnect', () => winston.warn('Disconnected!'))
@@ -52,7 +53,7 @@ client.on('error', winston.error)
 		winston.info(oneLine`${msg.author.tag} (${msg.author.id})
 			> ${msg.guild ? `${msg.guild.name} (${msg.guild.id})` : 'DM'}
 			>> ${cmd.groupID}:${cmd.memberName}
-			${Object.values(args)[0] !== '' || [] ? `>>> ${Object.values(args)}` : ''}
+			${Object.values(args)[0] !== '' || !Object.values(args).length ? `>>> ${Object.values(args)}` : ''}
 		`);
 	})
 	.on('message', async message => {
