@@ -44,6 +44,7 @@ module.exports = class MoneyTradeCommand extends Command {
 						const balance = await Currency.getBalance(msg.author.id);
 
 						if (['all', '-all', '-a'].includes(donuts)) return parseInt(balance);
+
 						return parseInt(donuts);
 					}
 				}
@@ -53,7 +54,6 @@ module.exports = class MoneyTradeCommand extends Command {
 
 	async run(msg, args) {
 		const { member, donuts } = args;
-
 		if (member.id === msg.author.id) return msg.reply(`you can't trade ${Currency.textPlural} with yourself, ya dingus.`); // eslint-disable-line
 		if (member.user.bot) return msg.reply(`don't give your ${Currency.textPlural} to bots: they're bots, man.`);
 		if (donuts <= 0) return msg.reply(`you can't trade 0 or less ${Currency.convert(0)}.`);
@@ -68,6 +68,7 @@ module.exports = class MoneyTradeCommand extends Command {
 
 		Currency.removeBalance(msg.author.id, donuts);
 		Currency.addBalance(member.id, donuts);
+
 		return msg.reply(`${member.displayName} successfully received your ${Currency.convert(donuts)}!`);
 	}
 };

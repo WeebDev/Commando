@@ -70,6 +70,7 @@ module.exports = class BuyItemCommand extends Command {
 		inventory.addItems(new ItemGroup(storeItem, amount));
 		Currency.removeBalance(msg.author.id, amount * storeItem.price);
 		inventory.save();
+
 		return msg.reply(stripIndents`
 			you have successfully purchased ${amount} ${itemName}${plural
 				? 's'

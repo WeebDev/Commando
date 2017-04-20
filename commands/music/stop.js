@@ -27,11 +27,13 @@ module.exports = class StopMusicCommand extends Command {
 		const song = queue.songs[0];
 		queue.songs = [];
 		if (song.dispatcher) song.dispatcher.end();
+
 		return msg.reply('you\'ve just killed the party. Congrats. 👏');
 	}
 
 	get queue() {
 		if (!this._queue) this._queue = this.client.registry.resolveCommand('music:play').queue;
+
 		return this._queue;
 	}
 };

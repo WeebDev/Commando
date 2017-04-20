@@ -4,23 +4,23 @@ const Redis = require('../Redis');
 
 const redis = new Redis();
 
-setInterval(() => {
-	redis.db.hgetallAsync('inventory').then(inventories => {
-		const ids = Object.keys(inventories || {});
+setInterval(async () => {
+	const inventories = await redis.db.hgetallAsync('inventory');
+	const ids = Object.keys(inventories || {});
 
-		for (const id of ids) {
-			UserProfile.findOne({ where: { userID: id } }).then(async user => {
-				if (!user) {
-					await UserProfile.create({
-						userID: id,
-						inventory: JSON.stringify(inventories[id])
-					});
-				} else {
-					await user.update({ inventory: JSON.stringify(inventories[id]) });
-				}
+	/* eslint-disable no-await-in-loop */
+	for (const id of ids) {
+		const user = UserProfile.findOne({ where: { userID: id } });
+		if (!user) {
+			await UserProfile.create({
+				userID: id,
+				inventory: JSON.stringify(inventories[id])
 			});
+		} else {
+			await user.update({ inventory: JSON.stringify(inventories[id]) });
 		}
-	});
+	}
+	/* eslint-enable no-await-in-loop */
 }, 30 * 60 * 1000);
 
 class Inventory {
@@ -36,7 +36,6 @@ class Inventory {
 
 	addItems(itemGroup) {
 		const amountInInventory = this.content[itemGroup.item.name] ? this.content[itemGroup.item.name].amount : 0;
-
 		itemGroup.amount += amountInInventory;
 		this.content[itemGroup.item.name] = itemGroup;
 	}

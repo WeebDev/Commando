@@ -26,7 +26,6 @@ module.exports = class BlackjackCommand extends Command {
 					validate: async (bet, msg) => {
 						bet = parseInt(bet);
 						const balance = await Currency.getBalance(msg.author.id);
-
 						if (balance < bet) {
 							return `
 								you don't have enough ${Currency.textPlural}.
@@ -34,13 +33,11 @@ module.exports = class BlackjackCommand extends Command {
 								Please specify a valid amount of ${Currency.textPlural}.
 							`;
 						}
-
 						if (![100, 200, 300, 400, 500, 1000].includes(bet)) {
 							return `
 								please choose \`100, 200, 300, 400, 500, 1000\` for your bet.
 							`;
 						}
-
 						return true;
 					}
 				}
@@ -50,13 +47,11 @@ module.exports = class BlackjackCommand extends Command {
 
 	run(msg, args) {
 		const { bet } = args;
-
 		if (Blackjack.gameExists(msg.author.id)) {
 			return msg.reply(`you can't start 2 games of blackjack at the same time.`);
 		}
 
 		const blackjack = new Blackjack(msg);
-
 		return msg.say(
 			`New game of blackjack started with ${msg.member.displayName} with a bet of ${Currency.convert(bet)}!`
 		).then(async () => {
@@ -137,6 +132,7 @@ module.exports = class BlackjackCommand extends Command {
 					? 'won' : 'lost'} ${Currency.convert(Math.abs(winnings))}`}`;
 
 			if (winnings !== 0) Currency.changeBalance(msg.author.id, winnings);
+
 			return msg.embed(embed);
 		});
 	}
@@ -146,6 +142,7 @@ module.exports = class BlackjackCommand extends Command {
 		if (dealerValue > 21) return 'dealer bust';
 		if (playerValue === dealerValue) return 'push';
 		if (playerValue === 'Blackjack' || playerValue > dealerValue) return 'win';
+
 		return 'loss';
 	}
 
@@ -155,21 +152,17 @@ module.exports = class BlackjackCommand extends Command {
 			let currentHand = hands[0];
 			let totalBet = bet;
 
-			const nextHand = () => { currentHand = hands[hands.indexOf(currentHand) + 1]; };
-
+			const nextHand = () => currentHand = hands[hands.indexOf(currentHand) + 1]; // eslint-disable-line no-return-assign, max-len
 			while (currentHand) { // eslint-disable-line no-unmodified-loop-condition
 				if (currentHand.length === 1) blackjack.hit(currentHand);
-
 				if (Blackjack.handValue(currentHand) === 'Blackjack') {
 					nextHand();
 					continue;
 				}
-
 				if (Blackjack.handValue(currentHand) >= 21) {
 					nextHand();
 					continue;
 				}
-
 				if (currentHand.doubled) {
 					blackjack.hit(currentHand);
 					nextHand();
@@ -228,9 +221,7 @@ module.exports = class BlackjackCommand extends Command {
 					});
 
 				if (responses.size === 0) break;
-
 				const action = responses.first().content.toLowerCase();
-
 				if (action === 'stand' || Blackjack.handValue(currentHand) >= 21) {
 					if (currentHand === hands[hands.length - 1]) break;
 					nextHand();
@@ -246,6 +237,7 @@ module.exports = class BlackjackCommand extends Command {
 					currentHand.doubled = true;
 				}
 			}
+
 			return resolve(hands);
 		});
 	}

@@ -52,7 +52,6 @@ module.exports = class SlotMachineCommand extends Command {
 						const inventory = await Inventory.fetchInventory(msg.author.id);
 						const userCoins = (inventory.content.coin || { amount: 0 }).amount;
 						const plural = userCoins > 1 || userCoins === 0;
-
 						if (userCoins < coins) {
 							return `
 								you don't have enough coins to pay your bet!
@@ -81,9 +80,7 @@ module.exports = class SlotMachineCommand extends Command {
 
 		inventory.removeItems(new ItemGroup(item, coins));
 		inventory.save();
-
 		Currency.addBalance('bank', coins * 100);
-
 		const roll = this.generateRoll();
 		let winnings = 0;
 
@@ -108,6 +105,7 @@ module.exports = class SlotMachineCommand extends Command {
 		}
 
 		Currency.addBalance(msg.author.id, coins * winnings);
+
 		return msg.embed({
 			color: 0x5C913B,
 			description: stripIndents`
@@ -133,11 +131,11 @@ module.exports = class SlotMachineCommand extends Command {
 		const roll = [];
 		reels.forEach((reel, index) => {
 			const rand = Math.floor(Math.random() * reel.length);
-
 			roll[index] = rand === 0 ? reel[reel.length - 1] : reel[rand - 1];
 			roll[index + 3] = reel[rand];
 			roll[index + 6] = rand === reel.length - 1 ? reel[0] : reel[rand + 1];
 		});
+
 		return roll;
 	}
 };

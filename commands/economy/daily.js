@@ -30,9 +30,8 @@ module.exports = class DailyCommand extends Command {
 	}
 
 	async run(msg, args) {
-		const received = await Daily.received(msg.author.id);
 		const member = args.member || msg.member;
-
+		const received = await Daily.received(msg.author.id);
 		if (received) {
 			const nextDaily = await Daily.nextDaily(msg.author.id);
 			return msg.reply(stripIndents`
@@ -49,6 +48,7 @@ module.exports = class DailyCommand extends Command {
 		}
 
 		Daily.receive(msg.author.id);
+
 		return msg.reply(`You have successfully received your daily ${Currency.convert(Daily.dailyPayout)}.`);
 	}
 };

@@ -82,6 +82,7 @@ module.exports = class MoneyLeaderboardCommand extends Command {
 
 		redis.db.setAsync('moneyleaderboard', JSON.stringify(money));
 		redis.db.expire('moneyleaderboard', 3600);
+
 		return JSON.stringify(money);
 	}
 };

@@ -101,24 +101,24 @@ module.exports = class ItemTradeCommand extends Command {
 
 	validate(item, amount, balance, itemBalance, user) {
 		const person = user === 'you';
-
 		if (item) {
 			if (!itemBalance) return `${user} ${person ? "don't" : "doesn't"} have any ${item}s.`;
 			if (amount > itemBalance) return `${user} ${person ? 'have' : 'has'} only ${itemBalance} ${item}s.`;
 		} else if (amount > balance) {
 			return `${user} ${person ? 'have' : 'has'} only ${Currency.convert(balance)}`;
 		}
+
 		return null;
 	}
 
 	isDonuts(item, amount) {
 		if (/donuts?/.test(item)) return null;
+
 		return ItemGroup.convert(item, amount);
 	}
 
 	sendItems(fromInventory, toInventory, item, amount) {
 		const itemGroup = new ItemGroup(item, amount);
-
 		fromInventory.removeItems(itemGroup);
 		toInventory.addItems(itemGroup);
 	}
@@ -128,20 +128,17 @@ module.exports = class ItemTradeCommand extends Command {
 		Currency.addBalance(toUser, amount);
 	}
 
-	response(msg, user, embed) {
-		return new Promise(async resolve => {
-			msg.say(`${user}, ${msg.member.displayName} wants to trade with you.`);
-			msg.embed(embed);
+	async response(msg, user, embed) {
+		msg.say(`${user}, ${msg.member.displayName} wants to trade with you.`);
+		msg.embed(embed);
+		const responses = await msg.channel.awaitMessages(response =>
+			response.author.id === user.id && response.content.toLowerCase() === 'accept',
+			{
+				maxMatches: 1,
+				time: 30e3
+			});
 
-			const responses = await msg.channel.awaitMessages(response =>
-				response.author.id === user.id && response.content.toLowerCase() === 'accept',
-				{
-					maxMatches: 1,
-					time: 30e3
-				});
-
-			if (responses.size === 0) return resolve(false);
-			return resolve(true);
-		});
+		if (responses.size === 0) return false;
+		return true;
 	}
 };

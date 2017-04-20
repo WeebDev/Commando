@@ -29,7 +29,7 @@ module.exports = class BlameCommand extends Command {
 		const member = args.member.displayName || 'Crawl';
 		const canvas = new Canvas();
 		const ctx = canvas.getContext('2d');
-		const { width, height } = this.textSizes(ctx, member);
+		const { width, height } = this._textSizes(ctx, member);
 
 		canvas.width = width < 130 ? 130 : width;
 		canvas.height = height;
@@ -48,16 +48,15 @@ module.exports = class BlameCommand extends Command {
 		return msg.channel.sendFile(canvas.toBuffer(), 'blame.png');
 	}
 
-	textSizes(ctx, text) {
+	_textSizes(ctx, text) {
 		ctx.font = '700 32px Arial';
 		const dimensions = ctx.measureText(text);
 		const sizes = {
 			width: dimensions.width + 20,
 			height: dimensions.emHeightAscent + 54
 		};
-		if (dimensions.actualBoundingBoxDescent) {
-			sizes.height += dimensions.actualBoundingBoxDescent - 3;
-		}
+		if (dimensions.actualBoundingBoxDescent) sizes.height += dimensions.actualBoundingBoxDescent - 3;
+
 		return sizes;
 	}
 };

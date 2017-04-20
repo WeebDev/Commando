@@ -40,11 +40,13 @@ module.exports = class SaveQueueCommand extends Command {
 			`,
 			image: { url: song.thumbnail }
 		};
+
 		return msg.author.sendMessage('', { embed });
 	}
 
 	get queue() {
 		if (!this._queue) this._queue = this.client.registry.resolveCommand('music:play').queue;
+
 		return this._queue;
 	}
 };

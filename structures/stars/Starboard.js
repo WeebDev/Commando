@@ -7,6 +7,7 @@ const Star = require('../../models/Star');
 module.exports = class Starboard {
 	static async createStar(message, starboardChannel, starBy) {
 		const starboardMessage = await starboardChannel.send({ embed: Starboard._starEmbed(message, 1) });
+
 		return Star.create({
 			messageID: message.id,
 			content: message.content,
@@ -25,7 +26,8 @@ module.exports = class Starboard {
 
 	static async isStarred(messageID) {
 		const star = await Star.findByPrimary(messageID);
-		return !!star;
+
+		return Boolean(star);
 	}
 
 	static async isAuthor(messageID, userID) {
@@ -35,12 +37,14 @@ module.exports = class Starboard {
 				authorID: userID
 			}
 		});
-		return !!star;
+
+		return Boolean(star);
 	}
 
 	static async hasStarred(messageID, userID) {
 		const star = await Star.findByPrimary(messageID);
 		if (!star) return false;
+
 		return star.starredBy.includes(userID);
 	}
 
@@ -69,6 +73,7 @@ module.exports = class Starboard {
 
 	static async getStar(messageID) {
 		const star = await Star.findByPrimary(messageID);
+
 		return star;
 	}
 
@@ -81,9 +86,11 @@ module.exports = class Starboard {
 			try {
 				const url = new URL(attachment.url);
 				const ext = path.extname(url.pathname);
+
 				return extensions.has(ext);
 			} catch (err) {
 				if (err.message !== 'Invalid URL') winston.error(err);
+
 				return false;
 			}
 		})) attachmentImage = message.attachments.first().url;
@@ -107,6 +114,7 @@ module.exports = class Starboard {
 		else if (starCount >= 10) footerText = `${starCount} ✨`;
 		else if (starCount >= 5) footerText = `${starCount} 🌟`;
 		else footerText = `${starCount} ⭐`;
+
 		return {
 			author: {
 				icon_url: message.author.displayAvatarURL, // eslint-disable-line camelcase

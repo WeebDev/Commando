@@ -46,6 +46,7 @@ module.exports = class MaxLengthCommand extends Command {
 		}
 
 		this.client.provider.set(msg.guild.id, 'maxLength', maxLength);
+
 		return msg.reply(`set the maximum song length to ${maxLength} minutes.`);
 	}
 };

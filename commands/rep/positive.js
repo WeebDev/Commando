@@ -49,6 +49,7 @@ module.exports = class RepPositiveCommand extends Command {
 			reputationBy: msg.author.id,
 			reputationMessage: message || null
 		});
+
 		return msg.reply(`you've successfully added a positive reputation point to ${member.displayName}.`);
 	}
 };

@@ -27,11 +27,11 @@ module.exports = class LockAllCommand extends Command {
 		const channelLocks = this.client.provider.get(msg.guild.id, 'locks', []);
 		for (const channel of channels.values()) {
 			if (channelLocks.includes(channel.id)) continue;
-
 			channelLocks.push(channel.id);
 		}
 
 		this.client.provider.set(msg.guild.id, 'locks', channelLocks);
+
 		return msg.reply(stripIndents`
 			all channels on this server have been locked. You can no longer earn xp or ${Currency.textPlural} anywhere.
 		`);

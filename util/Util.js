@@ -9,11 +9,13 @@ class Util {
 			.replace(/<@&[0-9]+>/g, roles => {
 				const replaceID = roles.replace(/<|&|>|@/g, '');
 				const role = msg.channel.guild.roles.get(replaceID);
+
 				return `@${role.name}`;
 			})
 			.replace(/<@!?[0-9]+>/g, user => {
 				const replaceID = user.replace(/<|!|>|@/g, '');
 				const member = msg.channel.guild.members.get(replaceID);
+
 				return `@${member.user.username}`;
 			});
 	}

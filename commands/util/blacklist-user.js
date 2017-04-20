@@ -29,13 +29,14 @@ module.exports = class BlacklistUserCommand extends Command {
 
 	run(msg, args) {
 		const { user } = args;
-		if (this.client.options.owner === user.id) return msg.reply('the bot owner can not be blacklisted.');
+		if (this.client.isOwner(user.id)) return msg.reply('the bot owner can not be blacklisted.');
 
 		const blacklist = this.client.provider.get('global', 'userBlacklist', []);
 		if (blacklist.includes(user.id)) return msg.reply('that user is already blacklisted.');
 
 		blacklist.push(user.id);
 		this.client.provider.set('global', 'userBlacklist', blacklist);
+
 		return msg.reply(`${user.username}#${user.discriminator} has been blacklisted from using ${this.client.user}.`);
 	}
 };

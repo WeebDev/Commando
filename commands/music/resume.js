@@ -29,11 +29,13 @@ module.exports = class ResumeSongCommand extends Command {
 		if (queue.songs[0].playing) return msg.reply('Resuming a song that isn\'t paused is a great move. Really fantastic.'); // eslint-disable-line max-len
 		queue.songs[0].dispatcher.resume();
 		queue.songs[0].playing = true;
+
 		return msg.reply('resumed the music. This party ain\'t over yet!');
 	}
 
 	get queue() {
 		if (!this._queue) this._queue = this.client.registry.resolveCommand('music:play').queue;
+
 		return this._queue;
 	}
 };

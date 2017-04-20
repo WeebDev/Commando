@@ -44,11 +44,13 @@ module.exports = class PersonalMessageCommand extends Command {
 				userID: msg.author.id,
 				personalMessage
 			});
+
 			return msg.reply('your message has been updated!');
 		}
 
 		profile.personalMessage = personalMessage;
 		await profile.save();
+
 		return msg.reply('your message has been updated!');
 	}
 };

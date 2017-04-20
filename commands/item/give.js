@@ -52,9 +52,9 @@ module.exports = class ItemGiveCommand extends Command {
 
 		const itemGroup = new ItemGroup(item, amount);
 		const receiveInv = await Inventory.fetchInventory(user.id);
-
 		inventory.removeItems(itemGroup);
 		receiveInv.addItems(itemGroup);
+
 		return msg.reply(`${user.displayName} successfully received your item(s)!`);
 	}
 };

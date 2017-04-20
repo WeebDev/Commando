@@ -56,9 +56,8 @@ module.exports = class PleaseCommand extends Command {
 			width: dimensions.width + 20,
 			height: dimensions.emHeightAscent + 54
 		};
-		if (dimensions.actualBoundingBoxDescent) {
-			sizes.height += dimensions.actualBoundingBoxDescent - 3;
-		}
+		if (dimensions.actualBoundingBoxDescent) sizes.height += dimensions.actualBoundingBoxDescent - 3;
+
 		return sizes;
 	}
 };

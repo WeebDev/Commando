@@ -50,6 +50,7 @@ module.exports = class MoneyRemoveCommand extends Command {
 	run(msg, args) {
 		const { member, donuts } = args;
 		Currency._changeBalance(member.id, donuts);
+
 		return msg.reply(`successfully removed ${Currency.convert(donuts)} from ${member.displayName}'s balance.`);
 	}
 };

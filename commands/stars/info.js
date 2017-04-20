@@ -26,9 +26,12 @@ module.exports = class StarInfoCommand extends Command {
 		const { message } = args;
 		const starboard = msg.guild.channels.find('name', 'starboard');
 		if (!starboard) return msg.reply('you can\'t see stars if you don\'t even have a starboard.');
+
 		const isStarred = await Starboard.isStarred(message.id);
 		if (!isStarred) return msg.reply('that message is not on the #starboard.');
+
 		const { starredBy } = await Starboard.getStar(message.id);
+
 		return msg.embed({
 			author: {
 				icon_url: message.author.displayAvatarURL, // eslint-disable-line camelcase

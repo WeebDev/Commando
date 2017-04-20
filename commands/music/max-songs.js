@@ -45,6 +45,7 @@ module.exports = class MaxSongsCommand extends Command {
 		}
 
 		this.client.provider.set(msg.guild.id, 'maxSongs', maxSongs);
+
 		return msg.reply(`set the maximum songs to ${maxSongs}.`);
 	}
 };

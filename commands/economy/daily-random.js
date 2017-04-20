@@ -22,9 +22,9 @@ module.exports = class DailyRandomCommand extends Command {
 	}
 
 	async run(msg) {
-		const received = await Daily.received(msg.author.id);
 		const guild = await msg.guild.fetchMembers();
 		const member = guild.members.filter(mem => mem.presence.status === 'online' && !mem.user.bot).random();
+		const received = await Daily.received(msg.author.id);
 
 		if (received) {
 			const nextDaily = await Daily.nextDaily(msg.author.id);
@@ -35,6 +35,7 @@ module.exports = class DailyRandomCommand extends Command {
 		}
 
 		Daily.receive(msg.author.id, member.id);
+
 		return msg.reply(oneLine`
 			${member.displayName}#${member.user.discriminator} (${member.id}) has successfully received your daily
 			${Currency.convert(Daily.dailyDonationPayout)}.

@@ -22,6 +22,7 @@ class Bank {
 
 	static async getBalance(user) {
 		const balance = await redis.db.hgetAsync('ledger', user) || 0;
+
 		return parseInt(balance);
 	}
 
@@ -44,10 +45,11 @@ class Bank {
 		redis.db.hgetallAsync('ledger').then(async balances => {
 			if (!balances) return;
 
+			/* eslint-disable no-await-in-loop */
 			for (const [user, balance] of Object.entries(balances)) {
-				/* eslint-disable no-await-in-loop */
 				await redis.db.hsetAsync('ledger', user, Math.round(balance * (interestRate + 1)));
 			}
+			/* eslint-enable no-await-in-loop */
 		});
 
 		const newInterestRate = Math.max(MIN_INTEREST_RATE, interestRate + (bankBalanceDelta * -INTEREST_MATURE_RATE));
@@ -60,11 +62,13 @@ class Bank {
 
 	static async getInterestRate() {
 		const interestRate = await redis.db.getAsync('interestrate') || 0.01;
+
 		return parseFloat(interestRate);
 	}
 
 	static async nextUpdate() {
 		const lastUpdate = await redis.db.getAsync('bankupdate');
+
 		return UPDATE_DURATION - (Date.now() - lastUpdate);
 	}
 }

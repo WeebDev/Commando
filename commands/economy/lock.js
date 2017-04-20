@@ -40,6 +40,7 @@ module.exports = class LockCommand extends Command {
 
 		channelLocks.push(channel.id);
 		this.client.provider.set(msg.guild.id, 'locks', channelLocks);
+
 		return msg.reply(stripIndents`
 			this channel has been locked. You can no longer earn xp or ${Currency.textPlural} in ${channel}.
 		`);
