@@ -10,7 +10,7 @@ const Star = Database.db.define('stars', {
 		unique: true
 	},
 	content: {
-		type: Sequelize.STRING,
+		type: Sequelize.STRING(2000), // eslint-disable-line new-cap
 		allowNull: false
 	},
 	authorID: {
