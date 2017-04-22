@@ -58,7 +58,7 @@ class Currency {
 					networth
 				});
 			} else {
-				user.update({
+				await user.update({
 					money,
 					balance,
 					networth

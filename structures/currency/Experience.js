@@ -60,7 +60,7 @@ class Experience {
 					experience: experiences[id]
 				});
 			} else {
-				user.update({ experience: experiences[id] });
+				await user.update({ experience: experiences[id] });
 			}
 		}
 		/* eslint-enable no-await-in-loop */
