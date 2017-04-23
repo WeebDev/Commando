@@ -40,7 +40,7 @@
   ],
   "license": "MIT",
   "scripts": {
-    "test": "eslint . silent"
+    "test": "eslint ."
   },
   "repository": {
     "type": "git",
