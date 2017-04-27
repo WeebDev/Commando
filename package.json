@@ -2,12 +2,45 @@
   "name": "commando",
   "version": "0.24.0",
   "description": ".",
+  "author": {
+    "name": "iCrawl",
+    "email": "icrawltogo@gmail.com"
+  },
+  "contributors": [
+    {
+      "name": "vzwGrey"
+    },
+    {
+      "name": "1Computer"
+    },
+    {
+      "name": "aemino"
+    },
+    {
+      "name": "TeeSeal"
+    },
+    {
+      "name": "Lewdcario"
+    },
+    {
+      "name": "kurisubrooks"
+    },
+    {
+      "name": "Gawdl3y"
+    },
+    {
+      "name": "Slamakans"
+    },
+    {
+      "name": "ImSanctuary"
+    },
+    {
+      "name": "Drahcirius"
+    }
+  ],
   "license": "MIT",
-  "author": "Crawl",
   "scripts": {
-    "start": "node Commando.js",
-    "update": "npm update",
-    "test": "eslint . silent"
+    "test": "eslint ."
   },
   "repository": {
     "type": "git",
@@ -47,7 +80,7 @@
   },
   "devDependencies": {
     "eslint": "^3.19.0",
-    "eslint-config-aqua": "^1.1.0"
+    "eslint-config-aqua": "^1.2.0"
   },
   "eslintConfig": {
     "extends": "aqua"
