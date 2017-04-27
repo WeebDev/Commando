@@ -53,27 +53,27 @@ module.exports = class ItemTradeCommand extends Command {
 	}
 
 	async run(msg, args) {
-		const { user, offerAmount, receiveAmount } = args;
+		const { member, offerAmount, receiveAmount } = args;
 		const offerItem = this.isDonuts(args.offerItem, offerAmount);
 		const receiveItem = this.isDonuts(args.receiveItem, receiveAmount);
 
-		if (user.id === msg.author.id) return msg.reply('what are you trying to achieve by trading with yourself?');
-		if (user.user.bot) return msg.reply('bots got nothing to trade, man.');
+		if (member.id === msg.author.id) return msg.reply('what are you trying to achieve by trading with yourself?');
+		if (member.user.bot) return msg.reply('bots got nothing to trade, man.');
 		if (!offerItem && !receiveItem) return msg.reply("you can't trade donuts for donuts.");
 
 		const offerBalance = Currency.getBalance(msg.author.id);
-		const receiveBalance = Currency.getBalance(user.id);
+		const receiveBalance = Currency.getBalance(member.id);
 		const offerInv = Inventory.fetchInventory(msg.author.id);
-		const receiveInv = Inventory.fetchInventory(user.id);
+		const receiveInv = Inventory.fetchInventory(member.id);
 		const offerItemBalance = offerInv.content[offerItem] ? offerInv.content[offerItem].amount : null;
 		const receiveItemBalance = receiveInv.content[receiveItem] ? receiveInv.content[receiveItem].amount : null;
 		const offerValidation = this.validate(offerItem, offerAmount, offerBalance, offerItemBalance, 'you');
-		const receiveValidation = this.validate(receiveItem, receiveAmount, receiveBalance, receiveItemBalance, user.displayName); // eslint-disable-line max-len
+		const receiveValidation = this.validate(receiveItem, receiveAmount, receiveBalance, receiveItemBalance, member.displayName); // eslint-disable-line max-len
 		if (offerValidation) return msg.reply(offerValidation);
 		if (receiveValidation) return msg.reply(receiveValidation);
 
 		const embed = {
-			title: `${msg.member.displayName} < -- > ${user.displayName}`,
+			title: `${msg.member.displayName} < -- > ${member.displayName}`,
 			description: 'Type `accept` within the next 30 seconds to accept this trade.',
 			fields: [
 				{
@@ -83,7 +83,7 @@ module.exports = class ItemTradeCommand extends Command {
 						: Currency.convert(offerAmount)
 				},
 				{
-					name: user.displayName,
+					name: member.displayName,
 					value: receiveItem
 						? `${receiveAmount} ${receiveItem}`
 						: Currency.convert(receiveAmount)
@@ -91,10 +91,10 @@ module.exports = class ItemTradeCommand extends Command {
 			]
 		};
 
-		if (!await this.response(msg, user, embed)) return msg.reply(`${user.displayName} declined or failed to respond.`);
-		if (!offerItem) this.sendDonuts(msg.author, user, offerAmount);
+		if (!await this.response(msg, member, embed)) return msg.reply(`${member.displayName} declined or failed to respond.`); // eslint-disable-line
+		if (!offerItem) this.sendDonuts(msg.author, member, offerAmount);
 		else this.sendItems(offerInv, receiveInv, offerItem, offerAmount);
-		if (!receiveItem) this.sendDonuts(user, msg.author, receiveAmount);
+		if (!receiveItem) this.sendDonuts(member, msg.author, receiveAmount);
 		else this.sendItems(receiveInv, offerInv, receiveItem, receiveAmount);
 		return msg.say('Trade successful.');
 	}
