@@ -83,7 +83,7 @@ class Currency {
 	}
 
 	static get plural() {
-		return '🧀s';
+		return '🧀';
 	}
 
 	static get textSingular() {
