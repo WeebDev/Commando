@@ -53,9 +53,9 @@ class Bank {
 		});
 
 		const newInterestRate = Math.max(MIN_INTEREST_RATE, interestRate + (bankBalanceDelta * -INTEREST_MATURE_RATE));
-		redis.db.setAsync('interestrate', newInterestRate);
-		redis.db.setAsync('lastbankbalance', bankBalance);
-		redis.db.setAsync('bankupdate', Date.now());
+		await redis.db.setAsync('interestrate', newInterestRate);
+		await redis.db.setAsync('lastbankbalance', bankBalance);
+		await redis.db.setAsync('bankupdate', Date.now());
 
 		setTimeout(() => Bank.applyInterest(), UPDATE_DURATION);
 	}

@@ -5,8 +5,8 @@ const redis = new Redis();
 
 const UPDATE_DURATION = 30 * 60 * 1000;
 
-redis.db.hgetAsync('money', 'bank').then(balance => {
-	if (!balance) redis.db.hsetAsync('money', 'bank', 5000);
+redis.db.hgetAsync('money', 'bank').then(async balance => {
+	if (!balance) await redis.db.hsetAsync('money', 'bank', 5000);
 });
 
 class Currency {
@@ -67,8 +67,8 @@ class Currency {
 		}
 		/* eslint-enable no-await-in-loop */
 
+		await redis.db.setAsync('moneyleaderboardreset', Date.now());
 		setTimeout(() => Currency.leaderboard(), UPDATE_DURATION);
-		redis.db.setAsync('moneyleaderboardreset', Date.now());
 	}
 
 	static convert(amount, text = false) {
@@ -79,19 +79,19 @@ class Currency {
 	}
 
 	static get singular() {
-		return '🍩';
+		return '🧀';
 	}
 
 	static get plural() {
-		return '🍩s';
+		return '🧀s';
 	}
 
 	static get textSingular() {
-		return 'donut';
+		return 'cheese';
 	}
 
 	static get textPlural() {
-		return 'donuts';
+		return 'cheese';
 	}
 }
 

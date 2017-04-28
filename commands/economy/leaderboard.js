@@ -80,7 +80,7 @@ module.exports = class MoneyLeaderboardCommand extends Command {
 			{ where: { userID: { $ne: 'bank' } }, order: Sequelize.literal('networth DESC') }
 		);
 
-		redis.db.setAsync('moneyleaderboard', JSON.stringify(money));
+		await redis.db.setAsync('moneyleaderboard', JSON.stringify(money));
 		redis.db.expire('moneyleaderboard', 3600);
 
 		return JSON.stringify(money);
