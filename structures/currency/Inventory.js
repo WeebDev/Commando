@@ -17,7 +17,7 @@ setInterval(async () => {
 				inventory: JSON.stringify(inventories[id])
 			});
 		} else {
-			await user.update({ inventory: JSON.stringify(inventories[id]) });
+			user.update({ inventory: JSON.stringify(inventories[id]) });
 		}
 	}
 	/* eslint-enable no-await-in-loop */

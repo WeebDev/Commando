@@ -51,14 +51,14 @@ class Currency {
 
 			const user = await UserProfile.findOne({ where: { userID: id } });
 			if (!user) {
-				UserProfile.create({
+				await UserProfile.create({
 					userID: id,
 					money,
 					balance,
 					networth
 				});
 			} else {
-				await user.update({
+				user.update({
 					money,
 					balance,
 					networth

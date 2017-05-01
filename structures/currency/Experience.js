@@ -55,12 +55,12 @@ class Experience {
 		for (const id of ids) {
 			const user = await UserProfile.findOne({ where: { userID: id } });
 			if (!user) {
-				UserProfile.create({
+				await UserProfile.create({
 					userID: id,
 					experience: experiences[id]
 				});
 			} else {
-				await user.update({ experience: experiences[id] });
+				user.update({ experience: experiences[id] });
 			}
 		}
 		/* eslint-enable no-await-in-loop */
