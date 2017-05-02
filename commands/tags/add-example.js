@@ -60,8 +60,8 @@ module.exports = class ExampleAddCommand extends Command {
 			example: true
 		});
 
-		const msgID = await msg.guild.channels.get(EXAMPLE_CHANNEL).send(content);
-		Tag.update({ exampleID: msgID.id }, { where: { name, guildID: msg.guild.id } });
+		const message = await msg.guild.channels.get(EXAMPLE_CHANNEL).send(content);
+		Tag.update({ exampleID: message.id }, { where: { name, guildID: msg.guild.id } });
 
 		return msg.say(`An example with the name **${name}** has been added, ${msg.author}`);
 	}
