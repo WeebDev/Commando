@@ -6,14 +6,23 @@ addons:
   apt:
     sources:
       - git-core
+      - ubuntu-toolchain-r-test
     packages:
       - git
+      - libcario2-dev
+      - libjpeg8-dev
+      - libpango1.0-dev
+      - libgif-dev
+      - g++-4.9
+env:
+  - CXX=g++-4.9
 before_install:
   - sudo apt-get update
   - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-engine
 language: node_js
 node_js:
   - '7'
-install: npm install
+cache: yarn
+install: yarn install
 script:
   - bash ./deploy/deploy.sh
