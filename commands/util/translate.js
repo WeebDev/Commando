@@ -47,7 +47,7 @@ module.exports = class TranslateCommand extends Command {
 				method: 'POST',
 				headers: {
 					'User-Agent': `Commando v${version} (https://github.com/WeebDev/Commando/)`,
-					Authorization: sherlockAPIKey
+					Authorization: SHERLOCK_API
 				},
 				uri: `https://api.kurisubrooks.com/api/translate`,
 				body: { to, from, query },
