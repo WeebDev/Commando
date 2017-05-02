@@ -29,6 +29,10 @@ services:
       - POSTGRES_USER=commando
       - POSTGRES_PASSWORD=POSTGRES_PW
       - PGDATA=PATH_TO_DIRECTORY_THAT_SAVES_DATA_ON_THE_SYSTEM
+    volumes:
+      - LOCALHOST_VOLUME_PATH:PATH_DEFINED_IN_PGDATA
   redis:
     image: "redis:3"
     container_name: commando_redis
+    volumes:
+      - LOCALHOST_VOLUME_PATH:/data
