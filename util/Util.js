@@ -3,7 +3,7 @@ class Util {
 		throw new Error(`The ${this.constructor.name} class may not be instantiated.`);
 	}
 
-	static cleanContent(content, msg) {
+	static cleanContent(msg, content) {
 		return content.replace(/@everyone/g, '@\u200Beveryone')
 			.replace(/@here/g, '@\u200Bhere')
 			.replace(/<@&[0-9]+>/g, roles => {

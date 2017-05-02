@@ -41,8 +41,8 @@ module.exports = class ServerTagAddCommand extends Command {
 	}
 
 	async run(msg, args) {
-		const name = Util.cleanContent(args.name.toLowerCase(), msg);
-		const content = Util.cleanContent(args.content, msg);
+		const name = Util.cleanContent(msg, args.name.toLowerCase());
+		const content = Util.cleanContent(msg, args.content);
 		const tag = await Tag.findOne({ where: { name, guildID: msg.guild.id } });
 		if (tag) return msg.say(`A server tag with the name **${name}** already exists, ${msg.author}`);
 
@@ -53,8 +53,8 @@ module.exports = class ServerTagAddCommand extends Command {
 			guildName: msg.guild.name,
 			channelID: msg.channel.id,
 			channelName: msg.channel.name,
-			name: name,
-			content: content,
+			name,
+			content,
 			type: true
 		});
 
