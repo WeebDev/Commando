@@ -3,7 +3,7 @@ const cheerio = require('cheerio');
 const snekfetch = require('snekfetch');
 const querystring = require('querystring');
 
-const { googleCustomSearchAPIKey, googleCustomSearchCX } = require('../../settings');
+const { GOOGLE_CUSTOM_SEARCH, GOOGLE_CUSTOM_SEARCH_CX } = process.env;
 
 module.exports = class SearchCommand extends Command {
 	constructor(client) {
@@ -29,14 +29,13 @@ module.exports = class SearchCommand extends Command {
 		});
 	}
 
-	async run(msg, args) {
-		const { search } = args;
-		if (!googleCustomSearchAPIKey) return msg.reply('my Commander has not set the Google API Key. Go yell at him.');
-		if (!googleCustomSearchCX) return msg.reply('my Commander has not set the Google API Key. Go yell at him.');
+	async run(msg, { search }) {
+		if (!GOOGLE_CUSTOM_SEARCH) return msg.reply('my Commander has not set the Google API Key. Go yell at him.');
+		if (!GOOGLE_CUSTOM_SEARCH_CX) return msg.reply('my Commander has not set the Google API Key. Go yell at him.');
 
 		const queryParams = {
-			key: googleCustomSearchAPIKey,
-			cx: googleCustomSearchCX,
+			key: GOOGLE_CUSTOM_SEARCH,
+			cx: GOOGLE_CUSTOM_SEARCH_CX,
 			safe: 'medium',
 			q: encodeURI(search) // eslint-disable-line id-length
 		};

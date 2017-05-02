@@ -39,8 +39,7 @@ module.exports = class ItemAddCommand extends Command {
 		return this.client.isOwner(msg.author);
 	}
 
-	async run(msg, args) {
-		const { name, price } = args;
+	async run(msg, { name, price }) {
 		const item = Store.getItem(name);
 		if (item) return msg.reply('an item with that name already exists.');
 

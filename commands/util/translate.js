@@ -1,7 +1,7 @@
 const { Command } = require('discord.js-commando');
 const request = require('request-promise');
 
-const { sherlockAPIKey } = require('../../settings');
+const { SHERLOCK_API } = process.env;
 const { version } = require('../../package');
 
 module.exports = class TranslateCommand extends Command {
@@ -38,10 +38,8 @@ module.exports = class TranslateCommand extends Command {
 		});
 	}
 
-	async run(msg, args) {
-		const { query, to, from } = args;
-
-		if (!sherlockAPIKey) return msg.reply('my Commander has not set the Sherlock API Key. Go yell at him.');
+	async run(msg, { query, to, from }) {
+		if (!SHERLOCK_API) return msg.reply('my Commander has not set the Sherlock API Key. Go yell at him.');
 
 		let response;
 		try {

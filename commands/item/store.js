@@ -1,6 +1,6 @@
 const { Command, util } = require('discord.js-commando');
 
-const { paginationItems } = require('../../settings');
+const { PAGINATED_ITEMS } = process.env;
 const Store = require('../../structures/currency/Store');
 
 module.exports = class StoreInfoCommand extends Command {
@@ -27,10 +27,9 @@ module.exports = class StoreInfoCommand extends Command {
 		});
 	}
 
-	run(msg, args) {
-		const { page } = args;
+	run(msg, { page }) {
 		const storeItems = Store.getItems().array();
-		const paginated = util.paginate(storeItems, page, Math.floor(paginationItems));
+		const paginated = util.paginate(storeItems, page, Math.floor(PAGINATED_ITEMS));
 		if (storeItems.length === 0) return msg.reply('can\'t show what we don\'t have, man.');
 
 		return msg.embed({

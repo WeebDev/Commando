@@ -21,8 +21,7 @@ module.exports = class UnstarCommand extends Command {
 		});
 	}
 
-	async run(msg, args) {
-		const { message } = args;
+	async run(msg, { message }) {
 		const starboard = msg.guild.channels.find('name', 'starboard');
 		if (!starboard) return msg.reply('you can\'t unstar things without a #starboard...');
 

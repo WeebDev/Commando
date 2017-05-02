@@ -28,8 +28,7 @@ module.exports = class StoreInfoCommand extends Command {
 		});
 	}
 
-	run(msg, args) {
-		const { item } = args;
+	run(msg, { item }) {
 		const storeItem = Store.getItem(item);
 		if (!storeItem) {
 			return msg.reply(stripIndents`

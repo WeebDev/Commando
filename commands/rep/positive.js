@@ -29,8 +29,7 @@ module.exports = class RepPositiveCommand extends Command {
 		});
 	}
 
-	async run(msg, args) {
-		const { member, message } = args;
+	async run(msg, { member, message }) {
 		if (member.id === msg.author.id) return msg.reply('you can\'t change your own reputation like that!');
 
 		const alreadyRepped = await UserRep.findOne({

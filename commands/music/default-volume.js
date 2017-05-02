@@ -1,6 +1,6 @@
 const { Command } = require('discord.js-commando');
 
-const config = require('../../settings');
+const { DEFAULT_VOLUME } = process.env;
 
 module.exports = class DefaultVolumeCommand extends Command {
 	constructor(client) {
@@ -24,13 +24,13 @@ module.exports = class DefaultVolumeCommand extends Command {
 
 	run(msg, args) {
 		if (!args) {
-			const defaultVolume = this.client.provider.get(msg.guild.id, 'defaultVolume', config.defaultVolume);
+			const defaultVolume = this.client.provider.get(msg.guild.id, 'defaultVolume', DEFAULT_VOLUME);
 			return msg.reply(`the default volume level is ${defaultVolume}.`);
 		}
 
 		if (args.toLowerCase() === 'default') {
 			this.client.provider.remove(msg.guild.id, 'defaultVolume');
-			return msg.reply(`set the default volume level to the bot's default (currently ${config.defaultVolume}).`);
+			return msg.reply(`set the default volume level to the bot's default (currently ${DEFAULT_VOLUME}).`);
 		}
 
 		const defaultVolume = parseInt(args);

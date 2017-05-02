@@ -36,8 +36,7 @@ module.exports = class WidthdrawCommand extends Command {
 		});
 	}
 
-	async run(msg, args) {
-		const { donuts } = args;
+	async run(msg, { donuts }) {
 		if (donuts <= 0) return msg.reply(`you can't widthdraw 0 or less ${Currency.convert(0)}.`);
 
 		const userBalance = await Bank.getBalance(msg.author.id);

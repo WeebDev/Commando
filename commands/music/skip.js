@@ -95,7 +95,7 @@ module.exports = class SkipSongCommand extends Command {
 		clearTimeout(vote.timeout);
 		vote.timeout = setTimeout(() => {
 			this.votes.delete(vote.guild);
-			vote.queue.textChannel.sendMessage('The vote to skip the current song has ended. Get outta here, party poopers.');
+			vote.queue.textChannel.send('The vote to skip the current song has ended. Get outta here, party poopers.');
 		}, time);
 
 		return Math.round(time / 1000);

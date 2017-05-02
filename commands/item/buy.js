@@ -39,8 +39,7 @@ module.exports = class BuyItemCommand extends Command {
 		});
 	}
 
-	async run(msg, args) {
-		const { amount, item } = args;
+	async run(msg, { amount, item }) {
 		const itemName = item.replace(/(\b\w)/gi, lc => lc.toUpperCase());
 		const storeItem = Store.getItem(item);
 		if (!storeItem) {

@@ -12,20 +12,20 @@ class SequelizeProvider extends SettingProvider {
 	 */
 
 	/**
-	 * @param {PostgreSQLDatabase} db - Database for the provider
+	 * @param {SQLDatabase} db - Database for the provider
 	 */
 	constructor(db) {
 		super();
 
 		/**
 		 * Database that will be used for storing/retrieving settings
-		 * @type {PostgreSQLDatabase}
+		 * @type {SQLDatabase}
 		 */
 		this.db = db;
 
 		/**
 		 * Client that the provider is for (set once the client is ready, after using {@link CommandoClient#setProvider})
-		 * @name PostgreSQLProvider#client
+		 * @name SequelizeProvider#client
 		 * @type {CommandoClient}
 		 * @readonly
 		 */
@@ -57,7 +57,7 @@ class SequelizeProvider extends SettingProvider {
 				unique: true,
 				primaryKey: true
 			},
-			settings: { type: Sequelize.STRING }
+			settings: { type: Sequelize.TEXT }
 		});
 
 		/**
@@ -77,7 +77,7 @@ class SequelizeProvider extends SettingProvider {
 			try {
 				settings = JSON.parse(row.dataValues.settings);
 			} catch (err) {
-				client.emit('warn', `PostgreSQLProvider couldn't parse the settings stored for guild ${row.dataValues.guild}.`);
+				client.emit('warn', `SequelizeProvider couldn't parse the settings stored for guild ${row.dataValues.guild}.`);
 				continue;
 			}
 
@@ -133,7 +133,10 @@ class SequelizeProvider extends SettingProvider {
 		}
 
 		settings[key] = val;
-		await this.model.upsert({ guild: guild !== 'global' ? guild : '0', settings: JSON.stringify(settings) }, { where: { guild: guild !== 'global' ? guild : '0' } }); // eslint-disable-line max-len
+		await this.model.upsert(
+			{ guild: guild !== 'global' ? guild : '0', settings: JSON.stringify(settings) },
+			{ where: { guild: guild !== 'global' ? guild : '0' } }
+		);
 		if (guild === 'global') this.updateOtherShards(key, val);
 		return val;
 	}
@@ -145,7 +148,10 @@ class SequelizeProvider extends SettingProvider {
 
 		const val = settings[key];
 		settings[key] = undefined;
-		await this.model.upsert({ guild: guild !== 'global' ? guild : '0', settings: JSON.stringify(settings) }, { where: { guild: guild !== 'global' ? guild : '0' } }); // eslint-disable-line max-len
+		await this.model.upsert(
+			{ guild: guild !== 'global' ? guild : '0', settings: JSON.stringify(settings) },
+			{ where: { guild: guild !== 'global' ? guild : '0' } }
+		);
 		if (guild === 'global') this.updateOtherShards(key, undefined);
 		return val;
 	}

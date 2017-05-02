@@ -37,8 +37,7 @@ module.exports = class RemindMeCommand extends Command {
 		});
 	}
 
-	async run(msg, args) {
-		const { remind } = args;
+	async run(msg, { remind }) {
 		const time = remind.startDate.getTime() - Date.now();
 		const preRemind = await msg.say(stripIndents`
 			I will remind you '${Util.cleanContent(remind.eventTitle, msg)}' ${moment().add(time, 'ms').fromNow()}.

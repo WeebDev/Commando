@@ -46,7 +46,7 @@ module.exports = class PleaseCommand extends Command {
 		};
 		generate();
 
-		return msg.channel.sendFile(canvas.toBuffer(), 'please.png');
+		return msg.channel.send({ files: [{ attachment: canvas.toBuffer(), name: 'please.png' }] });
 	}
 
 	textSizes(ctx, text) {

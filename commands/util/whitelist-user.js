@@ -27,8 +27,7 @@ module.exports = class WhitelistUserCommand extends Command {
 		return this.client.isOwner(msg.author);
 	}
 
-	run(msg, args) {
-		const { user } = args;
+	run(msg, { user }) {
 		const blacklist = this.client.provider.get('global', 'userBlacklist', []);
 		if (!blacklist.includes(user.id)) return msg.reply('that user is not blacklisted.');
 

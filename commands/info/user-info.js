@@ -23,14 +23,15 @@ module.exports = class UserInfoCommand extends Command {
 				{
 					key: 'member',
 					prompt: 'what user would you like to have information on?\n',
-					type: 'member'
+					type: 'member',
+					default: ''
 				}
 			]
 		});
 	}
 
 	async run(msg, args) {
-		const { member } = args;
+		const member = args.member || msg.member;
 		const user = member.user;
 		const usernames = await username.findAll({ where: { userID: user.id } });
 		return msg.embed({

@@ -68,8 +68,7 @@ module.exports = class RouletteCommand extends Command {
 		});
 	}
 
-	run(msg, args) {
-		const { bet, space } = args;
+	run(msg, { bet, space }) {
 		let roulette = Roulette.findGame(msg.guild.id);
 		if (roulette) {
 			if (roulette.hasPlayer(msg.author.id)) {

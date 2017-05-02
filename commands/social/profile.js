@@ -1,9 +1,11 @@
 const Canvas = require('canvas');
 const { Command } = require('discord.js-commando');
 
-const fs = global.Promise.promisifyAll(require('fs'));
 const path = require('path');
 const request = require('request-promise');
+const { promisifyAll } = require('tsubaki');
+
+const fs = promisifyAll(require('fs'));
 
 const Bank = require('../../structures/currency/Bank');
 const Currency = require('../../structures/currency/Currency');
@@ -160,7 +162,7 @@ module.exports = class ProfileCommand extends Command {
 		});
 		generate();
 
-		return msg.channel.sendFile(canvas.toBuffer(), `profile.png`);
+		return msg.channel.send({ files: [{ attachment: canvas.toBuffer(), name: 'profile.png' }] });
 	}
 
 	_wrapText(ctx, text, maxWidth) {

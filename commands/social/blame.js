@@ -45,7 +45,7 @@ module.exports = class BlameCommand extends Command {
 		};
 		generate();
 
-		return msg.channel.sendFile(canvas.toBuffer(), 'blame.png');
+		return msg.channel.send({ files: [{ attachment: canvas.toBuffer(), name: 'blame.png' }] });
 	}
 
 	_textSizes(ctx, text) {

@@ -1,6 +1,6 @@
 const { Command } = require('discord.js-commando');
 
-const { exampleChannel } = require('../../settings');
+const { EXAMPLE_CHANNEL } = process.env;
 const Tag = require('../../models/Tag');
 const Util = require('../../util/Util');
 
@@ -60,7 +60,7 @@ module.exports = class ExampleAddCommand extends Command {
 			example: true
 		});
 
-		const msgID = await msg.guild.channels.get(exampleChannel).sendMessage(content);
+		const msgID = await msg.guild.channels.get(EXAMPLE_CHANNEL).send(content);
 		Tag.update({ exampleID: msgID }, { where: { name, guildID: msg.guild.id } });
 
 		return msg.say(`An example with the name **${name}** has been added, ${msg.author}`);

@@ -1,7 +1,7 @@
 const { Command, util } = require('discord.js-commando');
 
 const Inventory = require('../../structures/currency/Inventory');
-const { paginationItems } = require('../../settings');
+const { PAGINATED_ITEMS } = process.env;
 
 module.exports = class InventoryShowCommand extends Command {
 	constructor(client) {
@@ -29,8 +29,7 @@ module.exports = class InventoryShowCommand extends Command {
 		});
 	}
 
-	async run(msg, args) {
-		const { page } = args;
+	async run(msg, { page }) {
 		let items = [];
 		const inventory = await Inventory.fetchInventory(msg.author.id);
 		for (const item of Object.keys(inventory.content)) {
@@ -40,7 +39,7 @@ module.exports = class InventoryShowCommand extends Command {
 			});
 		}
 
-		const paginated = util.paginate(items, page, Math.floor(paginationItems));
+		const paginated = util.paginate(items, page, Math.floor(PAGINATED_ITEMS));
 		if (items.length === 0) return msg.reply('can\'t show what you don\'t have, man.');
 
 		return msg.embed({

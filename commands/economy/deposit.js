@@ -36,8 +36,7 @@ module.exports = class DepositCommand extends Command {
 		});
 	}
 
-	async run(msg, args) {
-		const { donuts } = args;
+	async run(msg, { donuts }) {
 		if (donuts <= 0) return msg.reply(`you can't deposit 0 or less ${Currency.convert(0)}.`);
 
 		const userBalance = await Currency.getBalance(msg.author.id);

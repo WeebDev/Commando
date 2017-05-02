@@ -36,8 +36,7 @@ module.exports = class PersonalMessageCommand extends Command {
 		});
 	}
 
-	async run(msg, args) {
-		const { personalMessage } = args;
+	async run(msg, { personalMessage }) {
 		const profile = await UserProfile.findOne({ where: { userID: msg.author.id } });
 		if (!profile) {
 			await UserProfile.create({

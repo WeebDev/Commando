@@ -4,11 +4,8 @@ const moment = require('moment');
 const Sequelize = require('sequelize');
 
 const Currency = require('../../structures/currency/Currency');
-const { paginationItems } = require('../../settings');
-const Redis = require('../../structures/Redis');
+const { PAGINATED_ITEMS } = process.env;
 const UserProfile = require('../../models/UserProfile');
-
-const redis = new Redis();
 
 module.exports = class MoneyLeaderboardCommand extends Command {
 	constructor(client) {
@@ -44,14 +41,13 @@ module.exports = class MoneyLeaderboardCommand extends Command {
 		});
 	}
 
-	async run(msg, args) {
-		const { page } = args;
-		const lastUpdate = await redis.db.getAsync('moneyleaderboardreset');
+	async run(msg, { page }) {
+		const lastUpdate = await this.client.redis.getAsync('moneyleaderboardreset');
 		const cooldown = 30 * 60 * 1000;
 		const reset = cooldown - (Date.now() - lastUpdate);
 		const money = await this.findCached();
-		const paginated = util.paginate(JSON.parse(money), page, Math.floor(paginationItems));
-		let ranking = paginationItems * (paginated.page - 1);
+		const paginated = util.paginate(JSON.parse(money), page, Math.floor(PAGINATED_ITEMS));
+		let ranking = PAGINATED_ITEMS * (paginated.page - 1);
 
 		for (const user of paginated.items) await this.client.fetchUser(user.userID); // eslint-disable-line
 
@@ -72,16 +68,16 @@ module.exports = class MoneyLeaderboardCommand extends Command {
 	}
 
 	async findCached() {
-		const cache = await redis.db.getAsync('moneyleaderboard');
-		const cacheExpire = await redis.db.ttlAsync('moneyleaderboard');
+		const cache = await this.client.redis.getAsync('moneyleaderboard');
+		const cacheExpire = await this.client.redis.ttlAsync('moneyleaderboard');
 		if (cacheExpire !== -1 && cacheExpire !== -2) return cache;
 
 		const money = await UserProfile.findAll(
 			{ where: { userID: { $ne: 'bank' } }, order: Sequelize.literal('networth DESC') }
 		);
 
-		await redis.db.setAsync('moneyleaderboard', JSON.stringify(money));
-		redis.db.expire('moneyleaderboard', 3600);
+		await this.client.redis.setAsync('moneyleaderboard', JSON.stringify(money));
+		await this.client.redis.expireAsync('moneyleaderboard', 3600);
 
 		return JSON.stringify(money);
 	}

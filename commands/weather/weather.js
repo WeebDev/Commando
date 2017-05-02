@@ -2,11 +2,13 @@
 
 const Canvas = require('canvas');
 const { Command } = require('discord.js-commando');
-const fs = global.Promise.promisifyAll(require('fs'));
 const path = require('path');
 const request = require('request-promise');
+const { promisifyAll } = require('tsubaki');
 
-const { googleAPIKey, weatherAPIKey } = require('../../settings');
+const fs = promisifyAll(require('fs'));
+
+const { GOOGLE_API, WEATHER_API } = process.env;
 const { version } = require('../../package');
 
 module.exports = class WeatherCommand extends Command {
@@ -40,12 +42,12 @@ module.exports = class WeatherCommand extends Command {
 		Canvas.registerFont(path.join(__dirname, '..', '..', 'assets', 'weather', 'fonts', 'RobotoCondensed-Regular.ttf'), { family: 'Roboto Condensed' }); // eslint-disable-line max-len
 		Canvas.registerFont(path.join(__dirname, '..', '..', 'assets', 'weather', 'fonts', 'RobotoMono-Light.ttf'), { family: 'Roboto Mono' }); // eslint-disable-line max-len
 
-		if (!googleAPIKey) return msg.reply('my Commander has not set the Google API Key. Go yell at him.');
-		if (!weatherAPIKey) return msg.reply('my Commander has not set the Weather API Key. Go yell at him.');
+		if (!GOOGLE_API) return msg.reply('my Commander has not set the Google API Key. Go yell at him.');
+		if (!WEATHER_API) return msg.reply('my Commander has not set the Weather API Key. Go yell at him.');
 
 		const locationURI = encodeURIComponent(location.replace(/ /g, '+'));
 		const response = await request({
-			uri: `https://maps.googleapis.com/maps/api/geocode/json?address=${locationURI}&key=${googleAPIKey}`,
+			uri: `https://maps.googleapis.com/maps/api/geocode/json?address=${locationURI}&key=${GOOGLE_API}`,
 			headers: { 'User-Agent': `Commando v${version} (https://github.com/WeebDev/Commando/)` },
 			json: true
 		});
@@ -65,7 +67,7 @@ module.exports = class WeatherCommand extends Command {
 		const state = locality && governing ? governing : locality ? country : {};
 
 		const res = await request({
-			uri: `https://api.darksky.net/forecast/${weatherAPIKey}/${params}?exclude=minutely,hourly,flags&units=auto`,
+			uri: `https://api.darksky.net/forecast/${WEATHER_API}/${params}?exclude=minutely,hourly,flags&units=auto`,
 			headers: { 'User-Agent': `Commando v${version} (https://github.com/WeebDev/Commando/)` },
 			json: true
 		});
@@ -139,7 +141,7 @@ module.exports = class WeatherCommand extends Command {
 		precip.src = await fs.readFileAsync(path.join(__dirname, '..', '..', 'assets', 'weather', 'icons', theme, 'precip.png')); // eslint-disable-line max-len
 		generate();
 
-		return msg.channel.sendFile(canvas.toBuffer(), `${geocodelocation}.png`);
+		return msg.channel.send({ files: [{ attachment: canvas.toBuffer(), name: `${geocodelocation}.png` }] });
 	}
 
 	handleNotOK(msg, status) {

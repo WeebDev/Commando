@@ -1,7 +1,7 @@
 const { Command } = require('discord.js-commando');
 const { oneLine } = require('common-tags');
 
-const config = require('../../settings');
+const { MAX_LENGTH } = process.env;
 
 module.exports = class MaxLengthCommand extends Command {
 	constructor(client) {
@@ -14,7 +14,7 @@ module.exports = class MaxLengthCommand extends Command {
 			format: '[minutes|"default"]',
 			details: oneLine`
 				This is the maximum length of a song that users may queue, in minutes.
-				The default is ${config.maxLength}.
+				The default is ${MAX_LENGTH}.
 				Only administrators may change this setting.
 			`,
 			guildOnly: true,
@@ -31,13 +31,13 @@ module.exports = class MaxLengthCommand extends Command {
 
 	run(msg, args) {
 		if (!args) {
-			const maxLength = this.client.provider.get(msg.guild.id, 'maxLength', config.maxLength);
+			const maxLength = this.client.provider.get(msg.guild.id, 'maxLength', MAX_LENGTH);
 			return msg.reply(`the maximum length of a song is ${maxLength} minutes.`);
 		}
 
 		if (args.toLowerCase() === 'default') {
 			this.client.provider.remove(msg.guild.id, 'maxLength');
-			return msg.reply(`set the maximum song length to the default (currently ${config.maxLength} minutes).`);
+			return msg.reply(`set the maximum song length to the default (currently ${MAX_LENGTH} minutes).`);
 		}
 
 		const maxLength = parseInt(args);

@@ -1,67 +1,32 @@
 # Commando
 
-## Installation guide for Ubuntu 16.04.2 LTS 
+## Installation guide for Ubuntu 16.04.2 LTS
 
-#### Make sure the node version is > 7.6.0
-
-```bash
-node -v
-> 7.6.0
-```
-
-#### Install PostgresSQL
-If Postgres is not installed yet, follow these steps. If it is already installed, you should create a new db or use an existing one. 
+#### Install Docker
 
 ```bash
 sudo apt-get update
-sudo apt-get install postgresql postgresql-contrib
-```
-
-#### Create postgres user
-```bash
-sudo -i -u postgres
-createuser -P --interactive <name>
-createdb commando
-```
-
-#### Install Redis
-```bash
+sudo apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
+sudo apt-add-repository 'deb https://apt.dockerproject.org/repo ubuntu-xenial main'
 sudo apt-get update
-sudo apt-get install redis-server
+sudo apt-get install -y docker-engine
 ```
 
-#### Install required libraries
+#### Install docker-compose
 ```bash
-sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev build-essential g++
+sudo pip install docker-compose
 ```
 
-#### Update node_modules
-sudo is optional on this step but you may run into node-gyp rebuild error.
+#### Clone settings
 ```bash
-sudo npm i
+cp docker-compose.yml.example docker-compose.yml
 ```
 
-#### Clone settings 
+Fill out all the needed ENV variables.
+
+#### Launch docker-compose
+Make sure docker.sh is executeable.
+
 ```bash
-cp settings.json.example settings.json
-```
-
-After you clone the settings, edit them with your connection information. You'll also need to grab your bot token from the discord api page
-
-```json
-...
-"token": "<token>",
-"db":"postgres://<username>:<password>@localhost/commando"
-...
-```
-
-#### Launch Commando
-If there is a sequelize error, re-run the start command.
-```bash
-node Commando.js
-```
-
-If you run node with pm2
-```bash
-pm2 start Commando.js
+docker.sh
 ```

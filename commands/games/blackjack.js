@@ -45,8 +45,7 @@ module.exports = class BlackjackCommand extends Command {
 		});
 	}
 
-	run(msg, args) {
-		const { bet } = args;
+	run(msg, { bet }) {
 		if (Blackjack.gameExists(msg.author.id)) {
 			return msg.reply(`you can't start 2 games of blackjack at the same time.`);
 		}

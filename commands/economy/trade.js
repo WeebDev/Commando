@@ -52,8 +52,7 @@ module.exports = class MoneyTradeCommand extends Command {
 		});
 	}
 
-	async run(msg, args) {
-		const { member, donuts } = args;
+	async run(msg, { member, donuts }) {
 		if (member.id === msg.author.id) return msg.reply(`you can't trade ${Currency.textPlural} with yourself, ya dingus.`); // eslint-disable-line
 		if (member.user.bot) return msg.reply(`don't give your ${Currency.textPlural} to bots: they're bots, man.`);
 		if (donuts <= 0) return msg.reply(`you can't trade 0 or less ${Currency.convert(0)}.`);

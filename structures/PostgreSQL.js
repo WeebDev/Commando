@@ -1,25 +1,27 @@
 const Sequelize = require('sequelize');
 const winston = require('winston');
 
-const { db } = require('../settings');
-
-const database = new Sequelize(db, { logging: false });
+const { DB } = process.env;
+const database = new Sequelize(DB, { logging: false });
 
 class Database {
 	static get db() {
 		return database;
 	}
 
-	start() {
+	static start() {
 		database.authenticate()
-			.then(() => winston.info('Connection to database has been established successfully.'))
-			.then(() => winston.info('Synchronizing database...'))
+			.then(() => winston.info('[POSTGRES]: Connection to database has been established successfully.'))
+			.then(() => winston.info('[POSTGRES]: Synchronizing database...'))
 			.then(() => database.sync()
-				.then(() => winston.info('Synchronizing database done!'))
-				.catch(error => winston.error(`Error synchronizing the database: ${error}`))
+				.then(() => winston.info('[POSTGRES]: Done Synchronizing database!'))
+				.catch(error => winston.error(`[POSTGRES]: Error synchronizing the database: \n${error}`))
 			)
-			.then(() => winston.info('Ready to rock!'))
-			.catch(err => winston.error(`Unable to connect to the database: ${err}`));
+			.catch(error => {
+				winston.error(`[POSTGRES]: Unable to connect to the database: \n${error}`);
+				winston.error(`[POSTGRES]: Try reconnecting in 5 seconds...`);
+				setTimeout(() => Database.start(), 5000);
+			});
 	}
 }
 

@@ -2,14 +2,6 @@
 # yarn lockfile v1
 
 
-"@types/node@^6.0.48":
-  version "6.0.69"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-6.0.69.tgz#82d955985fcad2b95a72fcf5f8ea630d772535a7"
-
-"@types/node@^7.0.0":
-  version "7.0.12"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-7.0.12.tgz#ae5f67a19c15f752148004db07cbbb372e69efc9"
-
 Sherlock@neilgupta/Sherlock:
   version "1.3.6"
   resolved "https://codeload.github.com/neilgupta/Sherlock/tar.gz/a87770cbc8731073393c53ecb6ba6d6233c2a9a2"
@@ -149,7 +141,7 @@ bl@^1.0.0:
   dependencies:
     readable-stream "^2.0.5"
 
-bluebird@^3.4.6, bluebird@^3.5.0:
+bluebird@^3.3.4, bluebird@^3.4.6, bluebird@^3.5.0:
   version "3.5.0"
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.5.0.tgz#791420d7f551eea2897453a8a77653f96606d67c"
 
@@ -257,13 +249,6 @@ cli-width@^2.0.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/cli-width/-/cli-width-2.1.0.tgz#b234ca209b29ef66fc518d9b98d5847b00edf00a"
 
-cls-bluebird@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/cls-bluebird/-/cls-bluebird-2.0.1.tgz#c259a480ae02c0e506134307bb13db30446ee2e7"
-  dependencies:
-    is-bluebird "^1.0.2"
-    shimmer "^1.1.0"
-
 co@^4.6.0:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/co/-/co-4.6.0.tgz#6ea6bdf3d853ae54ccb8e47bfa0bf3f9031fb184"
@@ -319,7 +304,7 @@ cross-env@^3.1.2:
     cross-spawn "^5.1.0"
     is-windows "^1.0.0"
 
-cross-spawn@^5.0.1, cross-spawn@^5.1.0:
+cross-spawn@^5.1.0:
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/cross-spawn/-/cross-spawn-5.1.0.tgz#e8bd0efee58fcff6f8f94510a0a554bbfa235449"
   dependencies:
@@ -392,7 +377,7 @@ dashdash@^1.12.0:
   dependencies:
     assert-plus "^1.0.0"
 
-debug@2, debug@^2.1.1, debug@^2.2.0, debug@^2.3.0:
+debug@2, debug@^2.1.1, debug@^2.2.0:
   version "2.6.3"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.3.tgz#0f7eb8c30965ec08c72accfa0130c8b79984141d"
   dependencies:
@@ -442,10 +427,9 @@ discord.js@hydrabolt/discord.js:
   version "11.1.0"
   resolved "https://codeload.github.com/hydrabolt/discord.js/tar.gz/0d83f80fc05b25261b544ae6b8922e198168881e"
   dependencies:
-    "@types/node" "^7.0.0"
     long "^3.2.0"
     prism-media "^0.0.1"
-    snekfetch "^2.2.0"
+    snekfetch "^3.1.0"
     tweetnacl "^0.14.0"
     ws "^2.0.0"
 
@@ -484,9 +468,9 @@ domutils@1.5.1, domutils@^1.5.1:
     dom-serializer "0"
     domelementtype "1"
 
-dottie@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/dottie/-/dottie-2.0.0.tgz#da191981c8b8d713ca0115d5898cf397c2f0ddd0"
+dottie@^1.0.0:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/dottie/-/dottie-1.1.1.tgz#45c2a3f48bd6528eeed267a69a848eaaca6faa6a"
 
 double-ended-queue@^2.1.0-0:
   version "2.1.0-0"
@@ -507,12 +491,6 @@ end-of-stream@^1.0.0, end-of-stream@^1.1.0:
 entities@^1.1.1, entities@~1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/entities/-/entities-1.1.1.tgz#6e5c2d0a5621b5dadaecef80b90edfb5cd7772f0"
-
-env-cmd@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/env-cmd/-/env-cmd-5.0.0.tgz#c10892176a18bfcc5658cd9a2880add281de31ce"
-  dependencies:
-    cross-spawn "^5.0.1"
 
 erlpack@hammerandchisel/erlpack:
   version "0.1.0"
@@ -586,9 +564,9 @@ escope@^3.6.0:
     esrecurse "^4.1.0"
     estraverse "^4.1.1"
 
-eslint-config-aqua@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/eslint-config-aqua/-/eslint-config-aqua-1.1.0.tgz#7befb7220576b642da0d31a0a67caa7e7de15e71"
+eslint-config-aqua@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/eslint-config-aqua/-/eslint-config-aqua-1.2.0.tgz#347ecb519a0cf4dd0db089100259abd8207559ed"
 
 eslint@^3.19.0:
   version "3.19.0"
@@ -759,13 +737,13 @@ generate-object-property@^1.1.0:
   dependencies:
     is-property "^1.0.0"
 
+generic-pool@2.4.2:
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/generic-pool/-/generic-pool-2.4.2.tgz#886bc5bf0beb7db96e81bcbba078818de5a62683"
+
 generic-pool@2.4.3:
   version "2.4.3"
   resolved "https://registry.yarnpkg.com/generic-pool/-/generic-pool-2.4.3.tgz#780c36f69dfad05a5a045dd37be7adca11a4f6ff"
-
-generic-pool@^3.1.6:
-  version "3.1.7"
-  resolved "https://registry.yarnpkg.com/generic-pool/-/generic-pool-3.1.7.tgz#dac22b2c7a7a04e41732f7d8d2d25a303c88f662"
 
 getpass@^0.1.1:
   version "0.1.6"
@@ -872,9 +850,9 @@ imurmurhash@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/imurmurhash/-/imurmurhash-0.1.4.tgz#9218b9b2b928a238b13dc4fb6b6d576f231453ea"
 
-inflection@1.10.0:
-  version "1.10.0"
-  resolved "https://registry.yarnpkg.com/inflection/-/inflection-1.10.0.tgz#5bffcb1197ad3e81050f8e17e21668087ee9eb2f"
+inflection@^1.6.0:
+  version "1.12.0"
+  resolved "https://registry.yarnpkg.com/inflection/-/inflection-1.12.0.tgz#a200935656d6f5f6bc4dc7502e1aecb703228416"
 
 inflight@^1.0.4:
   version "1.0.6"
@@ -912,10 +890,6 @@ inquirer@^0.12.0:
 interpret@^1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/interpret/-/interpret-1.0.2.tgz#f4f623f0bb7122f15f5717c8e254b8161b5c5b2d"
-
-is-bluebird@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/is-bluebird/-/is-bluebird-1.0.2.tgz#096439060f4aa411abee19143a84d6a55346d6e2"
 
 is-fullwidth-code-point@^1.0.0:
   version "1.0.0"
@@ -1097,7 +1071,11 @@ lodash.some@^4.4.0:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/lodash.some/-/lodash.some-4.6.0.tgz#1bb9f314ef6b8baded13b549169b2a945eb68e4d"
 
-lodash@^4.0.0, lodash@^4.13.1, lodash@^4.17.1, lodash@^4.3.0:
+lodash@4.12.0, lodash@^4.0.0:
+  version "4.12.0"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.12.0.tgz#2bd6dc46a040f59e686c972ed21d93dc59053258"
+
+lodash@^4.13.1, lodash@^4.3.0:
   version "4.17.4"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"
 
@@ -1112,6 +1090,12 @@ lru-cache@^4.0.1:
     pseudomap "^1.0.1"
     yallist "^2.0.0"
 
+m3u8stream@^0.1.0:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/m3u8stream/-/m3u8stream-0.1.1.tgz#f23e3ded1e542bf5bd527aa411586481a8dedee6"
+  dependencies:
+    miniget "^1.0.0"
+
 mime-db@~1.27.0:
   version "1.27.0"
   resolved "https://registry.yarnpkg.com/mime-db/-/mime-db-1.27.0.tgz#820f572296bbd20ec25ed55e5b5de869e5436eb1"
@@ -1121,6 +1105,10 @@ mime-types@^2.1.12, mime-types@~2.1.7:
   resolved "https://registry.yarnpkg.com/mime-types/-/mime-types-2.1.15.tgz#a4ebf5064094569237b8cf70046776d09fc92aed"
   dependencies:
     mime-db "~1.27.0"
+
+miniget@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/miniget/-/miniget-1.0.0.tgz#019743264b33786c459f817df81482663df4941a"
 
 minimatch@^3.0.2:
   version "3.0.3"
@@ -1595,28 +1583,26 @@ semver@^5.0.1:
   version "5.3.0"
   resolved "https://registry.yarnpkg.com/semver/-/semver-5.3.0.tgz#9b2ce5d3de02d17c6012ad326aa6b4d0cf54f94f"
 
-sequelize@sequelize/sequelize:
-  version "4.0.0-2"
-  resolved "https://codeload.github.com/sequelize/sequelize/tar.gz/080549247e8ae6c2abb91a0782ee7694463e918a"
+sequelize@^3.30.4:
+  version "3.30.4"
+  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-3.30.4.tgz#bda2df1e31854b099e4149a111e9fc0a5ca1d1a4"
   dependencies:
-    bluebird "^3.4.6"
-    cls-bluebird "^2.0.1"
-    debug "^2.3.0"
+    bluebird "^3.3.4"
     depd "^1.1.0"
-    dottie "^2.0.0"
-    env-cmd "^5.0.0"
-    generic-pool "^3.1.6"
-    inflection "1.10.0"
-    lodash "^4.17.1"
+    dottie "^1.0.0"
+    generic-pool "2.4.2"
+    inflection "^1.6.0"
+    lodash "4.12.0"
     moment "^2.13.0"
     moment-timezone "^0.5.4"
     retry-as-promised "^2.0.0"
     semver "^5.0.1"
-    terraformer-wkt-parser "^1.1.2"
+    shimmer "1.1.0"
+    terraformer-wkt-parser "^1.1.0"
     toposort-class "^1.0.1"
     uuid "^3.0.0"
-    validator "^6.3.0"
-    wkx "^0.4.1"
+    validator "^5.2.0"
+    wkx "0.2.0"
 
 set-blocking@~2.0.0:
   version "2.0.0"
@@ -1640,7 +1626,7 @@ shelljs@^0.7.5:
     interpret "^1.0.0"
     rechoir "^0.6.2"
 
-shimmer@^1.1.0:
+shimmer@1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/shimmer/-/shimmer-1.1.0.tgz#97d7377137ffbbab425522e429fe0aa89a488b35"
 
@@ -1667,9 +1653,9 @@ slice-ansi@0.0.4:
   version "0.0.4"
   resolved "https://registry.yarnpkg.com/slice-ansi/-/slice-ansi-0.0.4.tgz#edbf8903f66f7ce2f8eafd6ceed65e264c831b35"
 
-snekfetch@^2.2.0, snekfetch@^2.3.2:
-  version "2.3.2"
-  resolved "https://registry.yarnpkg.com/snekfetch/-/snekfetch-2.3.2.tgz#942458489086fb9bde5de08f422998deac3568ca"
+snekfetch@^3.1.0, snekfetch@^3.1.6:
+  version "3.1.6"
+  resolved "https://registry.yarnpkg.com/snekfetch/-/snekfetch-3.1.6.tgz#3090d5cd3f5bc1e456f8aafa5024f64b7ca5b1e0"
 
 sntp@1.x.x:
   version "1.0.9"
@@ -1786,7 +1772,7 @@ tcomb@^2.5.0:
   version "2.7.0"
   resolved "https://registry.yarnpkg.com/tcomb/-/tcomb-2.7.0.tgz#10d62958041669a5d53567b9a4ee8cde22b1c2b0"
 
-terraformer-wkt-parser@^1.1.2:
+terraformer-wkt-parser@^1.1.0:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/terraformer-wkt-parser/-/terraformer-wkt-parser-1.1.2.tgz#336a0c8fc82094a5aff83288f69aedecd369bf0c"
   dependencies:
@@ -1817,6 +1803,10 @@ tough-cookie@~2.3.0:
 tryit@^1.0.1:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/tryit/-/tryit-1.0.3.tgz#393be730a9446fd1ead6da59a014308f36c289cb"
+
+tsubaki@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/tsubaki/-/tsubaki-1.1.0.tgz#fc186f537bf163d72f9d139f6e467b5036cfdb12"
 
 tunnel-agent@^0.4.3:
   version "0.4.3"
@@ -1879,9 +1869,9 @@ uuid@^3.0.0:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.0.1.tgz#6544bba2dfda8c1cf17e629a3a305e2bb1fee6c1"
 
-validator@^6.3.0:
-  version "6.3.0"
-  resolved "https://registry.yarnpkg.com/validator/-/validator-6.3.0.tgz#47ce23ed8d4eaddfa9d4b8ef0071b6cf1078d7c8"
+validator@^5.2.0:
+  version "5.7.0"
+  resolved "https://registry.yarnpkg.com/validator/-/validator-5.7.0.tgz#7a87a58146b695ac486071141c0c49d67da05e5c"
 
 verror@1.3.6:
   version "1.3.6"
@@ -1916,11 +1906,9 @@ winston@^2.3.1:
     isstream "0.1.x"
     stack-trace "0.0.x"
 
-wkx@^0.4.1:
-  version "0.4.1"
-  resolved "https://registry.yarnpkg.com/wkx/-/wkx-0.4.1.tgz#2fc171b5e9cb55c6256fef4bde1f21be413befee"
-  dependencies:
-    "@types/node" "^6.0.48"
+wkx@0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/wkx/-/wkx-0.2.0.tgz#76c24f16acd0cd8f93cd34aa331e0f7961256e84"
 
 wordwrap@~1.0.0:
   version "1.0.0"
@@ -1951,9 +1939,11 @@ yallist@^2.0.0:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/yallist/-/yallist-2.1.2.tgz#1c11f9218f076089a47dd512f93c6699a6a81d52"
 
-ytdl-core@^0.12.1:
-  version "0.12.1"
-  resolved "https://registry.yarnpkg.com/ytdl-core/-/ytdl-core-0.12.1.tgz#22d715782011b141c112130747c321576c1cf125"
+ytdl-core@^0.13.1:
+  version "0.13.1"
+  resolved "https://registry.yarnpkg.com/ytdl-core/-/ytdl-core-0.13.1.tgz#213349566c832c298619ac72d3711394cc0fc335"
   dependencies:
     html-entities "^1.1.3"
+    m3u8stream "^0.1.0"
+    miniget "^1.0.0"
     sax "^1.1.3"

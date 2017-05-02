@@ -36,9 +36,7 @@ module.exports = class LaunchCybernukeCommand extends Command {
 		return this.client.isOwner(msg.author) || msg.member.hasPermission('ADMINISTRATOR');
 	}
 
-	async run(msg, args) {
-		const { age, join } = args;
-
+	async run(msg, { age, join }) {
 		const statusMsg = await msg.reply('Calculating targeting parameters for cybernuke...');
 		await msg.guild.fetchMembers();
 
@@ -88,7 +86,7 @@ module.exports = class LaunchCybernukeCommand extends Command {
 
 		for (const member of members.values()) {
 			promises.push(
-				member.sendMessage(stripIndents`
+				member.send(stripIndents`
 					Sorry, but you've been automatically targetted by the cybernuke in the "${msg.guild.name}" server.
 					This means that you have been banned, likely in the case of a server raid.
 					Please contact them if you believe this ban to be in error.

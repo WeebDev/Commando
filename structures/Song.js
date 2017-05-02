@@ -1,7 +1,7 @@
 const { Util } = require('discord.js');
 const { oneLineTrim } = require('common-tags');
 
-const { soundcloudID } = require('../settings');
+const { SOUNDCLOUD_API } = process.env;
 
 module.exports = class Song {
 	constructor(video, member) {
@@ -14,7 +14,7 @@ module.exports = class Song {
 	}
 
 	get url() {
-		if (!isNaN(Number(this.id))) return `https://api.soundcloud.com/tracks/${this.id}/stream?client_id=${soundcloudID}`;
+		if (!isNaN(Number(this.id))) return `https://api.soundcloud.com/tracks/${this.id}/stream?client_id=${SOUNDCLOUD_API}`; // eslint-disable-line max-len
 		else return `https://www.youtube.com/watch?v=${this.id}`;
 	}
 

@@ -49,8 +49,7 @@ module.exports = class CleanCommand extends Command {
 		return this.client.isOwner(msg.author) || msg.member.roles.exists('name', 'Server Staff');
 	}
 
-	async run(msg, args) {
-		const { filter, limit } = args;
+	async run(msg, { filter, limit, member }) {
 		let messageFilter;
 
 		if (filter) {
@@ -58,8 +57,7 @@ module.exports = class CleanCommand extends Command {
 				messageFilter = message => message.content.search(/(discord\.gg\/.+|discordapp\.com\/invite\/.+)/i)
 				!== -1;
 			} else if (filter === 'user') {
-				if (args.member) {
-					const member = args.member;
+				if (member) {
 					const user = member.user;
 					messageFilter = message => message.author.id === user.id;
 				} else {

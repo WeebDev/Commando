@@ -15,7 +15,9 @@ build/Release
 # https://docs.npmjs.com/misc/faq#should-i-check-my-node-modules-folder-into-git
 node_modules
 
-.vscode
-settings.json
-docsdata.json
+deploy/deploy_key
+deploy/deploy_key.pub
+
+docker-compose.yml
+
 assets/profile/backgrounds/**

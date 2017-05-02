@@ -47,10 +47,8 @@ module.exports = class MoneyRemoveCommand extends Command {
 		return this.client.isOwner(msg.author);
 	}
 
-	run(msg, args) {
-		const { member, donuts } = args;
+	run(msg, { member, donuts }) {
 		Currency._changeBalance(member.id, donuts);
-
 		return msg.reply(`successfully removed ${Currency.convert(donuts)} from ${member.displayName}'s balance.`);
 	}
 };
