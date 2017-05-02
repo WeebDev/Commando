@@ -22,15 +22,15 @@ if [ -n "$TRAVIS_TAG" ]; then
 	DOCKER_RELEASE=$TRAVIS_TAG
 	test
 	docker login --username="$DOCKER_USERNAME" --password="$DOCKER_PASSWORD"
-	docker build -t tohru .
-	docker tag tohru:latest crawl/tohru:$DOCKER_RELEASE
-	docker push crawl/tohru:$DOCKER_RELEASE
+	docker build -t commando .
+	docker tag commando:latest crawl/commando:$DOCKER_RELEASE
+	docker push crawl/commando:$DOCKER_RELEASE
 else
 	echo -e "\e[36m\e[1mBuild triggered for branch \"${TRAVIS_BRANCH}\"."
 	DOCKER_RELEASE="latest"
 	test
 	docker login --username="$DOCKER_USERNAME" --password="$DOCKER_PASSWORD"
-	docker build -t tohru .
-	docker tag tohru:latest crawl/tohru:$DOCKER_RELEASE
-	docker push crawl/tohru:$DOCKER_RELEASE
+	docker build -t commando .
+	docker tag commando:latest crawl/commando:$DOCKER_RELEASE
+	docker push crawl/commando:$DOCKER_RELEASE
 fi
