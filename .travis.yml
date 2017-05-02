@@ -9,7 +9,7 @@ addons:
       - ubuntu-toolchain-r-test
     packages:
       - git
-      - libcario2-dev
+      - libcairo2-dev
       - libjpeg8-dev
       - libpango1.0-dev
       - libgif-dev
