@@ -40,11 +40,11 @@ module.exports = class RemindMeCommand extends Command {
 	async run(msg, { remind }) {
 		const time = remind.startDate.getTime() - Date.now();
 		const preRemind = await msg.say(stripIndents`
-			I will remind you '${Util.cleanContent(remind.eventTitle, msg)}' ${moment().add(time, 'ms').fromNow()}.
+			I will remind you '${Util.cleanContent(msg, remind.eventTitle)}' ${moment().add(time, 'ms').fromNow()}.
 		`);
 		const remindMessage = await new Promise(resolve => {
 			setTimeout(() => resolve(msg.say(stripIndents`
-				${msg.author} you wanted me to remind you of: '${Util.cleanContent(remind.eventTitle, msg)}'
+				${msg.author} you wanted me to remind you of: '${Util.cleanContent(msg, remind.eventTitle)}'
 			`)), time);
 		});
 
