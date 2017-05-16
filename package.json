@@ -60,7 +60,7 @@
     "bufferutil": "^3.0.0",
     "canvas": "automattic/node-canvas",
     "cheerio": "^0.22.0",
-    "discord.js": "hydrabolt/discord.js#11.1-dev",
+    "discord.js": "hydrabolt/discord.js",
     "discord.js-commando": "gawdl3y/discord.js-commando",
     "erlpack": "hammerandchisel/erlpack",
     "moment": "^2.18.1",
