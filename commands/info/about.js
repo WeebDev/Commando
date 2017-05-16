@@ -27,13 +27,8 @@ module.exports = class AboutCommand extends Command {
 				[Commando bot Github](https://github.com/WeebDev/Commando)
 
 				__**Installation:**__
-				**Node 7.0.0 or newer is required.**
+				**Node 7.6.0 or newer is required.**
 				\`npm i -S discord.js-commando\`
-
-				When running a bot using Commando, make sure to run Node with the \`--harmony\` flag.
-				Example:
-				\`node --harmony somebot.js\`
-				\`pm2 start somebot.js --node-args='--harmony'\`
 
 				[Documentation (WIP)](https://discord.js.org/#/docs/commando/)
 				[Discord.js Documentation](https://discord.js.org/#/docs/main/)
