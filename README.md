@@ -1,4 +1,16 @@
 # Commando
+> Commando Discord bot built on discord.js-commando.
+
+## Contributing
+
+1. Fork it!
+2. Create your feature branch: `git checkout -b my-new-feature`
+3. Commit your changes: `git commit -am 'Add some feature'`
+4. Push to the branch: `git push origin my-new-feature`
+5. Submit a pull request :D
+
+
+## Run it yourself
 
 ## Installation guide for Ubuntu 16.04.2 LTS
 
@@ -17,16 +29,22 @@ sudo apt-get install -y docker-engine
 sudo pip install docker-compose
 ```
 
-#### Clone settings
+#### Get ready
 ```bash
-cp docker-compose.yml.example docker-compose.yml
+wget https://raw.githubusercontent.com/WeebDev/Commando/master/docker-compose.yml.example -O docker-compose.yml
 ```
 
-Fill out all the needed ENV variables.
+***Fill out all the needed ENV variables.***
 
 #### Launch docker-compose
-Make sure docker.sh is executeable.
 
 ```bash
-docker.sh
+docker-compose up -d
 ```
+
+## Author
+
+**Commando** © [WeebDev](https://github.com/WeebDev), Released under the [MIT](https://github.com/WeebDev/Commando/blob/master/LICENSE) License.<br>
+Authored and maintained by WeebDev.
+
+> GitHub [@WeebDev](https://github.com/WeebDev)
