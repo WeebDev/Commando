@@ -9,7 +9,7 @@ COPY package.json yarn.lock ./
 #  Install dependencies
 RUN apk add --update \
 && apk add --no-cache ffmpeg opus pixman cairo pango giflib ca-certificates \
-&& apk add --no-cache --virtual .build-deps git curl pixman-dev cairo-dev pangomm-dev libjpeg-turbo-dev giflib-dev python g++ make
+&& apk add --no-cache --virtual .build-deps git curl pixman-dev cairo-dev pangomm-dev libjpeg-turbo-dev giflib-dev python g++ make \
 \
 # Install node.js dependencies
 && yarn install \
