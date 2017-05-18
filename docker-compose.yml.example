@@ -3,13 +3,12 @@ services:
   commando:
     image: "crawl/commando:latest"
     restart: always
-    container_name: commando
     environment:
       - TOKEN=BOT_TOKEN
       - COMMAND_PREFIX=-
       - OWNERS=OWNER_IDS,CAN,BE,SEPERATED,BY,COMMAS
       - DB=postgres://POSTGRES_USER_DEFINED_IN_POSTGRES_ENV:POSTGRES_PW_DEFINED_IN_POSTGRES_ENV@postgres:5432/POSTGRES_DB_EITHER_USER_DEFINED_IN_POSTGRES_ENV_OR_POSTGRES_DB_DEFINED_IN_POSTGRES
-      - REDIS=REDIS_HOSTNAME
+      - REDIS=redis
       - EXAMPLE_CHANNEL=CHANNEL_TO_POST_EXAMPLES_IN
       - WEATHER_API=DARK_SKY_WEATHER_API_KEY
       - GOOGLE_API=GOOGLE_API_KEY_FOR_YOUTUBE_AND_GEOCODE
@@ -22,17 +21,19 @@ services:
       - MAX_LENGTH=MAXIMUM_LENGTH_PER_SONG
       - MAX_SONGS=HOW_MANY_SONGS_A_USER_CAN_QUEUE_UP
       - PASSES=UPD_PACKET_PASS
+    depends_on:
+      - postgres
+      - redis
+
   postgres:
-    image: "postgres:9"
-    container_name: commando_db
+    image: "postgres:9-alpine"
     environment:
       - POSTGRES_USER=commando
       - POSTGRES_PASSWORD=POSTGRES_PW
-      - PGDATA=PATH_TO_DIRECTORY_THAT_SAVES_DATA_ON_THE_SYSTEM
     volumes:
-      - LOCALHOST_VOLUME_PATH:PATH_DEFINED_IN_PGDATA
+      - LOCALHOST_VOLUME_PATH/postgresql/data:/var/lib/postgresql/data
+
   redis:
-    image: "redis:3"
-    container_name: commando_redis
+    image: "redis:3-alpine"
     volumes:
-      - LOCALHOST_VOLUME_PATH:/data
+      - LOCALHOST_VOLUME_PATH/redis/data:/data
