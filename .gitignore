@@ -8,6 +8,9 @@ pids
 *.pid
 *.seed
 
+# IDE
+.vscode
+
 # Compiled binary addons (http://nodejs.org/api/addons.html)
 build/Release
 
