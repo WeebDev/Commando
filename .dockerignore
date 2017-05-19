@@ -1,0 +1,32 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+
+# IDE
+.vscode
+
+# Git
+.github
+.git
+.gitattributes
+.gitignore
+
+# Deployment
+deploy
+.travis.yml
+
+# Dependency directory
+node_modules
+
+# Docker
+.dockerignore
+docker-compose.yml
+docker-compose.yml.example
+docker.sh
+Dockerfile
