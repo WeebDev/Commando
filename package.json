@@ -1,6 +1,6 @@
 {
   "name": "commando",
-  "version": "0.26.0",
+  "version": "0.27.0",
   "description": ".",
   "author": {
     "name": "iCrawl",
@@ -81,7 +81,7 @@
   },
   "devDependencies": {
     "eslint": "^4.0.0",
-    "eslint-config-aqua": "^1.2.1"
+    "eslint-config-aqua": "^1.3.0"
   },
   "eslintConfig": {
     "extends": "aqua",
