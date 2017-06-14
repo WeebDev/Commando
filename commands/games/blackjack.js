@@ -93,23 +93,23 @@ module.exports = class BlackjackCommand extends Command {
 				const lossOrGain = Math.floor((['loss', 'bust'].includes(result)
 					? -1 : result === 'push'
 						? 0 : 1) * (hand.doubled
-							? 2 : 1) * (playerValue === 'Blackjack'
-								? 1.5 : 1) * bet);
+						? 2 : 1) * (playerValue === 'Blackjack'
+						? 1.5 : 1) * bet);
 
 				winnings += lossOrGain;
 				const soft = Blackjack.isSoft(hand);
+				/* eslint-disable max-len */
 				embed.fields.push({
 					name: playerHands.length === 1 ? '**Your hand**' : `**Hand ${i + 1}**`,
 					value: stripIndents`
 						${hand.join(' - ')}
 						Value: ${soft ? 'Soft ' : ''}${playerValue}
 
-						Result: ${
-							result.replace(/(^\w|\s\w)/g, ma => ma.toUpperCase())
-						}${result !== 'push' ? `, ${Currency.convert(lossOrGain)}` : `, ${Currency.textPlural} back`}
+						Result: ${result.replace(/(^\w|\s\w)/g, ma => ma.toUpperCase())}${result !== 'push' ? `, ${Currency.convert(lossOrGain)}` : `, ${Currency.textPlural} back`}
 					`,
 					inline: true
 				});
+				/* eslint-enable max-len */
 			});
 
 			embed.fields.push({
@@ -180,7 +180,7 @@ module.exports = class BlackjackCommand extends Command {
 						: `Type \`hit\` to draw another card, ${canDoubleDown
 							? '`double down` to double down, '
 							: ''}${canSplit
-								? '`split` to split, ' : ''}or \`stand\` to pass.`,
+							? '`split` to split, ' : ''}or \`stand\` to pass.`,
 					fields: [
 						{
 							name: hands.length === 1
@@ -188,9 +188,7 @@ module.exports = class BlackjackCommand extends Command {
 								: `**Hand ${hands.indexOf(currentHand) + 1}**`,
 							value: stripIndents`
 								${currentHand.join(' - ')}
-								Value: ${Blackjack.isSoft(currentHand)
-									? 'Soft '
-									: ''}${Blackjack.handValue(currentHand)}
+								Value: ${Blackjack.isSoft(currentHand) ? 'Soft ' : ''}${Blackjack.handValue(currentHand)}
 							`,
 							inline: true
 						},
@@ -198,9 +196,7 @@ module.exports = class BlackjackCommand extends Command {
 							name: '**Dealer hand**',
 							value: stripIndents`
 								${dealerHand[0]} - XX
-						 		Value: ${Blackjack.isSoft([dealerHand[0]])
-									? 'Soft '
-									: ''}${Blackjack.handValue([dealerHand[0]])}
+						 		Value: ${Blackjack.isSoft([dealerHand[0]]) ? 'Soft ' : ''}${Blackjack.handValue([dealerHand[0]])}
 							`,
 							inline: true
 						}
@@ -215,9 +211,9 @@ module.exports = class BlackjackCommand extends Command {
 						|| (msg2.content === 'split' && canSplit)
 						|| (msg2.content === 'double down' && canDoubleDown)
 					), {
-						maxMatches: 1,
-						time: 20e3
-					});
+					maxMatches: 1,
+					time: 20e3
+				});
 
 				if (responses.size === 0) break;
 				const action = responses.first().content.toLowerCase();

@@ -44,16 +44,13 @@ module.exports = class ViewQueueCommand extends Command {
 				name: `${msg.author.username}#${msg.author.discriminator} (${msg.author.id})`,
 				icon_url: msg.author.displayAvatarURL // eslint-disable-line camelcase
 			},
+			/* eslint-disable max-len */
 			description: stripIndents`
 				__**Song queue, page ${paginated.page}**__
-				${paginated.items.map(song => `**-** ${!isNaN(song.id)
-				? `${song.name} (${song.lengthString})`
-				: `[${song.name}](${`https://www.youtube.com/watch?v=${song.id}`})`} (${song.lengthString})`).join('\n')}
+				${paginated.items.map(song => `**-** ${!isNaN(song.id) ? `${song.name} (${song.lengthString})` : `[${song.name}](${`https://www.youtube.com/watch?v=${song.id}`})`} (${song.lengthString})`).join('\n')}
 				${paginated.maxPage > 1 ? `\nUse ${msg.usage()} to view a specific page.\n` : ''}
 
-				**Now playing:** ${!isNaN(currentSong.id)
-				? `${currentSong.name}`
-				: `[${currentSong.name}](${`https://www.youtube.com/watch?v=${currentSong.id}`})`}
+				**Now playing:** ${!isNaN(currentSong.id) ? `${currentSong.name}` : `[${currentSong.name}](${`https://www.youtube.com/watch?v=${currentSong.id}`})`}
 				${oneLine`
 					**Progress:**
 					${!currentSong.playing ? 'Paused: ' : ''}${Song.timeString(currentTime)} /
@@ -62,6 +59,7 @@ module.exports = class ViewQueueCommand extends Command {
 				`}
 				**Total queue time:** ${Song.timeString(totalLength)}
 			`
+			/* eslint-enable max-len */
 		});
 	}
 

@@ -133,10 +133,10 @@ module.exports = class ItemTradeCommand extends Command {
 		msg.embed(embed);
 		const responses = await msg.channel.awaitMessages(response =>
 			response.author.id === user.id && response.content.toLowerCase() === 'accept',
-			{
-				maxMatches: 1,
-				time: 30e3
-			});
+		{
+			maxMatches: 1,
+			time: 30e3
+		});
 
 		if (responses.size === 0) return false;
 		return true;

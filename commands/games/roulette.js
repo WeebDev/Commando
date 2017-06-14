@@ -96,20 +96,17 @@ module.exports = class RouletteCommand extends Command {
 				const winners = await roulette.awaitPlayers(16000).filter(player => player.winnings !== 0);
 				winners.forEach(winner => Currency.changeBalance(winner.user.id, winner.winnings));
 
+				/* eslint-disable max-len */
 				return msg.embed({
 					color: colors[roulette.winSpaces[1]] || null,
 					description: stripIndents`
-						The ball landed on: **${roulette.winSpaces[1]
-							? roulette.winSpaces[1]
-							: ''} ${roulette.winSpaces[0]}**!
+						The ball landed on: **${roulette.winSpaces[1] ? roulette.winSpaces[1] : ''} ${roulette.winSpaces[0]}**!
 
-						${winners.length !== 0
-							? `__**Winners:**__
-							${winners.map(winner => `${winner.user.username} won ${Currency.convert(winner.winnings)}`)
-								.join('\n')}`
-							: '__**No winner.**__'}
+						${winners.length !== 0 ? `__**Winners:**__
+							${winners.map(winner => `${winner.user.username} won ${Currency.convert(winner.winnings)}`).join('\n')}` : '__**No winner.**__'}
 					`
 				});
+				/* eslint-enable max-len */
 			});
 	}
 };

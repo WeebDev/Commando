@@ -33,12 +33,9 @@ module.exports = class TagListCommand extends Command {
 			.map(tag => tag.name)
 			.sort()
 			.join(', ');
+		/* eslint-disable newline-per-chained-call */
 		return msg.say(stripIndents`**❯ Tags:**
-			${tags.filter(tag => tag.type)
-				.filter(tag => !tag.example)
-				.map(tag => tag.name)
-				.sort()
-				.join(', ')}
+			${tags.filter(tag => tag.type).filter(tag => !tag.example).map(tag => tag.name).sort().join(', ')}
 
 			${examples ? `**❯ Examples:**
 				${examples}` : `There are no examples.`}
@@ -46,5 +43,6 @@ module.exports = class TagListCommand extends Command {
 			${usertags ? `**❯ ${msg.member.displayName}'s tags:**
 				${usertags}` : `${msg.member.displayName} has no tags.`}
 		`);
+		/* eslint-disable newline-per-chained-call */
 	}
 };

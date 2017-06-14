@@ -47,14 +47,14 @@ module.exports = class UserInfoCommand extends Command {
 				},
 				{
 					name: '❯ User Details',
+					/* eslint-disable max-len */
 					value: stripIndents`
-						• Created at: ${moment.utc(user.createdAt).format('dddd, MMMM Do YYYY, HH:mm:ss ZZ')}${user.bot
-							? '\n• Is a bot account'
-							: ''}
+						• Created at: ${moment.utc(user.createdAt).format('dddd, MMMM Do YYYY, HH:mm:ss ZZ')}${user.bot ? '\n• Is a bot account' : ''}
 						• Aliases: ${usernames.length ? usernames.map(uName => uName.username).join(', ') : user.username}
 						• Status: ${user.presence.status}
 						• Game: ${user.presence.game ? user.presence.game.name : 'None'}
 					`
+					/* eslint-enable max-len */
 				}
 			],
 			thumbnail: { url: user.displayAvatarURL }

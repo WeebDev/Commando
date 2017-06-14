@@ -5,9 +5,9 @@ const ranks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
 const suits = ['♣', '♦', '❤', '♠'];
 const DECK_TEMPLATE = suits
 	.map(suit => ranks.concat(ranks)
-	.concat(ranks)
-	.concat(ranks)
-	.map(rank => rank + suit))
+		.concat(ranks)
+		.concat(ranks)
+		.map(rank => rank + suit))
 	.reduce((array, arr) => array.concat(arr));
 
 class Blackjack {

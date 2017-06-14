@@ -53,16 +53,12 @@ module.exports = class BuyItemCommand extends Command {
 		const balance = await Currency.getBalance(msg.author.id);
 		const plural = amount > 1 || amount === 0;
 		if (balance < storeItem.price * amount) {
+			/* eslint-disable max-len */
 			return msg.reply(stripIndents`
-				you don't have enough donuts to buy ${amount} ${itemName}${plural
-					? 's'
-					: ''}. ${amount} ${itemName}${plural
-						? 's'
-						: ''} cost${plural
-							? ''
-							: 's'} ${amount * storeItem.price} 🍩s.
+				you don't have enough donuts to buy ${amount} ${itemName}${plural ? 's' : ''}. ${amount} ${itemName}${plural ? 's' : ''} cost${plural ? '' : 's'} ${amount * storeItem.price} 🍩s.
 				Your current account balance is ${balance} 🍩s.
 			`);
+			/* eslint-enable max-len */
 		}
 
 		const inventory = await Inventory.fetchInventory(msg.author.id);
@@ -71,9 +67,7 @@ module.exports = class BuyItemCommand extends Command {
 		inventory.save();
 
 		return msg.reply(stripIndents`
-			you have successfully purchased ${amount} ${itemName}${plural
-				? 's'
-				: ''} for ${amount * storeItem.price} 🍩s.
+			you have successfully purchased ${amount} ${itemName}${plural ? 's' : ''} for ${amount * storeItem.price} 🍩s.
 		`);
 	}
 };
