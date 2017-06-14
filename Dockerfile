@@ -1,4 +1,4 @@
-FROM node:7-alpine
+FROM node:8-alpine
 
 LABEL maintainer "iCrawl <icrawltogo@gmail.com>"
 

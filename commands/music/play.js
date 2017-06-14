@@ -48,10 +48,10 @@ module.exports = class PlaySongCommand extends Command {
 			}
 
 			const permissions = voiceChannel.permissionsFor(msg.client.user);
-			if (!permissions.hasPermission('CONNECT')) {
+			if (!permissions.has('CONNECT')) {
 				return msg.reply('I don\'t have permission to join your voice channel. No parties allowed there.');
 			}
-			if (!permissions.hasPermission('SPEAK')) {
+			if (!permissions.has('SPEAK')) {
 				return msg.reply('I don\'t have permission to speak in your voice channel. What a disappointment.');
 			}
 		} else if (!queue.voiceChannel.members.has(msg.author.id)) {

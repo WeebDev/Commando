@@ -21,6 +21,8 @@ services:
       - MAX_LENGTH=MAXIMUM_LENGTH_PER_SONG
       - MAX_SONGS=HOW_MANY_SONGS_A_USER_CAN_QUEUE_UP
       - PASSES=UPD_PACKET_PASS
+    volumes:
+      - LOCALHOST_VOLUME_PATH/backgrounds:/assets/profile/backgrounds
     depends_on:
       - postgres
       - redis
