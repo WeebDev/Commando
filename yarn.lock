@@ -1598,8 +1598,8 @@ slice-ansi@0.0.4:
   resolved "https://registry.yarnpkg.com/slice-ansi/-/slice-ansi-0.0.4.tgz#edbf8903f66f7ce2f8eafd6ceed65e264c831b35"
 
 snekfetch@^3.1.0, snekfetch@^3.1.8:
-  version "3.1.8"
-  resolved "https://registry.yarnpkg.com/snekfetch/-/snekfetch-3.1.8.tgz#a871a6208f9ec6ec72e2c61416f40880ee1aea92"
+  version "3.1.11"
+  resolved "https://registry.yarnpkg.com/snekfetch/-/snekfetch-3.1.11.tgz#552e4ad3a817bab343981a6d527e174df19b6d1d"
 
 sntp@1.x.x:
   version "1.0.9"
