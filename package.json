@@ -68,6 +68,7 @@
     "pg": "^6.4.0",
     "pg-hstore": "^2.3.2",
     "prism-media": "hydrabolt/prism-media",
+    "random-js": "^1.0.8",
     "redis": "^2.7.1",
     "request": "^2.81.0",
     "request-promise": "^4.2.1",
