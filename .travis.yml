@@ -17,10 +17,10 @@ addons:
 env:
   - CXX=g++-4.9
 before_install:
-  - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 0.24.5
+  - sudo apt-get update -qq
+  - sudo apt-get install -y -qq docker-ce
+  - curl -o- -L https://yarnpkg.com/install.sh | bash
   - export PATH="$HOME/.yarn/bin:$PATH"
-  - sudo apt-get update
-  - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-engine
 language: node_js
 node_js:
   - '8'
