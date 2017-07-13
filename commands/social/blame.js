@@ -1,4 +1,4 @@
-const Canvas = require('canvas');
+const { createCanvas } = require('canvas');
 const { Command } = require('discord.js-commando');
 
 module.exports = class BlameCommand extends Command {
@@ -27,7 +27,7 @@ module.exports = class BlameCommand extends Command {
 
 	run(msg, args) {
 		const member = args.member.displayName || 'Crawl';
-		const canvas = new Canvas();
+		const canvas = createCanvas();
 		const ctx = canvas.getContext('2d');
 		const { width, height } = this._textSizes(ctx, member);
 

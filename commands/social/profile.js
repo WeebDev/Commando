@@ -1,4 +1,4 @@
-const Canvas = require('canvas');
+const { createCanvas, loadImage, parseFont } = require('canvas');
 const { Command } = require('discord.js-commando');
 
 const path = require('path');
@@ -39,7 +39,6 @@ module.exports = class ProfileCommand extends Command {
 
 	async run(msg, args) {
 		const user = args.member || msg.member;
-		const Image = Canvas.Image;
 		const profile = await UserProfile.findOne({ where: { userID: user.id } });
 		const personalMessage = profile ? profile.personalMessage : '';
 		const money = await Currency.getBalance(user.id);
@@ -51,14 +50,17 @@ module.exports = class ProfileCommand extends Command {
 		const totalExp = await Experience.getTotalExperience(user.id);
 		const fillValue = Math.min(Math.max(currentExp / (levelBounds.upperBound - levelBounds.lowerBound), 0), 1);
 
-		Canvas.registerFont(path.join(__dirname, '..', '..', 'assets', 'profile', 'fonts', 'Roboto.ttf'), { family: 'Roboto' }); // eslint-disable-line max-len
-		Canvas.registerFont(path.join(__dirname, '..', '..', 'assets', 'profile', 'fonts', 'NotoEmoji-Regular.ttf'), { family: 'Roboto' }); // eslint-disable-line max-len
+		parseFont(path.join(__dirname, '..', '..', 'assets', 'profile', 'fonts', 'Roboto.ttf'), { family: 'Roboto' }); // eslint-disable-line max-len
+		parseFont(path.join(__dirname, '..', '..', 'assets', 'profile', 'fonts', 'NotoEmoji-Regular.ttf'), { family: 'Roboto' }); // eslint-disable-line max-len
 
-		const canvas = new Canvas(300, 300);
+		const canvas = createCanvas(300, 300);
 		const ctx = canvas.getContext('2d');
 		const lines = await this._wrapText(ctx, personalMessage, 110);
-		const base = new Image();
-		const cond = new Image();
+		const base = await loadImage(await fs.readFileAsync(path.join(__dirname, '..', '..', 'assets', 'profile', 'backgrounds', `${profile ? profile.background : 'default'}.png`))); // eslint-disable-line max-len
+		const cond = await loadImage(await request({
+			uri: user.user.displayAvatarURL('png'),
+			encoding: null
+		}));
 		const generate = () => {
 			// Environment Variables
 			ctx.drawImage(base, 0, 0);
@@ -154,12 +156,6 @@ module.exports = class ProfileCommand extends Command {
 			ctx.shadowColor = 'rgba(0, 0, 0, 0.2)';
 			ctx.drawImage(cond, 24, 21, 110, 110);
 		};
-
-		base.src = await fs.readFileAsync(path.join(__dirname, '..', '..', 'assets', 'profile', 'backgrounds', `${profile ? profile.background : 'default'}.png`)); // eslint-disable-line max-len
-		cond.src = await request({
-			uri: user.user.displayAvatarURL('png'),
-			encoding: null
-		});
 		generate();
 
 		return msg.channel.send({ files: [{ attachment: canvas.toBuffer(), name: 'profile.png' }] });
