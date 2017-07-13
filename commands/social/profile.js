@@ -3,9 +3,6 @@ const { Command } = require('discord.js-commando');
 
 const path = require('path');
 const request = require('request-promise');
-const { promisifyAll } = require('tsubaki');
-
-const fs = promisifyAll(require('fs'));
 
 const Bank = require('../../structures/currency/Bank');
 const Currency = require('../../structures/currency/Currency');
@@ -56,8 +53,11 @@ module.exports = class ProfileCommand extends Command {
 		const canvas = createCanvas(300, 300);
 		const ctx = canvas.getContext('2d');
 		const lines = await this._wrapText(ctx, personalMessage, 110);
-		const base = await loadImage(await fs.readFileAsync(path.join(__dirname, '..', '..', 'assets', 'profile', 'backgrounds', `${profile ? profile.background : 'default'}.png`))); // eslint-disable-line max-len
-		const cond = await loadImage(await request({ uri: user.user.displayAvatarURL({ format: 'png' }) }));
+		const base = await loadImage(path.join(__dirname, '..', '..', 'assets', 'profile', 'backgrounds', `${profile ? profile.background : 'default'}.png`)); // eslint-disable-line max-len
+		const cond = await loadImage(await request({
+			uri: user.user.displayAvatarURL({ format: 'png' }),
+			encoding: null
+		}));
 		const generate = () => {
 			// Environment Variables
 			ctx.drawImage(base, 0, 0);
