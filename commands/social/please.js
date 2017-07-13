@@ -1,4 +1,4 @@
-const { createCanvas, parseFont } = require('canvas');
+const Canvas = require('canvas');
 const { Command } = require('discord.js-commando');
 const path = require('path');
 
@@ -30,10 +30,10 @@ module.exports = class PleaseCommand extends Command {
 	run(msg, args) {
 		const member = args.member.displayName || 'Grey';
 
-		parseFont(path.join(__dirname, '..', '..', 'assets', 'profile', 'fonts', 'Roboto.ttf'), { family: 'Roboto' }); // eslint-disable-line max-len
-		parseFont(path.join(__dirname, '..', '..', 'assets', 'profile', 'fonts', 'NotoEmoji-Regular.ttf'), { family: 'Roboto' }); // eslint-disable-line max-len
+		Canvas.registerFont(path.join(__dirname, '..', '..', 'assets', 'profile', 'fonts', 'Roboto.ttf'), { family: 'Roboto' }); // eslint-disable-line max-len
+		Canvas.registerFont(path.join(__dirname, '..', '..', 'assets', 'profile', 'fonts', 'NotoEmoji-Regular.ttf'), { family: 'Roboto' }); // eslint-disable-line max-len
 
-		const canvas = createCanvas();
+		const canvas = new Canvas();
 		const ctx = canvas.getContext('2d');
 		const { width, height } = this.textSizes(ctx, member);
 
