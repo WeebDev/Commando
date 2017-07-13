@@ -1,4 +1,4 @@
-const { createCanvas, loadImage, registerFont } = require('canvas');
+const { createCanvas, loadImage, parseFont } = require('canvas');
 const { Command } = require('discord.js-commando');
 
 const path = require('path');
@@ -47,8 +47,8 @@ module.exports = class ProfileCommand extends Command {
 		const totalExp = await Experience.getTotalExperience(user.id);
 		const fillValue = Math.min(Math.max(currentExp / (levelBounds.upperBound - levelBounds.lowerBound), 0), 1);
 
-		registerFont(path.join(__dirname, '..', '..', 'assets', 'profile', 'fonts', 'Roboto.ttf'), { family: 'Roboto' }); // eslint-disable-line max-len
-		registerFont(path.join(__dirname, '..', '..', 'assets', 'profile', 'fonts', 'NotoEmoji-Regular.ttf'), { family: 'Roboto' }); // eslint-disable-line max-len
+		parseFont(path.join(__dirname, '..', '..', 'assets', 'profile', 'fonts', 'Roboto.ttf'), { family: 'Roboto' }); // eslint-disable-line max-len
+		parseFont(path.join(__dirname, '..', '..', 'assets', 'profile', 'fonts', 'NotoEmoji-Regular.ttf'), { family: 'Noto Emoji' }); // eslint-disable-line max-len
 
 		const canvas = createCanvas(300, 300);
 		const ctx = canvas.getContext('2d');
@@ -70,7 +70,7 @@ module.exports = class ProfileCommand extends Command {
 			ctx.shadowBlur = 2;
 
 			// Username
-			ctx.font = '20px Roboto';
+			ctx.font = '20px Roboto, "Noto Emoji"';
 			ctx.fillStyle = '#FFFFFF';
 			ctx.fillText(user.displayName, 50, 173);
 
