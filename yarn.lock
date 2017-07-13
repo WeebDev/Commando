@@ -186,9 +186,9 @@ callsites@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/callsites/-/callsites-0.2.0.tgz#afab96262910a7f33c19a5775825c69f34e350ca"
 
-canvas@automattic/node-canvas:
+canvas@next:
   version "2.0.0-alpha.2"
-  resolved "https://codeload.github.com/automattic/node-canvas/tar.gz/41af8c0f219c5a39fb03ee2778a50033e0fb28e0"
+  resolved "https://registry.yarnpkg.com/canvas/-/canvas-2.0.0-alpha.2.tgz#2b88e9afd6e90bece7dc64b50a2da8c7e5aab5d2"
   dependencies:
     nan "^2.4.0"
     parse-css-font "^2.0.2"
