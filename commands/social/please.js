@@ -41,7 +41,7 @@ module.exports = class PleaseCommand extends Command {
 		canvas.height = height;
 
 		const generate = () => {
-			ctx.font = '700 32px Arial';
+			ctx.font = '700 32px Roboto';
 			ctx.fillStyle = '#B93F2C';
 			ctx.textAlign = 'center';
 			ctx.fillText(member, canvas.width / 2, 35);
