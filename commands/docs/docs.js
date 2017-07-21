@@ -216,14 +216,14 @@ module.exports = class DocsCommand extends Command {
 
 	formatEvent(main, member, version) {
 		const embed = {
-			description: `__**[${main.item.name}#${main.item.name}](${this.makeLink(main, member, version)})**__\n`,
+			description: `__**[${main.item.name}#${member.item.name}](${this.makeLink(main, member, version)})**__\n`,
 			fields: []
 		};
 
-		if (main.item.description) embed.description += `\n${this.clean(main.item.description)}`;
+		if (member.item.description) embed.description += `\n${this.clean(member.item.description)}`;
 
-		if (main.item.params) {
-			const params = main.item.params.map(param => {
+		if (member.item.params) {
+			const params = member.item.params.map(param => {
 				const type = this.joinType(param.type);
 				return `\`${param.name}: ${type}\`\n${this.clean(param.description)}`;
 			});
