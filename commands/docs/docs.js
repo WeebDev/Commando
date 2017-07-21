@@ -153,7 +153,7 @@ module.exports = class DocsCommand extends Command {
 	formatProp(main, member, version) {
 		const embed = {
 			description: oneLineTrim`
-				__**[${main.item.name}${member.item.scope === 'static' ? '.' : '#'}${main.item.name}]
+				__**[${main.item.name}${member.item.scope === 'static' ? '.' : '#'}${member.item.name}]
 				(${this.makeLink(main, member, version)})**__
 			`,
 			fields: []
