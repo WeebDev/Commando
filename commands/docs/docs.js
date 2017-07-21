@@ -1,6 +1,6 @@
 const { Command } = require('discord.js-commando');
 const request = require('snekfetch');
-const { oneLine } = require('common-tags');
+const { oneLineTrim } = require('common-tags');
 
 module.exports = class DocsCommand extends Command {
 	constructor(client) {
@@ -93,7 +93,7 @@ module.exports = class DocsCommand extends Command {
 	}
 
 	makeLink(mainItem, item, version) {
-		return oneLine`
+		return oneLineTrim`
 			https://discord.js.org/#/docs/main/${version}/class/${mainItem.name}
 			?scrollTo=${item.scope === 'static' ? 's-' : ''}${item.name}
 		`;
@@ -137,13 +137,14 @@ module.exports = class DocsCommand extends Command {
 
 	formatProp(item, mainItem, version) {
 		const embed = {
-			description: oneLine`
+			description: oneLineTrim`
 				__**[${mainItem.name}${item.scope === 'static' ? '.' : '#'}${item.name}]
-				(${this.makeLink(mainItem, item, version)})**__\n
+				(${this.makeLink(mainItem, item, version)})**__
 			`,
 			fields: []
 		};
 
+		embed.description += '\n';
 		if (item.description) embed.description += `\n${this.clean(item.description)}`;
 
 		const type = this.joinType(item.type);
@@ -157,13 +158,14 @@ module.exports = class DocsCommand extends Command {
 
 	formatMethod(item, mainItem, version) {
 		const embed = {
-			description: oneLine`
+			description: oneLineTrim`
 				__**[${mainItem.name}${item.scope === 'static' ? '.' : '#'}${item.name}()]
-				(${this.makeLink(mainItem, item, version)})**__\n
+				(${this.makeLink(mainItem, item, version)})**__
 			`,
 			fields: []
 		};
 
+		embed.description += '\n';
 		if (item.description) embed.description += `\n${this.clean(item.description)}`;
 
 		if (item.params) {
