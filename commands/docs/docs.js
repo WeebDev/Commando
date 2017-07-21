@@ -81,7 +81,8 @@ module.exports = class DocsCommand extends Command {
 		const rest = query.slice(2);
 
 		if (rest.length) {
-			const base = this.joinType(member.item.type).replace(/<.+?>/g, '');
+			if (!member.item.type) return [];
+			const base = this.joinType(member.item.type).replace(/<.+>/g, '');
 			return this.search(docs, `${base}.${rest.join('.')}`);
 		}
 
