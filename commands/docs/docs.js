@@ -49,7 +49,7 @@ module.exports = class DocsCommand extends Command {
 	search(docs, query) {
 		query = query.split(/[#.]/);
 		const mainQuery = query[0].toLowerCase();
-		const memberQuery = query[1] ? query[1].toLowerCase() : null;
+		let memberQuery = query[1] ? query[1].toLowerCase() : null;
 
 		const findWithin = (parentItem, props, name) => {
 			let found = null;
@@ -71,15 +71,18 @@ module.exports = class DocsCommand extends Command {
 		const res = [main];
 		if (!memberQuery) return res;
 
-		const member = findWithin(main.item, {
-			classes: ['props', 'methods', 'events'],
-			interfaces: ['props', 'methods', 'events'],
-			typedefs: ['props']
-		}[main.category], memberQuery);
+		let props;
+		if (/\(.*?\)$/.test(memberQuery)) {
+			memberQuery = memberQuery.replace(/\(.*?\)$/, '');
+			props = ['methods'];
+		} else {
+			props = main.category === 'typedefs' ? ['props'] : ['props', 'methods', 'events'];
+		}
 
+		const member = findWithin(main.item, props, memberQuery);
 		if (!member) return [];
-		const rest = query.slice(2);
 
+		const rest = query.slice(2);
 		if (rest.length) {
 			if (!member.item.type) return [];
 			const base = this.joinType(member.item.type).replace(/<.+>/g, '');
