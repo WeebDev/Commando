@@ -85,7 +85,11 @@ module.exports = class DocsCommand extends Command {
 		const rest = query.slice(2);
 		if (rest.length) {
 			if (!member.item.type) return [];
-			const base = this.joinType(member.item.type).replace(/<.+>/g, '');
+			const base = this.joinType(member.item.type)
+				.replace(/<.+>/g, '')
+				.replace(/\|.+/, '')
+				.trim();
+
 			return this.search(docs, `${base}.${rest.join('.')}`);
 		}
 
@@ -171,6 +175,13 @@ module.exports = class DocsCommand extends Command {
 			value: `\`${type}\``
 		});
 
+		if (member.item.examples) {
+			embed.fields.push({
+				name: 'Example',
+				value: `\`\`\`js\n${member.item.examples.join('```\n```js\n')}\`\`\``
+			});
+		}
+
 		return embed;
 	}
 
@@ -214,6 +225,13 @@ module.exports = class DocsCommand extends Command {
 			});
 		}
 
+		if (member.item.examples) {
+			embed.fields.push({
+				name: 'Example',
+				value: `\`\`\`js\n${member.item.examples.join('```\n```js\n')}\`\`\``
+			});
+		}
+
 		return embed;
 	}
 
@@ -234,6 +252,13 @@ module.exports = class DocsCommand extends Command {
 			embed.fields.push({
 				name: 'Parameters',
 				value: params.join('\n\n')
+			});
+		}
+
+		if (member.item.examples) {
+			embed.fields.push({
+				name: 'Example',
+				value: `\`\`\`js\n${member.item.examples.join('```\n```js\n')}\`\`\``
 			});
 		}
 
