@@ -45,7 +45,7 @@ class Roulette {
 		return new Promise(resolve => {
 			setTimeout(() => {
 				games.delete(this.guildID);
-				return resolve(this.players);
+				return resolve(this.players || []);
 			}, time);
 		});
 	}
