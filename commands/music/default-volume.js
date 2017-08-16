@@ -19,7 +19,7 @@ module.exports = class DefaultVolumeCommand extends Command {
 	}
 
 	hasPermission(msg) {
-		return this.client.isOwner(msg.author) || msg.member.hasPermission('ADMINISTRATOR');
+		return this.client.isOwner(msg.author) || msg.member.has('ADMINISTRATOR');
 	}
 
 	run(msg, args) {
