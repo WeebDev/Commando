@@ -48,7 +48,7 @@ module.exports = class ServerTagAddCommand extends Command {
 
 		await Tag.create({
 			userID: msg.author.id,
-			userName: `${msg.author.username}#${msg.author.discriminator}`,
+			userName: `${msg.author.tag}`,
 			guildID: msg.guild.id,
 			guildName: msg.guild.name,
 			channelID: msg.channel.id,

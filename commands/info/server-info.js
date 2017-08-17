@@ -47,7 +47,7 @@ module.exports = class ServerInfoCommand extends Command {
 					name: '❯ Member',
 					value: stripIndents`
 						• ${msg.guild.memberCount} members
-						• Owner: ${msg.guild.owner.user.username}#${msg.guild.owner.user.discriminator}
+						• Owner: ${msg.guild.owner.user.tag}
 						(ID: ${msg.guild.ownerID})
 					`,
 					inline: true

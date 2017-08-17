@@ -43,7 +43,7 @@ module.exports = class InventoryShowCommand extends Command {
 		if (items.length === 0) return msg.reply('can\'t show what you don\'t have, man.');
 
 		return msg.embed({
-			description: `__**${msg.author.username}#${msg.author.discriminator}'s inventory:**__`,
+			description: `__**${msg.author.tag}'s inventory:**__`,
 			fields: [
 				{
 					name: 'Item',

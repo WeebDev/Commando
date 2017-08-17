@@ -33,8 +33,8 @@ module.exports = class StarInfoCommand extends Command {
 
 		return msg.embed({
 			author: {
-				icon_url: message.author.displayAvatarURL, // eslint-disable-line camelcase
-				name: `${message.author.username}#${message.author.discriminator} (${message.author.id})`
+				icon_url: message.author.displayAvatarURL({ format: 'png' }), // eslint-disable-line camelcase
+				name: `${message.author.tag} (${message.author.id})`
 			},
 			color: 0xFFAC33,
 			fields: [

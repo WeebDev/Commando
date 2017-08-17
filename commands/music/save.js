@@ -26,8 +26,8 @@ module.exports = class SaveQueueCommand extends Command {
 		let embed = {
 			color: 3447003,
 			author: {
-				name: `${msg.author.username}#${msg.author.discriminator} (${msg.author.id})`,
-				icon_url: msg.author.displayAvatarURL // eslint-disable-line camelcase
+				name: `${msg.author.tag} (${msg.author.id})`,
+				icon_url: msg.author.displayAvatarURL({ format: 'png' }) // eslint-disable-line camelcase
 			},
 			description: stripIndents`
 				**Currently playing:**

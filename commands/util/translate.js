@@ -60,7 +60,7 @@ module.exports = class TranslateCommand extends Command {
 		return msg.embed({
 			author: {
 				name: msg.member ? msg.member.displayName : msg.author.username,
-				icon_url: msg.author.avatarURL // eslint-disable-line camelcase
+				icon_url: msg.author.displayAvatarURL({ format: 'png' }) // eslint-disable-line camelcase
 			},
 			fields: [
 				{

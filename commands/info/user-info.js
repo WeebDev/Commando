@@ -57,7 +57,7 @@ module.exports = class UserInfoCommand extends Command {
 					/* eslint-enable max-len */
 				}
 			],
-			thumbnail: { url: user.displayAvatarURL }
+			thumbnail: { url: user.displayAvatarURL({ format: 'png' }) }
 		});
 	}
 };
