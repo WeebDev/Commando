@@ -421,7 +421,7 @@ discord.js-commando@gawdl3y/discord.js-commando:
 
 discord.js@hydrabolt/discord.js:
   version "12.0.0-dev"
-  resolved "https://codeload.github.com/hydrabolt/discord.js/tar.gz/3c532f16bc48175597a7bbed4fbba4637812184d"
+  resolved "https://codeload.github.com/hydrabolt/discord.js/tar.gz/65d9d46a3c659810e3748d0ebf6005bde1f61d85"
   dependencies:
     long "^3.0.0"
     prism-media "^0.0.1"
