@@ -36,7 +36,7 @@ module.exports = class WeatherCommand extends Command {
 
 	async run(msg, args) {
 		const { location } = args;
-		const Image = Canvas.Image;
+		const { Image } = Canvas;
 
 		Canvas.registerFont(path.join(__dirname, '..', '..', 'assets', 'weather', 'fonts', 'Roboto-Regular.ttf'), { family: 'Roboto' }); // eslint-disable-line max-len
 		Canvas.registerFont(path.join(__dirname, '..', '..', 'assets', 'weather', 'fonts', 'RobotoCondensed-Regular.ttf'), { family: 'Roboto Condensed' }); // eslint-disable-line max-len
@@ -73,7 +73,7 @@ module.exports = class WeatherCommand extends Command {
 		});
 
 		const condition = res.currently.summary;
-		const icon = res.currently.icon;
+		const { icon } = res.currently;
 		const chanceofrain = Math.round((res.currently.precipProbability * 100) / 5) * 5;
 		const temperature = Math.round(res.currently.temperature);
 		const humidity = Math.round(res.currently.humidity * 100);

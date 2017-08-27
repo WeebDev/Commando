@@ -21,7 +21,7 @@ module.exports = class Starboard {
 
 	static async deleteStar(message, starboardChannel) {
 		const star = await Star.findByPrimary(message.id);
-		const starMessage = await starboardChannel.fetchMessage(star.starboardMessageID);
+		const starMessage = await starboardChannel.messages.fetch(star.starboardMessageID);
 		await starMessage.delete();
 		await star.destroy();
 	}
@@ -55,7 +55,7 @@ module.exports = class Starboard {
 		const { stars: newCount } = await star.increment('stars');
 		star.starredBy = star.starredBy.concat([starredBy]);
 		await star.save();
-		const starMessage = await starboardChannel.fetchMessage(star.starboardMessageID);
+		const starMessage = await starboardChannel.messages.fetch(star.starboardMessageID);
 		starMessage.edit({ embed: Starboard._starEmbed(message, newCount) });
 	}
 
@@ -68,7 +68,7 @@ module.exports = class Starboard {
 		if (newCount <= 0) {
 			Starboard.deleteStar(message, starboardChannel);
 		} else {
-			const starMessage = await starboardChannel.fetchMessage(star.starboardMessageID);
+			const starMessage = await starboardChannel.messages.fetch(star.starboardMessageID);
 			starMessage.edit({ embed: Starboard._starEmbed(message, newCount) });
 		}
 	}

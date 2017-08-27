@@ -10,8 +10,8 @@ class RussianRoulette {
 
 	join(user, donuts) {
 		this.players.push({
-			user: user,
-			donuts: donuts
+			user,
+			donuts
 		});
 
 		games.set(this.guildID, this);

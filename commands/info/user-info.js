@@ -32,7 +32,7 @@ module.exports = class UserInfoCommand extends Command {
 
 	async run(msg, args) {
 		const member = args.member || msg.member;
-		const user = member.user;
+		const { user } = member;
 		const usernames = await username.findAll({ where: { userID: user.id } });
 		return msg.embed({
 			color: 3447003,

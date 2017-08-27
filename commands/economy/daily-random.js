@@ -22,7 +22,7 @@ module.exports = class DailyRandomCommand extends Command {
 	}
 
 	async run(msg) {
-		const guild = await msg.guild.fetchMembers();
+		const guild = await msg.guild.members.fetch();
 		const member = guild.members.filter(mem => mem.presence.status === 'online' && !mem.user.bot).random();
 		const received = await Daily.received(msg.author.id);
 

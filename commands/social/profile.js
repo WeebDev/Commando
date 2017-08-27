@@ -39,7 +39,7 @@ module.exports = class ProfileCommand extends Command {
 
 	async run(msg, args) {
 		const user = args.member || msg.member;
-		const Image = Canvas.Image;
+		const { Image } = Canvas;
 		const profile = await UserProfile.findOne({ where: { userID: user.id } });
 		const personalMessage = profile ? profile.personalMessage : '';
 		const money = await Currency.getBalance(user.id);

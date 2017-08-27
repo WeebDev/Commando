@@ -67,8 +67,8 @@ module.exports = class FortuneCommand extends Command {
 			followAllRedirects: true,
 			headers: { 'User-Agent': `Commando v${version} (https://github.com/WeebDev/Commando/)` },
 			body: {
-				title: title,
-				options: options,
+				title,
+				options,
 				captcha: true
 			},
 			json: true

@@ -58,7 +58,7 @@ module.exports = class CleanCommand extends Command {
 				!== -1;
 			} else if (filter === 'user') {
 				if (member) {
-					const user = member.user;
+					const { user } = member;
 					messageFilter = message => message.author.id === user.id;
 				} else {
 					return msg.say(`${msg.author}, you have to mention someone.`);
@@ -76,14 +76,14 @@ module.exports = class CleanCommand extends Command {
 			}
 
 			/* eslint-disable no-unused-vars, handle-callback-err */
-			const messages = await msg.channel.fetchMessages({ limit: limit }).catch(err => null);
+			const messages = await msg.channel.messages.fetch({ limit }).catch(err => null);
 			const messagesToDelete = messages.filter(messageFilter);
 			msg.channel.bulkDelete(messagesToDelete.array().reverse()).catch(err => null);
 
 			return null;
 		}
 
-		const messagesToDelete = await msg.channel.fetchMessages({ limit: limit }).catch(err => null);
+		const messagesToDelete = await msg.channel.messages.fetch({ limit }).catch(err => null);
 		msg.channel.bulkDelete(messagesToDelete.array().reverse()).catch(err => null);
 
 		return null;

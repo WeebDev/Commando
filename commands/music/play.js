@@ -42,7 +42,7 @@ module.exports = class PlaySongCommand extends Command {
 
 		let voiceChannel;
 		if (!queue) {
-			voiceChannel = msg.member.voiceChannel;
+			voiceChannel = msg.member.voiceChannel; // eslint-disable-line
 			if (!voiceChannel) {
 				return msg.reply('you aren\'t in a voice channel, ya dingus.');
 			}
@@ -108,7 +108,7 @@ module.exports = class PlaySongCommand extends Command {
 		if (!queue) {
 			queue = {
 				textChannel: msg.channel,
-				voiceChannel: voiceChannel,
+				voiceChannel,
 				connection: null,
 				songs: [],
 				volume: this.client.provider.get(msg.guild.id, 'defaultVolume', DEFAULT_VOLUME)
@@ -176,7 +176,7 @@ module.exports = class PlaySongCommand extends Command {
 			if (!queue) {
 				queue = {
 					textChannel: msg.channel,
-					voiceChannel: voiceChannel,
+					voiceChannel,
 					connection: null,
 					songs: [],
 					volume: this.client.provider.get(msg.guild.id, 'defaultVolume', DEFAULT_VOLUME)

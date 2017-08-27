@@ -73,16 +73,16 @@
     "request": "^2.0.0",
     "request-promise": "^4.0.0",
     "sequelize": "^4.0.0",
-    "simple-youtube-api": "^2.0.0",
+    "simple-youtube-api": "^3.0.0",
     "snekfetch": "^3.0.0",
     "tsubaki": "^1.0.0",
     "uws": "^8.0.0",
     "winston": "^2.0.0",
-    "ytdl-core": "^0.15.0"
+    "ytdl-core": "^0.17.0"
   },
   "devDependencies": {
     "eslint": "^4.0.0",
-    "eslint-config-aqua": "^1.0.0"
+    "eslint-config-aqua": "^2.0.0"
   },
   "eslintConfig": {
     "extends": "aqua",

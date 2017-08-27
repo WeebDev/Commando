@@ -49,7 +49,7 @@ module.exports = class MoneyLeaderboardCommand extends Command {
 		const paginated = util.paginate(JSON.parse(money), page, Math.floor(PAGINATED_ITEMS));
 		let ranking = PAGINATED_ITEMS * (paginated.page - 1);
 
-		for (const user of paginated.items) await this.client.fetchUser(user.userID); // eslint-disable-line
+		for (const user of paginated.items) await this.client.users.fetch(user.userID); // eslint-disable-line
 
 		return msg.embed({
 			color: 3447003,

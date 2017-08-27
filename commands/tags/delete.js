@@ -57,7 +57,7 @@ module.exports = class TagDeleteCommand extends Command {
 
 		Tag.destroy({ where: { name, guildID: msg.guild.id } });
 		if (tag.example) {
-			const messageToDelete = await msg.guild.channels.get(EXAMPLE_CHANNEL).fetchMessage(tag.exampleID);
+			const messageToDelete = await msg.guild.channels.get(EXAMPLE_CHANNEL).messages.fetch(tag.exampleID);
 			messageToDelete.delete();
 		}
 

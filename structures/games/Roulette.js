@@ -30,7 +30,7 @@ class Roulette {
 			? spaces.find(spc => spc.values.includes(space)).multiplier
 			: 0;
 		this.players.push({
-			user: user,
+			user,
 			winnings: donuts * multiplier
 		});
 

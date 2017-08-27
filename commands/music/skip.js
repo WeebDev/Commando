@@ -60,7 +60,7 @@ module.exports = class SkipSongCommand extends Command {
 			const newVote = {
 				count: 1,
 				users: [msg.author.id],
-				queue: queue,
+				queue,
 				guild: msg.guild.id,
 				start: Date.now(),
 				timeout: null
