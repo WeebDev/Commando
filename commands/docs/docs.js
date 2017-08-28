@@ -22,10 +22,10 @@ module.exports = class DocsCommand extends Command {
 				},
 				{
 					key: 'version',
-					prompt: 'which version of docs would you like (stable, master)?',
+					prompt: 'which version of docs would you like (stable, master, commando)?',
 					type: 'string',
 					parse: value => value.toLowerCase(),
-					validate: value => ['master', 'stable'].includes(value),
+					validate: value => ['master', 'stable', 'commando'].includes(value),
 					default: 'stable'
 				}
 			]
@@ -38,7 +38,10 @@ module.exports = class DocsCommand extends Command {
 	async fetchDocs(version) {
 		if (this.docs[version]) return this.docs[version];
 
-		const link = `https://raw.githubusercontent.com/hydrabolt/discord.js/docs/${version}.json`;
+		const link = version === 'commando'
+			? 'https://raw.githubusercontent.com/Gawdl3y/discord.js-commando/docs/master.json'
+			: `https://raw.githubusercontent.com/hydrabolt/discord.js/docs/${version}.json`;
+
 		const { text } = await request.get(link);
 		const json = JSON.parse(text);
 
@@ -107,9 +110,15 @@ module.exports = class DocsCommand extends Command {
 		return type.map(t => t.map(a => Array.isArray(a) ? a.join('') : a).join('')).join(' | ');
 	}
 
+	getLink(version) {
+		return version === 'commando'
+			? 'https://discord.js.org/#/docs/commando/master/'
+			: `https://discord.js.org/#/docs/main/${version}/`;
+	}
+
 	makeLink(main, member, version) {
 		return oneLineTrim`
-			https://discord.js.org/#/docs/main/${version}/
+			${this.getLink(version)}
 			${main.category === 'classes' ? 'class' : 'typedef'}/${main.item.name}
 			?scrollTo=${member.item.scope === 'static' ? 's-' : ''}${member.item.name}
 		`;
@@ -124,11 +133,11 @@ module.exports = class DocsCommand extends Command {
 		if (main.item.extends) embed.description += ` (extends ${main.item.extends[0]})`;
 
 		embed.description += oneLineTrim`
-			](https://discord.js.org/#/docs/main/${version}/
+			](${this.getLink(version)}/
 			${main.category === 'classes' ? 'class' : 'typedef'}/${main.item.name})**__
 		`;
-		embed.description += '\n';
 
+		embed.description += '\n';
 		if (main.item.description) embed.description += `\n${this.clean(main.item.description)}`;
 
 		const join = it => `\`${it.map(i => i.name).join('` `')}\``;
@@ -280,9 +289,9 @@ module.exports = class DocsCommand extends Command {
 		}[member.category].call(this, main, member, version) : this.formatMain(main, version);
 
 		const icon = 'https://cdn.discordapp.com/icons/222078108977594368/bc226f09db83b9176c64d923ff37010b.webp';
-		embed.url = `https://discord.js.org/#/docs/main/${version}`;
+		embed.url = this.getLink(version);
 		embed.author = {
-			name: `Discord.js Docs (${version})`,
+			name: version === 'commando' ? 'Commando Docs' : `Discord.js Docs (${version})`,
 			icon_url: icon // eslint-disable-line camelcase
 		};
 
