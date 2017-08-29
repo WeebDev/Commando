@@ -133,7 +133,7 @@ module.exports = class DocsCommand extends Command {
 		if (main.item.extends) embed.description += ` (extends ${main.item.extends[0]})`;
 
 		embed.description += oneLineTrim`
-			](${this.getLink(version)}/
+			](${this.getLink(version)}
 			${main.category === 'classes' ? 'class' : 'typedef'}/${main.item.name})**__
 		`;
 
