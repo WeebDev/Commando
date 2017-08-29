@@ -52,8 +52,8 @@ client.on('error', winston.error)
 	.on('unknownCommand', msg => {
 		if (msg.channel.type === 'dm') return;
 		if (msg.author.bot) return;
-
-		const args = { name: msg.content.split(client.commandPrefix)[1].toLowerCase() };
+		if (msg.content.split(msg.guild.commandPrefix)[1] === 'undefined') return;
+		const args = { name: msg.content.split(msg.guild.commandPrefix)[1].toLowerCase() };
 		client.registry.resolveCommand('tags:tag').run(msg, args);
 	})
 	.on('message', async message => {
