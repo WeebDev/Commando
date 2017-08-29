@@ -4,7 +4,6 @@ const path = require('path');
 const winston = require('winston');
 
 const SequelizeProvider = require('./providers/Sequelize');
-const Starboard = require('./structures/stars/Starboard');
 const { OWNERS, COMMAND_PREFIX, TOKEN } = process.env;
 
 const CommandoClient = require('./structures/CommandoClient');
