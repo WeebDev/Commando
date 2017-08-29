@@ -34,7 +34,7 @@ module.exports = class TagListAllCommand extends Command {
 		/* eslint-disable newline-per-chained-call */
 		return msg.say(stripIndents`**❯ All tags:**
 			${allTags ? allTags : `${msg.guild.name} has no tags.`}
-		`, { split: true });
+		`, { split: true, char: ',' });
 		/* eslint-disable newline-per-chained-call */
 	}
 };
