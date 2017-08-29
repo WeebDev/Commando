@@ -13,9 +13,10 @@ before_install:
   - sudo apt-get install -y -qq docker-ce
   - curl -o- -L https://yarnpkg.com/install.sh | bash
   - export PATH="$HOME/.yarn/bin:$PATH"
-  - npm i -g eslint eslint-config-aqua
+  - yarn add global eslint eslint-config-aqua
 language: node_js
 node_js:
   - '8'
+install: yarn test
 script:
   - bash ./deploy/deploy.sh
