@@ -28,7 +28,6 @@ module.exports = class TagListAllCommand extends Command {
 		if (!tags) return msg.say(`${msg.guild.name} doesn't have any tags, ${msg.author}. Why not add one?`);
 
 		const allTags = tags.filter(tag => !tag.type)
-			.filter(tag => tag.userID === msg.author.id)
 			.map(tag => tag.name)
 			.sort()
 			.join(', ');
