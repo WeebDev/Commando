@@ -31,10 +31,11 @@ module.exports = class TagListAllCommand extends Command {
 			.map(tag => tag.name)
 			.sort()
 			.join(', ');
+		console.log(allTags); // eslint-disable-line
 		/* eslint-disable newline-per-chained-call */
 		return msg.say(stripIndents`**❯ All tags:**
 			${allTags ? allTags : `${msg.guild.name} has no tags.`}
-		`, { split: true, char: ',' });
+		`, { split: true, char: ', ' });
 		/* eslint-disable newline-per-chained-call */
 	}
 };
