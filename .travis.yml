@@ -17,7 +17,5 @@ before_install:
 language: node_js
 node_js:
   - '8'
-cache:
-  yarn: true
 script:
   - bash ./deploy/deploy.sh
