@@ -23,15 +23,7 @@ module.exports = class AboutCommand extends Command {
 				This is the WIP official command framework for discord.js.
 				It makes full use of ES2017's \`async\`/\`await\`.
 
-				[Framework GitHub](https://github.com/Gawdl3y/discord.js-commando)
-				[Commando bot Github](https://github.com/WeebDev/Commando)
-
-				__**Installation:**__
-				**Node 7.6.0 or newer is required.**
-				\`npm i -S discord.js-commando\`
-
-				[Documentation (WIP)](https://discord.js.org/#/docs/commando/)
-				[Discord.js Documentation](https://discord.js.org/#/docs/main/)
+				
 			`
 		});
 	}
