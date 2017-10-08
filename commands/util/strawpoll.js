@@ -4,7 +4,7 @@ const { oneLine, stripIndents } = require('common-tags');
 
 const { version } = require('../../package');
 
-module.exports = class FortuneCommand extends Command {
+module.exports = class StrawpollCommand extends Command {
 	constructor(client) {
 		super(client, {
 			name: 'strawpoll',
